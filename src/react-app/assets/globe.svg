@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20">
+  <!-- Globe outline -->
+  <circle cx="10" cy="10" r="9" fill="none" stroke="#0066cc" stroke-width="1.5"/>
+  <!-- Meridian lines -->
+  <ellipse cx="10" cy="10" rx="4.5" ry="9" fill="none" stroke="#0066cc" stroke-width="1"/>
+  <ellipse cx="10" cy="10" rx="9" ry="4.5" fill="none" stroke="#0066cc" stroke-width="1"/>
+  <!-- Equator -->
+  <line x1="1" y1="10" x2="19" y2="10" stroke="#0066cc" stroke-width="1"/>
+  <!-- Prime meridian -->
+  <line x1="10" y1="1" x2="10" y2="19" stroke="#0066cc" stroke-width="1"/>
+  <!-- Continents (simplified) -->
+  <path d="M5 7 Q7 6 9 7 Q8 9 6 8 Z" fill="#0066cc" opacity="0.6"/>
+  <path d="M11 6 Q13 5 15 7 Q14 8 12 7 Z" fill="#0066cc" opacity="0.6"/>
+  <path d="M7 12 Q9 11 11 13 Q10 14 8 13 Z" fill="#0066cc" opacity="0.6"/>
+</svg>

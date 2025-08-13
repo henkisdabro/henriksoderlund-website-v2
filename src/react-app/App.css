@@ -76,6 +76,34 @@ body {
   text-align: left;
 }
 
+/* Typography Hierarchy */
+h1 {
+  margin-bottom: 2rem;
+}
+
+h2 {
+  color: #555;
+}
+
+h3 {
+  color: #666;
+}
+
+h4 {
+  color: #777;
+}
+
+h5 {
+  color: #888;
+}
+
+.country-flag {
+  width: 20px;
+  height: auto;
+  margin-right: 8px;
+  vertical-align: middle;
+}
+
 /* Home Page Styles */
 .hero-section {
   text-align: center;
@@ -213,7 +241,6 @@ body {
 
 .experience-entry h2 {
   font-size: 1.5rem;
-  color: #2c3e50;
   margin-bottom: 0.5rem;
 }
 
@@ -389,7 +416,7 @@ a:hover {
   position: fixed;
   top: 20px;
   left: 20px;
-  width: 200px;
+  width: 240px;
   max-height: calc(100vh - 40px);
   background: white;
   border: 1px solid #e1e5e9;
@@ -407,7 +434,7 @@ a:hover {
 
 .nav-box-header {
   display: flex;
-  justify-content: flex-end;
+  justify-content: flex-start;
   align-items: center;
   padding: 8px 12px;
   background: #f8f9fa;
@@ -517,31 +544,35 @@ a:hover {
 /* Heading levels indentation */
 .headings-list .heading-level-1 .heading-link {
   padding-left: 16px;
-  font-weight: 400;
+  font-weight: 600;
+  font-size: 0.85rem;
 }
 
 .headings-list .heading-level-2 .heading-link {
   padding-left: 28px;
   font-weight: 400;
+  font-size: 0.82rem;
 }
 
 .headings-list .heading-level-3 .heading-link {
   padding-left: 40px;
+  font-weight: 400;
+  font-size: 0.8rem;
 }
 
 .headings-list .heading-level-4 .heading-link {
   padding-left: 52px;
-  font-size: 0.85rem;
+  font-size: 0.78rem;
 }
 
 .headings-list .heading-level-5 .heading-link {
   padding-left: 64px;
-  font-size: 0.85rem;
+  font-size: 0.76rem;
 }
 
 .headings-list .heading-level-6 .heading-link {
   padding-left: 76px;
-  font-size: 0.85rem;
+  font-size: 0.74rem;
 }
 
 /* Main content area - adjust for navigation box */
@@ -573,7 +604,7 @@ a:hover {
   }
   
   .navigation-box:not(.collapsed) {
-    width: 280px;
+    width: 320px;
     height: auto;
     border-radius: 12px;
     top: 10px;
@@ -586,7 +617,7 @@ a:hover {
   }
   
   .navigation-box.collapsed .nav-box-header {
-    justify-content: center;
+    justify-content: flex-start;
     padding: 12px;
   }
   
@@ -630,11 +661,12 @@ a:hover {
   margin: 0 0.3rem;
   vertical-align: middle;
   line-height: 1;
+  font-size: 0.75rem;
 }
 
 .tech-icon {
-  width: 20px;
-  height: 20px;
+  width: 14px;
+  height: 14px;
   vertical-align: middle;
   filter: grayscale(100%) opacity(0.85);
 }
