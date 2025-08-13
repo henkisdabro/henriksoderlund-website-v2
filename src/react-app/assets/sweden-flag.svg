@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="20" height="14" viewBox="0 0 20 14">
+  <!-- Blue background -->
+  <rect width="20" height="14" fill="#006aa7"/>
+  <!-- Yellow cross - vertical bar -->
+  <rect width="2" height="14" x="6" fill="#fecc00"/>
+  <!-- Yellow cross - horizontal bar -->
+  <rect width="20" height="2" y="6" fill="#fecc00"/>
+</svg>

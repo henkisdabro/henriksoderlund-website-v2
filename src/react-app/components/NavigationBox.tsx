@@ -29,8 +29,8 @@ const NavigationBox: React.FC = () => {
         const text = heading.textContent || '';
         const level = parseInt(heading.tagName.charAt(1));
         
-        // Skip headings with these specific texts
-        if (text === 'Pages' || text === 'On This Page' || text === 'Navigation') {
+        // Skip headings with these specific texts, H1 headings, or H3 headings
+        if (text === 'Pages' || text === 'On This Page' || text === 'Navigation' || level === 1 || level === 3) {
           return;
         }
         
@@ -115,11 +115,11 @@ const NavigationBox: React.FC = () => {
             </ul>
           </div>
 
-          {/* Divider */}
-          {headings.length > 0 && <div className="nav-divider"></div>}
+          {/* Divider - Hide on homepage */}
+          {headings.length > 0 && location.pathname !== '/' && <div className="nav-divider"></div>}
 
-          {/* Current Page Headings */}
-          {headings.length > 0 && (
+          {/* Current Page Headings - Hide on homepage */}
+          {headings.length > 0 && location.pathname !== '/' && (
             <div className="nav-section">
               <h5>On This Page</h5>
               <ul className="nav-list headings-list">

@@ -33,7 +33,8 @@
       "Bash(npm run lint)",
       "WebFetch(domain:vite.dev)",
       "Bash(node:*)",
-      "Bash(npm update)"
+      "Bash(npm update)",
+      "Bash(npm run build:*)"
     ],
     "deny": [],
     "ask": []
