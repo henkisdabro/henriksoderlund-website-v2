@@ -958,6 +958,16 @@ a:hover {
     align-items: center;
   }
 
+  /* Footer tech stack mobile styling */
+  .site-footer p {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .tech-stack {
+    margin: 0;
+  }
+
   /* Mobile-responsive table styles */
   .modern-pricing-table,
   .pricing-table {
