@@ -1,0 +1,48 @@
+{
+	"recommendations": [
+		// Core Development
+		"ms-vscode.vscode-typescript-next",
+		"bradlc.vscode-tailwindcss",
+		"esbenp.prettier-vscode",
+		"dbaeumer.vscode-eslint",
+		
+		// React Development
+		"dsznajder.es7-react-js-snippets",
+		"formulahendry.auto-rename-tag",
+		"ms-vscode.vscode-json",
+		
+		// Vite & Build Tools
+		"antfu.vite",
+		"ZixuanChen.vitest-explorer",
+		
+		// Cloudflare Workers
+		"cloudflare.vscode-cloudflare-workers",
+		
+		// AI Assistant
+		"anthropic.claude-dev",
+		
+		// Code Quality & Productivity
+		"streetsidesoftware.code-spell-checker",
+		"usernamehw.errorlens",
+		"ms-vscode.vscode-typescript-next",
+		"christian-kohler.path-intellisense",
+		"ms-vscode.vscode-json",
+		
+		// Git & Version Control
+		"eamodio.gitlens",
+		"github.vscode-pull-request-github",
+		
+		// File Management
+		"christian-kohler.npm-intellisense",
+		"ms-vscode.vscode-package-json",
+		
+		// Optional but Helpful
+		"ms-vscode.vscode-hex-editor",
+		"ms-vscode.vscode-markdown",
+		"redhat.vscode-yaml"
+	],
+	"unwantedRecommendations": [
+		"ms-vscode.vscode-typescript",
+		"hookyqr.beautify"
+	]
+}

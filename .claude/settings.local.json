@@ -1,9 +1,30 @@
 {
   "permissions": {
     "allow": [
+      "Bash(robocopy:*)",
+      "Bash(powershell:*)",
+      "Bash(rmdir:*)",
+      "Bash(npm install)",
+      "Bash(npm run dev:*)",
       "WebFetch(domain:github.com)",
       "WebFetch(domain:github.com)",
-      "WebFetch(domain:docs.thulite.io)"
+      "WebFetch(domain:docs.thulite.io)",
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(rd:*)",
+      "Bash(git push:*)",
+      "Bash(gh repo create:*)",
+      "Bash(git checkout:*)",
+      "Bash(git stash:*)",
+      "Bash(git branch:*)",
+      "Bash(git remote add:*)",
+      "Bash(git remote rename:*)",
+      "Bash(gh repo view:*)",
+      "Bash(git rebase:*)",
+      "Bash(git filter-branch:*)",
+      "Bash(git clone:*)",
+      "Bash(gh repo delete:*)",
+      "Bash(gh auth:*)"
     ],
     "deny": [],
     "ask": []

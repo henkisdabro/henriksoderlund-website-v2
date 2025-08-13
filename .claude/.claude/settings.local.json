@@ -1,0 +1,14 @@
+{
+  "permissions": {
+    "allow": [
+      "WebFetch(domain:www.henriksoderlund.com)",
+      "Bash(mkdir:*)",
+      "Bash(cp:*)",
+      "Bash(npm install:*)",
+      "Bash(npm run dev:*)",
+      "Bash(npm run build:*)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}

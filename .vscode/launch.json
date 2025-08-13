@@ -1,0 +1,54 @@
+{
+	"version": "0.2.0",
+	"configurations": [
+		{
+			"name": "Launch Vite Dev Server",
+			"type": "node",
+			"request": "launch",
+			"runtimeArgs": [
+				"--experimental-network-inspection"
+			],
+			"program": "${workspaceFolder}/node_modules/vite/bin/vite.js",
+			"args": ["--host"],
+			"console": "integratedTerminal",
+			"env": {
+				"NODE_ENV": "development"
+			},
+			"skipFiles": ["<node_internals>/**"],
+			"cwd": "${workspaceFolder}"
+		},
+		{
+			"name": "Debug Wrangler Dev",
+			"type": "node",
+			"request": "launch",
+			"program": "${workspaceFolder}/node_modules/wrangler/bin/wrangler.js",
+			"args": ["dev", "--local"],
+			"console": "integratedTerminal",
+			"env": {
+				"NODE_ENV": "development"
+			},
+			"skipFiles": ["<node_internals>/**"],
+			"cwd": "${workspaceFolder}"
+		},
+		{
+			"name": "Run Tests",
+			"type": "node",
+			"request": "launch",
+			"program": "${workspaceFolder}/node_modules/vitest/vitest.mjs",
+			"args": ["run"],
+			"console": "integratedTerminal",
+			"skipFiles": ["<node_internals>/**"],
+			"cwd": "${workspaceFolder}"
+		},
+		{
+			"name": "Launch via NPM Script",
+			"type": "node",
+			"request": "launch",
+			"cwd": "${workspaceFolder}",
+			"runtimeExecutable": "npm",
+			"runtimeArgs": ["run", "dev"],
+			"console": "integratedTerminal",
+			"skipFiles": ["<node_internals>/**"]
+		}
+	]
+}

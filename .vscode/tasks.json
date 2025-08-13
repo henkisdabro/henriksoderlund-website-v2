@@ -1,0 +1,72 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"label": "dev",
+			"type": "npm",
+			"script": "dev",
+			"group": "build",
+			"presentation": {
+				"reveal": "always",
+				"panel": "new"
+			},
+			"problemMatcher": []
+		},
+		{
+			"label": "build",
+			"type": "npm",
+			"script": "build",
+			"group": {
+				"kind": "build",
+				"isDefault": true
+			},
+			"presentation": {
+				"reveal": "always"
+			},
+			"problemMatcher": ["$tsc"]
+		},
+		{
+			"label": "lint",
+			"type": "npm",
+			"script": "lint",
+			"group": "test",
+			"presentation": {
+				"reveal": "always"
+			},
+			"problemMatcher": ["$eslint-stylish"]
+		},
+		{
+			"label": "typecheck",
+			"type": "shell",
+			"command": "npx",
+			"args": ["tsc", "--noEmit"],
+			"group": "test",
+			"presentation": {
+				"reveal": "always"
+			},
+			"problemMatcher": ["$tsc"]
+		},
+		{
+			"label": "wrangler deploy",
+			"type": "npm",
+			"script": "deploy",
+			"group": "build",
+			"presentation": {
+				"reveal": "always"
+			},
+			"problemMatcher": []
+		},
+		{
+			"label": "wrangler dev",
+			"type": "shell",
+			"command": "npx",
+			"args": ["wrangler", "dev", "--local"],
+			"group": "build",
+			"presentation": {
+				"reveal": "always",
+				"panel": "new"
+			},
+			"problemMatcher": []
+		}
+	]
+}
