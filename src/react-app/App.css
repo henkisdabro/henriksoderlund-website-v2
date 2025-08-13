@@ -159,6 +159,7 @@ h5 {
   font-size: 1.8rem;
   margin-bottom: 1rem;
   color: #2c3e50;
+  text-align: center;
 }
 
 .content-section p {
@@ -258,18 +259,18 @@ h5 {
   margin-top: 1rem;
 }
 
-/* Work Experience Page Styles */
-.experience-entry {
+/* Content Entry Styles (used by Work Experience and Education pages) */
+.content-entry {
   margin-bottom: 3rem;
   padding-bottom: 2rem;
   border-bottom: 1px solid #e9ecef;
 }
 
-.experience-entry:last-child {
+.content-entry:last-child {
   border-bottom: none;
 }
 
-.experience-entry h2 {
+.content-entry h2 {
   font-size: 1.5rem;
   margin-bottom: 0.5rem;
 }
@@ -281,12 +282,12 @@ h5 {
   margin-bottom: 1rem;
 }
 
-.experience-entry ul {
+.content-entry ul {
   list-style-type: disc;
   margin-left: 2rem;
 }
 
-.experience-entry li {
+.content-entry li {
   margin-bottom: 0.8rem;
   text-align: justify;
 }
@@ -310,8 +311,60 @@ h5 {
 .services-section,
 .policy-section,
 .pricing-section,
-.calendar-section {
+.calendar-section,
+.ai-consultancy-section,
+.traditional-services-section {
   margin-bottom: 3rem;
+}
+
+.services-section h2,
+.policy-section h2,
+.pricing-section h2,
+.calendar-section h2,
+.ai-consultancy-section h2,
+.traditional-services-section h2 {
+  font-size: 1.8rem;
+  margin-bottom: 1rem;
+  color: #2c3e50;
+}
+
+.ai-consultancy-section,
+.traditional-services-section {
+  margin-bottom: 3rem;
+}
+
+.ai-services,
+.analytics-services {
+  margin-bottom: 2rem;
+}
+
+.ai-services h3,
+.analytics-services h3 {
+  font-size: 1.4rem;
+  margin-bottom: 1rem;
+  color: #374151;
+}
+
+.ai-services ul,
+.analytics-services ul {
+  list-style: none;
+  padding-left: 0;
+}
+
+.ai-services li,
+.analytics-services li {
+  margin-bottom: 0.75rem;
+  padding-left: 1.5rem;
+  position: relative;
+}
+
+.ai-services li:before,
+.analytics-services li:before {
+  content: "▶";
+  position: absolute;
+  left: 0;
+  color: #667eea;
+  font-size: 0.8rem;
 }
 
 .services-section ul {
@@ -334,27 +387,147 @@ h5 {
   font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
 }
 
-.pricing-table {
+/* Modern Pricing Table Styles */
+.modern-pricing-table {
   width: 100%;
-  border-collapse: collapse;
-  margin-top: 1rem;
+  border-collapse: separate;
+  border-spacing: 0;
+  margin-top: 1.5rem;
+  background: #fff;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  border: 1px solid #e5e7eb;
 }
 
-.pricing-table th,
-.pricing-table td {
-  padding: 1rem;
+.modern-pricing-table th {
+  background: #f8f9fa;
+  color: #2c3e50;
+  font-weight: 600;
+  font-size: 0.875rem;
+  padding: 1.25rem 1rem;
   text-align: left;
-  border-bottom: 1px solid #e9ecef;
+  letter-spacing: 0.025em;
+  text-transform: uppercase;
+  position: relative;
+  border-bottom: 2px solid #e5e7eb;
+}
+
+.modern-pricing-table th:first-child {
+  border-top-left-radius: 12px;
+}
+
+.modern-pricing-table th:last-child {
+  border-top-right-radius: 12px;
+}
+
+.modern-pricing-table td {
+  padding: 1.25rem 1rem;
+  text-align: left;
+  border-bottom: 1px solid #f3f4f6;
+  vertical-align: top;
+  line-height: 1.5;
+  font-size: 0.85rem;
+}
+
+.modern-pricing-table tbody tr {
+  /* Remove hover effects */
+}
+
+.modern-pricing-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.modern-pricing-table tbody tr:last-child td:first-child {
+  border-bottom-left-radius: 12px;
+}
+
+.modern-pricing-table tbody tr:last-child td:last-child {
+  border-bottom-right-radius: 12px;
+}
+
+/* Investment column styling */
+.modern-pricing-table td:nth-child(3) {
+  font-weight: 600;
+  color: #059669;
+  font-size: 1.05rem;
+}
+
+/* Service column styling */
+.modern-pricing-table td:first-child {
+  font-weight: 500;
+  color: #1f2937;
+}
+
+/* Timeline column styling */
+.modern-pricing-table td:nth-child(2) {
+  color: #6b7280;
+  font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+  font-size: 0.9rem;
+}
+
+/* Legacy pricing table styles (for backwards compatibility) */
+.pricing-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  margin-top: 1.5rem;
+  background: #fff;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  border: 1px solid #e5e7eb;
 }
 
 .pricing-table th {
-  background-color: #f8f9fa;
-  font-weight: 600;
+  background: #f8f9fa;
   color: #2c3e50;
+  font-weight: 600;
+  font-size: 0.875rem;
+  padding: 1.25rem 1rem;
+  text-align: left;
+  letter-spacing: 0.025em;
+  text-transform: uppercase;
+  border-bottom: 2px solid #e5e7eb;
 }
 
-.pricing-table tr:hover {
-  background-color: #f8f9fa;
+.pricing-table th:first-child {
+  border-top-left-radius: 12px;
+}
+
+.pricing-table th:last-child {
+  border-top-right-radius: 12px;
+}
+
+.pricing-table td {
+  padding: 1.25rem 1rem;
+  text-align: left;
+  border-bottom: 1px solid #f3f4f6;
+  vertical-align: top;
+  line-height: 1.5;
+  font-size: 0.85rem;
+}
+
+.pricing-table tbody tr {
+  /* Remove hover effects */
+}
+
+.pricing-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.pricing-table tbody tr:last-child td:first-child {
+  border-bottom-left-radius: 12px;
+}
+
+.pricing-table tbody tr:last-child td:last-child {
+  border-bottom-right-radius: 12px;
+}
+
+.pricing-table td:nth-child(3) {
+  font-weight: 600;
+  color: #059669;
+  font-size: 1.05rem;
 }
 
 .calendly-placeholder {
@@ -449,7 +622,9 @@ a:hover {
   left: 20px;
   width: 240px;
   max-height: calc(100vh - 40px);
-  background: white;
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
   border: 1px solid #e1e5e9;
   border-radius: 8px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
@@ -468,7 +643,7 @@ a:hover {
   justify-content: flex-start;
   align-items: center;
   padding: 8px 12px;
-  background: #f8f9fa;
+  background: rgba(248, 249, 250, 0.65);
   border-bottom: 1px solid #e1e5e9;
   min-height: 16px;
 }
@@ -658,7 +833,7 @@ a:hover {
     height: 50px;
     border-radius: 50%;
     border-bottom: none;
-    background: white;
+    background: rgba(255, 255, 255, 0.7);
   }
   
   .navigation-box.collapsed .collapse-btn {
@@ -752,11 +927,11 @@ a:hover {
   }
 
   h1 {
-    font-size: 1.8rem;
+    font-size: 2.4rem;
   }
 
   h2 {
-    font-size: 1.4rem;
+    font-size: 1rem;
   }
 
   h3 {

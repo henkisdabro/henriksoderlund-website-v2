@@ -17,7 +17,7 @@ const NavigationBox: React.FC = () => {
     { path: '/skills', name: 'Skills', emoji: '🛠️' },
     { path: '/work-experience', name: 'Work Experience', emoji: '💼' },
     { path: '/education', name: 'Education', emoji: '🎓' },
-    { path: '/consultation', name: 'Consultation', emoji: '💬' }
+    { path: '/consultancy', name: 'Consultancy', emoji: '💬' }
   ];
 
   useEffect(() => {

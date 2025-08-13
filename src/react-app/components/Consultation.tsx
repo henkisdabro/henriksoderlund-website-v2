@@ -3,95 +3,158 @@ import React from 'react';
 const Consultation: React.FC = () => {
   return (
     <div className="consultation-page">
-      <h1>Consultation</h1>
+      <h1>Strategic Technology Consultancy</h1>
       
       <section className="intro-section">
         <p>
-          If you need help with technology-related problems or ask questions about close-to anything, feel free book a slot on my calendar and we'll jump on a call. Below is a simple pricing table for easy reference. If you're in doubt, don't worry, just send across a reasonable amount, and we'll tally up after the session.
+          Transform your business with cutting-edge technology solutions. I provide strategic consultation and implementation services for AI automation, business intelligence, and digital transformation initiatives. From concept to deployment, I deliver enterprise-grade solutions that drive measurable results.
         </p>
       </section>
 
-      <section className="services-section">
-        <h2>📃 Services Offered</h2>
-        <ul>
-          <li>General Consultation, ask me anything!</li>
-          <li>Google Tag Manager
-            <ul>
-              <li>Client-side solutions, custom integration</li>
-              <li>Server-side solutions, setup and planning</li>
-              <li>Troubleshooting and building of <code>dataLayer</code> solutions</li>
-            </ul>
-          </li>
-          <li>Google Analytics
-            <ul>
-              <li>Audits</li>
-              <li>Migrations</li>
-              <li>Measurement Plans</li>
-              <li>Enhanced Ecommerce</li>
-              <li>Full Implementations</li>
-            </ul>
-          </li>
-          <li>Other knowledge areas from my <a href="/skills">skills page</a></li>
-        </ul>
-      </section>
-
-      <section className="policy-section">
-        <h2>🪂 Zero Risk Policy</h2>
+      <section className="ai-consultancy-section">
+        <h2>🤖 AI & Automation Consultancy</h2>
         <p>
-          If the consult did not meet your expected standard, I'll refund any fee paid, no questions asked. I aim to deliver incredible value and solve your problems in the best possible way ❤️
+          Leverage artificial intelligence to automate workflows, enhance decision-making, and create competitive advantages. I specialize in building intelligent systems that integrate seamlessly with your existing business processes.
         </p>
-      </section>
+        
+        <div className="ai-services">
+          <h3>Core AI Services</h3>
+          <ul>
+            <li><strong>AI-Enabled Automation Systems</strong> - Custom workflows that reduce manual tasks by 70-90%</li>
+            <li><strong>Intelligent Process Migration</strong> - Seamless transition of business processes to AI-enhanced systems</li>
+            <li><strong>Retrieval-Augmented Generation (RAG)</strong> - Knowledge systems that provide instant, accurate information access</li>
+            <li><strong>AI Agent Development</strong> - Autonomous systems for customer service, data analysis, and task automation</li>
+            <li><strong>Machine Learning Integration</strong> - Predictive analytics and intelligent decision support systems</li>
+            <li><strong>Natural Language Processing</strong> - Document analysis, content generation, and communication automation</li>
+          </ul>
+        </div>
 
-      <section className="pricing-section">
-        <h2>🎫 Appointment Prices & Duration</h2>
-        <table className="pricing-table">
+        <h3>AI Consultancy Pricing & Timelines</h3>
+        <table className="modern-pricing-table">
           <thead>
             <tr>
               <th>Service</th>
-              <th>Duration/Type</th>
-              <th>Price</th>
+              <th>Timeline</th>
+              <th>Investment</th>
+              <th>Deliverables</th>
             </tr>
           </thead>
           <tbody>
             <tr>
-              <td>General Questions</td>
-              <td>30min</td>
-              <td>AUD 150</td>
+              <td>AI Strategy & Feasibility Assessment</td>
+              <td>1-2 weeks</td>
+              <td>AUD 3,500</td>
+              <td>Strategic roadmap, ROI analysis, technical specifications</td>
             </tr>
             <tr>
-              <td>GTM & GA Q/A or Feedback</td>
-              <td>30min</td>
-              <td>AUD 250</td>
+              <td>Workflow Automation System</td>
+              <td>3-6 weeks</td>
+              <td>AUD 8,500 - 15,000</td>
+              <td>End-to-end automation, integration, training, documentation</td>
             </tr>
             <tr>
-              <td>GA4 Audit or Measurement Plan</td>
-              <td>Fixed</td>
-              <td>AUD 1,500</td>
+              <td>RAG Knowledge System</td>
+              <td>4-8 weeks</td>
+              <td>AUD 12,000 - 25,000</td>
+              <td>Custom RAG implementation, API integration, user interface</td>
             </tr>
             <tr>
-              <td>GA4 Projects / Implementations</td>
-              <td>Varies</td>
-              <td>Contact Me</td>
+              <td>AI Agent Development</td>
+              <td>6-12 weeks</td>
+              <td>AUD 18,000 - 35,000</td>
+              <td>Multi-agent system, monitoring dashboard, performance analytics</td>
             </tr>
             <tr>
-              <td>Setup of Meta CAPI</td>
-              <td>Fixed</td>
-              <td>AUD 2,500</td>
-            </tr>
-            <tr>
-              <td>Setup of Server-side GTM</td>
-              <td>Varies</td>
-              <td>Contact Me</td>
+              <td>Enterprise AI Migration</td>
+              <td>8-16 weeks</td>
+              <td>Starting at AUD 45,000</td>
+              <td>Full system migration, staff training, ongoing support</td>
             </tr>
           </tbody>
         </table>
       </section>
 
+      <section className="traditional-services-section">
+        <h2>📊 Analytics & Digital Intelligence</h2>
+        <p>
+          Comprehensive analytics solutions that provide actionable insights and drive data-informed decision making across your organization.
+        </p>
+        
+        <div className="analytics-services">
+          <h3>Core Analytics Services</h3>
+          <ul>
+            <li><strong>Google Analytics 4</strong> - Advanced implementations, custom reporting, and conversion optimization</li>
+            <li><strong>Google Tag Manager</strong> - Enterprise-grade tracking solutions, server-side implementations</li>
+            <li><strong>Business Intelligence Dashboards</strong> - Real-time reporting and performance monitoring systems</li>
+            <li><strong>Data Pipeline Architecture</strong> - Scalable data collection and processing solutions</li>
+            <li><strong>Conversion Rate Optimization</strong> - Data-driven testing and optimization strategies</li>
+          </ul>
+        </div>
+
+        <h3>Analytics Consultation Pricing</h3>
+        <table className="modern-pricing-table">
+          <thead>
+            <tr>
+              <th>Service</th>
+              <th>Timeline</th>
+              <th>Investment</th>
+              <th>Deliverables</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Strategic Analytics Consultation</td>
+              <td>1 hour</td>
+              <td>AUD 350</td>
+              <td>Expert guidance, Q&A, strategic recommendations</td>
+            </tr>
+            <tr>
+              <td>GA4 Enterprise Audit</td>
+              <td>1-2 weeks</td>
+              <td>AUD 2,800</td>
+              <td>Comprehensive audit report, optimization roadmap</td>
+            </tr>
+            <tr>
+              <td>Advanced Measurement Planning</td>
+              <td>2-3 weeks</td>
+              <td>AUD 4,500</td>
+              <td>Custom measurement framework, KPI mapping, implementation guide</td>
+            </tr>
+            <tr>
+              <td>GTM Server-Side Implementation</td>
+              <td>3-4 weeks</td>
+              <td>AUD 6,500</td>
+              <td>Complete server-side setup, testing, documentation</td>
+            </tr>
+            <tr>
+              <td>Meta CAPI & Advanced Tracking</td>
+              <td>2-3 weeks</td>
+              <td>AUD 4,200</td>
+              <td>Full CAPI implementation, event validation, optimization</td>
+            </tr>
+            <tr>
+              <td>Enterprise Analytics Implementation</td>
+              <td>4-8 weeks</td>
+              <td>Starting at AUD 12,000</td>
+              <td>Complete analytics ecosystem, training, ongoing support</td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section className="policy-section">
+        <h2>🛡️ Quality Guarantee</h2>
+        <p>
+          Every engagement is backed by our commitment to excellence. If the delivered solution doesn't meet the agreed specifications or your satisfaction, we'll work to resolve any issues at no additional cost. Your success is our primary objective.
+        </p>
+      </section>
+
       <section className="calendar-section">
-        <h2>🗺️ Book a Slot on my Calendar</h2>
+        <h2>📅 Schedule Your Strategic Session</h2>
         <div className="calendly-placeholder">
-          <p><em>Calendly integration will be implemented here</em></p>
-          <p>For now, please contact me directly to schedule a consultation.</p>
+          <p>Ready to transform your business with AI and advanced analytics? Let's discuss your specific needs and explore how we can accelerate your digital transformation.</p>
+          <p><strong>Book a complimentary 15-minute discovery call to get started.</strong></p>
+          <p><em>Calendly integration coming soon. For immediate consultation booking, please contact me directly.</em></p>
         </div>
       </section>
 
