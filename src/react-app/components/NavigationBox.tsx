@@ -88,7 +88,11 @@ const NavigationBox: React.FC = () => {
           onClick={() => setIsCollapsed(!isCollapsed)}
           aria-label={isCollapsed ? 'Expand navigation' : 'Collapse navigation'}
         >
-          {isCollapsed ? '▶' : '▼'}
+          <div className="hamburger-icon">
+            <span></span>
+            <span></span>
+            <span></span>
+          </div>
         </button>
       </div>
 

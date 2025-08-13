@@ -8,6 +8,7 @@ import Education from './components/Education';
 import Consultation from './components/Consultation';
 import Footer from './components/Footer';
 import NavigationBox from './components/NavigationBox';
+import GitHubLink from './components/GitHubLink';
 import "./App.css";
 
 function App() {
@@ -15,6 +16,7 @@ function App() {
     <Router>
       <div className="app">
         <NavigationBox />
+        <GitHubLink />
         
         <main className="main-content">
           <Routes>

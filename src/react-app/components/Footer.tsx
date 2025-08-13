@@ -2,6 +2,7 @@ import React from 'react';
 import cloudflareLogo from '../assets/Cloudflare.svg';
 import honoLogo from '../assets/hono.svg';
 import viteLogo from '/vite.svg';
+import claudeLogo from '../assets/claude.svg';
 
 const Footer: React.FC = () => {
   return (
@@ -23,6 +24,11 @@ const Footer: React.FC = () => {
         <span className="tech-stack">
           <img src={cloudflareLogo} alt="Cloudflare Workers" className="tech-icon" />
           Cloudflare Workers
+        </span>
+        {' '}
+        <span className="tech-stack">
+          <img src={claudeLogo} alt="Claude Code" className="tech-icon" />
+          Claude Code
         </span>
       </p>
     </footer>
