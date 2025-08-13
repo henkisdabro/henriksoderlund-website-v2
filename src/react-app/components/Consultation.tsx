@@ -42,33 +42,33 @@ const Consultation: React.FC = () => {
           <tbody>
             <tr>
               <td>AI Strategy & Feasibility Assessment</td>
-              <td>1-2 weeks</td>
-              <td>AUD 3,500</td>
-              <td>Strategic roadmap, ROI analysis, technical specifications</td>
+              <td data-label="Timeline">1-2 weeks</td>
+              <td data-label="Investment">AUD 3,500</td>
+              <td data-label="Deliverables">Strategic roadmap, ROI analysis, technical specifications</td>
             </tr>
             <tr>
               <td>Workflow Automation System</td>
-              <td>3-6 weeks</td>
-              <td>AUD 8,500 - 15,000</td>
-              <td>End-to-end automation, integration, training, documentation</td>
+              <td data-label="Timeline">3-6 weeks</td>
+              <td data-label="Investment">AUD 8,500 - 15,000</td>
+              <td data-label="Deliverables">End-to-end automation, integration, training, documentation</td>
             </tr>
             <tr>
               <td>RAG Knowledge System</td>
-              <td>4-8 weeks</td>
-              <td>AUD 12,000 - 25,000</td>
-              <td>Custom RAG implementation, API integration, user interface</td>
+              <td data-label="Timeline">4-8 weeks</td>
+              <td data-label="Investment">AUD 12,000 - 25,000</td>
+              <td data-label="Deliverables">Custom RAG implementation, API integration, user interface</td>
             </tr>
             <tr>
               <td>AI Agent Development</td>
-              <td>6-12 weeks</td>
-              <td>AUD 18,000 - 35,000</td>
-              <td>Multi-agent system, monitoring dashboard, performance analytics</td>
+              <td data-label="Timeline">6-12 weeks</td>
+              <td data-label="Investment">AUD 18,000 - 35,000</td>
+              <td data-label="Deliverables">Multi-agent system, monitoring dashboard, performance analytics</td>
             </tr>
             <tr>
               <td>Enterprise AI Migration</td>
-              <td>8-16 weeks</td>
-              <td>Starting at AUD 45,000</td>
-              <td>Full system migration, staff training, ongoing support</td>
+              <td data-label="Timeline">8-16 weeks</td>
+              <td data-label="Investment">Starting at AUD 45,000</td>
+              <td data-label="Deliverables">Full system migration, staff training, ongoing support</td>
             </tr>
           </tbody>
         </table>
@@ -104,39 +104,39 @@ const Consultation: React.FC = () => {
           <tbody>
             <tr>
               <td>Strategic Analytics Consultation</td>
-              <td>1 hour</td>
-              <td>AUD 350</td>
-              <td>Expert guidance, Q&A, strategic recommendations</td>
+              <td data-label="Timeline">1 hour</td>
+              <td data-label="Investment">AUD 350</td>
+              <td data-label="Deliverables">Expert guidance, Q&A, strategic recommendations</td>
             </tr>
             <tr>
               <td>GA4 Enterprise Audit</td>
-              <td>1-2 weeks</td>
-              <td>AUD 2,800</td>
-              <td>Comprehensive audit report, optimization roadmap</td>
+              <td data-label="Timeline">1-2 weeks</td>
+              <td data-label="Investment">AUD 2,800</td>
+              <td data-label="Deliverables">Comprehensive audit report, optimization roadmap</td>
             </tr>
             <tr>
               <td>Advanced Measurement Planning</td>
-              <td>2-3 weeks</td>
-              <td>AUD 4,500</td>
-              <td>Custom measurement framework, KPI mapping, implementation guide</td>
+              <td data-label="Timeline">2-3 weeks</td>
+              <td data-label="Investment">AUD 4,500</td>
+              <td data-label="Deliverables">Custom measurement framework, KPI mapping, implementation guide</td>
             </tr>
             <tr>
               <td>GTM Server-Side Implementation</td>
-              <td>3-4 weeks</td>
-              <td>AUD 6,500</td>
-              <td>Complete server-side setup, testing, documentation</td>
+              <td data-label="Timeline">3-4 weeks</td>
+              <td data-label="Investment">AUD 6,500</td>
+              <td data-label="Deliverables">Complete server-side setup, testing, documentation</td>
             </tr>
             <tr>
               <td>Meta CAPI & Advanced Tracking</td>
-              <td>2-3 weeks</td>
-              <td>AUD 4,200</td>
-              <td>Full CAPI implementation, event validation, optimization</td>
+              <td data-label="Timeline">2-3 weeks</td>
+              <td data-label="Investment">AUD 4,200</td>
+              <td data-label="Deliverables">Full CAPI implementation, event validation, optimization</td>
             </tr>
             <tr>
               <td>Enterprise Analytics Implementation</td>
-              <td>4-8 weeks</td>
-              <td>Starting at AUD 12,000</td>
-              <td>Complete analytics ecosystem, training, ongoing support</td>
+              <td data-label="Timeline">4-8 weeks</td>
+              <td data-label="Investment">Starting at AUD 12,000</td>
+              <td data-label="Deliverables">Complete analytics ecosystem, training, ongoing support</td>
             </tr>
           </tbody>
         </table>

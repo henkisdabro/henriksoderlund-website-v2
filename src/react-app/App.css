@@ -18,6 +18,7 @@ body {
   min-height: 100vh;
   display: flex;
   justify-content: center;
+  overflow-x: hidden;
 }
 
 p {
@@ -39,6 +40,7 @@ p {
   display: flex;
   flex-direction: column;
   align-items: center;
+  overflow-x: hidden;
 }
 
 /* Main Navigation Styles */
@@ -450,7 +452,7 @@ h5 {
 .modern-pricing-table td:nth-child(3) {
   font-weight: 600;
   color: #059669;
-  font-size: 1.05rem;
+  font-size: 0.95rem;
 }
 
 /* Service column styling */
@@ -956,12 +958,97 @@ a:hover {
     align-items: center;
   }
 
+  /* Mobile-responsive table styles */
+  .modern-pricing-table,
   .pricing-table {
-    font-size: 0.9rem;
+    display: block;
+    width: 100%;
+    box-shadow: none;
+    border: none;
+    border-radius: 0;
+    background: transparent;
   }
 
-  .pricing-table th,
+  .modern-pricing-table thead,
+  .pricing-table thead {
+    display: none;
+  }
+
+  .modern-pricing-table tbody,
+  .pricing-table tbody {
+    display: block;
+  }
+
+  .modern-pricing-table tr,
+  .pricing-table tr {
+    display: block;
+    margin-bottom: 1rem;
+    padding: 1rem;
+    background: #fff;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  }
+
+  .modern-pricing-table tr:last-child,
+  .pricing-table tr:last-child {
+    margin-bottom: 0;
+  }
+
+  .modern-pricing-table td,
   .pricing-table td {
-    padding: 0.5rem;
+    display: block;
+    padding: 0.5rem 0;
+    border: none;
+    text-align: left;
+    position: relative;
+    padding-left: 45%;
+    font-size: 0.9rem;
+    line-height: 1.4;
+  }
+
+  .modern-pricing-table td:before,
+  .pricing-table td:before {
+    content: attr(data-label);
+    position: absolute;
+    left: 0;
+    width: 40%;
+    padding-right: 10px;
+    white-space: nowrap;
+    font-weight: 600;
+    color: #374151;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.025em;
+  }
+
+  .modern-pricing-table td:first-child,
+  .pricing-table td:first-child {
+    font-weight: 600;
+    color: #1f2937;
+    font-size: 1rem;
+    margin-bottom: 0.5rem;
+    padding-left: 0;
+    border-bottom: 1px solid #f3f4f6;
+    padding-bottom: 0.5rem;
+  }
+
+  .modern-pricing-table td:first-child:before,
+  .pricing-table td:first-child:before {
+    display: none;
+  }
+
+  .modern-pricing-table td:nth-child(3),
+  .pricing-table td:nth-child(3) {
+    font-weight: 600;
+    color: #059669;
+    font-size: 1rem;
+  }
+
+  .modern-pricing-table td:nth-child(2),
+  .pricing-table td:nth-child(2) {
+    color: #6b7280;
+    font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+    font-size: 0.85rem;
   }
 }
