@@ -95,7 +95,7 @@ wrangler.toml.bak
 
 # Legacy content (old Hugo/Thulite files)
 content/
-assets/
+/assets/
 
 # Project management files (keep in repo but could be ignored if preferred)
 # TASKS.md
