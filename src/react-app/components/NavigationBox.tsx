@@ -79,10 +79,6 @@ const NavigationBox: React.FC = () => {
     }
   };
 
-  const getCurrentPageName = () => {
-    const currentPage = pages.find(page => page.path === location.pathname);
-    return currentPage ? `${currentPage.emoji} ${currentPage.name}` : '';
-  };
 
   return (
     <div className={`navigation-box ${isCollapsed ? 'collapsed' : ''}`}>

@@ -28,7 +28,12 @@
       "Bash(git remote set-url:*)",
       "Bash(git rm:*)",
       "WebSearch",
-      "Bash(npm outdated)"
+      "Bash(npm outdated)",
+      "Bash(npm run check:*)",
+      "Bash(npm run lint)",
+      "WebFetch(domain:vite.dev)",
+      "Bash(node:*)",
+      "Bash(npm update)"
     ],
     "deny": [],
     "ask": []
