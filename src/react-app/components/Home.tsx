@@ -5,7 +5,7 @@ const Home: React.FC = () => {
     <div className="home-page">
       <div className="hero-section">
         <img 
-          src="/images/henrik_profile_beard-modified_small.png" 
+          src="/images/henrik_profile_beard-modified_small.jpg" 
           alt="Henrik Söderlund" 
           className="profile-image"
         />

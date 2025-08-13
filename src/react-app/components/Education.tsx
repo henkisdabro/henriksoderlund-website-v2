@@ -1,5 +1,5 @@
 import React from 'react';
-import swedenFlag from '../assets/sweden-flag.svg';
+import swedenFlag from '../assets/se.svg';
 
 const Education: React.FC = () => {
   return (

@@ -1,6 +1,6 @@
 import React from 'react';
-import australiaFlag from '../assets/australia-flag.svg';
-import malaysiaFlag from '../assets/malaysia-flag.svg';
+import australiaFlag from '../assets/au.svg';
+import malaysiaFlag from '../assets/my.svg';
 import globe from '../assets/globe.svg';
 
 const WorkExperience: React.FC = () => {
