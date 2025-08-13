@@ -246,7 +246,8 @@ h5 {
 
 .dates {
   color: #7f8c8d;
-  font-style: italic;
+  font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+  font-style: normal;
   margin-bottom: 1rem;
 }
 
