@@ -34,7 +34,8 @@
       "WebFetch(domain:vite.dev)",
       "Bash(node:*)",
       "Bash(npm update)",
-      "Bash(npm run build:*)"
+      "Bash(npm run build:*)",
+      "Bash(del TASKS.md)"
     ],
     "deny": [],
     "ask": []

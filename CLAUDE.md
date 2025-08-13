@@ -10,19 +10,25 @@ This is Henrik Söderlund's personal website being rebuilt with modern technolog
 - **Routing**: React Router for client-side routing
 
 ## Current Status
-- Migrating from Thulite/Hugo static site to Vite + React + Hono stack
-- Working on site-rebuild-vite branch
-- Content has been migrated from old site structure
+- ✅ **Migration Complete**: Successfully migrated from Thulite/Hugo to Vite + React + Hono stack
+- ✅ **Main Branch**: Development moved to main branch (site-rebuild-vite merged)
+- ✅ **Content Migration**: All content migrated from old Markdown structure to React components
+- ✅ **Production Ready**: Site deployed and live on Cloudflare Workers
 
 ## Project Structure
 ```
 src/
 ├── react-app/           # React frontend application
-│   ├── components/      # React components
-│   ├── assets/         # Static assets (images, icons)
-│   └── App.tsx         # Main App component
-├── server/             # Backend server code (Hono.js)
-└── types/              # TypeScript type definitions
+│   ├── components/      # React components (Home, Skills, etc.)
+│   ├── assets/         # Static assets (SVG logos, flags)
+│   ├── App.tsx         # Main App component with routing
+│   ├── main.tsx        # React entry point
+│   └── index.css       # Global styles
+├── worker/             # Cloudflare Workers backend (Hono.js)
+│   └── index.ts        # Worker entry point
+public/                 # Static assets served directly
+├── images/             # Profile photos and screenshots
+└── vite.svg           # Vite logo
 ```
 
 ## Key Components
@@ -135,3 +141,26 @@ The project includes a complete `.vscode/` workspace configuration:
 - PowerShell terminal configured as default
 - CRLF line endings handled automatically by Git
 - All paths use forward slashes for consistency
+
+## File Management & Cleanup
+
+### Legacy Files
+The following directories are legacy from the old Hugo/Thulite setup and should be ignored:
+- `content/` - Old Markdown content files (migrated to React components)
+- `assets/` - Old Hugo assets (duplicated in `public/`)
+
+### Build Artifacts
+Always ensure these are properly ignored in git:
+- `dist/` - Vite build output (auto-generated)
+- `node_modules/` - NPM dependencies
+- `.wrangler/` - Wrangler cache and temporary files
+
+### Project Management
+- `TASKS.md` - Optional task tracking (can be ignored if using other tools)
+- `CLAUDE.md` - Project context for AI assistance (keep in repo)
+
+## Recent Improvements
+- ✅ **Updated .gitignore**: Added modern Vite/React/Cloudflare Workers patterns
+- ✅ **Build Optimization**: Proper exclusion of build artifacts from version control
+- ✅ **Legacy Cleanup**: Identified old Hugo/Thulite files for removal
+- ✅ **Development Environment**: Complete VS Code workspace configuration

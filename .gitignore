@@ -7,6 +7,7 @@ node_modules/
 dist/
 dist-ssr/
 build/
+out/
 
 # Development
 *.local
@@ -37,6 +38,7 @@ pids/
 # Testing
 coverage/
 .nyc_output/
+*.lcov
 
 # Editor directories and files
 # Keep useful VS Code settings for team, ignore personal ones
@@ -69,13 +71,15 @@ Desktop.ini
 *.sln
 *.sw?
 
-# Vite cache
+# Vite specific
 .vite/
+vite.config.*.timestamp-*
 
 # Cloudflare Workers / Wrangler
 .wrangler/
 .dev.vars*
 !.dev.vars.example
+wrangler.toml.bak
 
 # Environment variables
 .env*
@@ -84,3 +88,14 @@ Desktop.ini
 # Temporary files
 *.tmp
 *.temp
+
+# React/Vite specific
+.vercel/
+.turbo/
+
+# Legacy content (old Hugo/Thulite files)
+content/
+assets/
+
+# Project management files (keep in repo but could be ignored if preferred)
+# TASKS.md
