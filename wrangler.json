@@ -4,9 +4,9 @@
  */
 {
 	"$schema": "node_modules/wrangler/config-schema.json",
-	"name": "www-henriksoderlund-com",
+	"name": "henriksoderlund-website-v2",
 	"main": "./src/worker/index.ts",
-	"compatibility_date": "2025-04-01",
+	"compatibility_date": "2025-08-13",
 	"compatibility_flags": [
 		"nodejs_compat"
 	],
