@@ -1,0 +1,8 @@
+# My security address, please report any issues here 
+Contact: mailto:security@henriksoderlund.com
+
+# Expiry of policy
+Expires: 2025-12-31T15:59:00.000Z
+
+# Languages you may communicate in
+Preferred-Languages: en, sv
