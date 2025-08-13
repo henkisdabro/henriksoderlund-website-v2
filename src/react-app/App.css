@@ -553,7 +553,8 @@ a:hover {
 
 /* Responsive adjustments */
 @media (min-width: 1025px) {
-  .main-content {
+  .main-content,
+  .site-footer {
     margin-left: 120px;
   }
 }
