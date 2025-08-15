@@ -1,0 +1,130 @@
+name: Build and Deploy to Cloudflare Workers
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: 🛒 Checkout repository
+      uses: actions/checkout@v4
+      
+    - name: 📦 Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20'
+        cache: 'npm'
+        
+    - name: 📋 Install dependencies
+      run: npm ci
+      
+    - name: 🔍 Run linting
+      run: npm run lint
+      
+    - name: 🏗️ Build project (includes llms.txt generation)
+      run: npm run build
+      
+    - name: ✅ Verify build artifacts
+      run: |
+        echo "🔍 Checking build output..."
+        ls -la dist/client/
+        
+        echo "📄 Verifying llms.txt exists..."
+        if [ ! -f "dist/client/llms.txt" ]; then
+          echo "❌ llms.txt not found in build output"
+          exit 1
+        fi
+        
+        echo "📝 Verifying markdown files exist..."
+        required_files=("index.html.md" "expertise.md" "work-experience.md" "education.md" "consultancy.md")
+        for file in "${required_files[@]}"; do
+          if [ ! -f "dist/client/$file" ]; then
+            echo "❌ $file not found in build output"
+            exit 1
+          fi
+        done
+        
+        echo "✅ All required files verified"
+        echo "📊 Build statistics:"
+        wc -c dist/client/llms.txt dist/client/*.md
+        
+    - name: 🚀 Deploy to Cloudflare Workers
+      if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+      uses: cloudflare/wrangler-action@v3
+      with:
+        apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+        accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        command: deploy --compatibility-date=2025-08-03
+        
+    - name: 📋 Deployment Summary
+      if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+      run: |
+        echo "## 🎉 Deployment Successful" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        echo "### 📄 Generated Files" >> $GITHUB_STEP_SUMMARY
+        echo "- ✅ llms.txt ($(wc -c < dist/client/llms.txt) bytes)" >> $GITHUB_STEP_SUMMARY
+        echo "- ✅ index.html.md ($(wc -c < dist/client/index.html.md) bytes)" >> $GITHUB_STEP_SUMMARY
+        echo "- ✅ expertise.md ($(wc -c < dist/client/expertise.md) bytes)" >> $GITHUB_STEP_SUMMARY
+        echo "- ✅ work-experience.md ($(wc -c < dist/client/work-experience.md) bytes)" >> $GITHUB_STEP_SUMMARY
+        echo "- ✅ education.md ($(wc -c < dist/client/education.md) bytes)" >> $GITHUB_STEP_SUMMARY
+        echo "- ✅ consultancy.md ($(wc -c < dist/client/consultancy.md) bytes)" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        echo "### 🌐 Available URLs" >> $GITHUB_STEP_SUMMARY
+        echo "- [llms.txt](https://www.henriksoderlund.com/llms.txt)" >> $GITHUB_STEP_SUMMARY
+        echo "- [Homepage Markdown](https://www.henriksoderlund.com/index.html.md)" >> $GITHUB_STEP_SUMMARY
+        echo "- [Expertise Markdown](https://www.henriksoderlund.com/expertise.md)" >> $GITHUB_STEP_SUMMARY
+        echo "- [Work Experience Markdown](https://www.henriksoderlund.com/work-experience.md)" >> $GITHUB_STEP_SUMMARY
+        echo "- [Education Markdown](https://www.henriksoderlund.com/education.md)" >> $GITHUB_STEP_SUMMARY
+        echo "- [Consultancy Markdown](https://www.henriksoderlund.com/consultancy.md)" >> $GITHUB_STEP_SUMMARY
+        
+  # Separate job for pull requests - build and test only, no deployment
+  pr-check:
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: 🛒 Checkout repository
+      uses: actions/checkout@v4
+      
+    - name: 📦 Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20'
+        cache: 'npm'
+        
+    - name: 📋 Install dependencies
+      run: npm ci
+      
+    - name: 🔍 Run linting
+      run: npm run lint
+      
+    - name: 🏗️ Build and verify (PR check)
+      run: |
+        npm run build
+        
+        echo "✅ PR build successful"
+        echo "📊 Generated file sizes:"
+        wc -c dist/client/llms.txt dist/client/*.md
+        
+    - name: 📋 PR Build Summary
+      run: |
+        echo "## 🔍 PR Build Check Results" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        echo "✅ Build completed successfully" >> $GITHUB_STEP_SUMMARY
+        echo "✅ All llms.txt files generated" >> $GITHUB_STEP_SUMMARY
+        echo "✅ Linting passed" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        echo "### 📄 Generated Files Preview" >> $GITHUB_STEP_SUMMARY
+        echo "- llms.txt: $(wc -c < dist/client/llms.txt) bytes" >> $GITHUB_STEP_SUMMARY
+        echo "- index.html.md: $(wc -c < dist/client/index.html.md) bytes" >> $GITHUB_STEP_SUMMARY
+        echo "- expertise.md: $(wc -c < dist/client/expertise.md) bytes" >> $GITHUB_STEP_SUMMARY
+        echo "- work-experience.md: $(wc -c < dist/client/work-experience.md) bytes" >> $GITHUB_STEP_SUMMARY
+        echo "- education.md: $(wc -c < dist/client/education.md) bytes" >> $GITHUB_STEP_SUMMARY
+        echo "- consultancy.md: $(wc -c < dist/client/consultancy.md) bytes" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        echo "Ready for deployment once merged to main! 🚀" >> $GITHUB_STEP_SUMMARY

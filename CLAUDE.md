@@ -43,12 +43,14 @@ public/                 # Static assets served directly
 
 ## Development Commands
 - `npm run dev` - Start development server (Vite dev server on port 5173)
-- `npm run build` - Build for production (TypeScript compilation + Vite build)
+- `npm run build` - Build for production (includes smart llms.txt generation + Vite build)
 - `npm run preview` - Preview production build locally
 - `npm run lint` - Run ESLint for code quality checks
 - `npm run check` - Full check: TypeScript compilation, build, and dry-run deploy
 - `npm run deploy` - Deploy to Cloudflare Workers
 - `npm run cf-typegen` - Generate Cloudflare Workers types
+- `npm run generate-llms` - Force regenerate llms.txt and markdown files
+- `npm run generate-llms-if-needed` - Smart generation (only if content changed)
 
 **Note**: No test framework is currently configured. Tests can be added using Vitest or Jest if needed.
 
@@ -152,6 +154,12 @@ The project includes a complete `.vscode/` workspace configuration:
 
 ## File Management & Cleanup
 
+### Generated Files (Auto-Generated)
+The following files are automatically generated during build and excluded from git:
+- `public/llms.txt` - Main llms.txt file for AI/LLM consumption
+- `public/*.md` - Individual page markdown files (index.html.md, expertise.md, etc.)
+- `.llms-cache.json` - Build cache for content-based generation optimization
+
 ### Legacy Files
 The following directories are legacy from the old Hugo/Thulite setup and should be ignored:
 - `content/` - Old Markdown content files (migrated to React components)
@@ -167,6 +175,25 @@ Always ensure these are properly ignored in git:
 - `TASKS.md` - Optional task tracking (can be ignored if using other tools)
 - `CLAUDE.md` - Project context for AI assistance (keep in repo)
 
+## AI/LLM Optimization Features
+
+### llms.txt Implementation
+Complete implementation of the [llms.txt specification](https://llmstxt.org/) for optimal AI/LLM consumption:
+
+**Generated Files:**
+- `/llms.txt` - Structured overview with site context, GitHub projects, and technical focus areas
+- `/index.html.md` - Homepage content in clean markdown format
+- `/expertise.md` - Technical skills and experience in markdown
+- `/work-experience.md` - Professional background in markdown
+- `/education.md` - Educational qualifications in markdown
+- `/consultancy.md` - Consulting services and approach in markdown
+
+**Generation System:**
+- **Smart Caching**: Only regenerates when React component content actually changes
+- **UTF-8 Encoding**: Proper handling of international characters (ö, etc.)
+- **Build Integration**: Automatic generation during `npm run build`
+- **CI/CD Ready**: GitHub Actions workflow handles generation and deployment
+
 ## Recent Improvements
 - ✅ **Content Modernization**: Updated Homepage and Expertise page with executive-level language and AI focus
 - ✅ **Page Rebranding**: Renamed "Skills" to "Expertise" with SEO-friendly 301 redirects
@@ -179,3 +206,6 @@ Always ensure these are properly ignored in git:
 - ✅ **Development Environment**: Complete VS Code workspace configuration
 - ✅ **SEO Setup**: Ahrefs and Google Search Console verification files in place
 - ✅ **Wrangler Configuration**: Modern wrangler.json with observability and source maps
+- ✅ **AI-Optimized Content**: Complete llms.txt specification implementation for AI/LLM consumption
+- ✅ **Automated CI/CD**: GitHub Actions workflow for build, verification, and deployment
+- ✅ **Smart Generation**: Content-based caching system for efficient builds

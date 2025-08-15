@@ -99,3 +99,10 @@ content/
 
 # Project management files (keep in repo but could be ignored if preferred)
 # TASKS.md
+
+# Generated llms.txt files (regenerated during build)
+public/llms.txt
+public/*.md
+
+# LLMs generation cache
+.llms-cache.json

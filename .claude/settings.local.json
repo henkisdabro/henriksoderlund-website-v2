@@ -44,7 +44,12 @@
       "Bash(cp:*)",
       "Bash(npm install:*)",
       "Bash(npm test)",
-      "Bash(npm run:*)"
+      "Bash(npm run:*)",
+      "WebFetch(domain:raw.githubusercontent.com)",
+      "WebFetch(domain:llmstxt.org)",
+      "WebFetch(domain:developers.cloudflare.com)",
+      "Bash(grep:*)",
+      "Bash(find:*)"
     ],
     "deny": [],
     "ask": [],
