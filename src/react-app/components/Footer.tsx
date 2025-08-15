@@ -5,7 +5,7 @@ import reactLogo from '../assets/logos/react.svg';
 import viteLogo from '../assets/logos/vite.svg';
 import claudeLogo from '../assets/logos/claude.svg';
 
-const Footer: React.FC = () => {
+const Footer = () => {
   return (
     <footer className="site-footer">
       <p>

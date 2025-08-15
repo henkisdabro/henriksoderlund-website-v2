@@ -1,7 +1,7 @@
 import React from 'react';
 import swedenFlag from '../assets/flags/se.svg';
 
-const Education: React.FC = () => {
+const Education = () => {
   return (
     <div className="education-page">
       <h1>Education</h1>
