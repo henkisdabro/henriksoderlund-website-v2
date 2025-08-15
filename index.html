@@ -4,8 +4,9 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/bot.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Henrik Söderlund | Digital Strategy Executive & Technology Leader</title>
+    <title>Henrik Söderlund | Digital Strategy & Tech Executive</title>
     <meta name="description" content="The personal website of Henrik Söderlund, a Digital Strategy Executive & Technology Leader based in Perth, Australia." />
+    <link rel="canonical" href="https://www.henriksoderlund.com/" />
 
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website" />
@@ -127,25 +128,78 @@
     }
     </script>
 
-    <!-- Structured Data - Service Schema -->
+    <!-- Structured Data - Professional Service (Local Business) Schema -->
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
-      "@type": "Service",
-      "name": "Strategic Technology Consultancy",
+      "@type": "ProfessionalService",
+      "name": "Henrik Söderlund - Strategic Technology Consultancy",
       "description": "AI automation, analytics implementation, and digital transformation consulting services for businesses seeking to leverage cutting-edge technology solutions.",
-      "provider": {
+      "url": "https://www.henriksoderlund.com/",
+      "founder": {
         "@type": "Person",
         "name": "Henrik Söderlund",
         "url": "https://www.henriksoderlund.com/"
       },
-      "serviceType": "Technology Consulting",
-      "category": ["AI Automation", "Digital Analytics", "Technology Leadership", "Business Intelligence"],
-      "areaServed": ["Australia", "Global"],
-      "availableChannel": {
-        "@type": "ServiceChannel",
-        "serviceUrl": "https://www.henriksoderlund.com/consultancy",
-        "serviceSmsNumber": "https://calendly.com/henriksoederlund/30min"
+      "address": {
+        "@type": "PostalAddress",
+        "addressLocality": "Perth",
+        "addressRegion": "WA",
+        "addressCountry": "AU"
+      },
+      "areaServed": [
+        {
+          "@type": "City",
+          "name": "Perth"
+        },
+        {
+          "@type": "Country",
+          "name": "Australia"
+        },
+        {
+          "@type": "Place",
+          "name": "Global"
+        }
+      ],
+      "serviceType": ["Technology Consulting", "AI Automation", "Digital Analytics", "Business Intelligence"],
+      "priceRange": "AUD 350 - 45,000",
+      "paymentAccepted": "Cash, Credit Card, Bank Transfer",
+      "currenciesAccepted": "AUD",
+      "hasOfferCatalog": {
+        "@type": "OfferCatalog",
+        "name": "Consulting Services",
+        "itemListElement": [
+          {
+            "@type": "Offer",
+            "itemOffered": {
+              "@type": "Service",
+              "name": "AI Strategy & Feasibility Assessment",
+              "description": "Strategic roadmap, ROI analysis, technical specifications"
+            },
+            "price": "3500",
+            "priceCurrency": "AUD"
+          },
+          {
+            "@type": "Offer",
+            "itemOffered": {
+              "@type": "Service",
+              "name": "Workflow Automation System",
+              "description": "End-to-end automation, integration, training, documentation"
+            },
+            "priceSpecification": {
+              "@type": "PriceSpecification",
+              "minPrice": "8500",
+              "maxPrice": "15000",
+              "priceCurrency": "AUD"
+            }
+          }
+        ]
+      },
+      "contactPoint": {
+        "@type": "ContactPoint",
+        "contactType": "Customer Service",
+        "url": "https://calendly.com/henriksoederlund/30min",
+        "availableLanguage": ["English", "Swedish"]
       }
     }
     </script>
