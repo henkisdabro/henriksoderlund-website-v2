@@ -1,4 +1,32 @@
 # Cloudflare Workers compatible redirects
-# Redirect old Skills page to new Expertise page
+
+# Current site rebranding redirects
 /skills /expertise 301
 /skills/ /expertise/ 301
+
+# Legacy Hugo/Thulite site redirects (if any existed)
+# Blog section redirects - redirect to home since blog is discontinued
+/blog /  301
+/blog/ /  301
+/blog/* /  301
+
+# Content structure redirects for old Hugo paths (if they existed)
+/content/skills /expertise 301
+/content/skills/ /expertise/ 301
+/content/work-experience /work-experience 301
+/content/work-experience/ /work-experience/ 301
+/content/education /education 301
+/content/education/ /education/ 301
+/content/consultation /consultancy 301
+/content/consultation/ /consultancy/ 301
+
+# Common variations people might try
+/skill /expertise 301
+/about /  301
+/contact /consultancy 301
+
+# File extension redirects (if old site had .html files)
+/skills.html /expertise 301
+/work-experience.html /work-experience 301
+/education.html /education 301
+/consultation.html /consultancy 301
