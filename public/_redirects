@@ -1,0 +1,4 @@
+# Cloudflare Workers compatible redirects
+# Redirect old Skills page to new Expertise page
+/skills /expertise 301
+/skills/ /expertise/ 301

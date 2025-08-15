@@ -12,17 +12,18 @@ const Home: React.FC = () => {
         />
         <h1>Henrik Söderlund</h1>
         <p className="lead">
-          Digital Media & AdTech Leader | Strategic Team Leadership | Ex-Founder of Creme Digital | Marketing Technology | Measurement & Data Visualization
+          Digital Strategy Executive & Technology Leader<br/>
+          Transforming marketing performance through advanced measurement architecture and data-driven team leadership | Ex-Founder | AdTech Innovation Specialist
         </p>
       </div>
 
       <section className="content-section">
         <h2>Hello! 👋🏼</h2>
         <p>
-          I'm Henrik Söderlund, Media Activations Lead – <a href="https://initiative.com/" target="_blank" rel="noopener noreferrer">Initiative</a> Perth via <a href="https://kinesso.com" target="_blank" rel="noopener noreferrer">KINESSO</a>, part of the <a href="https://www.interpublic.com/" target="_blank" rel="noopener noreferrer">Interpublic Group</a>. As the former founder and technical lead of the award-winning boutique media agency <a href="https://www.cremedigital.com?utm_source=www.henriksoderlund.com&utm_medium=referral" target="_blank" rel="noopener noreferrer">Creme Digital</a> I bring comprehensive expertise in building and leading high-performance teams across Addressable (Programmatic) and Performance advertising channels. My distinctive edge lies in advanced ad performance tracking, measurement architecture, and server-side tagging/analytics implementation.
+          I'm Henrik Söderlund, a digital strategy executive currently leading media activations at <a href="https://initiative.com/" target="_blank" rel="noopener noreferrer">Initiative</a> Perth (<a href="https://kinesso.com" target="_blank" rel="noopener noreferrer">KINESSO</a>, <a href="https://www.interpublic.com/" target="_blank" rel="noopener noreferrer">Interpublic Group</a>). Over the past several years, I've evolved from founding and scaling the award-winning <a href="https://www.cremedigital.com?utm_source=www.henriksoderlund.com&utm_medium=referral" target="_blank" rel="noopener noreferrer">Creme Digital</a> into a senior leadership role where I architect measurement solutions and guide high-performance teams across programmatic and performance marketing channels. My strength lies in my exceptionally broad technical skillset and solutions-driven mindset—from advanced analytics and server-side implementations to AI-integrated workflows—enabling me to solve complex, multi-faceted challenges that others find intractable.
         </p>
         <p>
-          Swedish-born with optimization in my DNA, I've consistently delivered innovative solutions through custom agency performance tracking systems, streamlined operational processes, and effective SOPs. My versatile technology and systems proficiency enables precise management of multi-million dollar annual media budgets while maintaining exceptional resource efficiency and cost control.
+          With an inherent drive for optimization and systematic thinking, I've built my career on developing AI-powered solutions that transform how teams operate and perform. From designing custom performance tracking systems to implementing intelligent automation workflows, I combine strategic leadership with hands-on technical expertise to deliver measurable results at scale. This unique approach has enabled me to successfully guide multi-million dollar media investments while pioneering next-generation measurement methodologies that set new industry standards.
         </p>
       </section>
 

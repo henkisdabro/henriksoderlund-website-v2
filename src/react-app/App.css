@@ -71,6 +71,7 @@ p {
 /* Page Container Styles */
 .home-page,
 .skills-page,
+.expertise-page,
 .work-experience-page,
 .education-page,
 .consultation-page {
@@ -87,6 +88,7 @@ p {
   }
   
   .skills-page,
+  .expertise-page,
   .work-experience-page,
   .education-page,
   .consultation-page {
@@ -259,6 +261,7 @@ h5 {
   border-radius: 8px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   margin-top: 1rem;
+  margin-bottom: 3rem;
 }
 
 /* Content Entry Styles (used by Work Experience and Education pages) */
@@ -915,6 +918,7 @@ a:hover {
   
   .home-page h1,
   .skills-page h1,
+  .expertise-page h1,
   .work-experience-page h1,
   .education-page h1,
   .consultation-page h1 {
@@ -949,11 +953,13 @@ a:hover {
   width: 24px;
   height: 24px;
   color: #333;
-  transition: color 0.3s ease;
+  transition: all 0.3s ease;
 }
 
 .github-link:hover .github-icon {
   color: #000;
+  filter: drop-shadow(0 0 8px rgba(0, 0, 0, 0.4));
+  transform: scale(1.1);
 }
 
 /* Footer Styles */
@@ -1018,6 +1024,7 @@ a:hover {
 @media (max-width: 768px) {
   .home-page,
   .skills-page,
+  .expertise-page,
   .work-experience-page,
   .education-page,
   .consultation-page {

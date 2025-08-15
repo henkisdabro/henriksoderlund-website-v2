@@ -28,7 +28,7 @@ Henrik Söderlund's personal website built with modern web technologies and depl
 ```
 src/
 ├── react-app/           # React frontend application
-│   ├── components/      # React components (Home, Skills, etc.)
+│   ├── components/      # React components (Home, Expertise, etc.)
 │   ├── assets/         # Static assets (SVG logos, flags)
 │   ├── App.tsx         # Main App component with routing
 │   ├── main.tsx        # React entry point
@@ -36,6 +36,7 @@ src/
 ├── worker/             # Cloudflare Workers backend (Hono.js)
 │   └── index.ts        # Worker entry point
 public/                 # Static assets served directly
+├── _redirects          # Cloudflare Workers redirects file
 ├── ahrefs_bc08e3a49... # Ahrefs verification file
 ├── google52d2217b...   # Google Search Console verification
 └── bot.svg            # Custom favicon
@@ -120,7 +121,15 @@ npx wrangler tail
 - **tsconfig.*.json** - TypeScript configurations for app, worker, and Node.js
 - **eslint.config.js** - ESLint configuration for code quality
 
-### Verification Files
+### Page Components
+- **Home.tsx** - Homepage with executive introduction and AI-focused messaging
+- **Skills.tsx** - Expertise page (accessible at `/expertise`) showcasing technical leadership and AI capabilities
+- **WorkExperience.tsx** - Professional experience and achievements
+- **Education.tsx** - Educational background
+- **Consultation.tsx** - Services and consultation offerings
+
+### Verification & Redirects
+- **public/_redirects** - Cloudflare Workers redirect rules (`/skills` → `/expertise`)
 - **public/ahrefs_bc08e3a49...** - Ahrefs SEO verification
 - **public/google52d2217b...** - Google Search Console verification
 

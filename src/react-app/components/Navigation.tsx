@@ -27,7 +27,7 @@ export default function Navigation({ showResumeButton = false, excludePage }: Na
       
       <div className="centered-navigation">
         {excludePage !== 'home' && <Link to="/" className="nav-button">🏠 Home</Link>}
-        {excludePage !== 'skills' && <Link to="/skills" className="nav-button">🛠️ Skills</Link>}
+        {excludePage !== 'expertise' && <Link to="/expertise" className="nav-button">🛠️ Expertise</Link>}
         {excludePage !== 'work-experience' && <Link to="/work-experience" className="nav-button">💼 Work Experience</Link>}
         {excludePage !== 'education' && <Link to="/education" className="nav-button">🎓 Education</Link>}
         {excludePage !== 'consultation' && <Link to="/consultation" className="nav-button">💬 Consultation</Link>}

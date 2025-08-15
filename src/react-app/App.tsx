@@ -21,7 +21,7 @@ function App() {
         <main className="main-content">
           <Routes>
             <Route path="/" element={<Home />} />
-            <Route path="/skills" element={<Skills />} />
+            <Route path="/expertise" element={<Skills />} />
             <Route path="/work-experience" element={<WorkExperience />} />
             <Route path="/education" element={<Education />} />
             <Route path="/consultancy" element={<Consultation />} />

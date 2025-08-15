@@ -20,7 +20,7 @@ This is Henrik Söderlund's personal website being rebuilt with modern technolog
 ```
 src/
 ├── react-app/           # React frontend application
-│   ├── components/      # React components (Home, Skills, etc.)
+│   ├── components/      # React components (Home, Expertise, etc.)
 │   ├── assets/         # Static assets (SVG logos, flags)
 │   ├── App.tsx         # Main App component with routing
 │   ├── main.tsx        # React entry point
@@ -28,14 +28,17 @@ src/
 ├── worker/             # Cloudflare Workers backend (Hono.js)
 │   └── index.ts        # Worker entry point
 public/                 # Static assets served directly
-├── images/             # Profile photos and screenshots
-└── vite.svg           # Vite logo
+├── _redirects          # Cloudflare Workers redirects file
+├── ahrefs_bc08e3a49... # Ahrefs verification file
+├── google52d2217b...   # Google Search Console verification
+└── bot.svg            # Custom favicon
 ```
 
 ## Key Components
-- **App.tsx**: Main application with routing setup
+- **App.tsx**: Main application with routing setup including `/expertise` route
 - **NavigationBox.tsx**: Fixed navigation menu with page and heading links
-- **Home.tsx**: Homepage component with hero section and navigation
+- **Home.tsx**: Homepage component with executive introduction and AI-focused messaging
+- **Skills.tsx**: Expertise page (accessible at `/expertise`) showcasing technical leadership and AI capabilities
 - **Footer.tsx**: Footer with tech stack logos (Vite, Hono, Cloudflare Workers)
 
 ## Development Commands
@@ -165,6 +168,10 @@ Always ensure these are properly ignored in git:
 - `CLAUDE.md` - Project context for AI assistance (keep in repo)
 
 ## Recent Improvements
+- ✅ **Content Modernization**: Updated Homepage and Expertise page with executive-level language and AI focus
+- ✅ **Page Rebranding**: Renamed "Skills" to "Expertise" with SEO-friendly 301 redirects
+- ✅ **AI Integration**: Added AI-related skills and capabilities throughout content
+- ✅ **Redirect System**: Cloudflare Workers compatible `_redirects` file for URL changes
 - ✅ **Updated Dependencies**: Latest versions of React 19.1.1, Vite 7.1.2, Hono 4.9.1, TypeScript 5.9.2
 - ✅ **Updated .gitignore**: Added modern Vite/React/Cloudflare Workers patterns
 - ✅ **Build Optimization**: Proper exclusion of build artifacts from version control

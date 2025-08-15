@@ -14,7 +14,7 @@ const NavigationBox: React.FC = () => {
 
   const pages = [
     { path: '/', name: 'Home', emoji: '🏠' },
-    { path: '/skills', name: 'Skills', emoji: '🛠️' },
+    { path: '/expertise', name: 'Expertise', emoji: '🛠️' },
     { path: '/work-experience', name: 'Work Experience', emoji: '💼' },
     { path: '/education', name: 'Education', emoji: '🎓' },
     { path: '/consultancy', name: 'Consultancy', emoji: '💬' }
