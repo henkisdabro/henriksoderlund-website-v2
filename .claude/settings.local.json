@@ -62,7 +62,8 @@
       "WebFetch(domain:hono.dev)",
       "Bash(git reset:*)",
       "WebFetch(domain:scotthelme.co.uk)",
-      "mcp__ide__getDiagnostics"
+      "mcp__ide__getDiagnostics",
+      "Bash(npx wrangler:*)"
     ],
     "deny": [],
     "ask": [],
