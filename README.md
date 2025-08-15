@@ -29,6 +29,7 @@ Henrik Söderlund's personal website built with modern web technologies and depl
 src/
 ├── react-app/           # React frontend application
 │   ├── components/      # React components (Home, Expertise, etc.)
+│   ├── data/           # Centralized data files (consultation.ts, skills.ts, workExperience.ts)
 │   ├── assets/         # Static assets (SVG logos, flags)
 │   ├── App.tsx         # Main App component with routing
 │   ├── main.tsx        # React entry point
@@ -52,16 +53,21 @@ public/                 # Static assets served directly
 - 🔄 Full-stack development setup
 - 🧭 Fixed navigation box with dynamic heading detection
 - 📱 Mobile-responsive design
+- 🤖 AI-optimized content with llms.txt specification compliance
+- 📊 Centralized data architecture for maintainable content
+- ✨ Modern React patterns (optimized imports, clean component structure)
 
 ## Development Commands
 
 - `npm run dev` - Start development server (Vite dev server on port 5173)
-- `npm run build` - Build for production (TypeScript compilation + Vite build)
+- `npm run build` - Build for production (includes smart llms.txt generation + Vite build)
 - `npm run preview` - Preview production build locally
 - `npm run lint` - Run ESLint for code quality checks
 - `npm run check` - Full check: TypeScript compilation, build, and dry-run deploy
 - `npm run deploy` - Deploy to Cloudflare Workers
 - `npm run cf-typegen` - Generate Cloudflare Workers types
+- `npm run generate-llms` - Force regenerate llms.txt and markdown files
+- `npm run generate-llms-if-needed` - Smart generation (only if content changed)
 
 ## Getting Started
 
@@ -124,9 +130,14 @@ npx wrangler tail
 ### Page Components
 - **Home.tsx** - Homepage with executive introduction and AI-focused messaging
 - **Skills.tsx** - Expertise page (accessible at `/expertise`) showcasing technical leadership and AI capabilities
-- **WorkExperience.tsx** - Professional experience and achievements
+- **WorkExperience.tsx** - Professional experience and achievements (data-driven from `data/workExperience.ts`)
 - **Education.tsx** - Educational background
-- **Consultation.tsx** - Services and consultation offerings
+- **Consultation.tsx** - Services and consultation offerings (data-driven from `data/consultation.ts`)
+
+### Data Architecture
+- **data/consultation.ts** - Centralized consultation services and pricing data
+- **data/skills.ts** - Technical skills, platforms, and GitHub contributions data
+- **data/workExperience.ts** - Professional experience and achievements data
 
 ### Verification & Redirects
 - **public/_redirects** - Cloudflare Workers redirect rules (`/skills` → `/expertise`)
@@ -140,18 +151,26 @@ npx wrangler tail
 - [x] Confirm Ahrefs and Google Search Console verification files
 
 ### SEO & Site Configuration
+- [x] Enhanced meta description and social media tags (Open Graph, Twitter cards)
+- [x] Improved page titles and descriptions
 - [ ] Revise and improve security.txt
 - [ ] Add robots.txt
 - [ ] Add CORS and CSP headers
 
 ### Content & Visual Updates
 - [ ] Update content and project screenshots
+- [x] Centralized data architecture for maintainable content
 
 ## File Management
 
 ### Legacy Files (Can be ignored/removed)
 - `content/` - Old Markdown content files (migrated to React components)
 - `assets/` - Old Hugo assets (duplicated in `public/`)
+
+### Generated Files (Auto-Generated)
+- `public/llms.txt` - Main llms.txt file for AI/LLM consumption
+- `public/*.md` - Individual page markdown files (index.html.md, expertise.md, etc.)
+- `.llms-cache.json` - Build cache for content-based generation optimization
 
 ### Build Artifacts (Auto-generated)
 - `dist/` - Vite build output
