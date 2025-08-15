@@ -30,3 +30,6 @@
 /work-experience.html /work-experience 301
 /education.html /education 301
 /consultation.html /consultancy 301
+
+# llms.txt markdown file redirects
+/index.md /index.html.md 301

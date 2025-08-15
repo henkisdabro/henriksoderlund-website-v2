@@ -17,7 +17,7 @@ const PUBLIC_OUTPUT_FILE = path.join(PROJECT_ROOT, 'public', 'llms.txt');
 // Route mapping from App.tsx analysis
 const ROUTES = {
   '/': 'Home',
-  '/expertise': 'Skills', // Skills component serves /expertise route
+  '/expertise': 'Expertise', // Expertise component serves /expertise route
   '/work-experience': 'WorkExperience',
   '/education': 'Education',
   '/consultancy': 'Consultation'
@@ -162,9 +162,16 @@ function generateMarkdownPages() {
         filename = route.slice(1) + '.md'; // Remove leading slash
       }
       
-      // Write to public directory
+      // Write to public directory (force overwrite)
       const outputPath = path.join(PROJECT_ROOT, 'public', filename);
-      fs.writeFileSync(outputPath, markdownContent, 'utf8');
+      
+      // Ensure the file is properly overwritten by removing it first if it exists
+      if (fs.existsSync(outputPath)) {
+        fs.unlinkSync(outputPath);
+      }
+      
+      // Write with proper UTF-8 encoding
+      fs.writeFileSync(outputPath, markdownContent, { encoding: 'utf8', flag: 'w' });
       
       markdownFiles.push({
         route,
@@ -192,8 +199,8 @@ function main() {
     // Generate main llms.txt content
     const content = generateLlmsTxt();
     
-    // Write only to public directory (gets deployed)
-    fs.writeFileSync(PUBLIC_OUTPUT_FILE, content, 'utf8');
+    // Write only to public directory (gets deployed) with proper UTF-8 encoding
+    fs.writeFileSync(PUBLIC_OUTPUT_FILE, content, { encoding: 'utf8', flag: 'w' });
     
     console.log(`✅ llms.txt generated at: ${PUBLIC_OUTPUT_FILE}`);
     console.log(`📄 File size: ${fs.statSync(PUBLIC_OUTPUT_FILE).size} bytes`);

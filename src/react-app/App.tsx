@@ -2,7 +2,7 @@
 
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Home from './components/Home';
-import Skills from './components/Skills';
+import Expertise from './components/Expertise';
 import WorkExperience from './components/WorkExperience';
 import Education from './components/Education';
 import Consultation from './components/Consultation';
@@ -23,7 +23,7 @@ function App() {
         <main className="main-content">
           <Routes>
             <Route path="/" element={<Home />} />
-            <Route path="/expertise" element={<Skills />} />
+            <Route path="/expertise" element={<Expertise />} />
             <Route path="/work-experience" element={<WorkExperience />} />
             <Route path="/education" element={<Education />} />
             <Route path="/consultancy" element={<Consultation />} />

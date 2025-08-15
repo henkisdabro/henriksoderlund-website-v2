@@ -1,4 +1,4 @@
-export const skillsData = {
+export const expertiseData = {
   intro: {
     title: '🚀 Strategic Technology Leadership & AI Innovation',
     paragraph: 'As a senior technology executive, I architect comprehensive solutions that bridge cutting-edge AI capabilities with practical business outcomes. My expertise spans building intelligent automation systems, developing advanced measurement frameworks, and leading cross-functional teams to implement scalable technology solutions. I specialize in transforming complex technical challenges into competitive advantages through systematic innovation and AI-driven methodologies.',

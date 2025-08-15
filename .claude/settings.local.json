@@ -49,7 +49,10 @@
       "WebFetch(domain:llmstxt.org)",
       "WebFetch(domain:developers.cloudflare.com)",
       "Bash(grep:*)",
-      "Bash(find:*)"
+      "Bash(find:*)",
+      "Bash(del \"public\\*.md\")",
+      "Bash(del:*)",
+      "Bash(del \".llms-cache.json\")"
     ],
     "deny": [],
     "ask": [],
