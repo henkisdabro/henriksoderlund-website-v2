@@ -1,0 +1,156 @@
+# Henrik Söderlund's Personal Website - robots.txt
+# Updated: August 2025
+#
+#     _____________________
+#    |  ___________________  |
+#    | |                   | |
+#    | | Need AI Strategy? | |
+#    | | Contact Henrik    | |
+#    | | for Consultation  | |
+#    | |___________________| |
+#    |_______________________|
+#         _[_______]_
+#     ___[___________]___
+#    |         [_____] []|
+#    |         [_____] []|
+#     \___________________/
+#
+# Dear robots, please follow the rules below.
+
+# === SEARCH ENGINE BOTS (Welcome!) ===
+# All major search engines are welcome to index the site
+User-agent: Googlebot
+Allow: /
+
+User-agent: Bingbot
+Allow: /
+
+User-agent: Baiduspider
+Allow: /
+
+User-agent: YandexBot
+Allow: /
+
+User-agent: DuckDuckBot
+Allow: /
+
+# === AI TRAINING BOTS (Politely Declined) ===
+# Following 2025 best practices - AI bots for training are not permitted
+# Content is available through proper channels and attribution
+
+User-agent: GPTBot
+Disallow: /
+
+User-agent: Google-Extended
+Disallow: /
+
+User-agent: anthropic-ai
+Disallow: /
+
+User-agent: Claude-Web
+Disallow: /
+
+User-agent: CCBot
+Disallow: /
+
+User-agent: ChatGPT-User
+Disallow: /
+
+User-agent: Bytespider
+Disallow: /
+
+User-agent: PerplexityBot
+Disallow: /
+
+User-agent: YouBot
+Disallow: /
+
+User-agent: Meta-ExternalAgent
+Disallow: /
+
+User-agent: FacebookBot
+Disallow: /
+
+User-agent: Applebot-Extended
+Disallow: /
+
+# === SOCIAL MEDIA & NEWS BOTS (Welcome for previews!) ===
+User-agent: facebookexternalhit
+Allow: /
+
+User-agent: Twitterbot
+Allow: /
+
+User-agent: LinkedInBot
+Allow: /
+
+User-agent: WhatsApp
+Allow: /
+
+User-agent: SkypeUriPreview
+Allow: /
+
+User-agent: TelegramBot
+Allow: /
+
+User-agent: SlackBot
+Allow: /
+
+User-agent: DiscordBot
+Allow: /
+
+# === WELL-BEHAVED BOTS (General Rules) ===
+User-agent: *
+# Allow access to all public content
+Allow: /
+
+# Block Cloudflare internal endpoints (saves crawl budget)
+Disallow: /cdn-cgi/
+Disallow: /cdn-cgi/bm/cv/
+Disallow: /cdn-cgi/challenge-platform/
+Disallow: /cdn-cgi/images/trace/
+Disallow: /cdn-cgi/rum
+Disallow: /cdn-cgi/scripts/
+Disallow: /cdn-cgi/styles/
+Disallow: /cdn-fpw/sxg/
+
+# Block any potential development/build artifacts
+Disallow: /node_modules/
+Disallow: /dist/
+Disallow: /.git/
+Disallow: /.vscode/
+Disallow: /src/
+
+# Allow verification files (important for SEO tools)
+Allow: /google*.html
+Allow: /ahrefs_*
+Allow: /bing*.xml
+Allow: /yandex_*
+
+# Allow AI-friendly content discovery (but not training)
+Allow: /llms.txt
+Allow: /*.md
+
+# Allow all main content pages
+Allow: /
+Allow: /expertise
+Allow: /work-experience
+Allow: /education
+Allow: /consultancy
+
+# Allow redirected paths for backward compatibility
+Allow: /skills
+
+# Request reasonable crawl behavior
+Crawl-delay: 1
+
+# === SITEMAP LOCATION ===
+# Help bots discover all important pages
+Sitemap: https://henriksoderlund.com/sitemap.xml
+
+# === HUMAN MESSAGE ===
+# If you're a human reading this, this site showcases
+# modern web technologies and AI expertise.
+# 
+# Questions about AI strategy or web development?
+# Contact through the consultancy page!
