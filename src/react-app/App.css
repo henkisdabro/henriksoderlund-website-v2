@@ -1025,6 +1025,15 @@ a:hover {
   filter: none !important;
 }
 
+/* Tech row styling for desktop */
+.tech-row {
+  display: inline;
+}
+
+.tech-row .tech-stack {
+  margin: 0 0.3rem;
+}
+
 .cloudflare-icon {
   width: 20px;
   height: 20px;
@@ -1080,9 +1089,22 @@ a:hover {
   .site-footer p {
     flex-direction: column;
     gap: 0.5rem;
+    align-items: center;
   }
 
-  .tech-stack {
+  .powered-by {
+    margin-bottom: 0.5rem;
+  }
+
+  .tech-row {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 0.6rem;
+    margin: 0.2rem 0;
+  }
+
+  .tech-row .tech-stack {
     margin: 0;
   }
 
