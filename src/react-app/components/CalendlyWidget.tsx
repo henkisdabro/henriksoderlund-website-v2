@@ -12,6 +12,13 @@ const CalendlyWidget = ({ url, className = '' }: CalendlyWidgetProps) => {
       const script = document.createElement('script');
       script.src = 'https://assets.calendly.com/assets/external/widget.js';
       script.async = true;
+      
+      // Apply nonce if available from CSP meta tag
+      const nonceMetaTag = document.querySelector('meta[property="csp-nonce"]') as HTMLMetaElement;
+      if (nonceMetaTag?.content) {
+        script.setAttribute('nonce', nonceMetaTag.content);
+      }
+      
       document.head.appendChild(script);
     }
   }, []);

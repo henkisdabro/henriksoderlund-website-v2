@@ -14,13 +14,11 @@ https://:project.pages.dev/*
   X-XSS-Protection: 1; mode=block
   Referrer-Policy: strict-origin
   
-  # Content Security Policy - Production ready with analytics and external services
-  # - Vite React build support (unsafe-inline, unsafe-eval)
-  # - Faux Analytics and Google Analytics integration
-  # - Server-side Google Tag Manager (sgtm.henriksoderlund.com)
-  # - Calendly integration support
-  # - Cloudflare Insights and other essential services
-  Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://*.fouanalytics.com https://api.fouanalytics.com https://sgtm.henriksoderlund.com https://load.sgtm.henriksoderlund.com https://tagmanager.google.com https://www.googletagmanager.com https://static.cloudflareinsights.com https://assets.calendly.com https://unpkg.com; connect-src 'self' https://*.fouanalytics.com https://api.fouanalytics.com https://*.google-analytics.com https://analytics.google.com https://*.analytics.google.com https://sgtm.henriksoderlund.com https://stats.g.doubleclick.net ws: wss:; style-src 'self' 'unsafe-inline' https://tagmanager.google.com https://fonts.googleapis.com https://www.googletagmanager.com; img-src 'self' data: https://* *.google.com; font-src 'self' data: https://fonts.gstatic.com; frame-src 'self' https://sgtm.henriksoderlund.com https://calendly.com https://www.googletagmanager.com; worker-src * blob: data:; child-src * blob: data:; manifest-src 'self'; base-uri 'self'; form-action 'self'
+  # Content Security Policy now handled dynamically by Hono worker with nonce support
+  # - Dynamic nonce generation for enhanced security
+  # - Removes need for 'unsafe-eval' and most 'unsafe-inline' usage
+  # - Maintains support for all existing external services
+  # Note: CSP headers are now generated server-side with unique nonces per request
   
   # Permissions Policy - Disable unnecessary browser features
   Permissions-Policy: accelerometer=(), ambient-light-sensor=(), autoplay=(), battery=(), camera=(), cross-origin-isolated=(), display-capture=(), document-domain=(), encrypted-media=(), execution-while-not-rendered=(), execution-while-out-of-viewport=(), fullscreen=(self), geolocation=(), gyroscope=(), keyboard-map=(), magnetometer=(), microphone=(), midi=(), navigation-override=(), payment=(), picture-in-picture=(), publickey-credentials-get=(), screen-wake-lock=(), sync-xhr=(), usb=(), web-share=(), xr-spatial-tracking=()

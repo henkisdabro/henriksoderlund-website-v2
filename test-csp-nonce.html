@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CSP Nonce Test</title>
+</head>
+<body>
+    <h1>CSP Nonce Implementation Test</h1>
+    
+    <div id="test-results"></div>
+    
+    <script nonce="PLACEHOLDER_NONCE_VALUE">
+        // This script should work with nonce-based CSP
+        const results = document.getElementById('test-results');
+        
+        // Test 1: Check if CSP nonce meta tag exists
+        const nonceMetaTag = document.querySelector('meta[property="csp-nonce"]');
+        const hasNonceMeta = nonceMetaTag && nonceMetaTag.content;
+        
+        // Test 2: Check if current script has nonce
+        const currentScript = document.currentScript;
+        const hasScriptNonce = currentScript && currentScript.getAttribute('nonce');
+        
+        // Test 3: Verify CSP headers are present
+        const checkCSPHeaders = async () => {
+            try {
+                const response = await fetch(window.location.href);
+                const cspHeader = response.headers.get('content-security-policy');
+                return cspHeader && cspHeader.includes('nonce-');
+            } catch (e) {
+                return false;
+            }
+        };
+        
+        // Display results
+        const displayResults = (hasCsp) => {
+            results.innerHTML = `
+                <h2>Test Results:</h2>
+                <p>✅ CSP Nonce Meta Tag: ${hasNonceMeta ? 'FOUND' : 'MISSING'}</p>
+                <p>✅ Script Nonce Attribute: ${hasScriptNonce ? 'PRESENT' : 'MISSING'}</p>
+                <p>✅ CSP Header with Nonce: ${hasCsp ? 'PRESENT' : 'MISSING'}</p>
+                ${hasNonceMeta ? `<p><strong>Nonce Value:</strong> ${nonceMetaTag.content}</p>` : ''}
+                ${hasScriptNonce ? `<p><strong>Script Nonce:</strong> ${currentScript.getAttribute('nonce')}</p>` : ''}
+            `;
+        };
+        
+        checkCSPHeaders().then(displayResults);
+    </script>
+</body>
+</html>
