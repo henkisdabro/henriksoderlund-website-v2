@@ -155,8 +155,12 @@ function generateMarkdownPages() {
       const markdownContent = convertComponentToMarkdown(componentPath, pageTitle);
       
       // Determine output filename based on llms.txt spec
-      const slug = route === '/' ? 'index' : route.slice(1);
-      const filename = `${slug}.html.md`;
+      let filename;
+      if (route === '/') {
+        filename = 'index.html.md';
+      } else {
+        filename = route.slice(1) + '.md'; // Remove leading slash
+      }
       
       // Write to public directory
       const outputPath = path.join(PROJECT_ROOT, 'public', filename);
