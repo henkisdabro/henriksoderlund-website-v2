@@ -56,7 +56,12 @@
       "WebFetch(domain:www.cloudflare.com)",
       "Bash(curl:*)",
       "WebFetch(domain:henriksoderlund.com)",
-      "WebFetch(domain:www.henriksoderlund.com)"
+      "WebFetch(domain:www.henriksoderlund.com)",
+      "WebFetch(domain:help.calendly.com)",
+      "WebFetch(domain:developer.calendly.com)",
+      "WebFetch(domain:hono.dev)",
+      "Bash(git reset:*)",
+      "WebFetch(domain:scotthelme.co.uk)"
     ],
     "deny": [],
     "ask": [],
