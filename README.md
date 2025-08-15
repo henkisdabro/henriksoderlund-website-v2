@@ -1,5 +1,12 @@
 # Henrik Söderlund - Personal Website
 
+[![Vite](https://img.shields.io/badge/vite-7.1.2-646CFF?style=flat&logo=vite&logoColor=white)](https://vite.dev/)
+[![React](https://img.shields.io/badge/react-19.1.1-61DAFB?style=flat&logo=react&logoColor=white)](https://react.dev/)
+[![TypeScript](https://img.shields.io/badge/typescript-5.9.2-3178C6?style=flat&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
+[![Hono](https://img.shields.io/badge/hono-4.9.1-FF6B00?style=flat&logo=hono&logoColor=white)](https://hono.dev/)
+[![Cloudflare Workers](https://img.shields.io/badge/cloudflare%20workers-deployed-F38020?style=flat&logo=cloudflare&logoColor=white)](https://workers.cloudflare.com/)
+[![ESLint](https://img.shields.io/badge/eslint-9.33.0-4B32C3?style=flat&logo=eslint&logoColor=white)](https://eslint.org/)
+
 Henrik Söderlund's personal website built with modern web technologies and deployed on Cloudflare Workers.
 
 ## Tech Stack
@@ -29,7 +36,8 @@ src/
 ├── worker/             # Cloudflare Workers backend (Hono.js)
 │   └── index.ts        # Worker entry point
 public/                 # Static assets served directly
-├── images/             # Profile photos and screenshots
+├── ahrefs_bc08e3a49... # Ahrefs verification file
+├── google52d2217b...   # Google Search Console verification
 └── bot.svg            # Custom favicon
 ```
 
@@ -46,12 +54,13 @@ public/                 # Static assets served directly
 
 ## Development Commands
 
-- `npm run dev` - Start development server
-- `npm run build` - Build for production  
-- `npm run preview` - Preview production build
-- `npm run lint` - Run ESLint
-- `npm run check` - TypeScript check, build, and dry-run deploy
+- `npm run dev` - Start development server (Vite dev server on port 5173)
+- `npm run build` - Build for production (TypeScript compilation + Vite build)
+- `npm run preview` - Preview production build locally
+- `npm run lint` - Run ESLint for code quality checks
+- `npm run check` - Full check: TypeScript compilation, build, and dry-run deploy
 - `npm run deploy` - Deploy to Cloudflare Workers
+- `npm run cf-typegen` - Generate Cloudflare Workers types
 
 ## Getting Started
 
@@ -103,11 +112,23 @@ npx wrangler tail
 - Tech stack logos standardized to 20px in footer
 - Dynamic heading detection and smooth scroll navigation
 
+## Configuration Files
+
+### Build & Development
+- **vite.config.ts** - Vite configuration with React and Cloudflare plugins
+- **wrangler.json** - Cloudflare Workers deployment configuration
+- **tsconfig.*.json** - TypeScript configurations for app, worker, and Node.js
+- **eslint.config.js** - ESLint configuration for code quality
+
+### Verification Files
+- **public/ahrefs_bc08e3a49...** - Ahrefs SEO verification
+- **public/google52d2217b...** - Google Search Console verification
+
 ## Future Tasks and Site Improvements
 
 ### Analytics & Tracking
 - [ ] Add Google Tag Manager (GTM) to header with support for dev environments
-- [ ] Confirm Ahrefs and Google Search Console support
+- [x] Confirm Ahrefs and Google Search Console verification files
 
 ### SEO & Site Configuration
 - [ ] Revise and improve security.txt

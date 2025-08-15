@@ -4,10 +4,11 @@
 This is Henrik Söderlund's personal website being rebuilt with modern technologies.
 
 ## Tech Stack
-- **Frontend**: React with TypeScript, built with Vite
-- **Backend**: Hono.js (modern web framework)
-- **Deployment**: Cloudflare Workers
-- **Routing**: React Router for client-side routing
+- **Frontend**: React 19.1.1 with TypeScript 5.9.2, built with Vite 7.1.2
+- **Backend**: Hono.js 4.9.1 (modern web framework)
+- **Deployment**: Cloudflare Workers with observability enabled
+- **Routing**: React Router 7.8.0 for client-side routing
+- **Development**: ESLint 9.33.0, Wrangler 4.29.0
 
 ## Current Status
 - ✅ **Migration Complete**: Successfully migrated from Thulite/Hugo to Vite + React + Hono stack
@@ -38,12 +39,15 @@ public/                 # Static assets served directly
 - **Footer.tsx**: Footer with tech stack logos (Vite, Hono, Cloudflare Workers)
 
 ## Development Commands
-- `npm run dev` - Start development server
-- `npm run build` - Build for production
-- `npm run preview` - Preview production build
-- `npm run lint` - Run ESLint
-- `npm run check` - TypeScript check, build, and dry-run deploy
+- `npm run dev` - Start development server (Vite dev server on port 5173)
+- `npm run build` - Build for production (TypeScript compilation + Vite build)
+- `npm run preview` - Preview production build locally
+- `npm run lint` - Run ESLint for code quality checks
+- `npm run check` - Full check: TypeScript compilation, build, and dry-run deploy
 - `npm run deploy` - Deploy to Cloudflare Workers
+- `npm run cf-typegen` - Generate Cloudflare Workers types
+
+**Note**: No test framework is currently configured. Tests can be added using Vitest or Jest if needed.
 
 ## Design System & Recent Fixes
 - Clean, minimal design with proper typography
@@ -66,26 +70,27 @@ public/                 # Static assets served directly
 
 ## Cloudflare Workers Configuration
 
-### Wrangler Configuration
-The project uses **wrangler.json** (not wrangler.toml) for configuration:
-- **Purpose**: Used by both local development AND Cloudflare Workers deployment
-- **GitHub Integration**: When you push to GitHub, Cloudflare Workers uses this file to understand how to build and deploy your app
-- **Build Process**: The `wrangler.json` tells Workers which files to include, build commands, and routing rules
+### Wrangler Configuration (wrangler.json)
+The project uses **wrangler.json** for Cloudflare Workers configuration:
+- **Name**: `henriksoderlund-website-v2`
+- **Entry Point**: `./src/worker/index.ts` (Hono.js application)
+- **Compatibility Date**: `2025-08-03` with Node.js compatibility
+- **Assets**: Static files served from `./dist/client` with SPA routing
+- **Observability**: Enabled for monitoring and debugging
+- **Source Maps**: Uploaded for better error tracking
 
-### Key Wrangler Settings Needed:
-1. **Entry Point**: Defines the main server file (usually Hono app)
-2. **Build Commands**: How to compile TypeScript and bundle assets
-3. **Route Configuration**: URL patterns and handling
-4. **Environment Variables**: Any secrets or config needed
+### Current Configuration Features:
+- ✅ **Single Page Application**: Proper SPA routing with `not_found_handling`
+- ✅ **Source Maps**: Enabled for production debugging
+- ✅ **Node.js Compatibility**: For modern JavaScript features
+- ✅ **Observability**: Real-time monitoring and logs
+- ✅ **Static Assets**: Optimized asset serving from Vite build output
 
 ### Deployment Flow:
-1. Push code to GitHub
-2. Cloudflare Workers detects changes via GitHub integration
-3. Workers reads `wrangler.json` for build instructions
-4. Automatically builds and deploys the app
-5. Your site goes live on Cloudflare's edge network
-
-The wrangler file is ESSENTIAL for both local dev and production deployment.
+1. `npm run build` - TypeScript compilation + Vite build to `dist/`
+2. `npm run deploy` - Wrangler deploys worker + static assets
+3. Cloudflare Workers serves app globally from edge locations
+4. Static assets cached and served efficiently
 
 ## Development Environment
 
@@ -160,7 +165,10 @@ Always ensure these are properly ignored in git:
 - `CLAUDE.md` - Project context for AI assistance (keep in repo)
 
 ## Recent Improvements
+- ✅ **Updated Dependencies**: Latest versions of React 19.1.1, Vite 7.1.2, Hono 4.9.1, TypeScript 5.9.2
 - ✅ **Updated .gitignore**: Added modern Vite/React/Cloudflare Workers patterns
 - ✅ **Build Optimization**: Proper exclusion of build artifacts from version control
 - ✅ **Legacy Cleanup**: Identified old Hugo/Thulite files for removal
 - ✅ **Development Environment**: Complete VS Code workspace configuration
+- ✅ **SEO Setup**: Ahrefs and Google Search Console verification files in place
+- ✅ **Wrangler Configuration**: Modern wrangler.json with observability and source maps
