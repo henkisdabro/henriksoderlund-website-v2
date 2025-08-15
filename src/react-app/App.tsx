@@ -9,11 +9,13 @@ import Consultation from './components/Consultation';
 import Footer from './components/Footer';
 import NavigationBox from './components/NavigationBox';
 import GitHubLink from './components/GitHubLink';
+import ScrollToTop from './components/ScrollToTop';
 import "./App.css";
 
 function App() {
   return (
     <Router>
+      <ScrollToTop />
       <div className="app">
         <NavigationBox />
         <GitHubLink />
