@@ -956,10 +956,16 @@ a:hover {
   transition: all 0.3s ease;
 }
 
-.github-link:hover {
+.github-link:hover::before {
+  content: '';
+  position: absolute;
+  top: -6px;
+  left: -6px;
+  right: -6px;
+  bottom: -6px;
   background-color: #e9ecef;
   border-radius: 50%;
-  padding: 6px;
+  z-index: -1;
 }
 
 .github-link:hover .github-icon {
