@@ -1,4 +1,3 @@
-import React from 'react';
 import swedenFlag from '../assets/flags/se.svg';
 
 const Education = () => {

@@ -435,9 +435,6 @@ h5 {
   font-size: 0.85rem;
 }
 
-.modern-pricing-table tbody tr {
-  /* Remove hover effects */
-}
 
 .modern-pricing-table tbody tr:last-child td {
   border-bottom: none;
@@ -513,9 +510,6 @@ h5 {
   font-size: 0.85rem;
 }
 
-.pricing-table tbody tr {
-  /* Remove hover effects */
-}
 
 .pricing-table tbody tr:last-child td {
   border-bottom: none;

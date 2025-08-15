@@ -1,4 +1,3 @@
-import React from 'react';
 import profileImage from '../assets/images/henrik-profile-small.jpg';
 
 const Home = () => {

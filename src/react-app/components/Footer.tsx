@@ -1,4 +1,3 @@
-import React from 'react';
 import cloudflareLogo from '../assets/logos/cloudflare.svg';
 import honoLogo from '../assets/logos/hono.svg';
 import reactLogo from '../assets/logos/react.svg';
