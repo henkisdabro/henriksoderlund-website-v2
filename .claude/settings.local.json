@@ -61,7 +61,8 @@
       "WebFetch(domain:developer.calendly.com)",
       "WebFetch(domain:hono.dev)",
       "Bash(git reset:*)",
-      "WebFetch(domain:scotthelme.co.uk)"
+      "WebFetch(domain:scotthelme.co.uk)",
+      "mcp__ide__getDiagnostics"
     ],
     "deny": [],
     "ask": [],
