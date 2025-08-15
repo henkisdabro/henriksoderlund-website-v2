@@ -183,7 +183,7 @@ function convertComponentToMarkdown(componentPath, pageTitle = '') {
 function extractPageTitle(componentPath) {
   try {
     const content = fs.readFileSync(componentPath, 'utf8');
-    const h1Match = content.match(/<h1[^>]*>([^<]+)<\/h1>/);
+    const h1Match = content.match(/<h1[^>]*>(.*?)<\/h1>/);
     return h1Match ? h1Match[1].trim() : '';
   } catch (error) {
     console.warn(`Warning: Could not extract title from ${componentPath}:`, error.message);

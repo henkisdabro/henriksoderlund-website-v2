@@ -1,7 +1,6 @@
-import React from 'react';
 import profileImage from '../assets/images/henrik-profile-small.jpg';
 
-const Home: React.FC = () => {
+const Home = () => {
   return (
     <div className="home-page">
       <div className="hero-section">

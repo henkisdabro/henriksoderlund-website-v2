@@ -1,7 +1,6 @@
-import React from 'react';
 import githubIcon from '../assets/logos/github.svg';
 
-const GitHubLink: React.FC = () => {
+const GitHubLink = () => {
   return (
     <a
       href="https://github.com/henkisdabro"

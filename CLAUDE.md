@@ -21,6 +21,7 @@ This is Henrik Söderlund's personal website being rebuilt with modern technolog
 src/
 ├── react-app/           # React frontend application
 │   ├── components/      # React components (Home, Expertise, etc.)
+│   ├── data/           # Centralized data files (consultation.ts, skills.ts, workExperience.ts)
 │   ├── assets/         # Static assets (SVG logos, flags)
 │   ├── App.tsx         # Main App component with routing
 │   ├── main.tsx        # React entry point
@@ -195,6 +196,24 @@ Complete implementation of the [llms.txt specification](https://llmstxt.org/) fo
 - **CI/CD Ready**: GitHub Actions workflow handles generation and deployment
 
 ## Recent Improvements
+
+### Project-Wide Modernization (feature/project-improvements)
+- ✅ **Code Quality & Architecture**: 
+  - Centralized hardcoded data into `src/react-app/data/` directory (consultation.ts, skills.ts, workExperience.ts)
+  - Removed unused `Navigation.tsx` component
+  - Modernized component typing by removing `React.FC`
+  - Optimized React imports (removed unnecessary imports, kept only required hooks)
+  - Cleaned up CSS warnings (removed empty CSS rules)
+- ✅ **SEO & Meta Improvements**:
+  - Enhanced page title in `index.html`
+  - Added comprehensive meta description and social media tags (Open Graph, Twitter cards)
+  - Updated `package.json` with descriptive name and description
+- ✅ **llms.txt Specification Compliance**:
+  - Corrected markdown filename generation per official spec
+  - Improved title extraction logic for data-driven components
+  - Smart caching system for content-based generation optimization
+
+### Previous Foundation Work
 - ✅ **Content Modernization**: Updated Homepage and Expertise page with executive-level language and AI focus
 - ✅ **Page Rebranding**: Renamed "Skills" to "Expertise" with SEO-friendly 301 redirects
 - ✅ **AI Integration**: Added AI-related skills and capabilities throughout content

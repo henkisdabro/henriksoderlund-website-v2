@@ -136,7 +136,20 @@ function generateMarkdownPages() {
       }
       
       // Extract title from component
-      const pageTitle = extractPageTitle(componentPath);
+      let pageTitle = extractPageTitle(componentPath);
+
+      if (pageTitle.startsWith('{')) {
+        if (componentName === 'Consultation') {
+          const dataPath = path.join(PROJECT_ROOT, 'src', 'react-app', 'data', 'consultation.ts');
+          const dataContent = fs.readFileSync(dataPath, 'utf8');
+          const titleMatch = dataContent.match(/title: '([^']+)'/);
+          if (titleMatch) {
+            pageTitle = titleMatch[1];
+          } else {
+            pageTitle = 'Consultation'; // fallback
+          }
+        }
+      }
       
       // Convert to markdown
       const markdownContent = convertComponentToMarkdown(componentPath, pageTitle);

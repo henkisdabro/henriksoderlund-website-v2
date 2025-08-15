@@ -1,9 +1,9 @@
 {
-  "name": "vite-react-template",
-  "description": "A template for building a React application with Vite, Hono, and Cloudflare Workers",
+  "name": "henriksoderlund-website",
+  "description": "Personal website for Henrik Söderlund",
   "version": "0.0.0",
   "cloudflare": {
-    "label": "Vite React Template",
+    "label": "henriksoderlund-website",
     "products": [
       "Workers"
     ],

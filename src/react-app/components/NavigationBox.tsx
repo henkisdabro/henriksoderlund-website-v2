@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 
 interface HeadingItem {
@@ -7,7 +7,7 @@ interface HeadingItem {
   level: number;
 }
 
-const NavigationBox: React.FC = () => {
+const NavigationBox = () => {
   const [isCollapsed, setIsCollapsed] = useState(window.innerWidth <= 1024);
   const [headings, setHeadings] = useState<HeadingItem[]>([]);
   const location = useLocation();
@@ -29,7 +29,7 @@ const NavigationBox: React.FC = () => {
         const text = heading.textContent || '';
         const level = parseInt(heading.tagName.charAt(1));
         
-        // Skip headings with these specific texts, H1 headings, or H3 headings
+        // Skip H1 and H3 headings, and headings with specific text content, to create a cleaner navigation experience.
         if (text === 'Pages' || text === 'On This Page' || text === 'Navigation' || level === 1 || level === 3) {
           return;
         }
