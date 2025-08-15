@@ -56,7 +56,13 @@
       "WebFetch(domain:www.cloudflare.com)",
       "Bash(curl:*)",
       "WebFetch(domain:henriksoderlund.com)",
-      "WebFetch(domain:www.henriksoderlund.com)"
+      "WebFetch(domain:www.henriksoderlund.com)",
+      "WebFetch(domain:developers.google.com)",
+      "WebFetch(domain:schema.org)",
+      "WebFetch(domain:search.google.com)",
+      "WebFetch(domain:validator.schema.org)",
+      "WebFetch(domain:henriksoderlund-website-v2.par.workers.dev)",
+      "WebFetch(domain:henriksoderlund-website-v2.krrsantan.workers.dev)"
     ],
     "deny": [],
     "ask": [],

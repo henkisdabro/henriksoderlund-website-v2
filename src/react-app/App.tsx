@@ -6,6 +6,7 @@ import Expertise from './components/Expertise';
 import WorkExperience from './components/WorkExperience';
 import Education from './components/Education';
 import Consultation from './components/Consultation';
+import NotFound from './components/NotFound';
 import Footer from './components/Footer';
 import NavigationBox from './components/NavigationBox';
 import GitHubLink from './components/GitHubLink';
@@ -27,6 +28,7 @@ function App() {
             <Route path="/work-experience" element={<WorkExperience />} />
             <Route path="/education" element={<Education />} />
             <Route path="/consultancy" element={<Consultation />} />
+            <Route path="*" element={<NotFound />} />
           </Routes>
         </main>
         
