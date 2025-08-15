@@ -45,6 +45,34 @@ h3 {
   margin: 1.5rem 0 0.5rem 0;
 }
 
+/* Calendly Widget Styling */
+.calendar-section {
+  margin: 3rem 0;
+}
+
+.calendly-intro {
+  margin-bottom: 2rem;
+}
+
+.calendly-widget {
+  margin: 2rem 0;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.consultation-booking-widget {
+  background: #ffffff;
+}
+
+/* Responsive adjustments for mobile */
+@media (max-width: 768px) {
+  .calendly-widget {
+    margin: 1rem -1rem;
+    border-radius: 0;
+  }
+}
+
 /* Homepage styling */
 .lead {
   font-size: 1.1em;

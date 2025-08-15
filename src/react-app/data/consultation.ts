@@ -63,8 +63,8 @@ export const consultationData = {
     title: '📅 Schedule Your Strategic Session',
     paragraphs: [
       'Ready to transform your business with AI and advanced analytics? Let\'s discuss your specific needs and explore how we can accelerate your digital transformation.',
-      '<strong>Book a complimentary 15-minute discovery call to get started.</strong>',
-      '<em>Calendly integration coming soon. For immediate consultation booking, please contact me directly.</em>',
+      '<strong>Book a complimentary 30-minute discovery call to get started.</strong>',
     ],
+    calendlyUrl: 'https://calendly.com/henriksoederlund/30min?hide_event_type_details=1&hide_gdpr_banner=1',
   },
 };

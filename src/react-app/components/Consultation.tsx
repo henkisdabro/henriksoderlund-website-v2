@@ -1,4 +1,5 @@
 import { consultationData } from '../data/consultation';
+import CalendlyWidget from './CalendlyWidget';
 
 const Consultation = () => {
   return (
@@ -74,9 +75,14 @@ const Consultation = () => {
 
       <section className="calendar-section">
         <h2>{consultationData.scheduling.title}</h2>
-        <div className="calendly-placeholder">
+        <div className="calendly-intro">
           {consultationData.scheduling.paragraphs.map((p, i) => <p key={i} dangerouslySetInnerHTML={{ __html: p }} />)}
         </div>
+        <CalendlyWidget 
+          url={consultationData.scheduling.calendlyUrl} 
+          height="700px"
+          className="consultation-booking-widget"
+        />
       </section>
 
     </div>
