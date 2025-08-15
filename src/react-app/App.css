@@ -959,10 +959,10 @@ a:hover {
 .github-link:hover::before {
   content: '';
   position: absolute;
-  top: -6px;
-  left: -6px;
-  right: -6px;
-  bottom: -6px;
+  top: -8px;
+  left: -8px;
+  right: -8px;
+  bottom: -8px;
   background-color: #e9ecef;
   border-radius: 50%;
   z-index: -1;
