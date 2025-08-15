@@ -21,7 +21,7 @@ This is Henrik Söderlund's personal website being rebuilt with modern technolog
 src/
 ├── react-app/           # React frontend application
 │   ├── components/      # React components (Home, Expertise, etc.)
-│   ├── data/           # Centralized data files (consultation.ts, skills.ts, workExperience.ts)
+│   ├── data/           # Centralized data files (consultation.ts, expertise.ts, workExperience.ts)
 │   ├── assets/         # Static assets (SVG logos, flags)
 │   ├── App.tsx         # Main App component with routing
 │   ├── main.tsx        # React entry point
@@ -38,8 +38,8 @@ public/                 # Static assets served directly
 ## Key Components
 - **App.tsx**: Main application with routing setup including `/expertise` route
 - **NavigationBox.tsx**: Fixed navigation menu with page and heading links
-- **Home.tsx**: Homepage component with executive introduction and AI-focused messaging
-- **Skills.tsx**: Expertise page (accessible at `/expertise`) showcasing technical leadership and AI capabilities
+- **Home.tsx**: Homepage component with executive introduction, AI-focused messaging, and leadership content
+- **Expertise.tsx**: Expertise page (accessible at `/expertise`) showcasing technical leadership, AI capabilities, and people management skills
 - **Footer.tsx**: Footer with tech stack logos (Vite, Hono, Cloudflare Workers)
 
 ## Development Commands
@@ -197,9 +197,20 @@ Complete implementation of the [llms.txt specification](https://llmstxt.org/) fo
 
 ## Recent Improvements
 
+### Leadership Content Integration (August 2025)
+- ✅ **Human Leadership Integration**: 
+  - Added comprehensive leadership and people management content across homepage, expertise, and experience sections
+  - Created new `leadershipExpertise` section in `expertise.ts` with team building, client service, and strategic communication skills
+  - Enhanced work experience descriptions to highlight mentoring, team rebuilding, and stakeholder management achievements
+  - Balanced technical expertise with people leadership positioning
+- ✅ **Content Structure Enhancement**:
+  - Homepage now includes third paragraph focusing on leadership approach and team development
+  - Expertise page features dedicated leadership section with three skill categories
+  - Work experience entries emphasize concrete leadership outcomes (team retention, promotions, client relationships)
+
 ### Project-Wide Modernization (feature/project-improvements)
 - ✅ **Code Quality & Architecture**: 
-  - Centralized hardcoded data into `src/react-app/data/` directory (consultation.ts, skills.ts, workExperience.ts)
+  - Centralized hardcoded data into `src/react-app/data/` directory (consultation.ts, expertise.ts, workExperience.ts)
   - Removed unused `Navigation.tsx` component
   - Modernized component typing by removing `React.FC`
   - Optimized React imports (removed unnecessary imports, kept only required hooks)

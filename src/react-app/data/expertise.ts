@@ -3,18 +3,63 @@ export const expertiseData = {
     title: '🚀 Strategic Technology Leadership & AI Innovation',
     paragraph: 'As a senior technology executive, I architect comprehensive solutions that bridge cutting-edge AI capabilities with practical business outcomes. My expertise spans building intelligent automation systems, developing advanced measurement frameworks, and leading cross-functional teams to implement scalable technology solutions. I specialize in transforming complex technical challenges into competitive advantages through systematic innovation and AI-driven methodologies.',
   },
+  leadershipExpertise: {
+    title: '👥 Executive Leadership & People Development',
+    paragraph: 'Proven track record of building, mentoring, and leading high-performance teams while maintaining exceptional client relationships and stakeholder engagement. My leadership philosophy combines systematic people development with strategic business alignment, creating sustainable growth through both technological innovation and human capital investment.',
+    categories: [
+      {
+        category: 'Team Building & Development',
+        skills: [
+          'Team Rebuilding & Restructuring',
+          'Talent Development Frameworks',
+          'Employee Performance Systems',
+          'Career Pathway Mapping',
+          'Mentoring & Coaching (20+)',
+          'Cross-functional Team Leadership',
+          'Hiring & Interview Process Design',
+          'Skills Assessment & Gap Analysis',
+        ],
+      },
+      {
+        category: 'Client Service & Relationship Management',
+        skills: [
+          'Client Pitches & Presentations',
+          'Stakeholder Communication',
+          'Strategic Account Management',
+          'Client Demonstration & Training',
+          'Service Excellence Frameworks',
+          'Relationship Management',
+          'Client Success & Retention',
+          'Executive Stakeholder Management',
+        ],
+      },
+      {
+        category: 'Strategic Communication & Leadership',
+        skills: [
+          'Executive Presentations',
+          'Thought Leadership Development',
+          'Industry Conference Speaking',
+          'Cross-departmental Collaboration',
+          'Change Management',
+          'Training Program Development',
+          'Knowledge Documentation',
+          'Team Performance Analytics',
+        ],
+      },
+    ],
+  },
   skillsGrid: [
     {
       category: 'Advertising',
       skills: [
-        'RTB Programmatic Media Buying',
+        'RTB Programmatic Buying',
         'Cookieless & Privacy',
         'Tracking Templates & UTM',
         'Google Apps/Ads Script',
         'Email Marketing',
         'Impression, Click & Ad Tags',
         'Google Merchant Center',
-        'Product Catalogue RSS Feeds',
+        'Product Catalogue Feeds',
       ],
     },
     {
@@ -36,13 +81,13 @@ export const expertiseData = {
     {
       category: 'Data & AI Analysis',
       skills: [
-        'Advanced Spreadsheet Formulae',
+        'Advanced Spreadsheets',
         'Regular Expressions (RegEx)',
         'Python & R Programming',
         'Excel Power Query',
         'SQL & BigQuery',
         'AI Prompt Engineering',
-        'ChatGPT/Claude API Integration',
+        'LLM API Integration',
         'Claude Code',
         'Google Looker Studio',
         'Microsoft PowerBI',

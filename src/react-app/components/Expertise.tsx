@@ -17,15 +17,33 @@ const Expertise = () => {
         <p>{expertiseData.intro.paragraph}</p>
       </section>
 
-      <section className="skills-grid">
-        {expertiseData.skillsGrid.map(category => (
-          <div className="skill-category" key={category.category}>
-            <h3>{category.category}</h3>
-            <div className="skill-tags">
-              {category.skills.map(skill => <span className="skill-tag" key={skill}>{skill}</span>)}
+      <section className="leadership-section">
+        <h2>{expertiseData.leadershipExpertise.title}</h2>
+        <p>{expertiseData.leadershipExpertise.paragraph}</p>
+        <div className="skills-grid">
+          {expertiseData.leadershipExpertise.categories.map(category => (
+            <div className="skill-category" key={category.category}>
+              <h3>{category.category}</h3>
+              <div className="skill-tags">
+                {category.skills.map(skill => <span className="skill-tag" key={skill}>{skill}</span>)}
+              </div>
             </div>
-          </div>
-        ))}
+          ))}
+        </div>
+      </section>
+
+      <section className="technical-skills-section">
+        <h2>🛠️ Technical Expertise & Platform Mastery</h2>
+        <div className="skills-grid">
+          {expertiseData.skillsGrid.map(category => (
+            <div className="skill-category" key={category.category}>
+              <h3>{category.category}</h3>
+              <div className="skill-tags">
+                {category.skills.map(skill => <span className="skill-tag" key={skill}>{skill}</span>)}
+              </div>
+            </div>
+          ))}
+        </div>
       </section>
 
       <section className="platform-experience">

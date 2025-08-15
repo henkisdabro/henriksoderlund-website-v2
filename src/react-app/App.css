@@ -187,8 +187,10 @@ h5 {
 .platform-experience h2,
 .github-contributions h2,
 .dashboards-section h2,
-.wiki-section h2 {
-  font-size: 1.8rem;
+.wiki-section h2,
+.leadership-section h2,
+.technical-skills-section h2 {
+  font-size: 2rem;
   margin-bottom: 1rem;
   color: #2c3e50;
 }
@@ -1054,7 +1056,17 @@ a:hover {
   }
 
   h2 {
-    font-size: 1rem;
+    font-size: 1.3em;
+  }
+  
+  .consultancy-section h2,
+  .platform-experience h2,
+  .github-contributions h2,
+  .dashboards-section h2,
+  .wiki-section h2,
+  .leadership-section h2,
+  .technical-skills-section h2 {
+    font-size: 1.3em;
   }
 
   h3 {

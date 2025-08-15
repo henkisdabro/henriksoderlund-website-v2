@@ -33,6 +33,26 @@ h1 {
   line-height: 1.1;
 }
 
+h2 {
+  font-size: 2em;
+  line-height: 1.2;
+  margin: 2rem 0 1rem 0;
+}
+
+h3 {
+  font-size: 1.4em;
+  line-height: 1.3;
+  margin: 1.5rem 0 0.5rem 0;
+}
+
+/* Homepage styling */
+.lead {
+  font-size: 1.1em;
+  line-height: 1.4;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
 button {
   border-radius: 8px;
   border: 1px solid transparent;
@@ -52,6 +72,113 @@ button:focus-visible {
   outline: 4px auto -webkit-focus-ring-color;
 }
 
+/* Skills and Leadership Sections */
+.skills-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2rem;
+  margin: 2rem 0;
+}
+
+.skill-category {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 8px;
+  padding: 1.5rem;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.skill-category h3 {
+  margin: 0 0 1rem 0;
+  font-size: 1.2em;
+  color: #646cff;
+  font-weight: 600;
+}
+
+.skill-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.skill-tag {
+  background: rgba(100, 108, 255, 0.1);
+  color: #646cff;
+  padding: 0.25rem 0.75rem;
+  border-radius: 20px;
+  font-size: 0.9em;
+  border: 1px solid rgba(100, 108, 255, 0.2);
+  white-space: nowrap;
+}
+
+/* Platform tags styling */
+.platform-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.platform-tag {
+  background: rgba(100, 108, 255, 0.1);
+  color: #646cff;
+  padding: 0.25rem 0.75rem;
+  border-radius: 20px;
+  font-size: 0.9em;
+  border: 1px solid rgba(100, 108, 255, 0.2);
+  white-space: nowrap;
+}
+
+/* Mobile responsive adjustments */
+@media (max-width: 768px) {
+  body {
+    padding: 0 1rem;
+  }
+  
+  h1 {
+    font-size: 2.5em;
+  }
+  
+  h2 {
+    font-size: 1.3em;
+    line-height: 1.3;
+    margin: 1.5rem 0 0.8rem 0;
+  }
+  
+  h3 {
+    font-size: 1.1em;
+    line-height: 1.4;
+    margin: 1rem 0 0.4rem 0;
+  }
+  
+  .lead {
+    font-size: 1em;
+    max-width: 100%;
+  }
+  
+  .skills-grid {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+    margin: 1.5rem 0;
+  }
+  
+  .skill-category {
+    padding: 1rem;
+  }
+  
+  .skill-tags, .platform-tags {
+    gap: 0.4rem;
+  }
+  
+  .skill-tag, .platform-tag {
+    font-size: 0.8em;
+    padding: 0.2rem 0.5rem;
+    word-break: break-word;
+    overflow-wrap: break-word;
+    white-space: normal;
+    max-width: 100%;
+    flex: 0 0 auto;
+  }
+}
+
 @media (prefers-color-scheme: light) {
   :root {
     color: #213547;
@@ -62,5 +189,16 @@ button:focus-visible {
   }
   button {
     background-color: #f9f9f9;
+  }
+  
+  /* Light mode adjustments for skills */
+  .skill-category {
+    background: rgba(0, 0, 0, 0.02);
+    border: 1px solid rgba(0, 0, 0, 0.1);
+  }
+  
+  .skill-tag, .platform-tag {
+    background: rgba(100, 108, 255, 0.08);
+    border: 1px solid rgba(100, 108, 255, 0.15);
   }
 }
