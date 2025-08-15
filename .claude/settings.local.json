@@ -52,7 +52,11 @@
       "Bash(find:*)",
       "Bash(del \"public\\*.md\")",
       "Bash(del:*)",
-      "Bash(del \".llms-cache.json\")"
+      "Bash(del \".llms-cache.json\")",
+      "WebFetch(domain:www.cloudflare.com)",
+      "Bash(curl:*)",
+      "WebFetch(domain:henriksoderlund.com)",
+      "WebFetch(domain:www.henriksoderlund.com)"
     ],
     "deny": [],
     "ask": [],
