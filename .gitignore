@@ -80,6 +80,7 @@ vite.config.*.timestamp-*
 .dev.vars*
 !.dev.vars.example
 wrangler.toml.bak
+worker-configuration.d.ts
 
 # Environment variables
 .env*
