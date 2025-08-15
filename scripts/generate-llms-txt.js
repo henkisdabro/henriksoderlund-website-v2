@@ -136,18 +136,27 @@ function generateMarkdownPages() {
       }
       
       // Extract title from component
-      const pageTitle = extractPageTitle(componentPath);
+      let pageTitle = extractPageTitle(componentPath);
+
+      if (pageTitle.startsWith('{')) {
+        if (componentName === 'Consultation') {
+          const dataPath = path.join(PROJECT_ROOT, 'src', 'react-app', 'data', 'consultation.ts');
+          const dataContent = fs.readFileSync(dataPath, 'utf8');
+          const titleMatch = dataContent.match(/title: '([^']+)'/);
+          if (titleMatch) {
+            pageTitle = titleMatch[1];
+          } else {
+            pageTitle = 'Consultation'; // fallback
+          }
+        }
+      }
       
       // Convert to markdown
       const markdownContent = convertComponentToMarkdown(componentPath, pageTitle);
       
       // Determine output filename based on llms.txt spec
-      let filename;
-      if (route === '/') {
-        filename = 'index.html.md';
-      } else {
-        filename = route.slice(1) + '.md'; // Remove leading slash
-      }
+      const slug = route === '/' ? 'index' : route.slice(1);
+      const filename = `${slug}.html.md`;
       
       // Write to public directory
       const outputPath = path.join(PROJECT_ROOT, 'public', filename);
