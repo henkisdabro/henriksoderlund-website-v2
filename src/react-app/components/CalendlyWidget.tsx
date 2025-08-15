@@ -1,12 +1,11 @@
-import { useEffect, useRef } from 'react';
+import { useEffect } from 'react';
 
 interface CalendlyWidgetProps {
   url: string;
-  height?: string;
   className?: string;
 }
 
-const CalendlyWidget = ({ url, height = '700px', className = '' }: CalendlyWidgetProps) => {
+const CalendlyWidget = ({ url, className = '' }: CalendlyWidgetProps) => {
   useEffect(() => {
     // Load Calendly script if not already loaded (matches official implementation)
     if (!document.querySelector('script[src="https://assets.calendly.com/assets/external/widget.js"]')) {
@@ -21,10 +20,6 @@ const CalendlyWidget = ({ url, height = '700px', className = '' }: CalendlyWidge
     <div 
       className={`calendly-inline-widget ${className}`}
       data-url={url}
-      style={{ 
-        minWidth: '320px', 
-        height: height
-      }}
     />
   );
 };

@@ -80,7 +80,6 @@ const Consultation = () => {
         </div>
         <CalendlyWidget 
           url={consultationData.scheduling.calendlyUrl} 
-          height="700px"
           className="consultation-booking-widget"
         />
       </section>
