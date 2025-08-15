@@ -3,6 +3,9 @@
 ## Project Overview
 This is Henrik Söderlund's personal website being rebuilt with modern technologies.
 
+**Production Site**: `https://www.henriksoderlund.com/`
+**Deployment**: Automatic via GitHub Actions on push to main branch
+
 ## Tech Stack
 - **Frontend**: React 19.1.1 with TypeScript 5.9.2, built with Vite 7.1.2
 - **Backend**: Hono.js 4.9.1 (modern web framework)
@@ -93,10 +96,22 @@ The project uses **wrangler.json** for Cloudflare Workers configuration:
 - ✅ **Static Assets**: Optimized asset serving from Vite build output
 
 ### Deployment Flow:
-1. `npm run build` - TypeScript compilation + Vite build to `dist/`
-2. `npm run deploy` - Wrangler deploys worker + static assets
-3. Cloudflare Workers serves app globally from edge locations
-4. Static assets cached and served efficiently
+**IMPORTANT**: Deployment is handled automatically via GitHub Actions. DO NOT use `npm run deploy` directly.
+
+**Production Deployment Process:**
+1. **Push to main branch** - Triggers GitHub Actions workflow
+2. **Automated CI/CD Pipeline** (`.github/workflows/deploy.yml`):
+   - Install dependencies and run linting
+   - Build project (includes llms.txt generation + Vite build to `dist/`)
+   - Verify all build artifacts (llms.txt, markdown files, sitemap.xml)
+   - Deploy to Cloudflare Workers using stored secrets
+3. **Live Site**: Available at `https://www.henriksoderlund.com/`
+4. **Static assets** cached and served efficiently from Cloudflare edge
+
+**Development/Testing Only:**
+- `npm run build` - Local build for testing
+- `npm run preview` - Local preview of production build
+- `npm run deploy` - Manual deploy (only for development/testing, not production)
 
 ## Development Environment
 
