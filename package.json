@@ -37,13 +37,14 @@
     "wrangler": "^4.29.0"
   },
   "scripts": {
-    "build": "npm run generate-llms-if-needed && tsc -b && vite build",
+    "build": "npm run generate-llms-if-needed && npm run generate-sitemap && tsc -b && vite build",
     "cf-typegen": "wrangler types",
     "check": "tsc && vite build && wrangler deploy --dry-run",
     "deploy": "wrangler deploy",
     "dev": "vite",
     "generate-llms": "node scripts/generate-llms-txt.js",
     "generate-llms-if-needed": "node scripts/check-content-changes.js && npm run generate-llms || echo 'Skipping llms.txt generation - no content changes'",
+    "generate-sitemap": "node scripts/generate-sitemap.js",
     "lint": "eslint .",
     "preview": "npm run build && vite preview"
   },

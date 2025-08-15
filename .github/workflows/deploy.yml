@@ -49,9 +49,15 @@ jobs:
           fi
         done
         
+        echo "🗺️ Verifying sitemap.xml exists..."
+        if [ ! -f "dist/client/sitemap.xml" ]; then
+          echo "❌ sitemap.xml not found in build output"
+          exit 1
+        fi
+        
         echo "✅ All required files verified"
         echo "📊 Build statistics:"
-        wc -c dist/client/llms.txt dist/client/*.md
+        wc -c dist/client/llms.txt dist/client/*.md dist/client/sitemap.xml
         
     - name: 🚀 Deploy to Cloudflare Workers
       if: github.ref == 'refs/heads/main' && github.event_name == 'push'
@@ -73,8 +79,10 @@ jobs:
         echo "- ✅ work-experience.md ($(wc -c < dist/client/work-experience.md) bytes)" >> $GITHUB_STEP_SUMMARY
         echo "- ✅ education.md ($(wc -c < dist/client/education.md) bytes)" >> $GITHUB_STEP_SUMMARY
         echo "- ✅ consultancy.md ($(wc -c < dist/client/consultancy.md) bytes)" >> $GITHUB_STEP_SUMMARY
+        echo "- ✅ sitemap.xml ($(wc -c < dist/client/sitemap.xml) bytes)" >> $GITHUB_STEP_SUMMARY
         echo "" >> $GITHUB_STEP_SUMMARY
         echo "### 🌐 Available URLs" >> $GITHUB_STEP_SUMMARY
+        echo "- [Sitemap](https://www.henriksoderlund.com/sitemap.xml)" >> $GITHUB_STEP_SUMMARY
         echo "- [llms.txt](https://www.henriksoderlund.com/llms.txt)" >> $GITHUB_STEP_SUMMARY
         echo "- [Homepage Markdown](https://www.henriksoderlund.com/index.html.md)" >> $GITHUB_STEP_SUMMARY
         echo "- [Expertise Markdown](https://www.henriksoderlund.com/expertise.md)" >> $GITHUB_STEP_SUMMARY
@@ -109,7 +117,7 @@ jobs:
         
         echo "✅ PR build successful"
         echo "📊 Generated file sizes:"
-        wc -c dist/client/llms.txt dist/client/*.md
+        wc -c dist/client/llms.txt dist/client/*.md dist/client/sitemap.xml
         
     - name: 📋 PR Build Summary
       run: |
@@ -121,6 +129,7 @@ jobs:
         echo "" >> $GITHUB_STEP_SUMMARY
         echo "### 📄 Generated Files Preview" >> $GITHUB_STEP_SUMMARY
         echo "- llms.txt: $(wc -c < dist/client/llms.txt) bytes" >> $GITHUB_STEP_SUMMARY
+        echo "- sitemap.xml: $(wc -c < dist/client/sitemap.xml) bytes" >> $GITHUB_STEP_SUMMARY
         echo "- index.html.md: $(wc -c < dist/client/index.html.md) bytes" >> $GITHUB_STEP_SUMMARY
         echo "- expertise.md: $(wc -c < dist/client/expertise.md) bytes" >> $GITHUB_STEP_SUMMARY
         echo "- work-experience.md: $(wc -c < dist/client/work-experience.md) bytes" >> $GITHUB_STEP_SUMMARY

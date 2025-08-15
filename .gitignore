@@ -100,9 +100,10 @@ content/
 # Project management files (keep in repo but could be ignored if preferred)
 # TASKS.md
 
-# Generated llms.txt files (regenerated during build)
+# Generated files (regenerated during build)
 public/llms.txt
 public/*.md
+public/sitemap.xml
 
 # LLMs generation cache
 .llms-cache.json
