@@ -1,8 +1,8 @@
 import React from 'react';
-import cloudflareLogo from '../assets/Cloudflare.svg';
-import honoLogo from '../assets/hono.svg';
-import viteLogo from '/vite.svg';
-import claudeLogo from '../assets/claude.svg';
+import cloudflareLogo from '../assets/logos/cloudflare.svg';
+import honoLogo from '../assets/logos/hono.svg';
+import viteLogo from '../assets/logos/vite.svg';
+import claudeLogo from '../assets/logos/claude.svg';
 
 const Footer: React.FC = () => {
   return (

@@ -1,11 +1,12 @@
 import React from 'react';
+import profileImage from '../assets/images/henrik-profile-small.jpg';
 
 const Home: React.FC = () => {
   return (
     <div className="home-page">
       <div className="hero-section">
         <img 
-          src="/images/henrik_profile_beard-modified_small.jpg" 
+          src={profileImage} 
           alt="Henrik Söderlund" 
           className="profile-image"
         />

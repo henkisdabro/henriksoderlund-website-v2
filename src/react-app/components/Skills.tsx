@@ -1,4 +1,6 @@
 import React from 'react';
+import dashboardImage from '../assets/images/screenshots/dashboard.jpg';
+import wikiImage from '../assets/images/screenshots/wiki.jpg';
 
 const Skills: React.FC = () => {
   return (
@@ -187,7 +189,7 @@ const Skills: React.FC = () => {
           <p><strong>Featured Build:</strong></p>
           <p><strong>Campaign & Website Performance Dashboard</strong></p>
           <img 
-            src="/images/screely-1669110504856.png" 
+            src={dashboardImage} 
             alt="Campaign & Website Performance Dashboard in Looker Studio" 
             className="dashboard-image"
           />
@@ -200,7 +202,7 @@ const Skills: React.FC = () => {
           Using no-code tools such as Notion, Coda, Tana or Craft, below is a screenshot of an in-depth "Company Wiki" built as a knowledge base for company staff to find critical information pertaining to their role, such as claim forms, employee handbook, cheat sheets, guides and tutorials.
         </p>
         <img 
-          src="/images/screely-1669119970117.png" 
+          src={wikiImage} 
           alt="Sample Screenshot of Company Wiki developed in Notion" 
           className="wiki-image"
         />
