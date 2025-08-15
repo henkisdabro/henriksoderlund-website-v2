@@ -146,7 +146,7 @@ Crawl-delay: 1
 
 # === SITEMAP LOCATION ===
 # Help bots discover all important pages
-Sitemap: https://henriksoderlund.com/sitemap.xml
+Sitemap: https://www.henriksoderlund.com/sitemap.xml
 
 # === HUMAN MESSAGE ===
 # If you're a human reading this, this site showcases
