@@ -39,7 +39,7 @@ export const consultationData = {
         'Google Tag Manager - Enterprise-grade tracking solutions, server-side implementations',
         'Business Intelligence Dashboards - Real-time reporting and performance monitoring systems',
         'Data Pipeline Architecture - Scalable data collection and processing solutions',
-        'Conversion Rate Optimization - Data-driven testing and optimization strategies',
+        'Conversion Rate Optimisation - Data-driven testing and optimisation strategies',
       ],
     },
     pricing: {
@@ -47,10 +47,10 @@ export const consultationData = {
       headers: ['Service', 'Timeline', 'Investment', 'Deliverables'],
       rows: [
         ['Strategic Analytics Consultation', '1 hour', 'AUD 350', 'Expert guidance, Q&A, strategic recommendations'],
-        ['GA4 Enterprise Audit', '1-2 weeks', 'AUD 2,800', 'Comprehensive audit report, optimization roadmap'],
+        ['GA4 Enterprise Audit', '1-2 weeks', 'AUD 2,800', 'Comprehensive audit report, optimisation roadmap'],
         ['Advanced Measurement Planning', '2-3 weeks', 'AUD 4,500', 'Custom measurement framework, KPI mapping, implementation guide'],
         ['GTM Server-Side Implementation', '3-4 weeks', 'AUD 6,500', 'Complete server-side setup, testing, documentation'],
-        ['Meta CAPI & Advanced Tracking', '2-3 weeks', 'AUD 4,200', 'Full CAPI implementation, event validation, optimization'],
+        ['Meta CAPI & Advanced Tracking', '2-3 weeks', 'AUD 4,200', 'Full CAPI implementation, event validation, optimisation'],
         ['Enterprise Analytics Implementation', '4-8 weeks', 'Starting at AUD 12,000', 'Complete analytics ecosystem, training, ongoing support'],
       ],
     },

@@ -146,7 +146,7 @@ export const expertiseData = {
   ],
   platformExperience: {
     title: '📈 Advertising Platform Expertise',
-    paragraph: 'Extensive hands-on experience managing campaigns and implementing advanced measurement across major advertising platforms. Specializing in cross-platform attribution, server-side tracking implementations, and AI-driven optimization strategies for enterprise-scale media buying operations.',
+    paragraph: 'Extensive hands-on experience managing campaigns and implementing advanced measurement across major advertising platforms. Specialising in cross-platform attribution, server-side tracking implementations, and AI-driven optimisation strategies for enterprise-scale media buying operations.',
     platforms: [
       'Meta', 'Google Ads', 'Teads', 'DV360', 'CM360', 'SA360', 'TheTradeDesk', 'Vistar Media', 'Yahoo DSP', 'TikTok Ads', 'Zemanta', 'Snapchat', 'Spotify', 'Linkedin', 'Taboola', 'Outbrain', 'Quora', 'X Ads', 'Reddit',
     ],
@@ -157,7 +157,7 @@ export const expertiseData = {
       {
         title: 'Collection of Platform Click ID Parameters',
         url: 'https://github.com/henkisdabro/platform-url-click-id-parameters',
-        description: 'Comprehensive global database of URL parameters for analytics filtering, exclusion criteria, and ad platform pixel trigger optimization across multiple advertising ecosystems.',
+        description: 'Comprehensive global database of URL parameters for analytics filtering, exclusion criteria, and ad platform pixel trigger optimisation across multiple advertising ecosystems.',
       },
       {
         title: 'IPmeta Tag Template for GA4',
@@ -178,7 +178,7 @@ export const expertiseData = {
   },
   dashboards: {
     title: '📺 Data Architecture & Advanced Visualization',
-    paragraph: 'Expert in designing and implementing comprehensive data visualization ecosystems, leveraging AI-enhanced analytics platforms and automated data pipelines. Specialized in building executive-level dashboards that integrate multi-source data streams through advanced ETL processes, custom APIs, and intelligent reporting automation.',
+    paragraph: 'Expert in designing and implementing comprehensive data visualisation ecosystems, leveraging AI-enhanced analytics platforms and automated data pipelines. Specialised in building executive-level dashboards that integrate multi-source data streams through advanced ETL processes, custom APIs, and intelligent reporting automation.',
     featured: {
       title: 'Campaign & Website Performance Dashboard',
       image: 'dashboardImage',
@@ -186,7 +186,7 @@ export const expertiseData = {
   },
   knowledgeManagement: {
     title: '📖 Knowledge Management & Documentation Systems',
-    paragraph: 'Strategic development of comprehensive organizational knowledge bases that transform information accessibility and team productivity. Utilizing AI-enhanced documentation workflows and advanced no-code platforms, I design scalable information architectures that streamline operations, reduce training time, and ensure critical business knowledge is systematically captured and accessible across teams.',
+    paragraph: 'Strategic development of comprehensive organisational knowledge bases that transform information accessibility and team productivity. Utilising AI-enhanced documentation workflows and advanced no-code platforms, I design scalable information architectures that streamline operations, reduce training time, and ensure critical business knowledge is systematically captured and accessible across teams.',
     image: 'wikiImage',
   },
 };

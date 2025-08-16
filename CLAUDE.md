@@ -266,3 +266,11 @@ Complete implementation of the [llms.txt specification](https://llmstxt.org/) fo
 - ✅ **AI-Optimized Content**: Complete llms.txt specification implementation for AI/LLM consumption
 - ✅ **Automated CI/CD**: GitHub Actions workflow for build, verification, and deployment
 - ✅ **Smart Generation**: Content-based caching system for efficient builds
+
+## Content Standards
+
+### Writing Style & Language
+- **Language**: All content must use British English spelling and conventions
+- **Common British spellings**: optimisation (not optimization), specialising (not specializing), organisation (not organization), utilising (not utilizing), realise (not realize), colour (not color), behaviour (not behavior), centre (not center)
+- **Voice**: Professional, direct, and technical without being overly formal
+- **Consistency**: Maintain consistent terminology and spelling across all content files
