@@ -24,8 +24,8 @@ const Expertise = () => {
           {expertiseData.leadershipExpertise.categories.map(category => (
             <div className="skill-category" key={category.category}>
               <h3>{category.category}</h3>
-              <div className="skill-tags">
-                {category.skills.map(skill => <span className="skill-tag" key={skill}>{skill}</span>)}
+              <div className="skills-minimal-pills">
+                {category.skills.map(skill => <span className="skill-pill-minimal" key={skill}>{skill}</span>)}
               </div>
             </div>
           ))}
@@ -38,8 +38,8 @@ const Expertise = () => {
           {expertiseData.skillsGrid.map(category => (
             <div className="skill-category" key={category.category}>
               <h3>{category.category}</h3>
-              <div className="skill-tags">
-                {category.skills.map(skill => <span className="skill-tag" key={skill}>{skill}</span>)}
+              <div className="skills-minimal-pills">
+                {category.skills.map(skill => <span className="skill-pill-minimal" key={skill}>{skill}</span>)}
               </div>
             </div>
           ))}
@@ -49,8 +49,8 @@ const Expertise = () => {
       <section className="platform-experience">
         <h2>{expertiseData.platformExperience.title}</h2>
         <p>{expertiseData.platformExperience.paragraph}</p>
-        <div className="platform-tags">
-          {expertiseData.platformExperience.platforms.map(platform => <span className="platform-tag" key={platform}>{platform}</span>)}
+        <div className="skills-minimal-pills">
+          {expertiseData.platformExperience.platforms.map(platform => <span className="skill-pill-minimal" key={platform}>{platform}</span>)}
         </div>
       </section>
 

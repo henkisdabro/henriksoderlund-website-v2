@@ -197,7 +197,7 @@ button:focus-visible {
 }
 
 .skill-category {
-  background: rgba(100, 108, 255, 0.05);
+  background: rgba(255, 255, 255, 0.05);
   border-radius: 8px;
   padding: 1.5rem;
   border: 1px solid rgba(100, 108, 255, 0.15);
@@ -211,38 +211,6 @@ button:focus-visible {
   font-weight: 600;
 }
 
-.skill-tags {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem;
-}
-
-.skill-tag {
-  background: rgba(100, 108, 255, 0.1);
-  color: #646cff;
-  padding: 0.25rem 0.75rem;
-  border-radius: 20px;
-  font-size: 0.9em;
-  border: 1px solid rgba(100, 108, 255, 0.2);
-  white-space: nowrap;
-}
-
-/* Platform tags styling */
-.platform-tags {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem;
-}
-
-.platform-tag {
-  background: rgba(100, 108, 255, 0.1);
-  color: #646cff;
-  padding: 0.25rem 0.75rem;
-  border-radius: 20px;
-  font-size: 0.9em;
-  border: 1px solid rgba(100, 108, 255, 0.2);
-  white-space: nowrap;
-}
 
 /* Mobile responsive adjustments */
 @media (max-width: 768px) {
@@ -281,19 +249,6 @@ button:focus-visible {
     padding: 1rem;
   }
   
-  .skill-tags, .platform-tags {
-    gap: 0.4rem;
-  }
-  
-  .skill-tag, .platform-tag {
-    font-size: 0.8em;
-    padding: 0.2rem 0.5rem;
-    word-break: break-word;
-    overflow-wrap: break-word;
-    white-space: normal;
-    max-width: 100%;
-    flex: 0 0 auto;
-  }
 }
 
 @media (prefers-color-scheme: light) {
@@ -310,14 +265,9 @@ button:focus-visible {
   
   /* Light mode adjustments for skills */
   .skill-category {
-    background: rgba(100, 108, 255, 0.03);
+    background: rgba(255, 255, 255, 0.05);
     border: 1px solid rgba(100, 108, 255, 0.1);
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
-  }
-  
-  .skill-tag, .platform-tag {
-    background: rgba(100, 108, 255, 0.08);
-    border: 1px solid rgba(100, 108, 255, 0.15);
   }
 }
 
@@ -327,5 +277,49 @@ button:focus-visible {
     grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
     max-width: 1400px;
     margin: 2rem auto;
+  }
+}
+
+
+/* Skills Pill Display */
+.skills-minimal-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  line-height: 1.6;
+}
+
+.skill-pill-minimal {
+  background: #f1f3f4;
+  color: #666;
+  padding: 0.1rem 0.4rem;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  border: 1px solid #e5e7eb;
+  font-family: Monaco, Menlo, "Ubuntu Mono", monospace;
+  font-weight: normal;
+  cursor: default;
+}
+
+
+
+/* Light mode adjustments for skill pills */
+@media (prefers-color-scheme: light) {
+  .skill-pill-minimal {
+    background: #f1f3f4;
+    border: 1px solid #e5e7eb;
+    color: #555;
+  }
+}
+
+/* Mobile adjustments for skill pills */
+@media (max-width: 768px) {
+  .skill-pill-minimal {
+    font-size: 0.7rem;
+    padding: 0.05rem 0.3rem;
+  }
+
+  .skills-minimal-pills {
+    gap: 0.3rem;
   }
 }
