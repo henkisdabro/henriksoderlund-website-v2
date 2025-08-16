@@ -1,7 +1,4 @@
 import { Hono } from "hono";
-import { serveStatic } from "hono/cloudflare-workers";
-import llms from "../llms.txt";
-
 const app = new Hono<{ Bindings: Env }>();
 
 app.get("/api/", (c) => c.json({ name: "Cloudflare" }));
@@ -11,40 +8,48 @@ app.get("/favicon.ico", async (c) => {
   const url = new URL(c.req.url);
   url.pathname = "/bot.svg";
   const asset = await c.env.ASSETS.fetch(url.toString());
-
+  
   if (asset.status === 404) {
     return c.notFound();
   }
-
+  
   const svgContent = await asset.arrayBuffer();
   return c.body(svgContent, 200, {
-    "Content-Type": "image/svg+xml",
-    "Cache-Control": "public, max-age=86400",
+    'Content-Type': 'image/svg+xml',
+    'Cache-Control': 'public, max-age=86400'
   });
 });
 
 // Handle llms.txt specifically to ensure correct encoding
-app.get("/llms.txt", (c) => {
-  return c.text(llms, 200, {
-    "Content-Type": "text/plain; charset=utf-8",
-    "Cache-Control": "public, max-age=3600",
-    "X-Served-By": "worker-direct-read",
-  });
+app.get("/llms.txt", async (c) => {
+	const url = new URL(c.req.url);
+	const asset = await c.env.ASSETS.fetch(url.toString());
+
+	if (asset.status === 404) {
+		return c.notFound();
+	}
+
+	const text = await asset.text();
+	return c.text(text, 200, {
+		"Content-Type": "text/plain; charset=utf-8",
+		"Cache-Control": "public, max-age=3600",
+		"X-Served-By": "worker",
+	});
 });
 
 // Handle other text files with proper UTF-8 encoding
 app.get("*.txt", async (c) => {
   const url = new URL(c.req.url);
   const asset = await c.env.ASSETS.fetch(url.toString());
-
+  
   if (asset.status === 404) {
     return c.notFound();
   }
-
+  
   const text = await asset.text();
   return c.text(text, 200, {
-    "Content-Type": "text/plain; charset=utf-8",
-    "Cache-Control": "public, max-age=3600",
+    'Content-Type': 'text/plain; charset=utf-8',
+    'Cache-Control': 'public, max-age=3600'
   });
 });
 
@@ -52,15 +57,15 @@ app.get("*.txt", async (c) => {
 app.get("*.md", async (c) => {
   const url = new URL(c.req.url);
   const asset = await c.env.ASSETS.fetch(url.toString());
-
+  
   if (asset.status === 404) {
     return c.notFound();
   }
-
+  
   const text = await asset.text();
   return c.text(text, 200, {
-    "Content-Type": "text/markdown; charset=utf-8",
-    "Cache-Control": "public, max-age=3600",
+    'Content-Type': 'text/markdown; charset=utf-8',
+    'Cache-Control': 'public, max-age=3600'
   });
 });
 
