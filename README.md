@@ -147,7 +147,9 @@ npx wrangler tail
 ## Future Tasks and Site Improvements
 
 ### Analytics & Tracking
-- [ ] Add Google Tag Manager (GTM) to header with support for dev environments
+- [x] Add Google Tag Manager (GTM) to header with support for dev environments
+- [x] Implement comprehensive dataLayer with client-side and server-side metrics
+- [ ] **FIX: Cloudflare Variables Injection** - CF placeholders (%CF_COUNTRY%, %CF_COLO%, %CF_RAY%) not being replaced with actual values in dataLayer
 - [x] Confirm Ahrefs and Google Search Console verification files
 
 ### SEO & Site Configuration
