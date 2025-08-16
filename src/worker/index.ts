@@ -153,11 +153,12 @@ app.get("/sitemap.xml", async (c) => {
 });
 
 // Handle index.html with server-side data injection
-app.get("/", async (c) => {
+const handleIndexWithInjection = async (c: Context) => {
   try {
     const asset = await c.env.ASSETS.fetch(new URL("/index.html", c.req.url).toString());
     
     if (!asset.ok) {
+      console.error('Failed to fetch index.html:', asset.status);
       return c.notFound();
     }
     
@@ -168,6 +169,8 @@ app.get("/", async (c) => {
     const cfCountry = c.req.header('cf-ipcountry') || 'unknown';
     const cfColo = c.req.header('cf-ipcolo') || 'unknown';
     const cfRay = c.req.header('cf-ray') || 'unknown';
+    
+    console.log('Injecting CF data:', { cfCountry, cfColo, cfRay });
     
     // Replace placeholders with actual data
     html = html.replace(/%BUILD_TIMESTAMP%/g, buildTimestamp);
@@ -183,7 +186,10 @@ app.get("/", async (c) => {
     console.error('Index.html processing error:', error);
     return c.text('Internal server error', 500);
   }
-});
+};
+
+app.get("/", handleIndexWithInjection);
+app.get("/index.html", handleIndexWithInjection);
 
 // Handle static assets with long cache times
 app.get("*.{js,css,svg,png,jpg,jpeg,gif,webp,woff,woff2,ttf,eot,ico}", async (c) => {
@@ -307,6 +313,36 @@ app.use('/metrics', async (c, next) => {
     });
   }
   await next();
+});
+
+// Catch-all route for SPA routing - must be last
+app.get("*", async (c) => {
+  // For SPA routes (anything that would normally hit index.html), serve with data injection
+  const url = new URL(c.req.url);
+  
+  // Check if this is likely a page route (not an asset)
+  const isPageRoute = !url.pathname.includes('.') || 
+                      url.pathname.endsWith('.html') || 
+                      url.pathname === '/' ||
+                      url.pathname.startsWith('/expertise');
+  
+  if (isPageRoute) {
+    console.log('SPA route detected, serving index.html with injection:', url.pathname);
+    return handleIndexWithInjection(c);
+  }
+  
+  // For other requests, try to serve as static asset
+  try {
+    const asset = await c.env.ASSETS.fetch(c.req.url);
+    if (asset.ok) {
+      return asset;
+    }
+  } catch (error) {
+    console.error('Asset fetch failed:', error);
+  }
+  
+  // Fallback to index.html with injection for unknown routes
+  return handleIndexWithInjection(c);
 });
 
 export default app;
