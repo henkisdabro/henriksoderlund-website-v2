@@ -1,7 +1,6 @@
 {
 	"$schema": "node_modules/wrangler/config-schema.json",
 	"name": "henriksoderlund-website-v2",
-	"account_id": "fb24a6013111bfbeb0b2046d6e5326d2",
 	"main": "./src/worker/index.ts",
 	"compatibility_date": "2025-08-03",
 	"compatibility_flags": [

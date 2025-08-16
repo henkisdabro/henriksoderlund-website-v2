@@ -64,7 +64,12 @@
       "WebFetch(domain:henriksoderlund-website-v2.par.workers.dev)",
       "WebFetch(domain:henriksoderlund-website-v2.krrsantan.workers.dev)",
       "WebFetch(domain:ogp.me)",
-      "Bash(move:*)"
+      "Bash(move:*)",
+      "Bash(wrangler dev:*)",
+      "Bash(npx wrangler dev:*)",
+      "Bash(for i in {1..5})",
+      "Bash(do echo \"Request $i:\")",
+      "Bash(done)"
     ],
     "deny": [],
     "ask": [],
