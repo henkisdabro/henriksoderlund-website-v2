@@ -15,9 +15,9 @@ const NavigationBox = () => {
   const pages = [
     { path: '/', name: 'Home', emoji: '🏠' },
     { path: '/expertise', name: 'Expertise', emoji: '🛠️' },
+    { path: '/consultancy', name: 'Consultancy', emoji: '💬' },
     { path: '/work-experience', name: 'Work Experience', emoji: '💼' },
-    { path: '/education', name: 'Education', emoji: '🎓' },
-    { path: '/consultancy', name: 'Consultancy', emoji: '💬' }
+    { path: '/education', name: 'Education', emoji: '🎓' }
   ];
 
   useEffect(() => {
