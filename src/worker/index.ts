@@ -149,6 +149,39 @@ app.get("/sitemap.xml", async (c) => {
   return handleAssetFetch(c, c.req.url, 'application/xml; charset=utf-8', 'public, max-age=86400');
 });
 
+// Handle index.html with server-side data injection
+app.get("/", async (c) => {
+  try {
+    const asset = await c.env.ASSETS.fetch(new URL("/index.html", c.req.url).toString());
+    
+    if (!asset.ok) {
+      return c.notFound();
+    }
+    
+    let html = await asset.text();
+    
+    // Inject Cloudflare and server-side data
+    const buildTimestamp = new Date().toISOString();
+    const cfCountry = c.req.header('cf-ipcountry') || 'unknown';
+    const cfColo = c.req.header('cf-ipcolo') || 'unknown';
+    const cfRay = c.req.header('cf-ray') || 'unknown';
+    
+    // Replace placeholders with actual data
+    html = html.replace(/%BUILD_TIMESTAMP%/g, buildTimestamp);
+    html = html.replace(/%CF_COUNTRY%/g, cfCountry);
+    html = html.replace(/%CF_COLO%/g, cfColo);
+    html = html.replace(/%CF_RAY%/g, cfRay);
+    
+    return c.html(html, 200, {
+      'Cache-Control': 'public, max-age=3600',
+      'Content-Type': 'text/html; charset=utf-8'
+    });
+  } catch (error) {
+    console.error('Index.html processing error:', error);
+    return c.text('Internal server error', 500);
+  }
+});
+
 // Handle static assets with long cache times
 app.get("*.{js,css,svg,png,jpg,jpeg,gif,webp,woff,woff2,ttf,eot,ico}", async (c) => {
   const url = new URL(c.req.url);

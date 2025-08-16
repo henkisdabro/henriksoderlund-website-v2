@@ -233,15 +233,70 @@
   <link rel="preconnect" href="https://load.sgtm.henriksoderlund.com/" crossorigin>
   <link rel="dns-prefetch" href="https://load.sgtm.henriksoderlund.com/">
 
+  <!-- Initialize dataLayer before GTM -->
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    
+    // Device type detection
+    const deviceType = /Mobile|Android|iPhone|iPad/.test(navigator.userAgent) ? 'mobile' : 
+                      /Tablet|iPad/.test(navigator.userAgent) ? 'tablet' : 'desktop';
+    
+    // Initialize with all data
+    window.dataLayer.push({
+      'page_title': document.title,
+      'page_location': window.location.href,
+      'page_path': window.location.pathname,
+      'page_referrer': document.referrer,
+      'environment': location.hostname === 'localhost' || location.hostname === '127.0.0.1' || location.hostname.includes('vite') ? 'development' : 'production',
+      'build_timestamp': '%BUILD_TIMESTAMP%', // Will be replaced server-side
+      'user_agent': navigator.userAgent,
+      'screen_resolution': screen.width + 'x' + screen.height,
+      'viewport_size': window.innerWidth + 'x' + window.innerHeight,
+      'color_depth': screen.colorDepth,
+      'timezone': Intl.DateTimeFormat().resolvedOptions().timeZone,
+      'language': navigator.language,
+      'platform': navigator.platform,
+      'device_type': deviceType,
+      'is_mobile': deviceType === 'mobile',
+      'is_tablet': deviceType === 'tablet',
+      'is_desktop': deviceType === 'desktop',
+      'connection_type': navigator.connection ? navigator.connection.effectiveType : 'unknown',
+      // Cloudflare data will be injected server-side
+      'cf_country': '%CF_COUNTRY%',
+      'cf_colo': '%CF_COLO%',
+      'cf_ray': '%CF_RAY%'
+    });
+  </script>
+
   <!-- Google Tag Manager -->
-  <script>(function (w, d, s, l, i) { w[l] = w[l] || []; w[l].push({ 'gtm.start': new Date().getTime(), event: 'gtm.js' }); var f = d.getElementsByTagName(s)[0], j = d.createElement(s); j.async = true; j.src = "https://load.sgtm.henriksoderlund.com/dz4d7tyirczbv.js?" + i; f.parentNode.insertBefore(j, f); })(window, document, 'script', 'dataLayer', '6at4snq=aWQ9R1RNLUZXUjQ%3D&omNe=daQSaS');</script>
+  <script>
+    // Only load GTM in production (not on localhost or when NODE_ENV is development)
+    if (location.hostname !== 'localhost' && location.hostname !== '127.0.0.1' && !location.hostname.includes('vite')) {
+      (function (w, d, s, l, i) { 
+        w[l] = w[l] || []; 
+        w[l].push({ 'gtm.start': new Date().getTime(), event: 'gtm.js' }); 
+        var f = d.getElementsByTagName(s)[0], j = d.createElement(s); 
+        j.async = true; 
+        j.src = "https://load.sgtm.henriksoderlund.com/dz4d7tyirczbv.js?" + i; 
+        f.parentNode.insertBefore(j, f); 
+      })(window, document, 'script', 'dataLayer', '6at4snq=aWQ9R1RNLUZXUjQ%3D&omNe=daQSaS');
+    } else {
+      console.log('GTM disabled in development environment');
+    }
+  </script>
   <!-- End Google Tag Manager -->
 </head>
 
 <body>
   <!-- Google Tag Manager (noscript) -->
-  <noscript><iframe src="https://load.sgtm.henriksoderlund.com/ns.html?id=GTM-FWR4" height="0" width="0"
-      style="display:none;visibility:hidden"></iframe></noscript>
+  <noscript>
+    <script>
+      // Only load GTM noscript in production
+      if (location.hostname !== 'localhost' && location.hostname !== '127.0.0.1' && !location.hostname.includes('vite')) {
+        document.write('<iframe src="https://load.sgtm.henriksoderlund.com/ns.html?id=GTM-FWR4" height="0" width="0" style="display:none;visibility:hidden"></iframe>');
+      }
+    </script>
+  </noscript>
   <!-- End Google Tag Manager (noscript) -->
   <noscript><img src="https://api.fouanalytics.com/api/noscript-6686ht0xp1ec4dc5q5z4.gif"></noscript>
   <div id="root"></div>
