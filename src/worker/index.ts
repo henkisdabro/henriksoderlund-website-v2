@@ -7,7 +7,7 @@ app.get("/api/", (c) => c.json({ name: "Cloudflare" }));
 app.get("/favicon.ico", async (c) => {
   const url = new URL(c.req.url);
   url.pathname = "/bot.svg";
-  const asset = await c.env.ASSETS.fetch(url);
+  const asset = await c.env.ASSETS.fetch(url.toString());
   
   if (asset.status === 404) {
     return c.notFound();
@@ -23,7 +23,7 @@ app.get("/favicon.ico", async (c) => {
 // Handle text files with proper UTF-8 encoding
 app.get("*.txt", async (c) => {
   const url = new URL(c.req.url);
-  const asset = await c.env.ASSETS.fetch(url);
+  const asset = await c.env.ASSETS.fetch(url.toString());
   
   if (asset.status === 404) {
     return c.notFound();
@@ -39,7 +39,7 @@ app.get("*.txt", async (c) => {
 // Handle markdown files with proper UTF-8 encoding
 app.get("*.md", async (c) => {
   const url = new URL(c.req.url);
-  const asset = await c.env.ASSETS.fetch(url);
+  const asset = await c.env.ASSETS.fetch(url.toString());
   
   if (asset.status === 404) {
     return c.notFound();
