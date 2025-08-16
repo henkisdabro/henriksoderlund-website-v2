@@ -67,7 +67,7 @@ h3 {
 .ascii-art pre {
   font-family: 'Courier New', monospace;
   font-size: 1.2rem;
-  line-height: 1.3;
+  line-height: 1;
   color: #000;
   margin: 0;
   white-space: pre;
@@ -94,8 +94,8 @@ h3 {
   }
 
   .ascii-art pre {
-    font-size: 0.9rem;
-    line-height: 1.2;
+    font-size: 1rem;
+    line-height: 1;
   }
 
   .error-message h1 {
