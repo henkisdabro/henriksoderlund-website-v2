@@ -35,7 +35,7 @@ export const consultationData = {
     services: {
       title: 'Core Analytics Services',
       items: [
-        'Google Analytics 4 - Advanced implementations, custom reporting, and conversion optimization',
+        'Google Analytics - Advanced implementations, custom reporting, and conversion optimization',
         'Google Tag Manager - Enterprise-grade tracking solutions, server-side implementations',
         'Business Intelligence Dashboards - Real-time reporting and performance monitoring systems',
         'Data Pipeline Architecture - Scalable data collection and processing solutions',
@@ -65,6 +65,5 @@ export const consultationData = {
       'Ready to transform your business with AI and advanced analytics? Let\'s discuss your specific needs and explore how we can accelerate your digital transformation.',
       '<strong>Book a complimentary 30-minute discovery call to get started.</strong>',
     ],
-    calendlyUrl: 'https://calendly.com/henriksoederlund/30min?hide_event_type_details=1&hide_gdpr_banner=1',
   },
 };
