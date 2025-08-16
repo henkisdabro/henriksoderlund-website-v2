@@ -48,23 +48,16 @@ const GITHUB_PROJECTS = [
 ];
 
 // Extract metadata from React components
-function extractComponentMetadata(componentPath) {
+function getComponentMetadata(componentPath) {
   try {
     const content = fs.readFileSync(componentPath, 'utf8');
-    
-    // Extract the main heading (h1)
-    const h1Match = content.match(/<h1[^>]*>([^<]+)<\/h1>/);
-    const title = h1Match ? h1Match[1].trim() : null;
-    
-    // Extract the first paragraph for description
-    const pMatch = content.match(/<p[^>]*className="lead"[^>]*>([^<]+)<\/p>/) || 
-                   content.match(/<p[^>]*>([^<]+)<\/p>/);
-    const description = pMatch ? pMatch[1].replace(/<[^>]*>/g, '').trim() : null;
-    
-    return { title, description };
+    const stats = fs.statSync(componentPath);
+    const lastModified = stats.mtime.toISOString().split('T')[0];
+    const tokenCount = Math.round(content.length / 4);
+    return { lastModified, tokenCount };
   } catch (error) {
     console.warn(`Warning: Could not read component ${componentPath}:`, error.message);
-    return { title: null, description: null };
+    return { lastModified: null, tokenCount: null };
   }
 }
 
@@ -89,6 +82,8 @@ function generateLlmsTxt() {
 
   // Add main pages
   for (const [route, componentName] of Object.entries(ROUTES)) {
+    const componentPath = path.join(COMPONENTS_DIR, `${componentName}.tsx`);
+    const { lastModified, tokenCount } = getComponentMetadata(componentPath);
     const pageTitle = route === '/' ? 'Homepage' : 
                      route === '/expertise' ? 'Expertise' :
                      route.split('/')[1].split('-').map(word => 
@@ -96,7 +91,7 @@ function generateLlmsTxt() {
                      ).join(' ');
     
     const description = getPageDescription(route, componentName);
-    content += `- [${pageTitle}](${BASE_URL}${route}): ${description}\n`;
+    content += `- [${pageTitle}](${BASE_URL}${route}): ${description} (Updated: ${lastModified}, ~${tokenCount} tokens)\n`;
   }
 
   content += `\n## GitHub Projects\n`;
@@ -106,7 +101,7 @@ function generateLlmsTxt() {
     content += `- [${project.title}](${project.url}): ${project.description}\n`;
   }
 
-  content += `\n## Technical Focus Areas\n- [AI & Automation](${BASE_URL}/expertise): AI-powered solutions, prompt engineering, API integration\n- [Measurement & Analytics](${BASE_URL}/expertise): Server-side tracking, advanced attribution, data architecture\n- [Technology Leadership](${BASE_URL}/): Senior leadership in media activations and performance marketing\n- [Technology Leadership](${BASE_URL}/): Cross-platform system integration and infrastructure automation\n\n<!-- Generated automatically on ${timestamp} -->`;
+  content += `\n## Technical Focus Areas\n- [AI & Automation](${BASE_URL}/expertise): AI-powered solutions, prompt engineering, API integration\n- [Measurement & Analytics](${BASE_E_URL}/expertise): Server-side tracking, advanced attribution, data architecture\n- [Technology Leadership](${BASE_URL}/): Senior leadership in media activations and performance marketing\n- [Technology Leadership](${BASE_URL}/): Cross-platform system integration and infrastructure automation\n\n<!-- Generated automatically on ${timestamp} -->`;
 
   return content;
 }
