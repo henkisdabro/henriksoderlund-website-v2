@@ -23,15 +23,18 @@ app.use('*', async (c, next) => {
     c.header('Strict-Transport-Security', 'max-age=31536000; includeSubDomains; preload');
   }
   
-  // CSP for enhanced security
+  // CSP for enhanced security - matches _headers file with GTM additions
   c.header('Content-Security-Policy', 
     "default-src 'self'; " +
-    "script-src 'self' 'unsafe-inline' 'unsafe-eval'; " +
-    "style-src 'self' 'unsafe-inline'; " +
-    "img-src 'self' data: https:; " +
-    "font-src 'self' data:; " +
-    "connect-src 'self'; " +
-    "frame-ancestors 'none'; " +
+    "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://*.fouanalytics.com https://api.fouanalytics.com https://sgtm.henriksoderlund.com https://load.sgtm.henriksoderlund.com https://tagmanager.google.com https://www.googletagmanager.com https://static.cloudflareinsights.com https://unpkg.com https://calendar.google.com; " +
+    "connect-src 'self' https://*.fouanalytics.com https://api.fouanalytics.com https://*.google-analytics.com https://analytics.google.com https://*.analytics.google.com https://sgtm.henriksoderlund.com https://load.sgtm.henriksoderlund.com https://stats.g.doubleclick.net https://apix.b2c.com ws: wss:; " +
+    "style-src 'self' 'unsafe-inline' https://tagmanager.google.com https://fonts.googleapis.com https://www.googletagmanager.com https://calendar.google.com; " +
+    "img-src 'self' data: https://* *.google.com; " +
+    "font-src 'self' data: https://fonts.gstatic.com; " +
+    "frame-src 'self' https://sgtm.henriksoderlund.com https://www.googletagmanager.com https://calendar.google.com; " +
+    "worker-src * blob: data:; " +
+    "child-src * blob: data:; " +
+    "manifest-src 'self'; " +
     "base-uri 'self'; " +
     "form-action 'self';"
   );
