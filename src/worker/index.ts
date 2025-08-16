@@ -4,8 +4,20 @@ const app = new Hono<{ Bindings: Env }>();
 app.get("/api/", (c) => c.json({ name: "Cloudflare" }));
 
 // Handle favicon.ico redirect to bot.svg
-app.get("/favicon.ico", (c) => {
-  return c.env.ASSETS.fetch(new URL("/bot.svg", c.req.url).toString());
+app.get("/favicon.ico", async (c) => {
+  const url = new URL(c.req.url);
+  url.pathname = "/bot.svg";
+  const asset = await c.env.ASSETS.fetch(url.toString());
+  
+  if (asset.status === 404) {
+    return c.notFound();
+  }
+  
+  const svgContent = await asset.arrayBuffer();
+  return c.body(svgContent, 200, {
+    'Content-Type': 'image/svg+xml',
+    'Cache-Control': 'public, max-age=86400'
+  });
 });
 
 // Handle llms.txt specifically to ensure correct encoding

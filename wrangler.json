@@ -14,15 +14,9 @@
 	"observability": {
 		"enabled": true
 	},
-	"bindings": {
-		"ASSETS": {
-			"binding": "ASSETS",
-			"type": "static_assets",
-			"directory": "./dist/client"
-		}
-	},
 	"upload_source_maps": true,
 	"assets": {
+		"binding": "ASSETS",
 		"directory": "./dist/client",
 		"not_found_handling": "single-page-application"
 	}
