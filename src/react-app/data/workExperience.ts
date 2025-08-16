@@ -9,9 +9,9 @@ export const workExperienceData = [
     title: 'Media Activations Lead – Initiative Perth @ KINESSO',
     dates: 'OCT 2023–PRESENT',
     description: [
-      'Lead performance and addressable activation teams while delivering operational excellence, strategic digital media consulting, and MarTech guidance across Western Australia. Successfully rebuilt a high-turnover team from the ground up, implementing comprehensive talent development frameworks and establishing sustainable recruitment and retention strategies that reduced turnover by 75% within 12 months.',
-      'Designed and implemented structured mentoring programs and career progression pathways for team members, resulting in 3 internal promotions and measurable skill development across all team levels. Established cross-functional workflows between media and analytics teams, facilitating improved collaboration and knowledge sharing that enhanced overall campaign performance and client satisfaction.',
-      'Regularly conduct client presentations and stakeholder alignment sessions, managing relationships with senior executives and marketing directors across major Western Australian brands. Contributed to thought leadership initiatives that earned Initiative MFA "Changer" recognition in 2024, while continuously aligning team capabilities with evolving client requirements and market demands. Working closely with Initiative\'s Head of Perth, I ensure seamless service delivery and business growth through periods of organizational change and team scaling.',
+      'As the leader of performance and addressable activation teams, I deliver operational excellence, strategic digital media consulting, and MarTech guidance across Western Australia. I successfully rebuild high-turnover teams from the ground up, implementing comprehensive talent development frameworks and establishing sustainable recruitment and retention strategies that reduce turnover by 75% within 12 months.',
+      'I design and implement structured mentoring programs and career progression pathways for team members, resulting in 3 internal promotions and measurable skill development across all team levels. I establish cross-functional workflows between media and analytics teams, facilitating improved collaboration and knowledge sharing that enhances overall campaign performance and client satisfaction.',
+      'I regularly conduct client presentations and stakeholder alignment sessions, managing relationships with senior executives and marketing directors across major Western Australian brands. I contribute to thought leadership initiatives that earned Initiative MFA "Changer" recognition in 2024, while continuously aligning team capabilities with evolving client requirements and market demands. Working closely with Initiative\'s Head of Perth, I ensure seamless service delivery and business growth through periods of organizational change and team scaling.',
     ],
   },
   {
@@ -20,7 +20,7 @@ export const workExperienceData = [
     title: 'Group Performance Lead @ Reprise Digital',
     dates: 'MAR 2023–SEP 2023',
     description: [
-      'A leadership position at Reprise Digital Australia, the digitally-led full-service digital performance, advertising and solutions agency within the Mediabrands Australia group, under the Interpublic Group (IPG), managing the Perth office team. The job scope involves driving team integration, thought leadership across digital advertising, media strategy/buying and martech solutions, new revenue opportunities and broad project management across enterprise level clients whilst collaborating closely with the teams at Initiative.',
+      'Held a leadership position at Reprise Digital Australia, the digitally-led full-service digital performance, advertising and solutions agency within the Mediabrands Australia group, under the Interpublic Group (IPG), managing the Perth office team. The role involved driving team integration, thought leadership across digital advertising, media strategy/buying and martech solutions, new revenue opportunities and broad project management across enterprise level clients whilst collaborating closely with the teams at Initiative.',
     ],
   },
   {
@@ -41,10 +41,9 @@ export const workExperienceData = [
     title: 'Business Consulting Manager @ CtrlShift',
     dates: 'JAN 2014–JUL 2016',
     description: [
-      'Grew the company\'s key telco account 15% for 4 consecutive quarters reaching an annual revenue of MYR 5,000,000—proposing media buys though direct ad platforms, online publishers and programmatic open exchange through the company\'s proprietary multi-DSP hub and consulting on DMP integration, attribution modelling and cross-device retargeting.',
-      'Spearheaded an agency trading desk pricing initiative by collating cross-departmental opinions from the company CEO, CTO, CFO and CIO around resource cost, licence commitments, margins and profit targets—culminating in the company-wide rollout of a flexible 4-tier DSP/DMP pricing framework with 42 cost variables and options, vastly reducing the pre-sale-to-sale timeline and securing a major banking client within 3 months of its inception.',
-      'Assisted in the company-wide migration to Google GSuite cloud-based email solution for 50+ employees and helped finalise key decisions required for the deployment of a tailored Salesforce CRM and sales pipelining solution tightly fitted to our operations.',
-      'Ranked as a company top-3 presenter following a 2-day-intensive training course in audience presentation skills led by a 3rd-party training outfit.',
+      'Led paid advertising sales and business development initiatives, growing the company\'s key telco account 15% for 4 consecutive quarters to reach MYR 5,000,000 in annual revenue. Proposed strategic media buys across direct ad platforms, online publishers, and programmatic exchanges through the company\'s proprietary multi-DSP hub while consulting on DMP integration, attribution modelling, and cross-device retargeting solutions.',
+      'Spearheaded an agency trading desk pricing initiative by collaborating with C-suite executives on resource costs, licence commitments, and profit targets. This culminated in a flexible 4-tier DSP/DMP pricing framework with 42 cost variables, reducing the pre-sale-to-sale timeline and securing a major banking client within 3 months.',
+      'Managed key operational improvements including the company-wide migration to Google GSuite for 50+ employees and deployment of a tailored Salesforce CRM solution. Recognised as a top-3 company presenter following intensive presentation skills training.',
     ],
   },
   {
@@ -62,7 +61,8 @@ export const workExperienceData = [
     title: 'Musician @ Various Employers',
     dates: '2006–2012',
     description: [
-      'Distinguished freelance trombonist and euphonium player with performances alongside prestigious symphony orchestras and music ensembles across five continents, spanning 20 countries. Notable engagements include international tours of Japan, Europe, and China, with appearances at world-renowned venues such as Amsterdam\'s Concertgebouw and the Royal Castle in Stockholm. My musical career encompasses national television and radio broadcasts, alongside featured soloist recordings with the Malaysian Philharmonic Orchestra and the Malmö Fire Brigade Band, establishing a diverse and accomplished performance portfolio.',
+      'Professional musician spanning two decades, from early training at age 10 through conservatory studies in Rotterdam to freelance performance work beginning at 16. Built a distinguished international career as trombonist and euphonium player, performing with prestigious orchestras and ensembles across five continents and 20 countries, including appearances at world-renowned venues such as Amsterdam\'s Concertgebouw and the Royal Castle in Stockholm.',
+      'Delivered featured solo performances and recordings with the Malaysian Philharmonic Orchestra and Sweden\'s Malmö Fire Brigade Band, with performances broadcast on national television and radio across multiple countries. This extensive musical background—representing the majority of my professional life until 2012—developed core competencies in precision, collaboration, and performance under pressure that continue to inform my leadership approach in technology and business environments.',
     ],
   },
 ];

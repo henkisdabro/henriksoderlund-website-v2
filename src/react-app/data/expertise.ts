@@ -5,7 +5,7 @@ export const expertiseData = {
   },
   leadershipExpertise: {
     title: '👥 Executive Leadership & People Development',
-    paragraph: 'Proven track record of building, mentoring, and leading high-performance teams while maintaining exceptional client relationships and stakeholder engagement. My leadership philosophy combines systematic people development with strategic business alignment, creating sustainable growth through both technological innovation and human capital investment.',
+    paragraph: 'With extensive experience in executive leadership, I build, mentor, and guide high-performance teams while maintaining exceptional client relationships and stakeholder engagement. My leadership philosophy combines systematic people development with strategic business alignment, creating sustainable growth through both technological innovation and genuine investment in people\'s professional growth.',
     categories: [
       {
         category: 'Team Building & Development',
