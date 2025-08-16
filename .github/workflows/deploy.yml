@@ -10,9 +10,15 @@ jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
     
+    env:
+      LC_ALL: en_US.UTF-8
+      LANG: en_US.UTF-8
+    
     steps:
     - name: 🛒 Checkout repository
       uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
       
     - name: 📦 Setup Node.js
       uses: actions/setup-node@v4
@@ -39,6 +45,12 @@ jobs:
           echo "❌ llms.txt not found in build output"
           exit 1
         fi
+        
+        echo "🔤 Checking UTF-8 encoding in llms.txt..."
+        echo "First line of llms.txt:"
+        head -n 1 dist/client/llms.txt
+        echo "Character encoding verification:"
+        file -i dist/client/llms.txt
         
         echo "📝 Verifying markdown files exist..."
         required_files=("index.html.md" "expertise.md" "work-experience.md" "education.md" "consultancy.md")
@@ -95,9 +107,15 @@ jobs:
     if: github.event_name == 'pull_request'
     runs-on: ubuntu-latest
     
+    env:
+      LC_ALL: en_US.UTF-8
+      LANG: en_US.UTF-8
+    
     steps:
     - name: 🛒 Checkout repository
       uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
       
     - name: 📦 Setup Node.js
       uses: actions/setup-node@v4
