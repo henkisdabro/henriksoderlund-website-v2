@@ -111,7 +111,7 @@ export const expertiseData = {
     {
       category: 'Productivity & System Operations',
       skills: [
-        'Cross-Platform Operations (Linux, Windows, macOS)',
+        'Cross-Platform Operations',
         'System Integration & Architecture',
         'AI-Enhanced Workflow Design',
         'Notion & Advanced Documentation',
@@ -125,7 +125,7 @@ export const expertiseData = {
         'Domain & DNS Management',
         'Google Workspace Administration',
         'Microsoft 365 Administration',
-        'Email Security Protocols (DKIM, SPF, MTA-STS, DMARC)',
+        'Email Security (DKIM, SPF, DMARC)',
         'Cloud Infrastructure Setup',
         'SaaS Integration & Automation',
       ],

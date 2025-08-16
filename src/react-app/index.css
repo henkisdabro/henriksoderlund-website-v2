@@ -190,16 +190,19 @@ button:focus-visible {
 /* Skills and Leadership Sections */
 .skills-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
   gap: 2rem;
   margin: 2rem 0;
+  max-width: 100%;
 }
 
 .skill-category {
-  background: rgba(255, 255, 255, 0.05);
+  background: rgba(255, 255, 255, 0.08);
   border-radius: 8px;
   padding: 1.5rem;
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
 }
 
 .skill-category h3 {
@@ -223,6 +226,9 @@ button:focus-visible {
   font-size: 0.9em;
   border: 1px solid rgba(100, 108, 255, 0.2);
   white-space: nowrap;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 /* Platform tags styling */
@@ -240,6 +246,9 @@ button:focus-visible {
   font-size: 0.9em;
   border: 1px solid rgba(100, 108, 255, 0.2);
   white-space: nowrap;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 /* Mobile responsive adjustments */
@@ -308,12 +317,31 @@ button:focus-visible {
   
   /* Light mode adjustments for skills */
   .skill-category {
-    background: rgba(0, 0, 0, 0.02);
-    border: 1px solid rgba(0, 0, 0, 0.1);
+    background: rgba(0, 0, 0, 0.04);
+    border: 1px solid rgba(0, 0, 0, 0.15);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
   }
   
   .skill-tag, .platform-tag {
     background: rgba(100, 108, 255, 0.08);
     border: 1px solid rgba(100, 108, 255, 0.15);
+  }
+}
+
+/* Desktop responsive adjustments for wider screens */
+@media (min-width: 1200px) {
+  .skills-grid {
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    max-width: 1400px;
+    margin: 2rem auto;
+  }
+  
+  .skill-category {
+    max-width: 450px;
+  }
+  
+  .skill-tag, .platform-tag {
+    max-width: 200px;
   }
 }
