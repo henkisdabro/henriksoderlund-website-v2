@@ -85,10 +85,7 @@ function getPageDescription(route, componentName) {
 function generateLlmsTxt() {
   const timestamp = new Date().toISOString();
   
-  let content = `# Henrik Söderlund - Technology Leader & AI Innovator
-> Personal website showcasing technology leadership expertise, AI innovation, and technical leadership in marketing technology and measurement architecture
-
-## About\n`;
+  let content = `# Henrik Söderlund - Technology Leader & AI Innovator\n> Personal website showcasing technology leadership expertise, AI innovation, and technical leadership in marketing technology and measurement architecture\n\n## About\n`;
 
   // Add main pages
   for (const [route, componentName] of Object.entries(ROUTES)) {
@@ -109,13 +106,7 @@ function generateLlmsTxt() {
     content += `- [${project.title}](${project.url}): ${project.description}\n`;
   }
 
-  content += `\n## Technical Focus Areas
-- [AI & Automation](${BASE_URL}/expertise): AI-powered solutions, prompt engineering, API integration
-- [Measurement & Analytics](${BASE_URL}/expertise): Server-side tracking, advanced attribution, data architecture
-- [Technology Leadership](${BASE_URL}/): Senior leadership in media activations and performance marketing
-- [Technology Leadership](${BASE_URL}/): Cross-platform system integration and infrastructure automation
-
-<!-- Generated automatically on ${timestamp} -->`;
+  content += `\n## Technical Focus Areas\n- [AI & Automation](${BASE_URL}/expertise): AI-powered solutions, prompt engineering, API integration\n- [Measurement & Analytics](${BASE_URL}/expertise): Server-side tracking, advanced attribution, data architecture\n- [Technology Leadership](${BASE_URL}/): Senior leadership in media activations and performance marketing\n- [Technology Leadership](${BASE_URL}/): Cross-platform system integration and infrastructure automation\n\n<!-- Generated automatically on ${timestamp} -->`;
 
   return content;
 }
