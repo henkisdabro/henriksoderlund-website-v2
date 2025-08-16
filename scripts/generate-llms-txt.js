@@ -101,7 +101,7 @@ function generateLlmsTxt() {
     content += `- [${project.title}](${project.url}): ${project.description}\n`;
   }
 
-  content += `\n## Technical Focus Areas\n- [AI & Automation](${BASE_URL}/expertise): AI-powered solutions, prompt engineering, API integration\n- [Measurement & Analytics](${BASE_E_URL}/expertise): Server-side tracking, advanced attribution, data architecture\n- [Technology Leadership](${BASE_URL}/): Senior leadership in media activations and performance marketing\n- [Technology Leadership](${BASE_URL}/): Cross-platform system integration and infrastructure automation\n\n<!-- Generated automatically on ${timestamp} -->`;
+  content += `\n## Technical Focus Areas\n- [AI & Automation](${BASE_URL}/expertise): AI-powered solutions, prompt engineering, API integration\n- [Measurement & Analytics](${BASE_URL}/expertise): Server-side tracking, advanced attribution, data architecture\n- [Technology Leadership](${BASE_URL}/): Senior leadership in media activations and performance marketing\n- [Technology Leadership](${BASE_URL}/): Cross-platform system integration and infrastructure automation\n\n<!-- Generated automatically on ${timestamp} -->`;
 
   return content;
 }
