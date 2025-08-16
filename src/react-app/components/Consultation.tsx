@@ -1,5 +1,5 @@
 import { consultationData } from '../data/consultation';
-import CalendlyWidget from './CalendlyWidget';
+import GoogleCalendarWidget from './GoogleCalendarWidget';
 
 const Consultation = () => {
   return (
@@ -78,8 +78,9 @@ const Consultation = () => {
         <div className="calendly-intro">
           {consultationData.scheduling.paragraphs.map((p, i) => <p key={i} dangerouslySetInnerHTML={{ __html: p }} />)}
         </div>
-        <CalendlyWidget 
-          url={consultationData.scheduling.calendlyUrl} 
+        <GoogleCalendarWidget 
+          url={'https://calendar.google.com/calendar/appointments/schedules/AcZssZ2pABHRGGEq9T5Wj5DZmo2QvyA9kwKKRqd-eeO3W25C1EdczwDB_VTJmkDvExvyH5sk5aX1jBUL?gv=true'} 
+          label={'Book an appointment'}
           className="consultation-booking-widget"
         />
       </section>
