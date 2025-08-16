@@ -1233,3 +1233,490 @@ a:hover {
     height: 24px;
   }
 }
+
+/* ========================= PRINT STYLES ========================= */
+@media print {
+  /* Page setup with minimal header/footer spacing */
+  @page {
+    margin: 1.8cm 1.5cm 1.8cm 1.5cm;
+    size: A4;
+    @top-center {
+      content: "Henrik Söderlund • www.henriksoderlund.com";
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      font-size: 8pt;
+      color: #666;
+      margin-bottom: 0.4cm;
+    }
+    @bottom-center {
+      content: "Page " counter(page) " of " counter(pages);
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      font-size: 7pt;
+      color: #999;
+      margin-top: 0.4cm;
+    }
+  }
+
+  /* Reset and base styles for print */
+  * {
+    -webkit-print-color-adjust: exact !important;
+    color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  /* Root and body adjustments */
+  html, body {
+    width: 100% !important;
+    height: auto !important;
+    font-size: 10pt !important;
+    line-height: 1.3 !important;
+    color: #000 !important;
+    background: #fff !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    overflow: visible !important;
+  }
+
+  #root {
+    width: 100% !important;
+    max-width: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    display: block !important;
+  }
+
+  .app {
+    width: 100% !important;
+    max-width: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    display: block !important;
+    box-shadow: none !important;
+    border: none !important;
+  }
+
+  /* Hide interactive and navigation elements */
+  .navigation-box,
+  .github-link,
+  .nav-button,
+  .resume-button,
+  .gcal-scheduling-button,
+  .calendly-inline-widget,
+  .calendly-placeholder,
+  .consultation-booking-widget,
+  .main-nav,
+  .navigation-section,
+  .centered-navigation,
+  .more-about-navigation,
+  .site-footer,
+  button,
+  input[type="button"],
+  input[type="submit"],
+  .collapse-btn {
+    display: none !important;
+  }
+
+  /* Main content styling */
+  .main-content {
+    width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    max-width: none !important;
+  }
+
+  /* Adjust content positioning for reduced header space */
+  .main-content > *:first-child {
+    margin-top: 0 !important;
+  }
+  
+  /* Ensure H1 headings are positioned appropriately */
+  .main-content h1:first-child,
+  .main-content > *:first-child h1 {
+    margin-top: 0 !important;
+    padding-top: 0 !important;
+  }
+
+  /* Page containers */
+  .home-page,
+  .skills-page,
+  .expertise-page,
+  .work-experience-page,
+  .education-page,
+  .consultation-page {
+    width: 100% !important;
+    max-width: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  /* Typography for print - compact sizing */
+  h1 {
+    font-size: 18pt !important;
+    line-height: 1.2 !important;
+    margin: 0 0 10pt 0 !important;
+    color: #000 !important;
+    font-weight: bold !important;
+    page-break-after: avoid;
+  }
+
+  h2 {
+    font-size: 14pt !important;
+    line-height: 1.2 !important;
+    margin: 12pt 0 8pt 0 !important;
+    color: #000 !important;
+    font-weight: bold !important;
+    page-break-after: avoid;
+  }
+
+  h3 {
+    font-size: 12pt !important;
+    line-height: 1.2 !important;
+    margin: 10pt 0 6pt 0 !important;
+    color: #000 !important;
+    font-weight: bold !important;
+    page-break-after: avoid;
+  }
+
+  h4 {
+    font-size: 11pt !important;
+    line-height: 1.2 !important;
+    margin: 8pt 0 4pt 0 !important;
+    color: #000 !important;
+    font-weight: bold !important;
+    page-break-after: avoid;
+  }
+
+  h5, h6 {
+    font-size: 10pt !important;
+    line-height: 1.2 !important;
+    margin: 6pt 0 3pt 0 !important;
+    color: #000 !important;
+    font-weight: bold !important;
+    page-break-after: avoid;
+  }
+
+  p {
+    margin: 0 0 6pt 0 !important;
+    line-height: 1.3 !important;
+    font-size: 9pt !important;
+    color: #000 !important;
+    text-align: justify !important;
+    orphans: 2;
+    widows: 2;
+  }
+
+  /* Lead paragraph styling */
+  .lead {
+    font-size: 10pt !important;
+    line-height: 1.3 !important;
+    margin: 0 0 8pt 0 !important;
+    font-weight: normal !important;
+    color: #000 !important;
+  }
+
+  /* Lists */
+  ul, ol {
+    margin: 6pt 0 6pt 16pt !important;
+    padding: 0 !important;
+  }
+
+  li {
+    margin: 2pt 0 !important;
+    font-size: 9pt !important;
+    line-height: 1.3 !important;
+    color: #000 !important;
+    text-align: justify !important;
+  }
+
+  /* Skills and content sections */
+  .skills-grid {
+    display: block !important;
+    margin: 0 0 10pt 0 !important;
+  }
+
+  .skill-category {
+    margin: 0 0 8pt 0 !important;
+    padding: 4pt 0 !important;
+    background: none !important;
+    border: none !important;
+    box-shadow: none !important;
+  }
+
+  .skill-category h3 {
+    margin: 0 0 4pt 0 !important;
+    font-size: 11pt !important;
+    color: #000 !important;
+    font-weight: bold !important;
+  }
+
+  .skill-tags,
+  .platform-tags {
+    display: block !important;
+    margin: 0 !important;
+  }
+
+  .skill-tag,
+  .platform-tag {
+    display: inline !important;
+    background: none !important;
+    border: none !important;
+    padding: 0 !important;
+    margin: 0 4pt 0 0 !important;
+    font-size: 8pt !important;
+    color: #000 !important;
+    border-radius: 0 !important;
+    font-family: inherit !important;
+  }
+
+  .skill-tag:after,
+  .platform-tag:after {
+    content: " • ";
+    color: #666;
+  }
+
+  .skill-tag:last-child:after,
+  .platform-tag:last-child:after {
+    content: "";
+  }
+
+  /* Content entries */
+  .content-entry,
+  .education-entry {
+    margin: 0 0 10pt 0 !important;
+    padding: 0 0 8pt 0 !important;
+    border-bottom: 0.5pt solid #ccc !important;
+    background: none !important;
+  }
+
+  .content-entry:last-child,
+  .education-entry:last-child {
+    border-bottom: none !important;
+  }
+
+  .dates {
+    font-size: 8pt !important;
+    color: #666 !important;
+    font-family: inherit !important;
+    margin: 0 0 4pt 0 !important;
+  }
+
+  /* Tables for pricing - override mobile responsive styles for print */
+  .modern-pricing-table,
+  .pricing-table {
+    width: 100% !important;
+    border-collapse: collapse !important;
+    margin: 8pt 0 !important;
+    background: none !important;
+    box-shadow: none !important;
+    border-radius: 0 !important;
+    display: table !important;
+  }
+
+  .modern-pricing-table thead,
+  .pricing-table thead {
+    display: table-header-group !important;
+  }
+
+  .modern-pricing-table tbody,
+  .pricing-table tbody {
+    display: table-row-group !important;
+  }
+
+  .modern-pricing-table tr,
+  .pricing-table tr {
+    display: table-row !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    background: none !important;
+    border: none !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+  }
+
+  .modern-pricing-table th,
+  .pricing-table th {
+    display: table-cell !important;
+    background: #f5f5f5 !important;
+    color: #000 !important;
+    font-weight: bold !important;
+    font-size: 8pt !important;
+    padding: 4pt 6pt !important;
+    text-align: left !important;
+    border: 0.5pt solid #ccc !important;
+    position: relative !important;
+    padding-left: 6pt !important;
+  }
+
+  .modern-pricing-table td,
+  .pricing-table td {
+    display: table-cell !important;
+    padding: 4pt 6pt !important;
+    font-size: 8pt !important;
+    border: 0.5pt solid #ccc !important;
+    color: #000 !important;
+    background: none !important;
+    text-align: left !important;
+    position: relative !important;
+    padding-left: 6pt !important;
+  }
+
+  /* Remove mobile table pseudo-elements */
+  .modern-pricing-table td:before,
+  .pricing-table td:before {
+    display: none !important;
+    content: none !important;
+  }
+
+  /* Images */
+  img {
+    max-width: 100% !important;
+    height: auto !important;
+    page-break-inside: avoid;
+  }
+
+  .profile-image {
+    width: 60pt !important;
+    height: 60pt !important;
+    border-radius: 50% !important;
+    margin: 0 0 6pt 0 !important;
+    background: white !important;
+    border: 1pt solid #ddd !important;
+    box-shadow: none !important;
+  }
+
+  .dashboard-image,
+  .wiki-image {
+    max-width: 100% !important;
+    height: auto !important;
+    margin: 6pt 0 !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    border: 0.5pt solid #ccc !important;
+  }
+
+  /* Links */
+  a {
+    color: #000 !important;
+    text-decoration: underline !important;
+  }
+
+  a[href]:after {
+    content: " (" attr(href) ")";
+    font-size: 7pt;
+    color: #666;
+  }
+
+  /* Hide URLs for relative links and anchors */
+  a[href^="#"]:after,
+  a[href^="/"]:after {
+    content: "";
+  }
+
+  /* Special handling for GitHub contribution links - show full URL clearly */
+  .github-contributions .contribution h3 a[href]:after {
+    content: " → " attr(href);
+    font-size: 8pt !important;
+    color: #333 !important;
+    font-weight: normal !important;
+    display: block !important;
+    margin-top: 2pt !important;
+  }
+
+  /* Hero section adjustments - center content like website */
+  .hero-section {
+    text-align: center !important;
+    margin: 0 0 10pt 0 !important;
+  }
+
+  .hero-section h1 {
+    text-align: center !important;
+  }
+
+  .hero-section .lead {
+    text-align: center !important;
+    margin: 0 auto 8pt auto !important;
+    max-width: none !important;
+  }
+
+  /* Content sections */
+  .content-section {
+    margin: 0 0 10pt 0 !important;
+  }
+
+  .content-section h2 {
+    text-align: left !important;
+    font-size: 12pt !important;
+  }
+
+  .content-section p {
+    text-align: justify !important;
+  }
+
+  /* ASCII art for 404 page */
+  .ascii-art pre {
+    font-family: 'Courier New', monospace !important;
+    font-size: 6pt !important;
+    line-height: 1 !important;
+    color: #000 !important;
+    margin: 6pt 0 !important;
+    white-space: pre !important;
+  }
+
+  /* Service lists */
+  .ai-services,
+  .analytics-services {
+    margin: 0 0 8pt 0 !important;
+  }
+
+  .ai-services ul,
+  .analytics-services ul {
+    list-style: disc !important;
+    margin-left: 20pt !important;
+    padding: 0 !important;
+  }
+
+  .ai-services li,
+  .analytics-services li {
+    margin: 2pt 0 !important;
+    padding: 0 !important;
+    position: relative !important;
+  }
+
+  .ai-services li:before,
+  .analytics-services li:before {
+    display: none !important;
+  }
+
+  /* Country flags */
+  .country-flag {
+    width: 10pt !important;
+    height: auto !important;
+    margin-right: 3pt !important;
+    vertical-align: baseline !important;
+  }
+
+  /* Remove forced page breaks - allow natural flow */
+
+  /* Prevent orphans and widows - relaxed for compact layout */
+  h1, h2, h3, h4, h5, h6 {
+    orphans: 2;
+    widows: 2;
+  }
+
+  p, li {
+    orphans: 2;
+    widows: 2;
+  }
+
+  /* Ensure content fits properly */
+  .not-found-container {
+    padding: 0 !important;
+    margin: 0 !important;
+    min-height: auto !important;
+    display: block !important;
+  }
+
+  .error-message h1,
+  .error-message p {
+    color: #000 !important;
+  }
+}
