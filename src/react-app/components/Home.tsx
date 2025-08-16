@@ -22,7 +22,7 @@ const Home = () => {
       <section className="content-section">
         <h2>Hello! 👋🏼</h2>
         <p>
-          I'm Henrik Söderlund, a digital strategy executive currently leading
+          I'm Henrik Söderlund, a technology leader currently leading
           media activations at{" "}
           <a
             href="https://initiative.com/"

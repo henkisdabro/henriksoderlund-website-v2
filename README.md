@@ -29,7 +29,7 @@ Henrik Söderlund's personal website built with modern web technologies and depl
 src/
 ├── react-app/           # React frontend application
 │   ├── components/      # React components (Home, Expertise, etc.)
-│   ├── data/           # Centralized data files (consultation.ts, skills.ts, workExperience.ts)
+│   ├── data/           # Centralized data files (consultation.ts, expertise.ts, workExperience.ts)
 │   ├── assets/         # Static assets (SVG logos, flags)
 │   ├── App.tsx         # Main App component with routing
 │   ├── main.tsx        # React entry point
@@ -128,15 +128,15 @@ npx wrangler tail
 - **eslint.config.js** - ESLint configuration for code quality
 
 ### Page Components
-- **Home.tsx** - Homepage with executive introduction and AI-focused messaging
-- **Skills.tsx** - Expertise page (accessible at `/expertise`) showcasing technical leadership and AI capabilities
+- **Home.tsx** - Homepage with technology leadership introduction and AI-focused messaging
+- **Expertise.tsx** - Expertise page (accessible at `/expertise`) showcasing technical leadership and AI capabilities
 - **WorkExperience.tsx** - Professional experience and achievements (data-driven from `data/workExperience.ts`)
 - **Education.tsx** - Educational background
 - **Consultation.tsx** - Services and consultation offerings (data-driven from `data/consultation.ts`)
 
 ### Data Architecture
 - **data/consultation.ts** - Centralized consultation services and pricing data
-- **data/skills.ts** - Technical skills, platforms, and GitHub contributions data
+- **data/expertise.ts** - Technical skills, platforms, and GitHub contributions data
 - **data/workExperience.ts** - Professional experience and achievements data
 
 ### Verification & Redirects
@@ -153,8 +153,16 @@ npx wrangler tail
 ### SEO & Site Configuration
 - [x] Enhanced meta description and social media tags (Open Graph, Twitter cards)
 - [x] Improved page titles and descriptions
-- [ ] Revise and improve security.txt
-- [ ] Add robots.txt
+- [x] **Comprehensive Structured Data Implementation**:
+  - Person schema with detailed professional information
+  - Professional service schema with pricing and contact info
+  - Website schema with search functionality
+  - Skills, awards, education, and affiliations metadata
+- [x] **Brand Positioning Refinement**:
+  - Updated from "Digital Strategy & Tech Executive" to "Technology Leader & AI Innovator"
+  - Consistent positioning across all meta tags, social media cards, and structured data
+- [x] robots.txt with AI assistant messaging
+- [ ] Revise and improve security.txt  
 - [ ] Add CORS and CSP headers
 
 ### Content & Visual Updates

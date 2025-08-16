@@ -71,7 +71,7 @@ function extractComponentMetadata(componentPath) {
 // Generate page descriptions based on content
 function getPageDescription(route, componentName) {
   const descriptions = {
-    '/': 'Executive introduction and background',
+    '/': 'Technology leadership introduction and background',
     '/expertise': 'Technical skills including AI, measurement, and development',
     '/work-experience': 'Professional background and achievements', 
     '/education': 'Academic qualifications and certifications',
@@ -85,8 +85,8 @@ function getPageDescription(route, componentName) {
 function generateLlmsTxt() {
   const timestamp = new Date().toISOString();
   
-  let content = `# Henrik Söderlund - Digital Strategy Executive & Technology Leader
-> Personal website showcasing digital strategy expertise, AI innovation, and technical leadership in marketing technology and measurement architecture
+  let content = `# Henrik Söderlund - Technology Leader & AI Innovator
+> Personal website showcasing technology leadership expertise, AI innovation, and technical leadership in marketing technology and measurement architecture
 
 ## About\n`;
 
@@ -112,7 +112,7 @@ function generateLlmsTxt() {
   content += `\n## Technical Focus Areas
 - [AI & Automation](${BASE_URL}/expertise): AI-powered solutions, prompt engineering, API integration
 - [Measurement & Analytics](${BASE_URL}/expertise): Server-side tracking, advanced attribution, data architecture
-- [Digital Strategy](${BASE_URL}/): Executive leadership in media activations and performance marketing
+- [Technology Leadership](${BASE_URL}/): Senior leadership in media activations and performance marketing
 - [Technology Leadership](${BASE_URL}/): Cross-platform system integration and infrastructure automation
 
 <!-- Generated automatically on ${timestamp} -->`;

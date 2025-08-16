@@ -62,7 +62,9 @@
       "WebFetch(domain:search.google.com)",
       "WebFetch(domain:validator.schema.org)",
       "WebFetch(domain:henriksoderlund-website-v2.par.workers.dev)",
-      "WebFetch(domain:henriksoderlund-website-v2.krrsantan.workers.dev)"
+      "WebFetch(domain:henriksoderlund-website-v2.krrsantan.workers.dev)",
+      "WebFetch(domain:ogp.me)",
+      "Bash(move:*)"
     ],
     "deny": [],
     "ask": [],
