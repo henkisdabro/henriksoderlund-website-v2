@@ -26,7 +26,7 @@ export function llmsTxtPlugin(options = {}) {
       try {
         const content = generateLlmsTxt();
         const outputFile = path.resolve(outputPath);
-        fs.writeFileSync(outputFile, content, 'utf8');
+        fs.writeFileSync(outputFile, content, { encoding: 'utf8', flag: 'w' });
         
         if (isServing) {
           console.log('🤖 llms.txt generated for development');
@@ -51,7 +51,7 @@ export function llmsTxtPlugin(options = {}) {
         try {
           const content = generateLlmsTxt();
           const outputFile = path.resolve(outputPath);
-          fs.writeFileSync(outputFile, content, 'utf8');
+          fs.writeFileSync(outputFile, content, { encoding: 'utf8', flag: 'w' });
           console.log('🔄 llms.txt updated due to component changes');
         } catch (error) {
           console.error('❌ Failed to update llms.txt:', error.message);
