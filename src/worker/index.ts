@@ -316,32 +316,28 @@ app.use('/metrics', async (c, next) => {
 });
 
 // Catch-all route for SPA routing - must be last
-app.get("*", async (c) => {
-  // For SPA routes (anything that would normally hit index.html), serve with data injection
+app.all("*", async (c) => {
   const url = new URL(c.req.url);
+  console.log('Catch-all route hit:', url.pathname);
   
-  // Check if this is likely a page route (not an asset)
-  const isPageRoute = !url.pathname.includes('.') || 
-                      url.pathname.endsWith('.html') || 
-                      url.pathname === '/' ||
-                      url.pathname.startsWith('/expertise');
+  // Check if this is a static asset request
+  const isAsset = url.pathname.match(/\.(js|css|svg|png|jpg|jpeg|gif|webp|woff|woff2|ttf|eot|ico|txt|xml|md)$/i);
   
-  if (isPageRoute) {
-    console.log('SPA route detected, serving index.html with injection:', url.pathname);
-    return handleIndexWithInjection(c);
-  }
-  
-  // For other requests, try to serve as static asset
-  try {
-    const asset = await c.env.ASSETS.fetch(c.req.url);
-    if (asset.ok) {
-      return asset;
+  if (isAsset) {
+    // Try to serve as static asset first
+    try {
+      const asset = await c.env.ASSETS.fetch(c.req.url);
+      if (asset.ok) {
+        return asset;
+      }
+    } catch (error) {
+      console.error('Asset fetch failed:', error);
+      return c.notFound();
     }
-  } catch (error) {
-    console.error('Asset fetch failed:', error);
   }
   
-  // Fallback to index.html with injection for unknown routes
+  // For page routes (SPA), serve index.html with data injection
+  console.log('Serving SPA route with injection:', url.pathname);
   return handleIndexWithInjection(c);
 });
 
