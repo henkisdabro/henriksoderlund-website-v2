@@ -75,9 +75,10 @@ const Consultation = () => {
         <div className="case-study-header">
           <h2>{consultationData.caseStudy.title}</h2>
           <button 
+            type="button"
             className="case-study-toggle" 
             onClick={() => setIsCaseStudyExpanded(!isCaseStudyExpanded)}
-            aria-expanded={isCaseStudyExpanded}
+            {...{ "aria-expanded": isCaseStudyExpanded ? "true" : "false" }}
             aria-label={isCaseStudyExpanded ? "Collapse case study" : "Expand case study"}
           >
             {isCaseStudyExpanded ? '−' : '+'}
