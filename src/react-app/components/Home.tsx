@@ -45,16 +45,15 @@ const Home = () => {
           >
             Interpublic Group
           </a>
-          ). Over the past several years, building upon my foundation of founding and scaling
-          the award-winning{" "}
+          ). After founding and scaling the award-winning{" "}
           <a
             href="https://www.cremedigital.com?utm_source=www.henriksoderlund.com&utm_medium=referral"
             target="_blank"
             rel="noopener noreferrer"
           >
             Creme Digital
-          </a>{" "}
-          into a senior leadership role where I architect measurement solutions
+          </a>
+          , I transitioned into senior leadership roles where I architect measurement solutions
           and guide high-performance teams across programmatic and performance
           marketing channels. With an inherent drive for optimisation and systematic thinking, I've
           built my career on developing sophisticated systems and automation workflows that transform how
@@ -70,6 +69,12 @@ const Home = () => {
           others find intractable—whether designing custom performance tracking
           systems or implementing intelligent automation workflows that transform team operations.
         </p>
+        
+        <div className="expertise-link-section">
+          <a href="/expertise" className="expertise-link">
+            Explore My Expertise <span style={{fontSize: '1.2em'}}>→</span>
+          </a>
+        </div>
       </section>
     </div>
   );

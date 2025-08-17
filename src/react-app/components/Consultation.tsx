@@ -18,7 +18,7 @@ const Consultation = () => {
           <h3>{consultationData.aiConsultancy.services.title}</h3>
           <ul>
             {consultationData.aiConsultancy.services.items.map(item => (
-              <li key={item.name}><strong>{item.name}</strong> - {item.description}</li>
+              <li key={item.name}><strong>{item.name}</strong><br />{item.description}</li>
             ))}
           </ul>
         </div>

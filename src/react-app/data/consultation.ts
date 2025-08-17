@@ -57,7 +57,7 @@ export const consultationData = {
   },
   qualityGuarantee: {
     title: '🛡️ Quality Guarantee',
-    paragraph: 'Every engagement is backed by my commitment to excellence. If the delivered solution doesn\'t meet the agreed specifications or your satisfaction, I\'ll work to resolve any issues at no additional cost. Your success is my primary objective.',
+    paragraph: 'Every engagement is backed by my commitment to excellence. If the delivered solution doesn\'t meet the agreed specifications or your satisfaction, I\'ll work to resolve any issues at no additional cost.',
   },
   scheduling: {
     title: '📅 Schedule Your Strategic Session',

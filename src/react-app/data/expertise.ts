@@ -172,7 +172,7 @@ export const expertiseData = {
       {
         title: 'GTM-integration-Hugo',
         url: 'https://github.com/henkisdabro/GTM-integration-Hugo',
-        description: 'Advanced Google Tag Manager integration framework for Hugo static sites, featuring environment-specific deployment, server-side tagging variables, and custom GTM script hosting capabilities. Supports sophisticated staging/production workflows with seamless <a href="https://support.google.com/tagmanager/answer/6311518?hl=en" target="_blank" rel="noopener noreferrer">GTM environment management</a>.',
+        description: 'Advanced Google Tag Manager integration framework for Hugo static sites, featuring environment-specific deployment, server-side tagging variables, and custom GTM script hosting capabilities. Supports sophisticated staging/production workflows with seamless GTM environment management.',
       },
     ],
   },
