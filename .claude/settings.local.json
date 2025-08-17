@@ -70,7 +70,8 @@
       "Bash(for i in {1..5})",
       "Bash(do echo \"Request $i:\")",
       "Bash(done)",
-      "Bash(git merge:*)"
+      "Bash(git merge:*)",
+      "Bash(echo:*)"
     ],
     "deny": [],
     "ask": [],

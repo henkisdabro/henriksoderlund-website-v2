@@ -107,3 +107,6 @@ public/sitemap.xml
 
 # LLMs generation cache
 .llms-cache.json
+
+# LinkedIn profile development (contains personal information)
+linkedin/

@@ -274,3 +274,165 @@ Complete implementation of the [llms.txt specification](https://llmstxt.org/) fo
 - **Common British spellings**: optimisation (not optimization), specialising (not specializing), organisation (not organization), utilising (not utilizing), realise (not realize), colour (not color), behaviour (not behavior), centre (not center)
 - **Voice**: Professional, direct, and technical without being overly formal
 - **Consistency**: Maintain consistent terminology and spelling across all content files
+
+## LinkedIn Profile Development Guidelines
+
+### Overview
+These guidelines ensure consistent, effective LinkedIn profile development for Henrik Söderlund, targeting Australian CTO and Head of Analytics positions. All content must reflect Australian market requirements and use British English spelling throughout.
+
+### Target Positioning
+- **Primary Role**: Chief Technology Officer (CTO)
+- **Secondary Role**: Head of Analytics / Head of Data Science
+- **Market Focus**: Australia (salary range AU$180k-$370k for CTO roles)
+- **Industry Focus**: Technology, Digital Media, Analytics, AI/ML Leadership
+
+### Core Messaging Framework
+
+#### Essential Value Propositions
+1. **Technology Leadership**: Proven ability to architect and lead technology solutions at scale
+2. **AI & Automation**: Cutting-edge expertise in AI implementation and intelligent automation
+3. **Team Development**: Track record of building, mentoring, and scaling high-performance teams
+4. **Business Impact**: Quantifiable results in revenue growth, efficiency improvements, and digital transformation
+5. **Cross-functional Excellence**: Bridge between technical teams and executive stakeholders
+
+#### Australian Market Positioning
+- Emphasise local market experience (Initiative Perth, KINESSO, Interpublic Group)
+- Highlight understanding of Australian business culture and regulatory environment
+- Position for both startup agility and enterprise scale
+- Reference Australian technology ecosystem and innovation landscape
+
+### Content Structure Guidelines
+
+#### Headlines (220 character limit)
+**Format**: `[Role] | [Key Expertise] | [Unique Value] | [Market Focus]`
+
+**Essential Elements**:
+- Clear role identification (CTO, Technology Leader, Head of Analytics)
+- AI/automation positioning for 2025 market
+- Leadership and team development emphasis
+- Business impact focus
+- Australian market relevance
+
+**Keyword Strategy**:
+- Leadership, Technology, AI, Automation, Analytics, Team Building
+- Cloud Computing, Digital Transformation, Strategy
+- Australia, Perth, Enterprise, Scale
+
+#### About Section (2,600 character limit)
+
+**Structure**:
+1. **Opening Hook** (1-2 sentences): Immediate value proposition and current role
+2. **Core Expertise** (3-4 sentences): Technical depth with business context
+3. **Leadership Philosophy** (2-3 sentences): People development and team building approach
+4. **Quantifiable Achievements** (2-3 sentences): Specific results and business impact
+5. **Market Positioning** (1-2 sentences): Australian focus and industry recognition
+6. **Call to Action** (1 sentence): Clear next step for interested parties
+
+**Writing Guidelines**:
+- Use first person implied (avoid "I" where possible)
+- Include 2-3 quantifiable metrics
+- Balance technical expertise with executive presence
+- Emphasise transformation and innovation
+- Maintain conversational yet professional tone
+
+#### Experience Descriptions
+
+**Structure per Role**:
+1. **Impact Statement** (1-2 sentences): Overall contribution and transformation achieved
+2. **Leadership Achievements** (2-3 bullet points): Team development, stakeholder management
+3. **Technical Implementation** (2-3 bullet points): Specific solutions and innovations
+4. **Business Results** (1-2 bullet points): Quantifiable outcomes and metrics
+
+**Content Guidelines**:
+- Lead with business impact, support with technical detail
+- Quantify wherever possible (percentages, dollar amounts, team sizes)
+- Emphasise leadership progression and increasing responsibility
+- Highlight innovation and transformation initiatives
+- Use action verbs: architected, transformed, scaled, mentored, optimised
+
+### Australian Market Considerations
+
+#### Cultural Fit Elements
+- Collaborative leadership style (Australian workplace culture values)
+- Cross-functional communication skills
+- Stakeholder management across diverse teams
+- Practical, results-oriented approach
+- Innovation balanced with commercial pragmatism
+
+#### Industry-Specific Requirements
+
+**For CTO Roles**:
+- Cloud computing and infrastructure modernisation
+- Cybersecurity and compliance framework knowledge
+- Digital transformation leadership
+- Product development and technical strategy
+- Vendor management and technology partnerships
+
+**For Head of Analytics Roles**:
+- AI/ML implementation and governance
+- Data strategy and architecture
+- Advanced analytics and business intelligence
+- Stakeholder education and communication
+- Regulatory compliance (Australian data privacy laws)
+
+### Content Review Process
+
+#### Evaluation Criteria (1-10 scale)
+1. **Role Alignment**: How well content matches target position requirements
+2. **Market Relevance**: Alignment with Australian business environment
+3. **Competitive Differentiation**: Unique value vs. other candidates
+4. **Executive Presence**: Leadership credibility and strategic thinking
+5. **Technical Credibility**: Depth and currency of technical expertise
+6. **Communication Clarity**: Accessibility to both technical and business audiences
+7. **Quantifiable Impact**: Specific, measurable achievements
+8. **Career Progression**: Clear trajectory and increasing responsibility
+9. **Cultural Fit**: Alignment with Australian workplace expectations
+10. **Call to Action**: Clear next steps for interested parties
+
+#### Review Process
+1. **Initial Draft**: Create content following guidelines
+2. **Subagent Review**: Submit to specialist CTO and Analytics recruitment experts
+3. **Scoring**: Receive detailed feedback and numerical scores
+4. **Revision**: Implement feedback and improve based on recommendations
+5. **Final Review**: Confirm improved scores before publication
+6. **Market Testing**: Monitor engagement and adjust based on results
+
+### Keyword Optimisation
+
+#### Primary Keywords
+- Chief Technology Officer, CTO, Technology Leader
+- Head of Analytics, Data Science Leader, Analytics Director
+- AI, Automation, Machine Learning, Digital Transformation
+- Leadership, Team Building, Mentoring, Strategy
+
+#### Secondary Keywords
+- Cloud Computing, DevOps, Security, Architecture
+- Python, SQL, Analytics, Business Intelligence
+- Perth, Australia, KINESSO, Initiative, Enterprise
+- Innovation, Scale, Growth, Optimisation
+
+#### Long-tail Keywords
+- "AI-driven digital transformation"
+- "high-performance technology teams"
+- "enterprise analytics strategy"
+- "cross-functional leadership Australia"
+
+### Quality Assurance
+
+#### Language Standards
+- Exclusive use of British English spelling
+- Professional tone appropriate for executive positions
+- Industry-standard terminology and frameworks
+- Clear, concise communication style
+
+#### Technical Accuracy
+- Current technology trends and tools
+- Accurate representation of achievements and metrics
+- Realistic positioning for experience level
+- Compliance with LinkedIn platform requirements
+
+#### Legal and Ethical Considerations
+- No confidential client information
+- Accurate representation of achievements
+- Appropriate attribution for team successes
+- Compliance with professional standards
