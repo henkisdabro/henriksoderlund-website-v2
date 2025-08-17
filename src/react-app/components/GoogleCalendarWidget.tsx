@@ -11,7 +11,7 @@ const GoogleCalendarWidget = ({ url, label, color = '#039BE5', className }: Goog
   const scriptContainerRef = useRef<HTMLDivElement>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [hasError, setHasError] = useState(false);
-  const initTimeoutRef = useRef<NodeJS.Timeout>();
+  const initTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const isInitializedRef = useRef(false);
 
   useEffect(() => {
@@ -25,6 +25,7 @@ const GoogleCalendarWidget = ({ url, label, color = '#039BE5', className }: Goog
     // Clear any existing timeout
     if (initTimeoutRef.current) {
       clearTimeout(initTimeoutRef.current);
+      initTimeoutRef.current = null;
     }
 
     const initializeButton = () => {
@@ -115,6 +116,7 @@ const GoogleCalendarWidget = ({ url, label, color = '#039BE5', className }: Goog
     return () => {
       if (initTimeoutRef.current) {
         clearTimeout(initTimeoutRef.current);
+        initTimeoutRef.current = null;
       }
       isInitializedRef.current = false;
     };

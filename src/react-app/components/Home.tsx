@@ -125,7 +125,7 @@ const Home = () => {
       keywordElements.forEach(el => {
         el.classList.remove('breathing');
         // Force reflow for each element in Safari
-        void el.offsetHeight;
+        void (el as HTMLElement).offsetHeight;
       });
       
       const randomElement = keywordElements[Math.floor(Math.random() * keywordElements.length)];
