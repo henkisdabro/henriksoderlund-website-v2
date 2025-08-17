@@ -1,7 +1,10 @@
+import { useState } from 'react';
 import { consultationData } from '../data/consultation';
 import GoogleCalendarWidget from './GoogleCalendarWidget';
 
 const Consultation = () => {
+  const [isCaseStudyExpanded, setIsCaseStudyExpanded] = useState(false);
+
   return (
     <div className="consultation-page">
       <h1>{consultationData.intro.title}</h1>
@@ -66,6 +69,91 @@ const Consultation = () => {
             ))}
           </tbody>
         </table>
+      </section>
+
+      <section className="case-study-section">
+        <div className="case-study-header">
+          <h2>{consultationData.caseStudy.title}</h2>
+          <button 
+            className="case-study-toggle" 
+            onClick={() => setIsCaseStudyExpanded(!isCaseStudyExpanded)}
+            aria-expanded={isCaseStudyExpanded}
+            aria-label={isCaseStudyExpanded ? "Collapse case study" : "Expand case study"}
+          >
+            {isCaseStudyExpanded ? '−' : '+'}
+          </button>
+        </div>
+        <h3 className="case-study-subtitle">
+          {consultationData.caseStudy.subtitle}
+          {!isCaseStudyExpanded && <span className="expand-hint"> (Click + to read case study)</span>}
+        </h3>
+        
+        {isCaseStudyExpanded && (
+          <div className="case-study-expandable">
+            <div className="client-overview">
+              <div className="client-info">
+                <strong>Client:</strong> {consultationData.caseStudy.client.type}<br />
+                <strong>Team Size:</strong> {consultationData.caseStudy.client.team}<br />
+                <strong>Core Challenge:</strong> {consultationData.caseStudy.client.challenge}
+              </div>
+            </div>
+
+            <div className="case-study-content">
+              <div className="challenge-section">
+                <h4>{consultationData.caseStudy.challenge.title}</h4>
+                <p>{consultationData.caseStudy.challenge.description}</p>
+                <ul className="pain-points">
+                  {consultationData.caseStudy.challenge.painPoints.map((point, index) => (
+                    <li key={index}>{point}</li>
+                  ))}
+                </ul>
+              </div>
+
+              <div className="solution-section">
+                <h4>{consultationData.caseStudy.solution.title}</h4>
+                <p>{consultationData.caseStudy.solution.description}</p>
+                <div className="solution-components">
+                  {consultationData.caseStudy.solution.components.map((component, index) => (
+                    <div key={index} className="solution-component">
+                      <h5>{component.name}</h5>
+                      <p>{component.description}</p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              <div className="results-section">
+                <h4>{consultationData.caseStudy.results.title}</h4>
+                <p>{consultationData.caseStudy.results.description}</p>
+                <div className="results-metrics">
+                  {consultationData.caseStudy.results.metrics.map((metric, index) => (
+                    <div key={index} className="metric-card">
+                      <div className="metric-value">{metric.value}</div>
+                      <div className="metric-name">{metric.metric}</div>
+                      <div className="metric-description">{metric.description}</div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              <div className="technology-section">
+                <h4>{consultationData.caseStudy.technologies.title}</h4>
+                <ul className="technology-list">
+                  {consultationData.caseStudy.technologies.items.map((tech, index) => (
+                    <li key={index}>{tech}</li>
+                  ))}
+                </ul>
+              </div>
+
+              <div className="testimonial-section">
+                <blockquote className="case-study-testimonial">
+                  <p>"{consultationData.caseStudy.testimonial.quote}"</p>
+                  <cite>— {consultationData.caseStudy.testimonial.author}</cite>
+                </blockquote>
+              </div>
+            </div>
+          </div>
+        )}
       </section>
 
       <section className="policy-section">

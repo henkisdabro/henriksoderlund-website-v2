@@ -344,7 +344,8 @@ h5 {
 .pricing-section,
 .calendar-section,
 .ai-consultancy-section,
-.traditional-services-section {
+.traditional-services-section,
+.case-study-section {
   margin-bottom: 3rem;
 }
 
@@ -558,6 +559,220 @@ h5 {
 .consultation-booking-widget {
   text-align: center; /* Center content within this widget */
   margin-top: 2rem; /* Add some space above the button */
+}
+
+/* Case Study Section Styles */
+.case-study-section {
+  margin-bottom: 3rem;
+}
+
+.case-study-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.case-study-header h2 {
+  margin: 0;
+  color: #2c3e50;
+  font-size: 1.8rem;
+}
+
+.case-study-toggle {
+  background: white;
+  border: 1px solid #007acc;
+  border-radius: 4px;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 1.3rem;
+  color: #007acc;
+  font-weight: bold;
+  transition: all 0.2s ease;
+}
+
+.case-study-toggle:hover {
+  background-color: #007acc;
+  color: white;
+}
+
+.case-study-subtitle {
+  font-size: 1rem;
+  color: #333;
+  font-weight: 400;
+  margin: 0 0 1rem 0;
+  text-align: left;
+}
+
+.expand-hint {
+  font-size: 1rem;
+  color: #666;
+  font-style: normal;
+}
+
+.case-study-expandable {
+  margin-top: 1.5rem;
+}
+
+.client-overview {
+  background: white;
+  border-radius: 8px;
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+  border: 1px solid #e9ecef;
+}
+
+.client-info {
+  font-size: 0.9rem;
+  line-height: 1.6;
+  color: #333;
+}
+
+.case-study-content {
+  display: grid;
+  gap: 1.5rem;
+}
+
+.challenge-section,
+.solution-section,
+.results-section,
+.technology-section,
+.testimonial-section {
+  background: white;
+  border-radius: 8px;
+  padding: 1.5rem;
+  border: 1px solid #e9ecef;
+}
+
+.challenge-section h4,
+.solution-section h4,
+.results-section h4,
+.technology-section h4 {
+  font-size: 1.3rem;
+  color: #2c3e50;
+  margin: 0 0 1rem 0;
+  font-weight: 600;
+}
+
+.pain-points {
+  list-style: disc;
+  margin-left: 2rem;
+  margin: 1rem 0 1rem 2rem;
+}
+
+.pain-points li {
+  margin-bottom: 0.5rem;
+  color: #555;
+  line-height: 1.5;
+}
+
+.solution-components {
+  display: grid;
+  gap: 0.5rem;
+  margin-top: 1rem;
+}
+
+.solution-component {
+  background: #f8f9fa;
+  border-radius: 4px;
+  padding: 0.75rem;
+  border: 1px solid #e9ecef;
+}
+
+.solution-component h5 {
+  font-size: 1rem;
+  color: #2c3e50;
+  margin: 0 0 0.25rem 0;
+  font-weight: 600;
+}
+
+.solution-component p {
+  margin: 0;
+  color: #555;
+  font-size: 0.85rem;
+  line-height: 1.4;
+}
+
+.results-metrics {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 0.75rem;
+  margin-top: 1rem;
+}
+
+.metric-card {
+  background: #f8f9fa;
+  border: 1px solid #e9ecef;
+  border-radius: 4px;
+  padding: 1rem;
+  text-align: left;
+}
+
+.metric-value {
+  font-size: 1.3rem;
+  font-weight: 600;
+  margin-bottom: 0.25rem;
+  color: #333;
+}
+
+.metric-name {
+  font-size: 0.8rem;
+  font-weight: 500;
+  margin-bottom: 0.25rem;
+  color: #555;
+  text-transform: none;
+  letter-spacing: 0;
+}
+
+.metric-description {
+  font-size: 0.75rem;
+  color: #666;
+  line-height: 1.3;
+}
+
+.technology-list {
+  list-style: disc;
+  margin-left: 2rem;
+  margin: 1rem 0 1rem 2rem;
+  display: block;
+}
+
+.technology-list li {
+  margin-bottom: 0.5rem;
+  color: #555;
+  font-size: 0.9rem;
+  line-height: 1.4;
+}
+
+.testimonial-section {
+  background: #f8f9fa;
+  border: 1px solid #e9ecef;
+  text-align: center;
+}
+
+.case-study-testimonial {
+  margin: 0;
+  border: none;
+  padding: 0;
+}
+
+.case-study-testimonial p {
+  font-size: 1rem;
+  line-height: 1.6;
+  margin: 0 0 1rem 0;
+  font-style: italic;
+  color: #555;
+}
+
+.case-study-testimonial cite {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #2c3e50;
+  font-style: normal;
 }
 
 .gcal-scheduling-button {
@@ -1256,6 +1471,52 @@ a:hover {
     width: 24px;
     height: 24px;
   }
+
+  /* Case study mobile responsive styles */
+  .case-study-section {
+    margin-bottom: 2rem;
+  }
+
+  .case-study-header {
+    flex-direction: row;
+    align-items: center;
+  }
+
+  .case-study-toggle {
+    width: 32px;
+    height: 32px;
+    font-size: 1.1rem;
+  }
+
+  .client-overview,
+  .challenge-section,
+  .solution-section,
+  .results-section,
+  .technology-section,
+  .testimonial-section {
+    padding: 1rem;
+  }
+
+  .results-metrics {
+    grid-template-columns: 1fr;
+    gap: 0.75rem;
+  }
+
+  .metric-card {
+    padding: 1rem;
+  }
+
+  .metric-value {
+    font-size: 1.2rem;
+  }
+
+  .solution-components {
+    gap: 0.75rem;
+  }
+
+  .case-study-testimonial p {
+    font-size: 0.9rem;
+  }
 }
 
 /* ========================= PRINT STYLES ========================= */
@@ -1742,5 +2003,169 @@ a:hover {
   .error-message h1,
   .error-message p {
     color: #000 !important;
+  }
+
+  /* Case study print styles */
+  .case-study-section {
+    margin: 8pt 0 !important;
+    page-break-inside: avoid;
+  }
+
+  .case-study-header {
+    display: block !important;
+  }
+
+  .case-study-toggle {
+    display: none !important;
+  }
+
+  .case-study-subtitle {
+    font-size: 11pt !important;
+    color: #000 !important;
+    font-weight: normal !important;
+    margin: 2pt 0 6pt 0 !important;
+    text-align: left !important;
+  }
+
+  .case-study-expandable {
+    display: block !important;
+    margin-top: 0 !important;
+  }
+
+  .client-overview,
+  .challenge-section,
+  .solution-section,
+  .results-section,
+  .technology-section,
+  .testimonial-section {
+    background: none !important;
+    border: none !important;
+    border-radius: 0 !important;
+    padding: 4pt 0 !important;
+    box-shadow: none !important;
+    margin: 4pt 0 !important;
+  }
+
+  .client-info {
+    font-size: 8pt !important;
+    line-height: 1.3 !important;
+    color: #000 !important;
+  }
+
+  .case-study-content {
+    display: block !important;
+    gap: 0 !important;
+  }
+
+  .pain-points,
+  .technology-list {
+    list-style: disc !important;
+    margin-left: 16pt !important;
+    padding: 0 !important;
+    display: block !important;
+  }
+
+  .pain-points li,
+  .technology-list li {
+    margin: 2pt 0 !important;
+    padding: 0 !important;
+    font-size: 8pt !important;
+    color: #000 !important;
+  }
+
+  .solution-components {
+    display: block !important;
+    gap: 0 !important;
+    margin-top: 4pt !important;
+  }
+
+  .solution-component {
+    background: none !important;
+    border: none !important;
+    border-radius: 0 !important;
+    padding: 2pt 0 !important;
+    padding-left: 6pt !important;
+    margin: 2pt 0 !important;
+  }
+
+  .solution-component h5 {
+    font-size: 9pt !important;
+    color: #000 !important;
+    margin: 0 0 2pt 0 !important;
+    font-weight: bold !important;
+  }
+
+  .solution-component p {
+    margin: 0 !important;
+    color: #000 !important;
+    font-size: 8pt !important;
+    line-height: 1.3 !important;
+  }
+
+  .results-metrics {
+    display: block !important;
+    grid-template-columns: none !important;
+    gap: 0 !important;
+    margin-top: 4pt !important;
+  }
+
+  .metric-card {
+    background: none !important;
+    border: 0.5pt solid #ccc !important;
+    border-radius: 0 !important;
+    padding: 4pt 6pt !important;
+    text-align: left !important;
+    margin: 2pt 0 !important;
+    display: block !important;
+  }
+
+  .metric-value {
+    font-size: 11pt !important;
+    font-weight: bold !important;
+    margin-bottom: 2pt !important;
+    color: #000 !important;
+    display: inline !important;
+    margin-right: 6pt !important;
+  }
+
+  .metric-name {
+    font-size: 8pt !important;
+    font-weight: bold !important;
+    margin-bottom: 1pt !important;
+    text-transform: none !important;
+    letter-spacing: 0 !important;
+    color: #000 !important;
+    display: inline !important;
+    margin-right: 6pt !important;
+  }
+
+  .metric-description {
+    font-size: 7pt !important;
+    line-height: 1.3 !important;
+    color: #333 !important;
+    display: block !important;
+    margin-top: 1pt !important;
+  }
+
+  .testimonial-section {
+    background: none !important;
+    border: 0.5pt solid #ccc !important;
+    text-align: center !important;
+    padding: 6pt !important;
+  }
+
+  .case-study-testimonial p {
+    font-size: 9pt !important;
+    line-height: 1.3 !important;
+    margin: 0 0 3pt 0 !important;
+    font-style: italic !important;
+    color: #000 !important;
+  }
+
+  .case-study-testimonial cite {
+    font-size: 8pt !important;
+    font-weight: normal !important;
+    font-style: normal !important;
+    color: #333 !important;
   }
 }

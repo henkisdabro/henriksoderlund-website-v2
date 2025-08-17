@@ -59,6 +59,98 @@ export const consultationData = {
     title: '🛡️ Quality Guarantee',
     paragraph: 'Every engagement is backed by my commitment to excellence. If the delivered solution doesn\'t meet the agreed specifications or your satisfaction, I\'ll work to resolve any issues at no additional cost.',
   },
+  caseStudy: {
+    title: '🎯 Real-World Success Story',
+    subtitle: 'Transforming Advertising Agency Operations Through Intelligent Automation',
+    client: {
+      type: 'Global Advertising Agency',
+      team: '150+ creative and account management professionals',
+      challenge: 'Manual campaign workflows causing delays, errors, and team burnout',
+    },
+    challenge: {
+      title: 'The Challenge',
+      description: 'A leading advertising agency was struggling with complex, manual project workflows that involved multiple stakeholders, tight deadlines, and extensive documentation requirements. Their creative teams were spending 40% of their time on administrative tasks rather than strategic creative work.',
+      painPoints: [
+        'Manual project briefing process taking 2-3 days per campaign',
+        'Inconsistent data entry across finance, creative, and client management systems',
+        'No real-time visibility into project status or resource allocation',
+        'Revenue leakage from unbilled hours and delayed invoicing',
+        'High stress levels and overtime due to manual coordination tasks',
+      ],
+    },
+    solution: {
+      title: 'The Solution',
+      description: 'I designed and implemented a comprehensive automation ecosystem centred around Asana as the primary workflow engine, with intelligent integrations across their entire technology stack.',
+      components: [
+        {
+          name: 'Intelligent Project Initiation',
+          description: 'Automated Asana project creation from client briefs with smart task assignment based on team availability and expertise',
+        },
+        {
+          name: 'Financial System Integration',
+          description: 'Custom API integrations connecting Asana to accounting software for automatic time tracking, expense allocation, and invoice generation',
+        },
+        {
+          name: 'Real-Time Analytics Dashboard',
+          description: 'Executive dashboard providing live insights into project profitability, team utilisation, and revenue pipeline',
+        },
+        {
+          name: 'Smart Resource Management',
+          description: 'AI-powered resource allocation system that prevents overbooking and optimises team capacity across projects',
+        },
+        {
+          name: 'Automated Reporting',
+          description: 'Weekly stakeholder reports automatically generated from Asana data with key performance metrics and alerts',
+        },
+      ],
+    },
+    results: {
+      title: 'The Results',
+      description: 'Within 12 weeks of implementation, the agency experienced transformational improvements across all key metrics:',
+      metrics: [
+        {
+          metric: 'Administrative Time Reduction',
+          value: '75%',
+          description: 'Creative teams now spend 30+ hours per week on strategic work instead of admin tasks',
+        },
+        {
+          metric: 'Project Delivery Speed',
+          value: '60% faster',
+          description: 'Campaign launches reduced from 3 weeks to 1.2 weeks average',
+        },
+        {
+          metric: 'Revenue Recovery',
+          value: 'AUD 285,000',
+          description: 'Captured previously unbilled hours and improved invoicing accuracy',
+        },
+        {
+          metric: 'Executive Visibility',
+          value: 'Real-time',
+          description: 'Leadership team now has instant access to project status and profitability data',
+        },
+        {
+          metric: 'Team Satisfaction',
+          value: '8.2/10',
+          description: 'Employee satisfaction increased significantly with reduced manual workload',
+        },
+      ],
+    },
+    technologies: {
+      title: 'Technology Stack',
+      items: [
+        'Asana API for workflow automation',
+        'Python scripts for data processing and integration',
+        'REST API integrations with finance and CRM systems',
+        'Cloudflare Workers Functions for serverless automation',
+        'Power BI for executive dashboard and reporting',
+        'Zapier for rapid prototyping and non-technical integrations',
+      ],
+    },
+    testimonial: {
+      quote: 'The workflow automation Henrik implemented has significantly improved our project delivery times and reduced administrative overhead. The investment paid for itself within four months, and our ROI continues to grow as the system scales with our business.',
+      author: 'Operations Manager, Global Advertising Agency',
+    },
+  },
   scheduling: {
     title: '📅 Schedule Your Strategic Session',
     paragraphs: [
