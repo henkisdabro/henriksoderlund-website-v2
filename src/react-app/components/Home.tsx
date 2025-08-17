@@ -1,5 +1,5 @@
 import { useEffect, useRef } from "react";
-import profileImage from "../assets/images/henrik-profile-small.jpg";
+import profileImage from "../assets/images/henrik-profile-small.webp";
 
 const Home = () => {
   const contentRef = useRef<HTMLDivElement>(null);

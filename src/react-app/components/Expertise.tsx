@@ -1,5 +1,5 @@
-import dashboardImage from '../assets/images/screenshots/dashboard.jpg';
-import wikiImage from '../assets/images/screenshots/wiki.jpg';
+import dashboardImage from '../assets/images/screenshots/dashboard.webp';
+import wikiImage from '../assets/images/screenshots/wiki.webp';
 import { expertiseData } from '../data/expertise';
 
 const Expertise = () => {
