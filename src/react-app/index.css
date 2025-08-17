@@ -331,29 +331,57 @@ button:focus-visible {
   padding: 2px 4px;
   margin: -2px -4px;
   border-radius: 4px;
+  -webkit-transition: all 0.1s ease-out;
   transition: all 0.1s ease-out;
 }
 
 .breathe-keyword.breathing {
+  -webkit-animation: breathe-highlight 3s cubic-bezier(0.4, 0, 0.6, 1) 1 forwards;
   animation: breathe-highlight 3s cubic-bezier(0.4, 0, 0.6, 1) 1 forwards;
   z-index: 1;
 }
 
-@keyframes breathe-highlight {
+@-webkit-keyframes breathe-highlight {
   0% {
     background-color: transparent;
+    -webkit-box-shadow: 0 0 0 rgba(66, 133, 244, 0);
     box-shadow: 0 0 0 rgba(66, 133, 244, 0);
     opacity: 1;
   }
   
   50% {
     background-color: rgba(66, 133, 244, 0.18);
+    -webkit-box-shadow: 0 0 24px rgba(66, 133, 244, 0.45);
     box-shadow: 0 0 24px rgba(66, 133, 244, 0.45);
     opacity: 1;
   }
   
   100% {
     background-color: transparent;
+    -webkit-box-shadow: 0 0 0 rgba(66, 133, 244, 0);
+    box-shadow: 0 0 0 rgba(66, 133, 244, 0);
+    opacity: 1;
+  }
+}
+
+@keyframes breathe-highlight {
+  0% {
+    background-color: transparent;
+    -webkit-box-shadow: 0 0 0 rgba(66, 133, 244, 0);
+    box-shadow: 0 0 0 rgba(66, 133, 244, 0);
+    opacity: 1;
+  }
+  
+  50% {
+    background-color: rgba(66, 133, 244, 0.18);
+    -webkit-box-shadow: 0 0 24px rgba(66, 133, 244, 0.45);
+    box-shadow: 0 0 24px rgba(66, 133, 244, 0.45);
+    opacity: 1;
+  }
+  
+  100% {
+    background-color: transparent;
+    -webkit-box-shadow: 0 0 0 rgba(66, 133, 244, 0);
     box-shadow: 0 0 0 rgba(66, 133, 244, 0);
     opacity: 1;
   }
@@ -361,21 +389,47 @@ button:focus-visible {
 
 /* Light mode adjustments for breathing effect */
 @media (prefers-color-scheme: light) {
-  @keyframes breathe-highlight {
+  @-webkit-keyframes breathe-highlight {
     0% {
       background-color: transparent;
+      -webkit-box-shadow: 0 0 0 rgba(66, 133, 244, 0);
       box-shadow: 0 0 0 rgba(66, 133, 244, 0);
       opacity: 1;
     }
     
     50% {
       background-color: rgba(66, 133, 244, 0.22);
+      -webkit-box-shadow: 0 0 28px rgba(66, 133, 244, 0.5);
       box-shadow: 0 0 28px rgba(66, 133, 244, 0.5);
       opacity: 1;
     }
     
     100% {
       background-color: transparent;
+      -webkit-box-shadow: 0 0 0 rgba(66, 133, 244, 0);
+      box-shadow: 0 0 0 rgba(66, 133, 244, 0);
+      opacity: 1;
+    }
+  }
+  
+  @keyframes breathe-highlight {
+    0% {
+      background-color: transparent;
+      -webkit-box-shadow: 0 0 0 rgba(66, 133, 244, 0);
+      box-shadow: 0 0 0 rgba(66, 133, 244, 0);
+      opacity: 1;
+    }
+    
+    50% {
+      background-color: rgba(66, 133, 244, 0.22);
+      -webkit-box-shadow: 0 0 28px rgba(66, 133, 244, 0.5);
+      box-shadow: 0 0 28px rgba(66, 133, 244, 0.5);
+      opacity: 1;
+    }
+    
+    100% {
+      background-color: transparent;
+      -webkit-box-shadow: 0 0 0 rgba(66, 133, 244, 0);
       box-shadow: 0 0 0 rgba(66, 133, 244, 0);
       opacity: 1;
     }
@@ -390,21 +444,47 @@ button:focus-visible {
     border-radius: 3px;
   }
   
-  @keyframes breathe-highlight {
+  @-webkit-keyframes breathe-highlight {
     0% {
       background-color: transparent;
+      -webkit-box-shadow: 0 0 0 rgba(66, 133, 244, 0);
       box-shadow: 0 0 0 rgba(66, 133, 244, 0);
       opacity: 1;
     }
     
     50% {
       background-color: rgba(66, 133, 244, 0.15);
+      -webkit-box-shadow: 0 0 18px rgba(66, 133, 244, 0.35);
       box-shadow: 0 0 18px rgba(66, 133, 244, 0.35);
       opacity: 1;
     }
     
     100% {
       background-color: transparent;
+      -webkit-box-shadow: 0 0 0 rgba(66, 133, 244, 0);
+      box-shadow: 0 0 0 rgba(66, 133, 244, 0);
+      opacity: 1;
+    }
+  }
+  
+  @keyframes breathe-highlight {
+    0% {
+      background-color: transparent;
+      -webkit-box-shadow: 0 0 0 rgba(66, 133, 244, 0);
+      box-shadow: 0 0 0 rgba(66, 133, 244, 0);
+      opacity: 1;
+    }
+    
+    50% {
+      background-color: rgba(66, 133, 244, 0.15);
+      -webkit-box-shadow: 0 0 18px rgba(66, 133, 244, 0.35);
+      box-shadow: 0 0 18px rgba(66, 133, 244, 0.35);
+      opacity: 1;
+    }
+    
+    100% {
+      background-color: transparent;
+      -webkit-box-shadow: 0 0 0 rgba(66, 133, 244, 0);
       box-shadow: 0 0 0 rgba(66, 133, 244, 0);
       opacity: 1;
     }

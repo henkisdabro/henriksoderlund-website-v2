@@ -51,25 +51,36 @@ const Home = () => {
         const parent = wrap.parentNode;
         if (parent) {
           parent.replaceChild(document.createTextNode(wrap.textContent || ''), wrap);
-          parent.normalize(); // Merge adjacent text nodes
+          if (parent.normalize) {
+            parent.normalize(); // Merge adjacent text nodes
+          }
         }
       });
       
-      // Find and wrap keywords
-      const walker = document.createTreeWalker(
-        contentRef.current,
-        NodeFilter.SHOW_TEXT,
-        null
-      );
-      
-      const textNodes: Text[] = [];
-      let node: Text | null;
-      
-      while ((node = walker.nextNode() as Text)) {
-        if (node.nodeValue && node.nodeValue.trim() && node.parentElement && !node.parentElement.classList.contains('breathe-keyword')) {
+      // Safari-compatible text node finding
+      const findTextNodes = (element: Element): Text[] => {
+        const textNodes: Text[] = [];
+        const walker = document.createTreeWalker(
+          element,
+          NodeFilter.SHOW_TEXT,
+          {
+            acceptNode: (node: Node) => {
+              return node.nodeValue && node.nodeValue.trim() && 
+                     node.parentElement && !node.parentElement.classList.contains('breathe-keyword')
+                     ? NodeFilter.FILTER_ACCEPT 
+                     : NodeFilter.FILTER_REJECT;
+            }
+          }
+        );
+        
+        let node: Text | null;
+        while ((node = walker.nextNode() as Text)) {
           textNodes.push(node);
         }
-      }
+        return textNodes;
+      };
+      
+      const textNodes = findTextNodes(contentRef.current);
       
       // Process text nodes to wrap keywords (longest first to avoid conflicts)
       const sortedKeywords = [...keywords].sort((a, b) => b.length - a.length);
@@ -87,17 +98,22 @@ const Home = () => {
         });
         
         if (hasKeyword && textNode.parentNode) {
-          const wrapper = document.createElement('div');
+          const wrapper = document.createElement('span');
           wrapper.innerHTML = content;
+          const fragment = document.createDocumentFragment();
           while (wrapper.firstChild) {
-            textNode.parentNode.insertBefore(wrapper.firstChild, textNode);
+            fragment.appendChild(wrapper.firstChild);
           }
-          textNode.parentNode.removeChild(textNode);
+          textNode.parentNode.replaceChild(fragment, textNode);
         }
       });
       
-      // Get all keyword elements
-      keywordElements = Array.from(contentRef.current.querySelectorAll('.breathe-keyword'));
+      // Get all keyword elements with a small delay for Safari
+      setTimeout(() => {
+        if (contentRef.current) {
+          keywordElements = Array.from(contentRef.current.querySelectorAll('.breathe-keyword'));
+        }
+      }, 100);
     };
 
     const animateRandomKeyword = () => {
@@ -106,29 +122,42 @@ const Home = () => {
       currentlyAnimating = true;
       
       // Clear ALL breathing animations first
-      keywordElements.forEach(el => el.classList.remove('breathing'));
+      keywordElements.forEach(el => {
+        el.classList.remove('breathing');
+        // Force reflow for each element in Safari
+        void el.offsetHeight;
+      });
       
       const randomElement = keywordElements[Math.floor(Math.random() * keywordElements.length)];
       
-      // Force reflow to ensure clean state
-      randomElement.offsetHeight; // Force reflow
-      randomElement.classList.add('breathing');
+      // Safari-compatible animation trigger
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          randomElement.classList.add('breathing');
+        });
+      });
       
-      // Remove animation after completion
+      // Remove animation after completion with Safari-safe timing
       setTimeout(() => {
         randomElement.classList.remove('breathing');
-        currentlyAnimating = false;
-      }, 3200); // Slightly longer than animation
+        // Double-check removal for Safari
+        requestAnimationFrame(() => {
+          randomElement.classList.remove('breathing');
+          currentlyAnimating = false;
+        });
+      }, 3300); // Slightly longer than animation for Safari
     };
 
-    // Initialize
+    // Initialize with Safari-compatible timing
     setTimeout(() => {
       createBreathingEffect();
       
-      // Start animation loop
-      animationInterval = setInterval(() => {
-        animateRandomKeyword();
-      }, 4000); // Every 4 seconds
+      // Start animation loop with additional delay for Safari
+      setTimeout(() => {
+        animationInterval = setInterval(() => {
+          animateRandomKeyword();
+        }, 4000); // Every 4 seconds
+      }, 500);
       
     }, 1000);
 
