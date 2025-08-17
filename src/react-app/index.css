@@ -323,3 +323,99 @@ button:focus-visible {
     gap: 0.3rem;
   }
 }
+
+/* Breathing/Twinkling Keyword Animation */
+.breathe-keyword {
+  display: inline;
+  position: relative;
+  padding: 2px 4px;
+  margin: -2px -4px;
+  border-radius: 4px;
+  transition: all 0.1s ease-out;
+}
+
+.breathe-keyword.breathing {
+  animation: breathe-highlight 3s cubic-bezier(0.4, 0, 0.6, 1) 1 forwards;
+  z-index: 1;
+}
+
+@keyframes breathe-highlight {
+  0% {
+    background-color: transparent;
+    box-shadow: 0 0 0 rgba(66, 133, 244, 0);
+    opacity: 1;
+  }
+  
+  50% {
+    background-color: rgba(66, 133, 244, 0.18);
+    box-shadow: 0 0 24px rgba(66, 133, 244, 0.45);
+    opacity: 1;
+  }
+  
+  100% {
+    background-color: transparent;
+    box-shadow: 0 0 0 rgba(66, 133, 244, 0);
+    opacity: 1;
+  }
+}
+
+/* Light mode adjustments for breathing effect */
+@media (prefers-color-scheme: light) {
+  @keyframes breathe-highlight {
+    0% {
+      background-color: transparent;
+      box-shadow: 0 0 0 rgba(66, 133, 244, 0);
+      opacity: 1;
+    }
+    
+    50% {
+      background-color: rgba(66, 133, 244, 0.22);
+      box-shadow: 0 0 28px rgba(66, 133, 244, 0.5);
+      opacity: 1;
+    }
+    
+    100% {
+      background-color: transparent;
+      box-shadow: 0 0 0 rgba(66, 133, 244, 0);
+      opacity: 1;
+    }
+  }
+}
+
+/* Mobile optimisation for breathing effect */
+@media (max-width: 768px) {
+  .breathe-keyword {
+    padding: 1px 3px;
+    margin: -1px -3px;
+    border-radius: 3px;
+  }
+  
+  @keyframes breathe-highlight {
+    0% {
+      background-color: transparent;
+      box-shadow: 0 0 0 rgba(66, 133, 244, 0);
+      opacity: 1;
+    }
+    
+    50% {
+      background-color: rgba(66, 133, 244, 0.15);
+      box-shadow: 0 0 18px rgba(66, 133, 244, 0.35);
+      opacity: 1;
+    }
+    
+    100% {
+      background-color: transparent;
+      box-shadow: 0 0 0 rgba(66, 133, 244, 0);
+      opacity: 1;
+    }
+  }
+}
+
+/* Reduced motion accessibility */
+@media (prefers-reduced-motion: reduce) {
+  .breathe-keyword.breathing {
+    animation: none;
+    background-color: rgba(66, 133, 244, 0.2);
+    box-shadow: none;
+  }
+}
