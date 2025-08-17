@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 interface GoogleCalendarWidgetProps {
   url: string;
@@ -7,38 +7,100 @@ interface GoogleCalendarWidgetProps {
   className?: string;
 }
 
-const GoogleCalendarWidget: React.FC<GoogleCalendarWidgetProps> = ({ url, label, color = '#039BE5', className }) => {
+const GoogleCalendarWidget = ({ url, label, color = '#039BE5', className }: GoogleCalendarWidgetProps) => {
   const scriptContainerRef = useRef<HTMLDivElement>(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [hasError, setHasError] = useState(false);
+  const initTimeoutRef = useRef<NodeJS.Timeout>();
+  const isInitializedRef = useRef(false);
 
   useEffect(() => {
     const scriptId = 'google-calendar-scheduling-script';
     const linkId = 'google-calendar-scheduling-css';
+    
+    setIsLoading(true);
+    setHasError(false);
+    isInitializedRef.current = false;
 
-    // Function to load script
-    const loadScript = () => {
-      if (document.getElementById(scriptId)) return; // Script already loaded
+    // Clear any existing timeout
+    if (initTimeoutRef.current) {
+      clearTimeout(initTimeoutRef.current);
+    }
 
-      const script = document.createElement('script');
-      script.id = scriptId;
-      script.src = 'https://calendar.google.com/calendar/scheduling-button-script.js';
-      script.async = true;
-      script.onload = () => {
-        // Once the main script is loaded, initialize the button
+    const initializeButton = () => {
+      if (!scriptContainerRef.current || isInitializedRef.current) {
+        return;
+      }
+
+      // Clear the container first
+      scriptContainerRef.current.innerHTML = '';
+
+      try {
         if (window.calendar && window.calendar.schedulingButton) {
           window.calendar.schedulingButton.load({
             url: url,
             color: color,
             label: label,
-            target: scriptContainerRef.current, // Use the ref as the target
+            target: scriptContainerRef.current,
           });
+          isInitializedRef.current = true;
+          setIsLoading(false);
+          setHasError(false);
+        } else {
+          // Retry after a short delay if API isn't ready
+          initTimeoutRef.current = setTimeout(() => {
+            if (window.calendar && window.calendar.schedulingButton && scriptContainerRef.current && !isInitializedRef.current) {
+              window.calendar.schedulingButton.load({
+                url: url,
+                color: color,
+                label: label,
+                target: scriptContainerRef.current,
+              });
+              isInitializedRef.current = true;
+              setIsLoading(false);
+              setHasError(false);
+            } else if (!window.calendar || !window.calendar.schedulingButton) {
+              setHasError(true);
+              setIsLoading(false);
+            }
+          }, 1000);
         }
+      } catch (error) {
+        console.error('Error initializing Google Calendar widget:', error);
+        setHasError(true);
+        setIsLoading(false);
+      }
+    };
+
+    const loadScript = () => {
+      const existingScript = document.getElementById(scriptId);
+      
+      if (existingScript) {
+        // Script already exists, just initialize
+        setTimeout(initializeButton, 100);
+        return;
+      }
+
+      const script = document.createElement('script');
+      script.id = scriptId;
+      script.src = 'https://calendar.google.com/calendar/scheduling-button-script.js';
+      script.async = true;
+      
+      script.onload = () => {
+        setTimeout(initializeButton, 200);
       };
+      
+      script.onerror = () => {
+        console.error('Failed to load Google Calendar script');
+        setHasError(true);
+        setIsLoading(false);
+      };
+      
       document.head.appendChild(script);
     };
 
-    // Function to load CSS
     const loadCss = () => {
-      if (document.getElementById(linkId)) return; // CSS already loaded
+      if (document.getElementById(linkId)) return;
 
       const link = document.createElement('link');
       link.id = linkId;
@@ -50,19 +112,62 @@ const GoogleCalendarWidget: React.FC<GoogleCalendarWidgetProps> = ({ url, label,
     loadCss();
     loadScript();
 
-    // Cleanup function
     return () => {
-      // No need to remove the script/link if they are global and might be used elsewhere
-      // However, if this component is the *only* place they are used,
-      // and to prevent potential issues on unmount/remount, we can remove them.
-      // For now, let's assume they are safe to remain, or that the Google script handles re-initialization.
-      // If issues arise, more aggressive cleanup (removing script/link elements) might be needed.
+      if (initTimeoutRef.current) {
+        clearTimeout(initTimeoutRef.current);
+      }
+      isInitializedRef.current = false;
     };
-  }, [url, label, color]); // Re-run effect if these props change
+  }, [url, label, color]);
+
+  if (hasError) {
+    return (
+      <div className={className}>
+        <div style={{ 
+          padding: '20px', 
+          textAlign: 'center', 
+          backgroundColor: '#f5f5f5', 
+          borderRadius: '8px',
+          border: '1px solid #ddd'
+        }}>
+          <p style={{ margin: '0 0 15px 0', color: '#666' }}>
+            Unable to load booking widget. Please use the direct link below:
+          </p>
+          <a 
+            href={url} 
+            target="_blank" 
+            rel="noopener noreferrer"
+            style={{
+              display: 'inline-block',
+              padding: '12px 24px',
+              backgroundColor: color,
+              color: 'white',
+              textDecoration: 'none',
+              borderRadius: '4px',
+              fontWeight: 'bold'
+            }}
+          >
+            {label}
+          </a>
+        </div>
+      </div>
+    );
+  }
 
   return (
-    <div ref={scriptContainerRef} className={className}>
-      {/* The Google Calendar button will be rendered inside this div */}
+    <div className={className}>
+      {isLoading && (
+        <div style={{ 
+          padding: '20px', 
+          textAlign: 'center',
+          color: '#666'
+        }}>
+          Loading booking widget...
+        </div>
+      )}
+      <div ref={scriptContainerRef} style={{ opacity: isLoading ? 0 : 1 }}>
+        {/* The Google Calendar button will be rendered inside this div */}
+      </div>
     </div>
   );
 };
