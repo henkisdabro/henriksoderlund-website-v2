@@ -1220,6 +1220,53 @@ a:hover {
   color: #000;
 }
 
+/* LinkedIn Link Styles */
+.linkedin-link {
+  position: absolute;
+  top: 35px;
+  right: 75px; /* Position next to GitHub icon */
+  z-index: 1000;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Ultrawide gutter positioning for LinkedIn button */
+@media (min-width: 1400px) {
+  .linkedin-link {
+    right: max(60px, calc((100vw - 1200px) / 2 - 40px));
+  }
+}
+
+.linkedin-link:hover {
+  text-decoration: none;
+}
+
+.linkedin-icon {
+  width: 28px;
+  height: 28px;
+  color: #333;
+  opacity: 0.7;
+  transition: all 0.3s ease;
+}
+
+.linkedin-link:hover::before {
+  content: '';
+  position: absolute;
+  top: -10px;
+  left: -10px;
+  right: -10px;
+  bottom: -10px;
+  background-color: #e9ecef;
+  border-radius: 50%;
+  z-index: -1;
+}
+
+.linkedin-link:hover .linkedin-icon {
+  color: #000;
+}
+
 /* Footer Styles */
 .site-footer {
   text-align: center;
@@ -1472,6 +1519,18 @@ a:hover {
     height: 24px;
   }
 
+  /* LinkedIn link mobile styles */
+  .linkedin-link {
+    position: absolute;
+    top: 27px;
+    right: 60px; /* Position next to GitHub icon */
+  }
+
+  .linkedin-icon {
+    width: 24px;
+    height: 24px;
+  }
+
   /* Case study mobile responsive styles */
   .case-study-section {
     margin-bottom: 2rem;
@@ -1582,6 +1641,7 @@ a:hover {
   /* Hide interactive and navigation elements */
   .navigation-box,
   .github-link,
+  .linkedin-link,
   .nav-button,
   .resume-button,
   .gcal-scheduling-button,

@@ -10,6 +10,7 @@ import NotFound from './components/NotFound';
 import Footer from './components/Footer';
 import NavigationBox from './components/NavigationBox';
 import GitHubLink from './components/GitHubLink';
+import LinkedInLink from './components/LinkedInLink';
 import ScrollToTop from './components/ScrollToTop';
 import "./App.css";
 
@@ -20,6 +21,7 @@ function App() {
       <div className="app">
         <NavigationBox />
         <GitHubLink />
+        <LinkedInLink />
         
         <main className="main-content">
           <Routes>
