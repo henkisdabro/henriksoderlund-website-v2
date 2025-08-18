@@ -43,34 +43,6 @@ const Consultation = () => {
         </table>
       </section>
 
-      <section className="traditional-services-section">
-        <h2>{consultationData.analyticsConsultancy.title}</h2>
-        <p>{consultationData.analyticsConsultancy.paragraph}</p>
-        
-        <div className="analytics-services">
-          <h3>{consultationData.analyticsConsultancy.services.title}</h3>
-          <ul>
-            {consultationData.analyticsConsultancy.services.items.map(item => <li key={item}>{item}</li>)}
-          </ul>
-        </div>
-
-        <h3>{consultationData.analyticsConsultancy.pricing.title}</h3>
-        <table className="modern-pricing-table">
-          <thead>
-            <tr>
-              {consultationData.analyticsConsultancy.pricing.headers.map(header => <th key={header}>{header}</th>)}
-            </tr>
-          </thead>
-          <tbody>
-            {consultationData.analyticsConsultancy.pricing.rows.map((row, index) => (
-              <tr key={index}>
-                {row.map((cell, cellIndex) => <td key={cellIndex} data-label={consultationData.analyticsConsultancy.pricing.headers[cellIndex]}>{cell}</td>)}
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </section>
-
       <section className="case-study-section">
         <div className="case-study-header">
           <h2>{consultationData.caseStudy.title}</h2>
@@ -155,6 +127,34 @@ const Consultation = () => {
             </div>
           </div>
         )}
+      </section>
+
+      <section className="traditional-services-section">
+        <h2>{consultationData.analyticsConsultancy.title}</h2>
+        <p>{consultationData.analyticsConsultancy.paragraph}</p>
+        
+        <div className="analytics-services">
+          <h3>{consultationData.analyticsConsultancy.services.title}</h3>
+          <ul>
+            {consultationData.analyticsConsultancy.services.items.map(item => <li key={item}>{item}</li>)}
+          </ul>
+        </div>
+
+        <h3>{consultationData.analyticsConsultancy.pricing.title}</h3>
+        <table className="modern-pricing-table">
+          <thead>
+            <tr>
+              {consultationData.analyticsConsultancy.pricing.headers.map(header => <th key={header}>{header}</th>)}
+            </tr>
+          </thead>
+          <tbody>
+            {consultationData.analyticsConsultancy.pricing.rows.map((row, index) => (
+              <tr key={index}>
+                {row.map((cell, cellIndex) => <td key={cellIndex} data-label={consultationData.analyticsConsultancy.pricing.headers[cellIndex]}>{cell}</td>)}
+              </tr>
+            ))}
+          </tbody>
+        </table>
       </section>
 
       <section className="policy-section">
