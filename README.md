@@ -1,11 +1,11 @@
 # Henrik Söderlund - Personal Website
 
-[![Vite](https://img.shields.io/badge/vite-7.1.2-646CFF?style=flat&logo=vite&logoColor=white)](https://vite.dev/)
+[![Vite](https://img.shields.io/badge/vite-7.1.3-646CFF?style=flat&logo=vite&logoColor=white)](https://vite.dev/)
 [![React](https://img.shields.io/badge/react-19.1.1-61DAFB?style=flat&logo=react&logoColor=white)](https://react.dev/)
 [![TypeScript](https://img.shields.io/badge/typescript-5.9.2-3178C6?style=flat&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
-[![Hono](https://img.shields.io/badge/hono-4.9.1-FF6B00?style=flat&logo=hono&logoColor=white)](https://hono.dev/)
+[![Hono](https://img.shields.io/badge/hono-4.9.4-FF6B00?style=flat&logo=hono&logoColor=white)](https://hono.dev/)
 [![Cloudflare Workers](https://img.shields.io/badge/cloudflare%20workers-deployed-F38020?style=flat&logo=cloudflare&logoColor=white)](https://workers.cloudflare.com/)
-[![ESLint](https://img.shields.io/badge/eslint-9.33.0-4B32C3?style=flat&logo=eslint&logoColor=white)](https://eslint.org/)
+[![ESLint](https://img.shields.io/badge/eslint-9.34.0-4B32C3?style=flat&logo=eslint&logoColor=white)](https://eslint.org/)
 
 Henrik Söderlund's personal website built with modern web technologies and deployed on Cloudflare Workers.
 
