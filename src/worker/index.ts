@@ -214,11 +214,11 @@ const removeEmojis = (text: string): string => {
 // Generate content from actual data files - DO NOT MODIFY COPYWRITING WITHOUT EXPLICIT APPROVAL
 const generateHomepageContent = (): string => {
   return `
-    <h1>Henrik Söderlund</h1>
+    <h1>Henrik Soederlund</h1>
     <p class="lead">Digital Media Leader & AI Solutions Expert. Former agency founder now architecting performance marketing solutions through automation, advanced analytics, and strategic team development in enterprise environments.</p>
     
     <h2>Hello!</h2>
-    <p>I'm Henrik Söderlund, a technology leader responsible for media activations at <a href="https://initiative.com/" target="_blank" rel="noopener noreferrer">Initiative</a> Perth (<a href="https://kinesso.com" target="_blank" rel="noopener noreferrer">KINESSO</a>, <a href="https://www.interpublic.com/" target="_blank" rel="noopener noreferrer">Interpublic Group</a>). After founding and scaling the award-winning <a href="https://www.cremedigital.com?utm_source=www.henriksoderlund.com&utm_medium=referral" target="_blank" rel="noopener noreferrer">Creme Digital</a>, I transitioned into senior leadership roles where I architect measurement solutions and guide high-performance teams across programmatic and performance marketing channels. With an inherent drive for optimisation and systematic thinking, I've built my career on developing sophisticated systems and automation workflows that transform how teams operate—from advanced analytics and server-side implementations to, more recently, intelligent AI-powered solutions that deliver measurable results at scale.</p>
+    <p>I'm Henrik Soederlund, a technology leader responsible for media activations at <a href="https://initiative.com/" target="_blank" rel="noopener noreferrer">Initiative</a> Perth (<a href="https://kinesso.com" target="_blank" rel="noopener noreferrer">KINESSO</a>, <a href="https://www.interpublic.com/" target="_blank" rel="noopener noreferrer">Interpublic Group</a>). After founding and scaling the award-winning <a href="https://www.cremedigital.com?utm_source=www.henriksoderlund.com&utm_medium=referral" target="_blank" rel="noopener noreferrer">Creme Digital</a>, I transitioned into senior leadership roles where I architect measurement solutions and guide high-performance teams across programmatic and performance marketing channels. With an inherent drive for optimisation and systematic thinking, I've built my career on developing sophisticated systems and automation workflows that transform how teams operate—from advanced analytics and server-side implementations to, more recently, intelligent AI-powered solutions that deliver measurable results at scale.</p>
     
     <p>Beyond technical innovation, my leadership approach centres on developing high-performing teams and cultivating lasting client relationships. Throughout my career, I've successfully rebuilt teams during challenging transitions, mentored 20+ professionals, and delivered compelling presentations that have secured major partnerships. My exceptionally broad technical skillset combined with solutions-driven mindset enables me to solve complex, multi-faceted challenges that others find intractable—whether designing custom performance tracking systems or implementing intelligent automation workflows that transform team operations.</p>
     
@@ -338,7 +338,7 @@ const getPrerenderedContent = (path: string): { title: string; content: string; 
     case '/':
     case '/index.html':
       return {
-        title: 'Henrik Söderlund - Technology Leader & AI Innovator',
+        title: 'Henrik Soederlund - Technology Leader & AI Innovator',
         content: generateHomepageContent(),
         links: baseLinks
       };
@@ -348,7 +348,7 @@ const getPrerenderedContent = (path: string): { title: string; content: string; 
         `<a href="${contrib.url}" target="_blank" rel="noopener noreferrer">${contrib.title}</a>`
       );
       return {
-        title: 'Expertise - Henrik Söderlund',
+        title: 'Expertise - Henrik Soederlund',
         content: generateExpertiseContent(),
         links: baseLinks.concat(expertiseLinks)
       };
@@ -356,14 +356,14 @@ const getPrerenderedContent = (path: string): { title: string; content: string; 
 
     case '/work-experience':
       return {
-        title: 'Work Experience - Henrik Söderlund',
+        title: 'Work Experience - Henrik Soederlund',
         content: generateWorkExperienceContent(),
         links: baseLinks
       };
 
     case '/education':
       return {
-        title: 'Education - Henrik Söderlund',
+        title: 'Education - Henrik Soederlund',
         content: `
           <h1>Education</h1>
           
@@ -384,7 +384,7 @@ const getPrerenderedContent = (path: string): { title: string; content: string; 
 
     case '/consultancy':
       return {
-        title: 'Strategic AI & Analytics Consultancy - Henrik Söderlund',
+        title: 'Strategic AI & Analytics Consultancy - Henrik Soederlund',
         content: generateConsultancyContent(),
         links: baseLinks.concat([
           '<a href="https://calendly.com/henriksoederlund/30min" target="_blank" rel="noopener noreferrer">Book a consultation</a>'
@@ -393,7 +393,7 @@ const getPrerenderedContent = (path: string): { title: string; content: string; 
 
     default:
       return {
-        title: 'Henrik Söderlund - Technology Leader & AI Innovator',
+        title: 'Henrik Soederlund - Technology Leader & AI Innovator',
         content: `
           <h1>Page Not Found</h1>
           <p>The page you're looking for doesn't exist. Return to the homepage to explore AI consulting, technology leadership, and professional expertise.</p>
@@ -423,7 +423,7 @@ const handleIndexWithInjection = async (c: Context) => {
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>${prerendered.title}</title>
-  <meta name="description" content="The personal website of Henrik Söderlund, a Technology Leader & AI Innovator based in Perth, Australia." />
+  <meta name="description" content="The personal website of Henrik Soederlund, a Technology Leader & AI Innovator based in Perth, Australia." />
   <meta property="og:type" content="profile" />
   <meta property="og:url" content="${fullUrl}" />
   <meta property="og:title" content="${prerendered.title}" />
