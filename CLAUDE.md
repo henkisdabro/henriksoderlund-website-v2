@@ -108,6 +108,15 @@ public/                 # Static assets served directly
 - If copywriting improvements are needed, ASK for permission first and explain exactly what you want to change
 - This includes server-side generated content in the Hono worker that mirrors React components
 
+### **Character Encoding Standards**
+
+⚠️ **CRITICAL**: Apply consistent character encoding across ALL generated files (llms.txt, markdown files).
+
+- **Key Replacements**: `ö → oe`, `" → "`, `— → -`, remove emojis and Unicode symbols
+- **Implementation**: Use centralized `removeEmojis()` function from `jsx-to-markdown.js`
+- **Scope**: ALL generated text content including titles, descriptions, project data
+- **Testing**: Verify consistent encoding in `llms.txt` and `.md` files after generation
+
 ### Writing Style & Language
 
 - **Language**: All content must use British English spelling and conventions
@@ -179,11 +188,11 @@ The project uses **wrangler.json** for Cloudflare Workers configuration:
 
 ### Current Configuration Features
 
-- ✅ **Single Page Application**: Proper SPA routing with `not_found_handling`
+- ✅ **Hybrid Routing Architecture**: `run_worker_first: ["/"]` forces homepage through worker code for crawler detection
 - ✅ **Source Maps**: Enabled for production debugging
 - ✅ **Node.js Compatibility**: For modern JavaScript features
 - ✅ **Observability**: Real-time monitoring and logs
-- ✅ **Static Assets**: Optimized asset serving from Vite build output
+- ✅ **Intelligent Asset Serving**: Static assets served optimally while preserving worker routing for critical paths
 
 ### Deployment
 
@@ -230,7 +239,75 @@ This collaborative approach is particularly valuable for:
 - Performance optimization challenges
 - Security implementation reviews
 
+## Critical Debugging Learnings (August 2025)
+
+### Cloudflare Workers Assets vs Worker Routing
+
+**CRITICAL ISSUE PATTERN**: When using Cloudflare Workers with assets, static files served from the assets directory bypass worker code entirely. This creates SEO and crawler content issues.
+
+**The Problem:**
+- `wrangler.json` with basic `assets.directory: "./dist/client"` serves ALL files statically
+- Homepage (`/`) requests get `index.html` served directly from assets, never reaching worker code
+- This bypasses crawler detection, server-side content generation, and SEO metadata injection
+- Result: Crawlers get empty React shell instead of proper content
+
+**The Solution:**
+Use `run_worker_first` in `wrangler.json` to force specific routes through worker code:
+
+```json
+{
+  "assets": {
+    "binding": "ASSETS",
+    "directory": "./dist/client",
+    "run_worker_first": ["/"]
+  }
+}
+```
+
+**Key Learning**: Always test crawler behavior separately from regular user experience when implementing hybrid serving models.
+
+### SEO Metadata for Crawler HTML Generation
+
+**CRITICAL REQUIREMENT**: When generating custom HTML for crawlers, include COMPLETE SEO metadata, not just basic tags.
+
+**Required Elements for Full SEO:**
+- ✅ Complete Open Graph tags (11+ tags including image metadata)
+- ✅ Full Twitter Card metadata (8+ tags)
+- ✅ Site verification tags (Google, Ahrefs)
+- ✅ ALL JSON-LD structured data schemas (Person, ProfessionalService, WebSite)
+- ✅ Favicon, canonical links, proper meta descriptions
+- ✅ Analytics tracking (noscript fallbacks)
+
+**Implementation Pattern:**
+Create a comprehensive `generateSEOMetadata()` function that extracts all metadata from the original static HTML and applies it to crawler-generated HTML.
+
+**Testing Strategy:**
+- Test crawlers: `curl -H "User-Agent: Googlebot/2.1" URL`
+- Count SEO tags: `curl -H "User-Agent: Googlebot/2.1" URL | grep -c "og:"` 
+- Verify content: `curl -H "User-Agent: Googlebot/2.1" URL | grep "<h1>"`
+- Test regular users: `curl URL` (should get React SPA)
+
+### Character Encoding in Generated Files
+
+**ISSUE**: International characters (ö, em dashes, smart quotes) cause encoding problems in generated text files.
+
+**Solution**: Apply comprehensive character replacement across ALL generated files:
+- Create centralized `removeEmojis()` function in `jsx-to-markdown.js`
+- Export and reuse across all generation scripts (`generate-llms-txt.js`, etc.)
+- Key replacements: `ö → oe`, `" → "`, `— → -`, remove emojis
+- Apply to ALL text content: titles, descriptions, project data
+
+**Testing**: Verify `llms.txt` and `.md` files have consistent character encoding.
+
 ## Recent Technical Improvements
+
+### Homepage Crawler Content Resolution (August 2025)
+
+- ✅ **Critical Fix**: Resolved missing H1 and content for search engine crawlers on homepage
+- ✅ **Assets Routing**: Implemented `run_worker_first: ["/"]` in wrangler.json to force homepage through worker
+- ✅ **Comprehensive SEO Restoration**: Added complete Open Graph, Twitter Cards, and structured data to crawler HTML
+- ✅ **Hybrid Architecture Validation**: Verified crawlers get server-rendered content while users get React SPA
+- ✅ **Character Encoding**: Applied consistent UTF-8 character replacement across all generated files
 
 ### SEO & IndexNow Implementation (August 2025)
 
