@@ -529,6 +529,9 @@ function removeEmojis(text) {
     // Replace smart quotes with regular quotes  
     .replace(/[""]/g, '"')
     .replace(/['']/g, "'")
+    // Replace ö character with 'oe' for proper encoding
+    .replace(/ö/g, 'oe')
+    .replace(/Ö/g, 'Oe')
     // Replace other problematic punctuation
     .replace(/…/g, '...')
     // Replace non-breaking spaces with regular spaces
