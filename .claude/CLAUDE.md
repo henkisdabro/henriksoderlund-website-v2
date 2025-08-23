@@ -3,6 +3,7 @@
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
 ## Project Overview
+
 This is Henrik Söderlund's personal website being rebuilt with modern technologies.
 
 **Production Site**: `https://www.henriksoderlund.com/`
@@ -113,7 +114,7 @@ public/                 # Static assets served directly
 
 ## Development Workflow
 
-1. Run `npm run dev` for local development with HMR at http://localhost:5173
+1. Run `npm run dev` for local development with HMR at <http://localhost:5173>
 2. Navigate between pages using React Router (/, /expertise, /work-experience, /education, /consultation)
 3. Content is served entirely from React components (no markdown processing)
 4. Static assets are served from `/public/` directory
@@ -129,6 +130,7 @@ public/                 # Static assets served directly
 - **Styling**: All styles in `src/react-app/App.css` with component-specific classes
 
 ## Design System & Recent Fixes
+
 - Clean, minimal design with proper typography
 - **Layout**: App content horizontally centered using flexbox on body element
 - **Navigation**: Fixed navigation box (200px width) on left side with grey hover states
@@ -142,6 +144,7 @@ public/                 # Static assets served directly
 - **Text Alignment**: Content is left-aligned, only containers are centered
 
 ## Navigation Box Features
+
 - Dynamic heading detection and navigation
 - Collapsible with expand/collapse button
 - Filters out headings named "Pages", "On This Page", "Navigation" from dynamic list
@@ -199,6 +202,7 @@ The project uses **wrangler.json** for Cloudflare Workers configuration:
 - **AI Assistant**: Claude Code (native VS Code extension)
 
 ### VS Code Configuration
+
 The project includes a complete `.vscode/` workspace configuration:
 
 #### Extensions (`.vscode/extensions.json`)
@@ -238,7 +242,7 @@ The project includes a complete `.vscode/` workspace configuration:
 - Wrangler deployment and development tasks
 - Integrated with VS Code's task runner
 
-### Development Workflow
+### VS Code Development Workflow
 
 1. Open project in VS Code
 2. Install recommended extensions when prompted
@@ -293,6 +297,7 @@ Always ensure these are properly ignored in git:
 ## AI/LLM Optimization Features
 
 ### llms.txt Implementation
+
 Complete implementation of the [llms.txt specification](https://llmstxt.org/) for optimal AI/LLM consumption:
 
 **Generated Files:**
@@ -386,11 +391,13 @@ Complete implementation of the [llms.txt specification](https://llmstxt.org/) fo
   - Smart caching system for content-based generation optimization
 
 ### Brand Positioning Updates (August 2025)
+
 - ✅ **Position Refinement**: Removed "executive" and "strategy" positioning across all content
   - Updated page titles from "Digital Strategy & Tech Executive" to "Technology Leader & AI Innovator"
   - Changed personal descriptions from "digital strategy executive" to "technology leader"
   - Modified llms.txt positioning from "Digital Strategy Executive" to "Technology Leader & AI Innovator"
   - Updated all meta descriptions, Open Graph, and Twitter Card metadata
+
 - ✅ **Comprehensive SEO Enhancement**:
   - Enhanced structured data (JSON-LD) with comprehensive person and professional service schemas
   - Added detailed skills, awards, education, and professional affiliations in structured data
@@ -398,6 +405,7 @@ Complete implementation of the [llms.txt specification](https://llmstxt.org/) fo
   - Updated all social media metadata for consistent positioning across platforms
 
 ### Previous Foundation Work
+
 - ✅ **Content Modernization**: Updated Homepage and Expertise page with technology leadership language and AI focus
 - ✅ **Page Rebranding**: Renamed "Skills" to "Expertise" with SEO-friendly 301 redirects
 - ✅ **AI Integration**: Added AI-related skills and capabilities throughout content
@@ -416,6 +424,7 @@ Complete implementation of the [llms.txt specification](https://llmstxt.org/) fo
 ## LinkedIn Profile Development Guidelines
 
 ### Overview
+
 These guidelines ensure consistent, effective LinkedIn profile development for Henrik Söderlund, targeting Australian CTO and Head of Analytics positions. All content must reflect Australian market requirements and use British English spelling throughout.
 
 ### Target Positioning
@@ -445,6 +454,7 @@ These guidelines ensure consistent, effective LinkedIn profile development for H
 ### Content Structure Guidelines
 
 #### Headlines (220 character limit)
+
 **Format**: `[Role] | [Key Expertise] | [Unique Value] | [Market Focus]`
 
 **Essential Elements**:
@@ -473,6 +483,7 @@ These guidelines ensure consistent, effective LinkedIn profile development for H
 6. **Call to Action** (1 sentence): Clear next step for interested parties
 
 **Writing Guidelines**:
+
 - Use first person implied (avoid "I" where possible)
 - Include 2-3 quantifiable metrics
 - Balance technical expertise with executive presence
@@ -482,12 +493,14 @@ These guidelines ensure consistent, effective LinkedIn profile development for H
 #### Experience Descriptions
 
 **Structure per Role**:
+
 1. **Impact Statement** (1-2 sentences): Overall contribution and transformation achieved
 2. **Leadership Achievements** (2-3 bullet points): Team development, stakeholder management
 3. **Technical Implementation** (2-3 bullet points): Specific solutions and innovations
 4. **Business Results** (1-2 bullet points): Quantifiable outcomes and metrics
 
 **Content Guidelines**:
+
 - Lead with business impact, support with technical detail
 - Quantify wherever possible (percentages, dollar amounts, team sizes)
 - Emphasise leadership progression and increasing responsibility
@@ -497,6 +510,7 @@ These guidelines ensure consistent, effective LinkedIn profile development for H
 ### Australian Market Considerations
 
 #### Cultural Fit Elements
+
 - Collaborative leadership style (Australian workplace culture values)
 - Cross-functional communication skills
 - Stakeholder management across diverse teams
@@ -506,6 +520,7 @@ These guidelines ensure consistent, effective LinkedIn profile development for H
 #### Industry-Specific Requirements
 
 **For CTO Roles**:
+
 - Cloud computing and infrastructure modernisation
 - Cybersecurity and compliance framework knowledge
 - Digital transformation leadership
@@ -513,6 +528,7 @@ These guidelines ensure consistent, effective LinkedIn profile development for H
 - Vendor management and technology partnerships
 
 **For Head of Analytics Roles**:
+
 - AI/ML implementation and governance
 - Data strategy and architecture
 - Advanced analytics and business intelligence
@@ -522,6 +538,7 @@ These guidelines ensure consistent, effective LinkedIn profile development for H
 ### Content Review Process
 
 #### Evaluation Criteria (1-10 scale)
+
 1. **Role Alignment**: How well content matches target position requirements
 2. **Market Relevance**: Alignment with Australian business environment
 3. **Competitive Differentiation**: Unique value vs. other candidates
@@ -534,6 +551,7 @@ These guidelines ensure consistent, effective LinkedIn profile development for H
 10. **Call to Action**: Clear next steps for interested parties
 
 #### Review Process
+
 1. **Initial Draft**: Create content following guidelines
 2. **Subagent Review**: Submit to specialist CTO and Analytics recruitment experts
 3. **Scoring**: Receive detailed feedback and numerical scores
@@ -544,18 +562,21 @@ These guidelines ensure consistent, effective LinkedIn profile development for H
 ### Keyword Optimisation
 
 #### Primary Keywords
+
 - Chief Technology Officer, CTO, Technology Leader
 - Head of Analytics, Data Science Leader, Analytics Director
 - AI, Automation, Machine Learning, Digital Transformation
 - Leadership, Team Building, Mentoring, Strategy
 
 #### Secondary Keywords
+
 - Cloud Computing, DevOps, Security, Architecture
 - Python, SQL, Analytics, Business Intelligence
 - Perth, Australia, KINESSO, Initiative, Enterprise
 - Innovation, Scale, Growth, Optimisation
 
 #### Long-tail Keywords
+
 - "AI-driven digital transformation"
 - "high-performance technology teams"
 - "enterprise analytics strategy"
@@ -564,18 +585,21 @@ These guidelines ensure consistent, effective LinkedIn profile development for H
 ### Quality Assurance
 
 #### Language Standards
+
 - Exclusive use of British English spelling
 - Professional tone appropriate for executive positions
 - Industry-standard terminology and frameworks
 - Clear, concise communication style
 
 #### Technical Accuracy
+
 - Current technology trends and tools
 - Accurate representation of achievements and metrics
 - Realistic positioning for experience level
 - Compliance with LinkedIn platform requirements
 
 #### Legal and Ethical Considerations
+
 - No confidential client information
 - Accurate representation of achievements
 - Appropriate attribution for team successes
