@@ -451,7 +451,7 @@ const handleIndexWithInjection = async (c: Context) => {
     );
 
     if (crawlerDetected) {
-      console.log('Crawler detected for path:', path);
+      console.log('CRAWLER DETECTED for path:', path, 'User-Agent:', c.req.header('user-agent'));
       
       const prerendered = getPrerenderedContent(path);
       
@@ -477,7 +477,9 @@ const handleIndexWithInjection = async (c: Context) => {
       `;
       
       // Inject content inside the existing root div using capturing groups
+      const originalHtml = html;
       html = html.replace(/(<div id="root">)(<\/div>)/, `$1${newRootContent}$2`);
+      console.log('CONTENT INJECTION - Path:', path, 'Injection successful:', originalHtml !== html);
       
       // Update title for all pages including homepage
       html = html.replace(
@@ -505,8 +507,14 @@ const handleIndexWithInjection = async (c: Context) => {
   }
 };
 
-app.get("/", handleIndexWithInjection);
-app.get("/index.html", handleIndexWithInjection);
+app.get("/", async (c) => {
+  console.log('SPECIFIC ROUTE HIT: / (root path)');
+  return handleIndexWithInjection(c);
+});
+app.get("/index.html", async (c) => {
+  console.log('SPECIFIC ROUTE HIT: /index.html');
+  return handleIndexWithInjection(c);
+});
 
 // Handle static assets with long cache times
 app.get("*.{js,css,svg,png,jpg,jpeg,gif,webp,woff,woff2,ttf,eot,ico}", async (c) => {
@@ -822,7 +830,7 @@ app.use('/metrics', async (c, next) => {
 // Catch-all route for SPA routing - must be last
 app.all("*", async (c) => {
   const url = new URL(c.req.url);
-  console.log('Catch-all route hit:', url.pathname);
+  console.log('CATCH-ALL ROUTE HIT:', url.pathname, 'User-Agent:', c.req.header('user-agent')?.substring(0, 50));
   
   // Check if this is a static asset request
   const isAsset = url.pathname.match(/\.(js|css|svg|png|jpg|jpeg|gif|webp|woff|woff2|ttf|eot|ico|txt|xml|md)$/i);
