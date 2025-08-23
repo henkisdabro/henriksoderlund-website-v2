@@ -506,15 +506,27 @@ function removeEmojis(text) {
   if (typeof text !== 'string') return '';
   
   return text
-    // Remove standard emojis (Unicode ranges)
+    // Remove standard emojis (Unicode ranges) - more comprehensive
     .replace(/[\u{1F600}-\u{1F64F}]|[\u{1F300}-\u{1F5FF}]|[\u{1F680}-\u{1F6FF}]|[\u{1F1E0}-\u{1F1FF}]|[\u{2600}-\u{26FF}]|[\u{2700}-\u{27BF}]/gu, '')
     // Remove additional emoji ranges
     .replace(/[\u{1F900}-\u{1F9FF}]|[\u{1FA70}-\u{1FAFF}]|[\u{1F000}-\u{1F02F}]|[\u{1F0A0}-\u{1F0FF}]/gu, '')
-    // Remove specific emojis that might be missed
-    .replace(/🚀|🛠️|👥|📊|🔗|👋🏼|🇦🇺|🇸🇬|🇸🇪|🤖|💼|📈|📱|💻|⚡|🎯|🌟|📝|🔄|📄|✅|🔧|⭐|🎉|✨|🏆|🎯|📈|🌍|⚡|🔥|💡/g, '')
+    // Remove emoji modifiers and combining sequences
+    .replace(/[\u{1F3FB}-\u{1F3FF}]/gu, '') // Skin tone modifiers
+    .replace(/[\u{200D}]/gu, '') // Zero width joiner used in emoji sequences
+    .replace(/[\u{FE0F}]/gu, '') // Variation selector-16 (emoji presentation)
+    .replace(/[\u{FE0E}]/gu, '') // Variation selector-15 (text presentation)
+    // Remove specific common emojis that might be missed by ranges
+    .replace(/🚀|🛠️|👥|📊|🔗|👋🏼|🇦🇺|🇸🇬|🇸🇪|🤖|💼|📈|📱|💻|⚡|🎯|🌟|📝|🔄|📄|✅|🔧|⭐|🎉|✨|🏆|🌍|🔥|💡|🏅|🎖️|🏵️|🎗️|🎯|📌|📍|🔖|🏷️/g, '')
+    // Convert arrows to safe equivalents rather than removing (preserve navigation arrows)
+    .replace(/→/g, '->')
+    .replace(/←/g, '<-')
+    .replace(/↑/g, '^')
+    .replace(/↓/g, 'v')
+    // Remove diagonal arrows that are rarely used in text
+    .replace(/[↗↖↘↙↔↕]/g, '')
     // Replace em dashes with regular dashes
     .replace(/[—–]/g, '-')
-    // Replace smart quotes with regular quotes
+    // Replace smart quotes with regular quotes  
     .replace(/[""]/g, '"')
     .replace(/['']/g, "'")
     // Replace other problematic punctuation
@@ -523,16 +535,18 @@ function removeEmojis(text) {
     .replace(/\u00A0/g, ' ')
     // Remove other Unicode symbols and pictographs
     .replace(/[\u{2000}-\u{206F}]|[\u{2E00}-\u{2E7F}]|[\u{3000}-\u{303F}]/gu, ' ')
-    // Remove miscellaneous symbols
-    .replace(/[\u{2580}-\u{259F}]|[\u{25A0}-\u{25FF}]|[\u{2600}-\u{26FF}]|[\u{2700}-\u{27BF}]/gu, '')
+    // Remove miscellaneous symbols (more comprehensive)
+    .replace(/[\u{2580}-\u{259F}]|[\u{25A0}-\u{25FF}]/gu, '')
     // Remove box drawing and block elements
     .replace(/[\u{2500}-\u{257F}]/gu, '')
-    // Remove dingbats
+    // Remove dingbats and miscellaneous symbols
     .replace(/[\u{2700}-\u{27BF}]/gu, '')
     // Remove geometric shapes
     .replace(/[\u{25A0}-\u{25FF}]/gu, '')
     // Remove miscellaneous technical symbols
     .replace(/[\u{2300}-\u{23FF}]/gu, '')
+    // Remove mathematical operators that might be interpreted as emojis
+    .replace(/[\u{2200}-\u{22FF}]/gu, '')
     // Clean up any extra whitespace left by character removal
     .replace(/\s{2,}/g, ' ')
     .trim();
@@ -659,12 +673,9 @@ function jsxToMarkdown(jsxContent, pageTitle = '') {
     .replace(/\n\s*\n\s*\n+/g, '\n\n') // Multiple newlines to double newlines
     .replace(/^\s+/gm, '') // Remove leading whitespace on lines
     .replace(/\s+$/gm, '') // Remove trailing whitespace on lines
-    // Fix text spacing issues - add space after periods/commas when missing
+    // Fix text spacing issues - be very conservative to avoid breaking existing text
     .replace(/([.!?])([A-Z])/g, '$1 $2') // Add space after sentence endings
-    .replace(/([,;])([A-Za-z])/g, '$1 $2') // Add space after commas/semicolons
-    // Fix link and text spacing
-    .replace(/\)([A-Z])/g, ') $1') // Add space after closing parentheses before capital letters
-    .replace(/([a-z])(\[)/g, '$1 $2') // Add space before links
+    .replace(/([,;])([A-Z])/g, '$1 $2') // Add space after commas/semicolons before capitals only
     // Remove duplicate spaces
     .replace(/ {2,}/g, ' ')
     .trim()
