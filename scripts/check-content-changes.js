@@ -13,33 +13,74 @@ const PROJECT_ROOT = path.resolve(__dirname, '..');
 const COMPONENTS_DIR = path.join(PROJECT_ROOT, 'src', 'react-app', 'components');
 const CACHE_FILE = path.join(PROJECT_ROOT, '.llms-cache.json');
 
-// Components that affect llms.txt generation
+// Files that affect llms.txt generation
 const TRACKED_COMPONENTS = [
   'Home.tsx',
-  'Skills.tsx', 
+  'Expertise.tsx', // Renamed from Skills.tsx
   'WorkExperience.tsx',
   'Education.tsx',
   'Consultation.tsx',
   'App.tsx' // For routing changes
 ];
 
+// Data files that affect content generation
+const TRACKED_DATA_FILES = [
+  'expertise.ts',
+  'workExperience.ts', 
+  'consultation.ts'
+];
+
 /**
- * Calculate hash of all tracked component files
+ * Calculate hash of all tracked component files and data files
  */
 function calculateContentHash() {
   let combinedContent = '';
   
+  // Hash component files
   for (const component of TRACKED_COMPONENTS) {
-    const componentPath = path.join(COMPONENTS_DIR, component);
+    // App.tsx is in the react-app root, others are in components
+    const componentPath = component === 'App.tsx' 
+      ? path.join(PROJECT_ROOT, 'src', 'react-app', component)
+      : path.join(COMPONENTS_DIR, component);
     
     try {
       if (fs.existsSync(componentPath)) {
         const content = fs.readFileSync(componentPath, 'utf8');
-        combinedContent += content;
+        combinedContent += `[COMPONENT:${component}]${content}`;
+      } else {
+        console.warn(`Warning: Component file not found: ${componentPath}`);
       }
     } catch (error) {
       console.warn(`Warning: Could not read ${component}:`, error.message);
     }
+  }
+  
+  // Hash data files
+  const DATA_DIR = path.join(PROJECT_ROOT, 'src', 'react-app', 'data');
+  for (const dataFile of TRACKED_DATA_FILES) {
+    const dataPath = path.join(DATA_DIR, dataFile);
+    
+    try {
+      if (fs.existsSync(dataPath)) {
+        const content = fs.readFileSync(dataPath, 'utf8');
+        combinedContent += `[DATA:${dataFile}]${content}`;
+      } else {
+        console.warn(`Warning: Data file not found: ${dataPath}`);
+      }
+    } catch (error) {
+      console.warn(`Warning: Could not read ${dataFile}:`, error.message);
+    }
+  }
+  
+  // Also include the markdown generation script itself to catch improvements
+  const scriptPath = path.join(PROJECT_ROOT, 'scripts', 'jsx-to-markdown.js');
+  try {
+    if (fs.existsSync(scriptPath)) {
+      const scriptContent = fs.readFileSync(scriptPath, 'utf8');
+      combinedContent += `[SCRIPT:jsx-to-markdown.js]${scriptContent}`;
+    }
+  } catch (error) {
+    console.warn(`Warning: Could not read script file:`, error.message);
   }
   
   return crypto.createHash('md5').update(combinedContent).digest('hex');
@@ -72,7 +113,11 @@ function updateCache() {
   const cache = {
     contentHash: currentHash,
     lastUpdated: new Date().toISOString(),
-    trackedFiles: TRACKED_COMPONENTS
+    trackedFiles: {
+      components: TRACKED_COMPONENTS,
+      dataFiles: TRACKED_DATA_FILES,
+      scripts: ['jsx-to-markdown.js']
+    }
   };
   
   fs.writeFileSync(CACHE_FILE, JSON.stringify(cache, null, 2), 'utf8');

@@ -192,18 +192,18 @@ const removeEmojis = (text: string): string => {
     .trim();
 };
 
-// Generate content from actual data files
+// Generate content from actual data files - DO NOT MODIFY COPYWRITING WITHOUT EXPLICIT APPROVAL
 const generateHomepageContent = (): string => {
   return `
     <h1>Henrik Söderlund</h1>
     <p class="lead">Digital Media Leader & AI Solutions Expert. Former agency founder now architecting performance marketing solutions through automation, advanced analytics, and strategic team development in enterprise environments.</p>
     
     <h2>Hello!</h2>
-    <p>I'm Henrik Söderlund, a technology leader responsible for media activations at Initiative Perth (KINESSO, Interpublic Group). After founding and scaling the award-winning Creme Digital, I transitioned into senior leadership roles where I architect measurement solutions and guide high-performance teams across programmatic and performance marketing channels.</p>
+    <p>I'm Henrik Söderlund, a technology leader responsible for media activations at <a href="https://initiative.com/" target="_blank" rel="noopener noreferrer">Initiative Perth</a> (<a href="https://kinesso.com" target="_blank" rel="noopener noreferrer">KINESSO</a>, <a href="https://www.interpublic.com/" target="_blank" rel="noopener noreferrer">Interpublic Group</a>). After founding and scaling the award-winning <a href="https://www.cremedigital.com?utm_source=www.henriksoderlund.com&utm_medium=referral" target="_blank" rel="noopener noreferrer">Creme Digital</a>, I transitioned into senior leadership roles where I architect measurement solutions and guide high-performance teams across programmatic and performance marketing channels.</p>
     
     <p>With an inherent drive for optimisation and systematic thinking, I've built my career on developing sophisticated systems and automation workflows that transform how teams operate—from advanced analytics and server-side implementations to, more recently, intelligent AI-powered solutions that deliver measurable results at scale.</p>
     
-    <p>Beyond technical innovation, my leadership approach centres on developing high-performing teams and cultivating lasting client relationships. Throughout my career, I've successfully rebuilt teams during challenging transitions, mentored 20+ professionals, and delivered compelling presentations that have secured major partnerships.</p>
+    <p>Beyond technical innovation, my leadership approach centres on developing high-performing teams and cultivating lasting client relationships. Throughout my career, I've successfully rebuilt teams during challenging transitions, mentored 20+ professionals, and delivered compelling presentations that have secured major partnerships. My exceptionally broad technical skillset combined with solutions-driven mindset enables me to solve complex, multi-faceted challenges that others find intractable—whether designing custom performance tracking systems or implementing intelligent automation workflows that transform team operations.</p>
   `;
 };
 
@@ -412,12 +412,26 @@ const handleIndexWithInjection = async (c: Context) => {
     const userAgent = c.req.header('user-agent') || '';
     const crawlerDetected = isCrawler(userAgent);
     
+    // Get the current path for Open Graph and canonical URL updates
+    const url = new URL(c.req.url);
+    const path = url.pathname;
+    const fullUrl = `https://www.henriksoderlund.com${path === '/' ? '' : path}`;
+    
+    // Update canonical URL and Open Graph URL dynamically
+    html = html.replace(
+      /<meta property="og:url" content="[^"]*" \/>/,
+      `<meta property="og:url" content="${fullUrl}" />`
+    );
+    
+    // Add canonical link tag in head
+    html = html.replace(
+      /<meta name="ahrefs-site-verification"/,
+      `<link rel="canonical" href="${fullUrl}" />\n  <meta name="ahrefs-site-verification"`
+    );
+
     if (crawlerDetected) {
       console.log('Crawler detected:', userAgent);
       
-      // Get the current path for content injection
-      const url = new URL(c.req.url);
-      const path = url.pathname;
       const prerendered = getPrerenderedContent(path);
       
       // Inject crawler-friendly content into the HTML
@@ -451,6 +465,14 @@ const handleIndexWithInjection = async (c: Context) => {
         html = html.replace(
           /<title>.*?<\/title>/,
           `<title>${prerendered.title}</title>`
+        );
+      }
+      
+      // Update Open Graph title for specific pages
+      if (path !== '/' && path !== '/index.html') {
+        html = html.replace(
+          /<meta property="og:title" content="[^"]*" \/>/,
+          `<meta property="og:title" content="${prerendered.title}" />`
         );
       }
       
@@ -542,6 +564,193 @@ Policy: https://www.henriksoderlund.com/
     'Content-Type': 'text/plain; charset=utf-8',
     'Cache-Control': 'public, max-age=86400'
   });
+});
+
+// IndexNow configuration
+const INDEXNOW_KEY = 'b17bc1cea33c519799f86d4e8d5d57ae587dd332361abff618a9dcd87a77ad15';
+const INDEXNOW_ENDPOINTS = [
+  'https://api.indexnow.org/indexnow',
+  'https://www.bing.com/indexnow',
+  'https://yandex.com/indexnow'
+];
+
+// IndexNow key validation endpoint
+app.get(`/${INDEXNOW_KEY}.txt`, (c) => {
+  return c.text(INDEXNOW_KEY, 200, {
+    'Content-Type': 'text/plain; charset=utf-8',
+    'Cache-Control': 'public, max-age=86400'
+  });
+});
+
+// Helper function to submit URLs to IndexNow
+const submitToIndexNow = async (urls: string[], host: string = 'www.henriksoderlund.com') => {
+  const payload = {
+    host,
+    key: INDEXNOW_KEY,
+    keyLocation: `https://${host}/${INDEXNOW_KEY}.txt`,
+    urlList: urls.map(url => url.startsWith('http') ? url : `https://${host}${url}`)
+  };
+
+  const results: Array<{endpoint: string; success: boolean; status?: number; error?: string}> = [];
+
+  for (const endpoint of INDEXNOW_ENDPOINTS) {
+    try {
+      const response = await fetch(endpoint, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'User-Agent': 'www.henriksoderlund.com IndexNow Client'
+        },
+        body: JSON.stringify(payload)
+      });
+
+      results.push({
+        endpoint,
+        success: response.ok,
+        status: response.status
+      });
+
+      console.log(`IndexNow submission to ${endpoint}: ${response.status}`);
+    } catch (error) {
+      results.push({
+        endpoint,
+        success: false,
+        error: error instanceof Error ? error.message : String(error)
+      });
+      console.error(`IndexNow submission failed for ${endpoint}:`, error);
+    }
+  }
+
+  return results;
+};
+
+// IndexNow single URL submission endpoint
+app.get("/indexnow", async (c) => {
+  const url = c.req.query('url');
+  const key = c.req.query('key');
+  
+  if (!url) {
+    return c.json({ error: 'URL parameter is required' }, 400);
+  }
+  
+  if (!key || key !== INDEXNOW_KEY) {
+    return c.json({ error: 'Invalid or missing key' }, 403);
+  }
+
+  // Validate URL belongs to this domain
+  try {
+    const urlObj = new URL(url);
+    if (urlObj.hostname !== 'www.henriksoderlund.com' && urlObj.hostname !== 'henriksoderlund.com') {
+      return c.json({ error: 'URL must belong to this domain' }, 422);
+    }
+  } catch {
+    return c.json({ error: 'Invalid URL format' }, 400);
+  }
+
+  const results = await submitToIndexNow([url]);
+  
+  const successful = results.filter(r => r.success).length;
+  const failed = results.filter(r => !r.success).length;
+
+  return c.json({
+    success: successful > 0,
+    submitted_url: url,
+    results: {
+      successful,
+      failed,
+      details: results
+    },
+    timestamp: new Date().toISOString()
+  }, successful > 0 ? 200 : 207);
+});
+
+// IndexNow bulk URL submission endpoint
+app.post("/indexnow", async (c) => {
+  const body = await c.req.json().catch(() => null);
+  
+  if (!body || !Array.isArray(body.urlList) || !body.key) {
+    return c.json({ error: 'Invalid request body. Expected JSON with urlList and key.' }, 400);
+  }
+
+  if (body.key !== INDEXNOW_KEY) {
+    return c.json({ error: 'Invalid key' }, 403);
+  }
+
+  if (body.urlList.length > 10000) {
+    return c.json({ error: 'Maximum 10,000 URLs per request' }, 400);
+  }
+
+  // Validate all URLs belong to this domain
+  const invalidUrls = [];
+  for (const url of body.urlList) {
+    try {
+      const urlObj = new URL(url);
+      if (urlObj.hostname !== 'www.henriksoderlund.com' && urlObj.hostname !== 'henriksoderlund.com') {
+        invalidUrls.push(url);
+      }
+    } catch {
+      invalidUrls.push(url);
+    }
+  }
+
+  if (invalidUrls.length > 0) {
+    return c.json({ 
+      error: 'Some URLs are invalid or do not belong to this domain',
+      invalid_urls: invalidUrls.slice(0, 10) // Show first 10 invalid URLs
+    }, 422);
+  }
+
+  const results = await submitToIndexNow(body.urlList);
+  
+  const successful = results.filter(r => r.success).length;
+  const failed = results.filter(r => !r.success).length;
+
+  return c.json({
+    success: successful > 0,
+    submitted_urls_count: body.urlList.length,
+    results: {
+      successful,
+      failed,
+      details: results
+    },
+    timestamp: new Date().toISOString()
+  }, successful > 0 ? 200 : 207);
+});
+
+// Automatic IndexNow submission for common pages (can be called after deployments)
+app.post("/indexnow/submit-all", async (c) => {
+  const key = c.req.query('key');
+  
+  if (!key || key !== INDEXNOW_KEY) {
+    return c.json({ error: 'Invalid or missing key' }, 403);
+  }
+
+  const commonUrls = [
+    'https://www.henriksoderlund.com/',
+    'https://www.henriksoderlund.com/expertise',
+    'https://www.henriksoderlund.com/work-experience',
+    'https://www.henriksoderlund.com/education',
+    'https://www.henriksoderlund.com/consultancy',
+    'https://www.henriksoderlund.com/llms.txt',
+    'https://www.henriksoderlund.com/sitemap.xml'
+  ];
+
+  const results = await submitToIndexNow(commonUrls);
+  
+  const successful = results.filter(r => r.success).length;
+  const failed = results.filter(r => !r.success).length;
+
+  return c.json({
+    success: successful > 0,
+    message: 'Submitted all common pages to search engines',
+    submitted_urls: commonUrls,
+    results: {
+      successful,
+      failed,
+      details: results
+    },
+    timestamp: new Date().toISOString()
+  }, successful > 0 ? 200 : 207);
 });
 
 // Rate limiting helper (simple implementation)

@@ -498,20 +498,42 @@ function extractSkillsContent(componentPath) {
 }
 
 /**
- * Remove emojis from text content
- * @param {string} text - Text that may contain emojis
- * @returns {string} - Text with emojis removed
+ * Remove emojis and non-UTF8 supported characters from text content
+ * @param {string} text - Text that may contain emojis and special characters
+ * @returns {string} - Text with emojis and problematic characters removed/replaced
  */
 function removeEmojis(text) {
-  // Remove various emoji patterns
+  if (typeof text !== 'string') return '';
+  
   return text
     // Remove standard emojis (Unicode ranges)
     .replace(/[\u{1F600}-\u{1F64F}]|[\u{1F300}-\u{1F5FF}]|[\u{1F680}-\u{1F6FF}]|[\u{1F1E0}-\u{1F1FF}]|[\u{2600}-\u{26FF}]|[\u{2700}-\u{27BF}]/gu, '')
     // Remove additional emoji ranges
-    .replace(/[\u{1F900}-\u{1F9FF}]|[\u{1FA70}-\u{1FAFF}]/gu, '')
-    // Remove common emojis that might be missed
-    .replace(/🚀|🛠️|👥|📊|🔗|👋🏼|🇦🇺|🇸🇬|🇸🇪|🤖|💼|📈|📱|💻|⚡|🎯|🌟|📝|🔄|📄|✅/g, '')
-    // Clean up any extra whitespace left by emoji removal
+    .replace(/[\u{1F900}-\u{1F9FF}]|[\u{1FA70}-\u{1FAFF}]|[\u{1F000}-\u{1F02F}]|[\u{1F0A0}-\u{1F0FF}]/gu, '')
+    // Remove specific emojis that might be missed
+    .replace(/🚀|🛠️|👥|📊|🔗|👋🏼|🇦🇺|🇸🇬|🇸🇪|🤖|💼|📈|📱|💻|⚡|🎯|🌟|📝|🔄|📄|✅|🔧|⭐|🎉|✨|🏆|🎯|📈|🌍|⚡|🔥|💡/g, '')
+    // Replace em dashes with regular dashes
+    .replace(/[—–]/g, '-')
+    // Replace smart quotes with regular quotes
+    .replace(/[""]/g, '"')
+    .replace(/['']/g, "'")
+    // Replace other problematic punctuation
+    .replace(/…/g, '...')
+    // Replace non-breaking spaces with regular spaces
+    .replace(/\u00A0/g, ' ')
+    // Remove other Unicode symbols and pictographs
+    .replace(/[\u{2000}-\u{206F}]|[\u{2E00}-\u{2E7F}]|[\u{3000}-\u{303F}]/gu, ' ')
+    // Remove miscellaneous symbols
+    .replace(/[\u{2580}-\u{259F}]|[\u{25A0}-\u{25FF}]|[\u{2600}-\u{26FF}]|[\u{2700}-\u{27BF}]/gu, '')
+    // Remove box drawing and block elements
+    .replace(/[\u{2500}-\u{257F}]/gu, '')
+    // Remove dingbats
+    .replace(/[\u{2700}-\u{27BF}]/gu, '')
+    // Remove geometric shapes
+    .replace(/[\u{25A0}-\u{25FF}]/gu, '')
+    // Remove miscellaneous technical symbols
+    .replace(/[\u{2300}-\u{23FF}]/gu, '')
+    // Clean up any extra whitespace left by character removal
     .replace(/\s{2,}/g, ' ')
     .trim();
 }

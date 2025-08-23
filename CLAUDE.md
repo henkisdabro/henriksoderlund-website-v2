@@ -269,6 +269,13 @@ Complete implementation of the [llms.txt specification](https://llmstxt.org/) fo
 
 ## Content Standards
 
+### **CRITICAL RULE - Content Preservation**
+⚠️ **NEVER modify, change, or "improve" existing copywriting without explicit approval from the user.** 
+- The homepage copy, About sections, and all marketing content has been carefully crafted and tested
+- Technical fixes (SEO, structure, formatting) are allowed, but content changes are NOT
+- If copywriting improvements are needed, ASK for permission first and explain exactly what you want to change
+- This includes server-side generated content in the Hono worker that mirrors React components
+
 ### Writing Style & Language
 - **Language**: All content must use British English spelling and conventions
 - **Common British spellings**: optimisation (not optimization), specialising (not specializing), organisation (not organization), utilising (not utilizing), realise (not realize), colour (not color), behaviour (not behavior), centre (not center)
