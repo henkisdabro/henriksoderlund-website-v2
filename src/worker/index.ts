@@ -429,13 +429,13 @@ const handleIndexWithInjection = async (c: Context) => {
     html = html.replace(/%CF_COLO%/g, cfColo);
     html = html.replace(/%CF_RAY%/g, cfRay);
     
-    // Check if this is a crawler request using enhanced detection
-    const crawlerDetected = isCrawler(c);
-    console.log('DEBUG: Path:', path, 'Crawler detected:', crawlerDetected, 'User-Agent:', c.req.header('user-agent'));
-    
     // Get the current path for Open Graph and canonical URL updates
     const url = new URL(c.req.url);
     const path = url.pathname;
+    
+    // Check if this is a crawler request using enhanced detection
+    const crawlerDetected = isCrawler(c);
+    console.log('DEBUG: Path:', path, 'Crawler detected:', crawlerDetected, 'User-Agent:', c.req.header('user-agent'));
     const fullUrl = `https://www.henriksoderlund.com${path === '/' ? '' : path}`;
     
     // Update canonical URL and Open Graph URL dynamically
