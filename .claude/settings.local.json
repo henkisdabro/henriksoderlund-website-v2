@@ -72,7 +72,10 @@
       "Bash(done)",
       "Bash(git merge:*)",
       "Bash(echo:*)",
-      "Read(/c:\\Users\\henrik\\OneDrive\\Documents\\ShareX\\Screenshots\\2025-08/**)"
+      "Read(/c:\\Users\\henrik\\OneDrive\\Documents\\ShareX\\Screenshots\\2025-08/**)",
+      "WebFetch(domain:www.indexnow.org)",
+      "Bash(npx tsc:*)",
+      "Bash(tree:*)"
     ],
     "deny": [],
     "ask": [],
