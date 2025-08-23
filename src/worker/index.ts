@@ -454,9 +454,8 @@ const handleIndexWithInjection = async (c: Context) => {
       
       const prerendered = getPrerenderedContent(path);
       
-      // Inject crawler-friendly content into the HTML
-      const crawlerContent = `
-        <div id="root">
+      // Create content to inject inside the existing root div
+      const newRootContent = `
           <div class="app">
             <main class="main-content">
               ${prerendered.content}
@@ -474,11 +473,10 @@ const handleIndexWithInjection = async (c: Context) => {
               ${prerendered.links.join(' ')}
             </div>
           </div>
-        </div>
       `;
       
-      // Replace the root div content with crawler content using regex for robustness
-      html = html.replace(/<div id="root">.*?<\/div>/s, crawlerContent);
+      // Inject content inside the existing root div using capturing groups
+      html = html.replace(/(<div id="root">)(<\/div>)/, `$1${newRootContent}$2`);
       
       // Update title for all pages including homepage
       html = html.replace(
