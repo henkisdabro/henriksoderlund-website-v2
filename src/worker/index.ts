@@ -157,11 +157,24 @@ app.get("/sitemap.xml", async (c) => {
   return handleAssetFetch(c, c.req.url, 'application/xml; charset=utf-8', 'public, max-age=86400');
 });
 
-// Crawler detection function
-const isCrawler = (userAgent: string): boolean => {
+// Enhanced crawler detection using Cloudflare's native bot management
+const isCrawler = (c: Context): boolean => {
+  // First try Cloudflare's native bot detection (most reliable)
+  try {
+    const cf = c.req.raw.cf as any;
+    if (cf?.botManagement?.verifiedBot === true) {
+      console.log('Verified bot detected via Cloudflare bot management');
+      return true;
+    }
+  } catch (error) {
+    console.log('Cloudflare bot management not available, falling back to User-Agent');
+  }
+  
+  // Fallback to User-Agent string matching
+  const userAgent = c.req.header('user-agent') || '';
   const crawlerPatterns = [
     'AhrefsBot',
-    'AhrefsSiteAudit',
+    'AhrefsSiteAudit', 
     'Googlebot',
     'bingbot',
     'Baiduspider',
@@ -179,7 +192,13 @@ const isCrawler = (userAgent: string): boolean => {
   ];
   
   const ua = userAgent.toLowerCase();
-  return crawlerPatterns.some(pattern => ua.includes(pattern.toLowerCase()));
+  const isUserAgentCrawler = crawlerPatterns.some(pattern => ua.includes(pattern.toLowerCase()));
+  
+  if (isUserAgentCrawler) {
+    console.log('Crawler detected via User-Agent:', userAgent);
+  }
+  
+  return isUserAgentCrawler;
 };
 
 // Helper function to remove emojis from content
@@ -410,9 +429,8 @@ const handleIndexWithInjection = async (c: Context) => {
     html = html.replace(/%CF_COLO%/g, cfColo);
     html = html.replace(/%CF_RAY%/g, cfRay);
     
-    // Check if this is a crawler request
-    const userAgent = c.req.header('user-agent') || '';
-    const crawlerDetected = isCrawler(userAgent);
+    // Check if this is a crawler request using enhanced detection
+    const crawlerDetected = isCrawler(c);
     
     // Get the current path for Open Graph and canonical URL updates
     const url = new URL(c.req.url);
@@ -432,10 +450,9 @@ const handleIndexWithInjection = async (c: Context) => {
     );
 
     if (crawlerDetected) {
-      console.log('Crawler detected:', userAgent, 'for path:', path);
+      console.log('Crawler detected for path:', path);
       
       const prerendered = getPrerenderedContent(path);
-      console.log('Prerendered content length:', prerendered.content.length);
       
       // Inject crawler-friendly content into the HTML
       const crawlerContent = `
@@ -462,7 +479,6 @@ const handleIndexWithInjection = async (c: Context) => {
       
       // Replace the empty root div with crawler content
       html = html.replace('<div id="root"></div>', crawlerContent);
-      console.log('HTML replacement completed, root div replaced:', html.includes('<main class="main-content">'));
       
       // Update title for specific pages
       if (path !== '/' && path !== '/index.html') {

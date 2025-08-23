@@ -76,7 +76,8 @@
       "WebFetch(domain:www.indexnow.org)",
       "Bash(npx tsc:*)",
       "Bash(tree:*)",
-      "Bash(gh run list:*)"
+      "Bash(gh run list:*)",
+      "Bash(npx:*)"
     ],
     "deny": [],
     "ask": [],
