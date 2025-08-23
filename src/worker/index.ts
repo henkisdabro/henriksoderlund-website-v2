@@ -431,6 +431,7 @@ const handleIndexWithInjection = async (c: Context) => {
     
     // Check if this is a crawler request using enhanced detection
     const crawlerDetected = isCrawler(c);
+    console.log('DEBUG: Path:', path, 'Crawler detected:', crawlerDetected, 'User-Agent:', c.req.header('user-agent'));
     
     // Get the current path for Open Graph and canonical URL updates
     const url = new URL(c.req.url);
