@@ -811,20 +811,16 @@ app.use('/metrics', async (c, next) => {
   await next();
 });
 
-// Homepage routes - moved here for debugging route priority
-app.get("/", async (c) => {
-  console.log('SPECIFIC ROUTE HIT: / (root path)');
-  return handleIndexWithInjection(c);
-});
-app.get("/index.html", async (c) => {
-  console.log('SPECIFIC ROUTE HIT: /index.html');
-  return handleIndexWithInjection(c);
-});
-
-// Catch-all route for SPA routing - must be last
+// Catch-all route for SPA routing - handles all routes including homepage
 app.all("*", async (c) => {
   const url = new URL(c.req.url);
   console.log('CATCH-ALL ROUTE HIT:', url.pathname, 'User-Agent:', c.req.header('user-agent')?.substring(0, 50));
+  
+  // Handle homepage paths explicitly
+  if (url.pathname === '/' || url.pathname === '/index.html') {
+    console.log('HANDLING HOMEPAGE PATH in catch-all:', url.pathname);
+    return handleIndexWithInjection(c);
+  }
   
   // Check if this is a static asset request
   const isAsset = url.pathname.match(/\.(js|css|svg|png|jpg|jpeg|gif|webp|woff|woff2|ttf|eot|ico|txt|xml|md)$/i);
@@ -842,7 +838,7 @@ app.all("*", async (c) => {
     }
   }
   
-  // For page routes (SPA), serve index.html with data injection
+  // For other page routes (SPA), serve index.html with data injection
   console.log('Serving SPA route with injection:', url.pathname);
   return handleIndexWithInjection(c);
 });
