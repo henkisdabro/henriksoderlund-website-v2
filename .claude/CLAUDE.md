@@ -334,6 +334,44 @@ Complete implementation of the [llms.txt specification](https://llmstxt.org/) fo
 - **Voice**: Professional, direct, and technical without being overly formal
 - **Consistency**: Maintain consistent terminology and spelling across all content files
 
+### Markdown Linting Standards
+
+All markdown files in this project must pass the following linting rules:
+
+- **MD022 (blanks-around-headings)**: All headings (## ### ####) must be surrounded by blank lines
+- **MD024 (no-duplicate-heading)**: No duplicate heading text at any level (rename duplicates with descriptive prefixes)
+- **MD031 (blanks-around-fences)**: Code blocks must be surrounded by blank lines
+- **MD032 (blanks-around-lists)**: All lists (bullet and numbered) must be surrounded by blank lines
+- **MD034 (no-bare-urls)**: URLs must be wrapped in angle brackets `<url>` or proper markdown links `[text](url)`
+- **MD040 (fenced-code-language)**: Code blocks must specify a language (use `text` for generic content)
+
+**Example of properly formatted markdown:**
+
+```text
+## Main Heading
+
+Introductory paragraph.
+
+### Sub Heading
+
+Another paragraph before a list.
+
+- First list item
+- Second list item
+
+Code block with proper spacing:
+
+```text
+code content here
+```
+
+Regular paragraph with properly formatted URL: <http://localhost:5173>
+
+### Different Sub Heading
+
+Never duplicate heading text - use descriptive prefixes instead.
+```
+
 ## Content Structure (Current Pages)
 
 - **Home**: Henrik's professional introduction and summary with technology leadership focus
