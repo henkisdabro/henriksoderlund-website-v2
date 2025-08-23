@@ -152,7 +152,165 @@ app.get("/sitemap.xml", async (c) => {
   return handleAssetFetch(c, c.req.url, 'application/xml; charset=utf-8', 'public, max-age=86400');
 });
 
-// Handle index.html with server-side data injection
+// Crawler detection function
+const isCrawler = (userAgent: string): boolean => {
+  const crawlerPatterns = [
+    'AhrefsBot',
+    'AhrefsSiteAudit',
+    'Googlebot',
+    'bingbot',
+    'Baiduspider',
+    'facebookexternalhit',
+    'Twitterbot',
+    'LinkedInBot',
+    'WhatsApp',
+    'Slackbot',
+    'DuckDuckBot',
+    'YandexBot',
+    'SemrushBot',
+    'MJ12bot',
+    'DotBot',
+    'rogerbot'
+  ];
+  
+  const ua = userAgent.toLowerCase();
+  return crawlerPatterns.some(pattern => ua.includes(pattern.toLowerCase()));
+};
+
+// Pre-rendered content for different routes
+const getPrerenderedContent = (path: string): { title: string; content: string; links: string[] } => {
+  const baseLinks = [
+    '<a href="https://initiative.com/" target="_blank" rel="noopener noreferrer">Initiative</a>',
+    '<a href="https://kinesso.com" target="_blank" rel="noopener noreferrer">KINESSO</a>',
+    '<a href="https://www.interpublic.com/" target="_blank" rel="noopener noreferrer">Interpublic Group</a>',
+    '<a href="https://www.cremedigital.com?utm_source=www.henriksoderlund.com&utm_medium=referral" target="_blank" rel="noopener noreferrer">Creme Digital</a>',
+    '<a href="/expertise">Explore My Expertise</a>',
+    '<a href="https://www.linkedin.com/in/henriksoderlund/" target="_blank" rel="noopener noreferrer">LinkedIn</a>',
+    '<a href="https://github.com/henkisdabro" target="_blank" rel="noopener noreferrer">GitHub</a>'
+  ];
+
+  switch (path) {
+    case '/':
+    case '/index.html':
+      return {
+        title: 'Henrik Söderlund - Technology Leader & AI Innovator',
+        content: `
+          <h1>Henrik Söderlund</h1>
+          <p class="lead">Digital Media Leader & AI Solutions Expert. Former agency founder now architecting performance marketing solutions through automation, advanced analytics, and strategic team development in enterprise environments.</p>
+          
+          <h2>Hello! 👋🏼</h2>
+          <p>I'm Henrik Söderlund, a technology leader responsible for media activations at Initiative Perth (KINESSO, Interpublic Group). After founding and scaling the award-winning Creme Digital, I transitioned into senior leadership roles where I architect measurement solutions and guide high-performance teams across programmatic and performance marketing channels.</p>
+          
+          <p>With an inherent drive for optimisation and systematic thinking, I've built my career on developing sophisticated systems and automation workflows that transform how teams operate—from advanced analytics and server-side implementations to, more recently, intelligent AI-powered solutions that deliver measurable results at scale.</p>
+          
+          <p>Beyond technical innovation, my leadership approach centres on developing high-performing teams and cultivating lasting client relationships. Throughout my career, I've successfully rebuilt teams during challenging transitions, mentored 20+ professionals, and delivered compelling presentations that have secured major partnerships.</p>
+        `,
+        links: baseLinks
+      };
+
+    case '/expertise':
+      return {
+        title: 'Expertise - Henrik Söderlund',
+        content: `
+          <h1>Expertise</h1>
+          
+          <h2>🚀 Strategic Technology Leadership & AI Innovation</h2>
+          <p>As a senior technology leader, I architect comprehensive solutions that bridge cutting-edge AI capabilities with practical business outcomes. My expertise spans building intelligent automation systems, developing advanced measurement frameworks, and leading cross-functional teams to implement scalable technology solutions.</p>
+          
+          <h2>👥 Executive Leadership & People Development</h2>
+          <p>With extensive experience in executive leadership, I build, mentor, and guide high-performance teams while maintaining exceptional client relationships and stakeholder engagement. My leadership philosophy combines systematic people development with strategic business alignment.</p>
+          
+          <h2>🛠️ Technical Expertise & Platform Mastery</h2>
+          <p>Comprehensive technical skills spanning analytics platforms, programming languages, cloud infrastructure, and AI/ML technologies. Expert in Google Analytics, Google Ads, Meta platforms, Python, React, and cloud computing solutions.</p>
+          
+          <h2>📊 Advanced Dashboard & Analytics Solutions</h2>
+          <p>Specialist in creating sophisticated measurement and reporting solutions. Built advanced Campaign & Website Performance Dashboards in Looker Studio with real-time analytics and conversion tracking.</p>
+        `,
+        links: baseLinks.concat([
+          '<a href="https://github.com/henkisdabro/claude-computer-use-macos" target="_blank" rel="noopener noreferrer">Claude Computer Use macOS</a>',
+          '<a href="https://github.com/henkisdabro/aws-cost-allocation-automation" target="_blank" rel="noopener noreferrer">AWS Cost Allocation Automation</a>',
+          '<a href="https://github.com/henkisdabro/ga4-server-side-tracking-gtm" target="_blank" rel="noopener noreferrer">GA4 Server-Side Tracking GTM</a>'
+        ])
+      };
+
+    case '/work-experience':
+      return {
+        title: 'Work Experience - Henrik Söderlund',
+        content: `
+          <h1>Work Experience</h1>
+          
+          <h2>🇦🇺 Senior Media Activation Lead</h2>
+          <p class="dates">May 2023–Present</p>
+          <p>Initiative Perth, Kinesso, Interpublic Group - Perth, Australia</p>
+          <p>Leading strategic technology initiatives and media activation solutions for enterprise clients. Architecting measurement frameworks and developing AI-powered automation systems.</p>
+          
+          <h2>🇦🇺 Founder & Managing Director</h2>
+          <p class="dates">Jan 2018–Apr 2023</p>
+          <p>Creme Digital - Perth, Australia</p>
+          <p>Founded and scaled award-winning digital marketing agency to 15+ team members. Secured major enterprise clients and delivered innovative measurement solutions. Recognised as Advertising+Marketing AOTY Best Local Media Agency 2021.</p>
+          
+          <h2>🇸🇬 Digital Marketing Manager</h2>
+          <p class="dates">Jul 2016–Dec 2017</p>
+          <p>Envato - Singapore</p>
+          <p>Led digital marketing initiatives for Southeast Asian markets. Implemented advanced analytics and attribution models across multiple product lines.</p>
+        `,
+        links: baseLinks
+      };
+
+    case '/education':
+      return {
+        title: 'Education - Henrik Söderlund',
+        content: `
+          <h1>Education</h1>
+          
+          <h2>🇸🇪 Tertiary Education</h2>
+          <p class="dates">1999–2006</p>
+          <p>Master of Music [M.Mus.] Instrument: Trombone at Lund University - Malmö, Sweden</p>
+          
+          <h2>🇸🇪 Secondary Education</h2>
+          <p class="dates">1996–1999</p>
+          <p>Natural Sciences at Kattegattgymnasiet - Malmö, Sweden</p>
+          
+          <h2>🇸🇪 Primary Education</h2>
+          <p class="dates">1987–1996</p>
+          <p>Elementary at Örjanskolan - Halmstad, Sweden</p>
+        `,
+        links: baseLinks
+      };
+
+    case '/consultancy':
+      return {
+        title: 'Strategic AI & Analytics Consultancy - Henrik Söderlund',
+        content: `
+          <h1>Strategic AI & Analytics Consultancy</h1>
+          
+          <h2>🤖 AI Strategy & Implementation Consulting</h2>
+          <p>Comprehensive AI consultancy services designed to transform your business operations through intelligent automation and advanced analytics. From strategic feasibility assessments to full-scale implementation and training.</p>
+          
+          <h2>📊 Advanced Analytics & Measurement Solutions</h2>
+          <p>Enterprise-grade analytics consulting specialising in attribution modeling, advanced reporting, and comprehensive measurement frameworks. Expert in Google Analytics 4, server-side tracking, and custom dashboard development.</p>
+          
+          <h2>💼 Proven Track Record</h2>
+          <p>Successfully delivered AI automation solutions resulting in 73% efficiency improvements, 89% accuracy in predictive models, and comprehensive team upskilling programs.</p>
+        `,
+        links: baseLinks.concat([
+          '<a href="https://calendly.com/henriksoederlund/30min" target="_blank" rel="noopener noreferrer">Book a consultation</a>'
+        ])
+      };
+
+    default:
+      return {
+        title: 'Henrik Söderlund - Technology Leader & AI Innovator',
+        content: `
+          <h1>Page Not Found</h1>
+          <p>The page you're looking for doesn't exist. Return to the homepage to explore AI consulting, technology leadership, and professional expertise.</p>
+        `,
+        links: ['<a href="/">Return to Homepage</a>']
+      };
+  }
+};
+
+// Handle index.html with server-side data injection and crawler content
 const handleIndexWithInjection = async (c: Context) => {
   try {
     const asset = await c.env.ASSETS.fetch(new URL("/index.html", c.req.url).toString());
@@ -177,6 +335,55 @@ const handleIndexWithInjection = async (c: Context) => {
     html = html.replace(/%CF_COUNTRY%/g, cfCountry);
     html = html.replace(/%CF_COLO%/g, cfColo);
     html = html.replace(/%CF_RAY%/g, cfRay);
+    
+    // Check if this is a crawler request
+    const userAgent = c.req.header('user-agent') || '';
+    const crawlerDetected = isCrawler(userAgent);
+    
+    if (crawlerDetected) {
+      console.log('Crawler detected:', userAgent);
+      
+      // Get the current path for content injection
+      const url = new URL(c.req.url);
+      const path = url.pathname;
+      const prerendered = getPrerenderedContent(path);
+      
+      // Inject crawler-friendly content into the HTML
+      const crawlerContent = `
+        <div id="root">
+          <div class="app">
+            <main class="main-content">
+              ${prerendered.content}
+            </main>
+            <nav class="crawler-nav">
+              <ul>
+                <li><a href="/">Home</a></li>
+                <li><a href="/expertise">Expertise</a></li>
+                <li><a href="/work-experience">Work Experience</a></li>
+                <li><a href="/education">Education</a></li>
+                <li><a href="/consultancy">Consultancy</a></li>
+              </ul>
+            </nav>
+            <div class="external-links">
+              ${prerendered.links.join(' ')}
+            </div>
+          </div>
+        </div>
+      `;
+      
+      // Replace the empty root div with crawler content
+      html = html.replace('<div id="root"></div>', crawlerContent);
+      
+      // Update title for specific pages
+      if (path !== '/' && path !== '/index.html') {
+        html = html.replace(
+          /<title>.*?<\/title>/,
+          `<title>${prerendered.title}</title>`
+        );
+      }
+      
+      console.log('Serving pre-rendered content to crawler for path:', path);
+    }
     
     // Use c.body instead of c.html to have full control over Content-Type header
     return c.body(html, 200, {
