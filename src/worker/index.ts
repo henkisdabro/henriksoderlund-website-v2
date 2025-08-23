@@ -406,6 +406,58 @@ const getPrerenderedContent = (path: string): { title: string; content: string; 
 // Handle index.html with server-side data injection and crawler content
 const handleIndexWithInjection = async (c: Context) => {
   try {
+    const url = new URL(c.req.url);
+    const path = url.pathname;
+    const crawlerDetected = isCrawler(c);
+    
+    console.log('HANDLER CALLED - Path:', path, 'Crawler:', crawlerDetected);
+    
+    // If crawler detected, return completely custom HTML
+    if (crawlerDetected) {
+      const prerendered = getPrerenderedContent(path);
+      const fullUrl = `https://www.henriksoderlund.com${path === '/' ? '' : path}`;
+      
+      const crawlerHtml = `<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>${prerendered.title}</title>
+  <meta name="description" content="The personal website of Henrik Söderlund, a Technology Leader & AI Innovator based in Perth, Australia." />
+  <meta property="og:type" content="profile" />
+  <meta property="og:url" content="${fullUrl}" />
+  <meta property="og:title" content="${prerendered.title}" />
+  <meta property="og:description" content="Technology Leader specialising in AI automation, digital marketing, and technology leadership." />
+  <link rel="canonical" href="${fullUrl}" />
+</head>
+<body>
+  <div id="root">
+    <div class="app">
+      <main class="main-content">
+        ${prerendered.content}
+      </main>
+      <nav class="crawler-nav">
+        <ul>
+          <li><a href="/">Home</a></li>
+          <li><a href="/expertise">Expertise</a></li>
+          <li><a href="/work-experience">Work Experience</a></li>
+          <li><a href="/education">Education</a></li>
+          <li><a href="/consultancy">Consultancy</a></li>
+        </ul>
+      </nav>
+      <div class="external-links">
+        ${prerendered.links.join(' ')}
+      </div>
+    </div>
+  </div>
+</body>
+</html>`;
+      
+      console.log('SERVING CUSTOM CRAWLER HTML for path:', path);
+      return c.html(crawlerHtml);
+    }
+    
+    // For regular users, serve the React SPA
     const asset = await c.env.ASSETS.fetch(new URL("/index.html", c.req.url).toString());
     
     if (!asset.ok) {
@@ -415,92 +467,31 @@ const handleIndexWithInjection = async (c: Context) => {
     
     let html = await asset.text();
     
-    // Inject Cloudflare and server-side data
+    // Basic data injection for regular users
     const buildTimestamp = new Date().toISOString();
     const cfCountry = c.req.header('cf-ipcountry') || 'unknown';
     const cfColo = c.req.header('cf-ipcolo') || 'unknown';
     const cfRay = c.req.header('cf-ray') || 'unknown';
     
-    console.log('Injecting CF data:', { cfCountry, cfColo, cfRay });
-    
-    // Replace placeholders with actual data
     html = html.replace(/%BUILD_TIMESTAMP%/g, buildTimestamp);
     html = html.replace(/%CF_COUNTRY%/g, cfCountry);
     html = html.replace(/%CF_COLO%/g, cfColo);
     html = html.replace(/%CF_RAY%/g, cfRay);
     
-    // Get the current path for Open Graph and canonical URL updates
-    const url = new URL(c.req.url);
-    const path = url.pathname;
-    
-    // Check if this is a crawler request using enhanced detection
-    const crawlerDetected = isCrawler(c);
-    console.log('DEBUG: Path:', path, 'Crawler detected:', crawlerDetected, 'User-Agent:', c.req.header('user-agent'));
     const fullUrl = `https://www.henriksoderlund.com${path === '/' ? '' : path}`;
     
-    // Update canonical URL and Open Graph URL dynamically
+    // Update canonical URL and Open Graph URL
     html = html.replace(
       /<meta property="og:url" content="[^"]*" \/>/,
       `<meta property="og:url" content="${fullUrl}" />`
     );
     
-    // Add canonical link tag in head
     html = html.replace(
       /<meta name="ahrefs-site-verification"/,
       `<link rel="canonical" href="${fullUrl}" />\n  <meta name="ahrefs-site-verification"`
     );
-
-    if (crawlerDetected) {
-      console.log('CRAWLER DETECTED for path:', path, 'User-Agent:', c.req.header('user-agent'));
-      
-      const prerendered = getPrerenderedContent(path);
-      
-      // Create content to inject inside the existing root div
-      const newRootContent = `
-          <div class="app">
-            <main class="main-content">
-              ${prerendered.content}
-            </main>
-            <nav class="crawler-nav">
-              <ul>
-                <li><a href="/">Home</a></li>
-                <li><a href="/expertise">Expertise</a></li>
-                <li><a href="/work-experience">Work Experience</a></li>
-                <li><a href="/education">Education</a></li>
-                <li><a href="/consultancy">Consultancy</a></li>
-              </ul>
-            </nav>
-            <div class="external-links">
-              ${prerendered.links.join(' ')}
-            </div>
-          </div>
-      `;
-      
-      // Inject content inside the existing root div using capturing groups
-      const originalHtml = html;
-      html = html.replace(/(<div id="root">)(<\/div>)/, `$1${newRootContent}$2`);
-      console.log('CONTENT INJECTION - Path:', path, 'Injection successful:', originalHtml !== html);
-      
-      // Update title for all pages including homepage
-      html = html.replace(
-        /<title>.*?<\/title>/,
-        `<title>${prerendered.title}</title>`
-      );
-      
-      // Update Open Graph title for all pages including homepage
-      html = html.replace(
-        /<meta property="og:title" content="[^"]*" \/>/,
-        `<meta property="og:title" content="${prerendered.title}" />`
-      );
-      
-      console.log('Serving pre-rendered content to crawler for path:', path);
-    }
     
-    // Use c.body instead of c.html to have full control over Content-Type header
-    return c.body(html, 200, {
-      'Cache-Control': 'public, max-age=3600',
-      'Content-Type': 'text/html; charset=utf-8'
-    });
+    return c.html(html);
   } catch (error) {
     console.error('Index.html processing error:', error);
     return c.text('Internal server error', 500);
