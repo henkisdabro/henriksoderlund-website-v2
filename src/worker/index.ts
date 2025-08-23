@@ -403,6 +403,239 @@ const getPrerenderedContent = (path: string): { title: string; content: string; 
   }
 };
 
+// Generate comprehensive SEO metadata for crawlers
+const generateSEOMetadata = (path: string, title: string, fullUrl: string): string => {
+  const ogTitle = path === '/' ? 'Henrik Söderlund | Digital Media Leader & AI Solutions Innovator' : title;
+  const twitterTitle = ogTitle;
+  
+  return `
+  <meta charset="UTF-8" />
+  <link rel="icon" type="image/svg+xml" href="/bot.svg" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>${title}</title>
+  <meta name="description" content="The personal website of Henrik Söderlund, a Technology Leader & AI Innovator based in Perth, Australia." />
+
+  <!-- Open Graph / Facebook -->
+  <meta property="og:type" content="profile" />
+  <meta property="og:url" content="${fullUrl}" />
+  <meta property="og:title" content="${ogTitle}" />
+  <meta property="og:description" content="Technology Leader specialising in AI automation, digital marketing, and technology leadership. Expert in building intelligent systems, leading high-performance teams, and delivering enterprise-scale solutions." />
+  <meta property="og:image" content="https://www.henriksoderlund.com/og_image.png" />
+  <meta property="og:image:alt" content="Henrik Söderlund - Digital Media Leader & AI Solutions Innovator" />
+  <meta property="og:image:type" content="image/png" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:site_name" content="Henrik Söderlund" />
+  <meta property="og:locale" content="en_AU" />
+  <meta property="profile:first_name" content="Henrik" />
+  <meta property="profile:last_name" content="Söderlund" />
+  <meta property="profile:username" content="henkisdabro" />
+
+  <!-- Twitter -->
+  <meta property="twitter:card" content="summary_large_image" />
+  <meta property="twitter:site" content="@henkisdabro" />
+  <meta property="twitter:creator" content="@henkisdabro" />
+  <meta property="twitter:url" content="${fullUrl}" />
+  <meta property="twitter:title" content="${twitterTitle}" />
+  <meta property="twitter:description" content="Technology Leader specialising in AI automation, digital marketing, and technology leadership. Expert in building intelligent systems, leading high-performance teams, and delivering enterprise-scale solutions." />
+  <meta property="twitter:image" content="https://www.henriksoderlund.com/og_image.png" />
+  <meta property="twitter:image:alt" content="Henrik Söderlund - Digital Media Leader & AI Solutions Innovator" />
+
+  <!-- SEO -->
+  <meta name="google-site-verification" content="TVUdAh0RA_yjsXKKjybCDe7JsKnXBhYFbcRPoJy03rc" />
+  <meta name="ahrefs-site-verification" content="bc08e3a49be838e1d8cfa2eabc5bf8e7d833c572e09db62742db9ed9917d6ada">
+  <link rel="canonical" href="${fullUrl}" />
+
+  <!-- Structured Data - Person Schema -->
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Person",
+      "name": "Henrik Söderlund",
+      "url": "https://www.henriksoderlund.com/",
+      "image": "https://www.henriksoderlund.com/og_image.png",
+      "jobTitle": "Digital Media Leader & AI Solutions Innovator",
+      "description": "Technology Leader specialising in AI automation, digital marketing, and technology leadership. Expert in building intelligent systems, leading high-performance teams, and delivering enterprise-scale solutions.",
+      "address": {
+        "@type": "PostalAddress",
+        "addressLocality": "Perth",
+        "addressRegion": "WA",
+        "addressCountry": "AU"
+      },
+      "worksFor": {
+        "@type": "Organization",
+        "name": "KINESSO",
+        "url": "https://kinesso.com/"
+      },
+      "affiliation": [
+        {
+          "@type": "Organization",
+          "name": "Initiative Perth"
+        }
+      ],
+      "knowsAbout": [
+        "Artificial Intelligence",
+        "Digital Marketing",
+        "Technology Leadership",
+        "Team Management",
+        "Google Analytics",
+        "Google Tag Manager",
+        "Programmatic Advertising",
+        "Marketing Technology",
+        "Data Analytics",
+        "Business Intelligence",
+        "AI Automation",
+        "Performance Marketing",
+        "Server-Side Tracking",
+        "React Development",
+        "Python Programming",
+        "Process Automation"
+      ],
+      "skills": [
+        "Strategic Technology Leadership",
+        "AI & Machine Learning Implementation",
+        "Digital Advertising & Media Buying",
+        "Advanced Analytics & Measurement",
+        "Team Building & Mentoring",
+        "Client Relationship Management",
+        "Google Ads & Meta Advertising",
+        "Marketing Technology Stack Management",
+        "Data Pipeline Architecture",
+        "Cross-Platform Attribution"
+      ],
+      "alumniOf": [
+        {
+          "@type": "EducationalOrganization",
+          "name": "Malmö Academy of Music",
+          "address": {
+            "@type": "PostalAddress",
+            "addressCountry": "SE"
+          }
+        }
+      ],
+      "knowsLanguage": [
+        {
+          "@type": "Language",
+          "name": "English"
+        },
+        {
+          "@type": "Language", 
+          "name": "Swedish"
+        }
+      ],
+      "sameAs": [
+        "https://github.com/henkisdabro",
+        "https://www.linkedin.com/in/henriksoderlund/"
+      ],
+      "award": [
+        "MFA Changer Recognition 2024 (Initiative)",
+        "Advertising+Marketing AOTY Best Local Media Agency 2021 (Creme Digital)"
+      ],
+      "memberOf": [
+        {
+          "@type": "Organization",
+          "name": "Facebook Blueprint Certified Professional"
+        }
+      ]
+    }
+  </script>
+
+  <!-- Structured Data - Professional Service Schema -->
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "ProfessionalService",
+      "name": "Henrik Söderlund - Strategic Technology Consultancy",
+      "description": "AI automation, analytics implementation, and digital transformation consulting services for businesses seeking to leverage cutting-edge technology solutions.",
+      "url": "https://www.henriksoderlund.com/",
+      "founder": {
+        "@type": "Person",
+        "name": "Henrik Söderlund",
+        "url": "https://www.henriksoderlund.com/"
+      },
+      "address": {
+        "@type": "PostalAddress",
+        "addressLocality": "Perth",
+        "addressRegion": "WA",
+        "addressCountry": "AU"
+      },
+      "areaServed": [
+        {
+          "@type": "City",
+          "name": "Perth"
+        },
+        {
+          "@type": "Country",
+          "name": "Australia"
+        },
+        {
+          "@type": "Place",
+          "name": "Global"
+        }
+      ],
+      "priceRange": "AUD 350 - 45,000",
+      "paymentAccepted": "Cash, Credit Card, Bank Transfer",
+      "currenciesAccepted": "AUD",
+      "hasOfferCatalog": {
+        "@type": "OfferCatalog",
+        "name": "Consulting Services",
+        "itemListElement": [
+          {
+            "@type": "Offer",
+            "itemOffered": {
+              "@type": "Service",
+              "name": "AI Strategy & Feasibility Assessment",
+              "description": "Strategic roadmap, ROI analysis, technical specifications"
+            },
+            "price": "3500",
+            "priceCurrency": "AUD"
+          },
+          {
+            "@type": "Offer",
+            "itemOffered": {
+              "@type": "Service",
+              "name": "Workflow Automation System",
+              "description": "End-to-end automation, integration, training, documentation"
+            },
+            "priceSpecification": {
+              "@type": "PriceSpecification",
+              "minPrice": "8500",
+              "maxPrice": "15000",
+              "priceCurrency": "AUD"
+            }
+          }
+        ]
+      },
+      "contactPoint": {
+        "@type": "ContactPoint",
+        "contactType": "Customer Service",
+        "url": "https://calendly.com/henriksoederlund/30min",
+        "availableLanguage": ["English", "Swedish"]
+      }
+    }
+  </script>
+
+  <!-- Structured Data - Website Schema -->
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebSite",
+      "name": "Henrik Söderlund - Digital Media Leader & AI Solutions Innovator",
+      "url": "https://www.henriksoderlund.com/",
+      "description": "The personal website of Henrik Söderlund, a Digital Media Leader & AI Solutions Innovator based in Perth, Australia.",
+      "author": {
+        "@type": "Person",
+        "name": "Henrik Söderlund"
+      },
+      "potentialAction": {
+        "@type": "SearchAction",
+        "target": "https://www.henriksoderlund.com/?s={search_term_string}",
+        "query-input": "required name=search_term_string"
+      }
+    }
+  </script>`;
+};
+
 // Handle index.html with server-side data injection and crawler content
 const handleIndexWithInjection = async (c: Context) => {
   try {
@@ -420,17 +653,11 @@ const handleIndexWithInjection = async (c: Context) => {
       const crawlerHtml = `<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>${prerendered.title}</title>
-  <meta name="description" content="The personal website of Henrik Söderlund, a Technology Leader & AI Innovator based in Perth, Australia." />
-  <meta property="og:type" content="profile" />
-  <meta property="og:url" content="${fullUrl}" />
-  <meta property="og:title" content="${prerendered.title}" />
-  <meta property="og:description" content="Technology Leader specialising in AI automation, digital marketing, and technology leadership." />
-  <link rel="canonical" href="${fullUrl}" />
+${generateSEOMetadata(path, prerendered.title, fullUrl)}
 </head>
 <body>
+  <!-- Fathom Analytics noscript -->
+  <noscript><img src="https://api.fouanalytics.com/api/noscript-6686ht0xp1ec4dc5q5z4.gif" alt="Fathom Analytics tracking pixel"></noscript>
   <div id="root">
     <div class="app">
       <main class="main-content">
