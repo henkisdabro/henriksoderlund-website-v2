@@ -161,12 +161,12 @@ app.get("/sitemap.xml", async (c) => {
 const isCrawler = (c: Context): boolean => {
   // First try Cloudflare's native bot detection (most reliable)
   try {
-    const cf = c.req.raw.cf as any;
+    const cf = c.req.raw.cf as { botManagement?: { verifiedBot?: boolean } };
     if (cf?.botManagement?.verifiedBot === true) {
       console.log('Verified bot detected via Cloudflare bot management');
       return true;
     }
-  } catch (error) {
+  } catch {
     console.log('Cloudflare bot management not available, falling back to User-Agent');
   }
   
