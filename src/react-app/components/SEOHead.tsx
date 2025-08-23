@@ -46,10 +46,17 @@ const SEOHead = ({
     }
     
     // Update canonical URL
-    const canonical = document.querySelector('link[rel="canonical"]');
+    let canonical = document.querySelector('link[rel="canonical"]');
     const fullCanonicalUrl = canonicalUrl || `https://www.henriksoderlund.com${location.pathname}`;
+    
     if (canonical) {
       canonical.setAttribute('href', fullCanonicalUrl);
+    } else {
+      // Create canonical tag if it doesn't exist
+      canonical = document.createElement('link');
+      canonical.setAttribute('rel', 'canonical');
+      canonical.setAttribute('href', fullCanonicalUrl);
+      document.head.appendChild(canonical);
     }
     
     // Update Open Graph title

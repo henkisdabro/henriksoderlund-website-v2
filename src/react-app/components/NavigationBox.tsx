@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 
 interface HeadingItem {
   id: string;
@@ -104,8 +104,8 @@ const NavigationBox = () => {
             <ul className="nav-list">
               {pages.map(page => (
                 <li key={page.path} className={location.pathname === page.path ? 'active' : ''}>
-                  <Link 
-                    to={page.path}
+                  <a 
+                    href={page.path}
                     onClick={() => {
                       if (window.innerWidth <= 1024) {
                         setIsCollapsed(true);
@@ -113,7 +113,7 @@ const NavigationBox = () => {
                     }}
                   >
                     {page.emoji} {page.name}
-                  </Link>
+                  </a>
                 </li>
               ))}
             </ul>
