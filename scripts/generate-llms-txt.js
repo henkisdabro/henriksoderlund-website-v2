@@ -3,7 +3,7 @@
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
-import { convertComponentToMarkdown, extractPageTitle } from './jsx-to-markdown.js';
+import { convertComponentToMarkdown, extractPageTitle, jsxToMarkdown, removeEmojis } from './jsx-to-markdown.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -78,7 +78,7 @@ function getPageDescription(route, componentName) {
 function generateLlmsTxt() {
   const timestamp = new Date().toISOString();
   
-  let content = `# Henrik Söderlund - Technology Leader & AI Innovator\n> Personal website showcasing technology leadership expertise, AI innovation, and technical leadership in marketing technology and measurement architecture\n\n## About\n`;
+  let content = `# ${removeEmojis('Henrik Söderlund - Technology Leader & AI Innovator')}\n> ${removeEmojis('Personal website showcasing technology leadership expertise, AI innovation, and technical leadership in marketing technology and measurement architecture')}\n\n## About\n`;
 
   // Add main pages
   for (const [route, componentName] of Object.entries(ROUTES)) {
@@ -90,18 +90,18 @@ function generateLlmsTxt() {
                        word.charAt(0).toUpperCase() + word.slice(1)
                      ).join(' ');
     
-    const description = getPageDescription(route, componentName);
-    content += `- [${pageTitle}](${BASE_URL}${route}): ${description} (Updated: ${lastModified}, ~${tokenCount} tokens)\n`;
+    const description = removeEmojis(getPageDescription(route, componentName));
+    content += `- [${removeEmojis(pageTitle)}](${BASE_URL}${route}): ${description} (Updated: ${lastModified}, ~${tokenCount} tokens)\n`;
   }
 
   content += `\n## GitHub Projects\n`;
   
   // Add GitHub projects
   for (const project of GITHUB_PROJECTS) {
-    content += `- [${project.title}](${project.url}): ${project.description}\n`;
+    content += `- [${removeEmojis(project.title)}](${project.url}): ${removeEmojis(project.description)}\n`;
   }
 
-  content += `\n## Technical Focus Areas\n- [AI & Automation](${BASE_URL}/expertise): AI-powered solutions, prompt engineering, API integration\n- [Measurement & Analytics](${BASE_URL}/expertise): Server-side tracking, advanced attribution, data architecture\n- [Technology Leadership](${BASE_URL}/): Senior leadership in media activations and performance marketing\n- [Technology Leadership](${BASE_URL}/): Cross-platform system integration and infrastructure automation\n\n<!-- Generated automatically on ${timestamp} -->`;
+  content += `\n## Technical Focus Areas\n- [${removeEmojis('AI & Automation')}](${BASE_URL}/expertise): ${removeEmojis('AI-powered solutions, prompt engineering, API integration')}\n- [${removeEmojis('Measurement & Analytics')}](${BASE_URL}/expertise): ${removeEmojis('Server-side tracking, advanced attribution, data architecture')}\n- [${removeEmojis('Technology Leadership')}](${BASE_URL}/): ${removeEmojis('Senior leadership in media activations and performance marketing')}\n- [${removeEmojis('Technology Leadership')}](${BASE_URL}/): ${removeEmojis('Cross-platform system integration and infrastructure automation')}\n\n<!-- Generated automatically on ${timestamp} -->`;
 
   return content;
 }

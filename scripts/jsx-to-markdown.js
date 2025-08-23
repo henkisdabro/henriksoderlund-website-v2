@@ -736,5 +736,6 @@ export {
   convertComponentToMarkdown,
   extractPageTitle,
   jsxToMarkdown,
-  extractJSXContent
+  extractJSXContent,
+  removeEmojis
 };
