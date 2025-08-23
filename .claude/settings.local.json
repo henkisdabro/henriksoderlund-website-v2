@@ -75,7 +75,8 @@
       "Read(/c:\\Users\\henrik\\OneDrive\\Documents\\ShareX\\Screenshots\\2025-08/**)",
       "WebFetch(domain:www.indexnow.org)",
       "Bash(npx tsc:*)",
-      "Bash(tree:*)"
+      "Bash(tree:*)",
+      "Bash(gh run list:*)"
     ],
     "deny": [],
     "ask": [],

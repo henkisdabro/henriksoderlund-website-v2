@@ -432,9 +432,10 @@ const handleIndexWithInjection = async (c: Context) => {
     );
 
     if (crawlerDetected) {
-      console.log('Crawler detected:', userAgent);
+      console.log('Crawler detected:', userAgent, 'for path:', path);
       
       const prerendered = getPrerenderedContent(path);
+      console.log('Prerendered content length:', prerendered.content.length);
       
       // Inject crawler-friendly content into the HTML
       const crawlerContent = `
@@ -461,6 +462,7 @@ const handleIndexWithInjection = async (c: Context) => {
       
       // Replace the empty root div with crawler content
       html = html.replace('<div id="root"></div>', crawlerContent);
+      console.log('HTML replacement completed, root div replaced:', html.includes('<main class="main-content">'));
       
       // Update title for specific pages
       if (path !== '/' && path !== '/index.html') {
