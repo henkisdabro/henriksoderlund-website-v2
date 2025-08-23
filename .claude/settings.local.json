@@ -77,7 +77,9 @@
       "Bash(npx tsc:*)",
       "Bash(tree:*)",
       "Bash(gh run list:*)",
-      "Bash(npx:*)"
+      "Bash(npx:*)",
+      "Bash(npm update:*)",
+      "Bash(npm outdated:*)"
     ],
     "deny": [],
     "ask": [],
