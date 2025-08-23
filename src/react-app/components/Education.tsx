@@ -1,20 +1,8 @@
 import swedenFlag from "../assets/flags/se.svg";
-import SEOHead from './SEOHead';
-import { getSEOData } from '../data/seoData';
 
 const Education = () => {
-  const seoData = getSEOData('/education');
-  
   return (
-    <>
-      <SEOHead 
-        title={seoData.title}
-        description={seoData.description}
-        keywords={seoData.keywords}
-        ogType={seoData.ogType}
-        schemaData={seoData.schemaData}
-      />
-      <div className="education-page">
+    <div className="education-page">
       <h1>Education</h1>
 
       <section className="content-entry">
@@ -47,7 +35,6 @@ const Education = () => {
         <p>Halmstad, Sweden</p>
       </section>
       </div>
-    </>
   );
 };
 

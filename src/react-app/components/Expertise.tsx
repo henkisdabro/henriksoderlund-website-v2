@@ -1,26 +1,15 @@
 import dashboardImage from '../assets/images/screenshots/dashboard.webp';
 import wikiImage from '../assets/images/screenshots/wiki.webp';
 import { expertiseData } from '../data/expertise';
-import SEOHead from './SEOHead';
-import { getSEOData } from '../data/seoData';
 
 const Expertise = () => {
   const imageMap: { [key: string]: string } = {
     dashboardImage,
     wikiImage,
   };
-  const seoData = getSEOData('/expertise');
 
   return (
-    <>
-      <SEOHead 
-        title={seoData.title}
-        description={seoData.description}
-        keywords={seoData.keywords}
-        ogType={seoData.ogType}
-        schemaData={seoData.schemaData}
-      />
-      <div className="expertise-page">
+    <div className="expertise-page">
       <h1>Expertise</h1>
       
       <section className="consultancy-section">
@@ -100,8 +89,7 @@ const Expertise = () => {
         />
       </section>
 
-      </div>
-    </>
+    </div>
   );
 };
 

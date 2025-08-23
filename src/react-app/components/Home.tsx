@@ -1,11 +1,8 @@
 import { useEffect, useRef } from "react";
 import profileImage from "../assets/images/henrik-profile-small.webp";
-import SEOHead from "./SEOHead";
-import { getSEOData } from "../data/seoData";
 
 const Home = () => {
   const contentRef = useRef<HTMLDivElement>(null);
-  const seoData = getSEOData('/');
 
   useEffect(() => {
     // Keywords to highlight with breathing effect
@@ -173,15 +170,7 @@ const Home = () => {
     };
   }, []);
   return (
-    <>
-      <SEOHead 
-        title={seoData.title}
-        description={seoData.description}
-        keywords={seoData.keywords}
-        ogType={seoData.ogType}
-        schemaData={seoData.schemaData}
-      />
-      <div className="home-page" ref={contentRef}>
+    <div className="home-page" ref={contentRef}>
       <div className="hero-section">
         <img
           src={profileImage}
@@ -255,8 +244,7 @@ const Home = () => {
           </a>
         </div>
       </section>
-      </div>
-    </>
+    </div>
   );
 };
 

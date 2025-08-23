@@ -1,23 +1,12 @@
 import { useState } from 'react';
 import { consultationData } from '../data/consultation';
 import GoogleCalendarWidget from './GoogleCalendarWidget';
-import SEOHead from './SEOHead';
-import { getSEOData } from '../data/seoData';
 
 const Consultation = () => {
   const [isCaseStudyExpanded, setIsCaseStudyExpanded] = useState(false);
-  const seoData = getSEOData('/consultancy');
 
   return (
-    <>
-      <SEOHead 
-        title={seoData.title}
-        description={seoData.description}
-        keywords={seoData.keywords}
-        ogType={seoData.ogType}
-        schemaData={seoData.schemaData}
-      />
-      <div className="consultation-page">
+    <div className="consultation-page">
       <h1>{consultationData.intro.title}</h1>
       
       <section className="intro-section">
@@ -186,7 +175,6 @@ const Consultation = () => {
       </section>
 
       </div>
-    </>
   );
 };
 
