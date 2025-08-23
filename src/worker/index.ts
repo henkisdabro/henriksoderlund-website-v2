@@ -178,7 +178,8 @@ const handleIndexWithInjection = async (c: Context) => {
     html = html.replace(/%CF_COLO%/g, cfColo);
     html = html.replace(/%CF_RAY%/g, cfRay);
     
-    return c.html(html, 200, {
+    // Use c.body instead of c.html to have full control over Content-Type header
+    return c.body(html, 200, {
       'Cache-Control': 'public, max-age=3600',
       'Content-Type': 'text/html; charset=utf-8'
     });
