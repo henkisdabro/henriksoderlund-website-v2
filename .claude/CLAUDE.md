@@ -9,6 +9,7 @@ This is Henrik Söderlund's personal website being rebuilt with modern technolog
 **Deployment**: Automatic via GitHub Actions on push to main branch
 
 ## Tech Stack
+
 - **Frontend**: React 19.1.1 with TypeScript 5.9.2, built with Vite 7.1.2
 - **Backend**: Hono.js 4.9.1 (modern web framework)
 - **Deployment**: Cloudflare Workers with observability enabled
@@ -16,6 +17,7 @@ This is Henrik Söderlund's personal website being rebuilt with modern technolog
 - **Development**: ESLint 9.33.0, Wrangler 4.29.0
 
 ## Current Status
+
 - ✅ **Migration Complete**: Successfully migrated from Thulite/Hugo to Vite + React + Hono stack
 - ✅ **Main Branch**: Development moved to main branch (site-rebuild-vite merged)
 - ✅ **Content Migration**: All content migrated from old Markdown structure to React components
@@ -24,6 +26,7 @@ This is Henrik Söderlund's personal website being rebuilt with modern technolog
 ## Architecture
 
 ### Frontend (React SPA)
+
 - **Location**: `src/react-app/`
 - **Entry point**: `src/react-app/main.tsx`
 - **Main component**: `src/react-app/App.tsx`
@@ -33,6 +36,7 @@ This is Henrik Söderlund's personal website being rebuilt with modern technolog
 - Uses React 19 with TypeScript
 
 ### Page Components
+
 - **Location**: `src/react-app/components/`
 - **Home**: Professional introduction with navigation to other sections
 - **Expertise**: Technical leadership, AI capabilities, and people management skills (renamed from Skills)
@@ -42,17 +46,19 @@ This is Henrik Söderlund's personal website being rebuilt with modern technolog
 - **NavigationBox**: Fixed navigation menu with page and heading links
 
 ### Backend (Cloudflare Worker)
+
 - **Location**: `src/worker/index.ts`
 - Built with Hono framework for lightweight API routes
 - Runs on Cloudflare Workers runtime
 - Serves API endpoints at `/api/*` routes
-- **Dual serving model**: 
+- **Dual serving model**:
   - Regular users get React SPA with client-side routing
   - Crawlers get server-side rendered content for SEO
 - **IndexNow support**: Complete implementation for instant search engine indexing
 
 ### Project Structure
-```
+
+```text
 src/
 ├── react-app/           # React frontend application
 │   ├── components/      # React components (Home, Expertise, etc.)
@@ -71,18 +77,21 @@ public/                 # Static assets served directly
 ```
 
 ### Static Assets
+
 - **Profile images**: `src/react-app/assets/images/henrik-profile-small.webp`
 - **Dashboard screenshots**: `src/react-app/assets/images/screenshots/*.webp`
 - **Verification files**: `public/google52d2217b2a4bc22f.html`, `public/ahrefs_*`
 - **SEO files**: `public/.well-known/security.txt`
 
 ### Build System
+
 - **Frontend build**: Vite compiles React SPA to `dist/client/`
 - **Worker build**: TypeScript compiles worker to run on Cloudflare edge
 - **Deployment**: Wrangler handles deployment to Cloudflare Workers
 - **Assets**: Static assets served from `dist/client/` via Cloudflare Workers
 
 ## Development Commands
+
 - `npm run dev` - Start development server (Vite dev server on port 5173)
 - `npm run build` - Build for production (includes smart llms.txt generation + Vite build)
 - `npm run preview` - Preview production build locally
