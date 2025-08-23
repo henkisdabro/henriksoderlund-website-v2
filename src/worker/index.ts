@@ -507,14 +507,7 @@ const handleIndexWithInjection = async (c: Context) => {
   }
 };
 
-app.get("/", async (c) => {
-  console.log('SPECIFIC ROUTE HIT: / (root path)');
-  return handleIndexWithInjection(c);
-});
-app.get("/index.html", async (c) => {
-  console.log('SPECIFIC ROUTE HIT: /index.html');
-  return handleIndexWithInjection(c);
-});
+// Homepage routes moved to end for debugging
 
 // Handle static assets with long cache times
 app.get("*.{js,css,svg,png,jpg,jpeg,gif,webp,woff,woff2,ttf,eot,ico}", async (c) => {
@@ -825,6 +818,16 @@ app.use('/metrics', async (c, next) => {
     });
   }
   await next();
+});
+
+// Homepage routes - moved here for debugging route priority
+app.get("/", async (c) => {
+  console.log('SPECIFIC ROUTE HIT: / (root path)');
+  return handleIndexWithInjection(c);
+});
+app.get("/index.html", async (c) => {
+  console.log('SPECIFIC ROUTE HIT: /index.html');
+  return handleIndexWithInjection(c);
 });
 
 // Catch-all route for SPA routing - must be last
