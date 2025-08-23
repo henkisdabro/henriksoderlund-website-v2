@@ -12,6 +12,7 @@
 	"upload_source_maps": true,
 	"assets": {
 		"binding": "ASSETS",
-		"directory": "./dist/client"
+		"directory": "./dist/client",
+		"run_worker_first": ["/"]
 	}
 }
