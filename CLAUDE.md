@@ -209,7 +209,7 @@ When facing complex technical issues that require deep analysis, Claude Code can
 
 **Command to use:**
 ```bash
-npx https://github.com/google-gemini/gemini-cli --prompt "YOUR_DETAILED_ANALYSIS_REQUEST"
+gemini -p "YOUR_DETAILED_ANALYSIS_REQUEST"
 ```
 
 **Best Practices for AI Collaboration:**

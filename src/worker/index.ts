@@ -477,24 +477,20 @@ const handleIndexWithInjection = async (c: Context) => {
         </div>
       `;
       
-      // Replace the empty root div with crawler content
-      html = html.replace('<div id="root"></div>', crawlerContent);
+      // Replace the root div content with crawler content using regex for robustness
+      html = html.replace(/<div id="root">.*?<\/div>/s, crawlerContent);
       
-      // Update title for specific pages
-      if (path !== '/' && path !== '/index.html') {
-        html = html.replace(
-          /<title>.*?<\/title>/,
-          `<title>${prerendered.title}</title>`
-        );
-      }
+      // Update title for all pages including homepage
+      html = html.replace(
+        /<title>.*?<\/title>/,
+        `<title>${prerendered.title}</title>`
+      );
       
-      // Update Open Graph title for specific pages
-      if (path !== '/' && path !== '/index.html') {
-        html = html.replace(
-          /<meta property="og:title" content="[^"]*" \/>/,
-          `<meta property="og:title" content="${prerendered.title}" />`
-        );
-      }
+      // Update Open Graph title for all pages including homepage
+      html = html.replace(
+        /<meta property="og:title" content="[^"]*" \/>/,
+        `<meta property="og:title" content="${prerendered.title}" />`
+      );
       
       console.log('Serving pre-rendered content to crawler for path:', path);
     }
