@@ -201,6 +201,35 @@ The project uses **wrangler.json** for Cloudflare Workers configuration:
 - `npm run preview` - Local preview of production build
 - `npm run deploy` - Manual deploy (only for development/testing, not production)
 
+## AI Collaboration Strategy for Complex Debugging
+
+### Using Gemini CLI for Second Opinion Analysis
+
+When facing complex technical issues that require deep analysis, Claude Code can collaborate with Google's Gemini AI for alternative perspectives. This strategy proved highly effective for debugging crawler detection issues.
+
+**Command to use:**
+```bash
+npx https://github.com/google-gemini/gemini-cli --prompt "YOUR_DETAILED_ANALYSIS_REQUEST"
+```
+
+**Best Practices for AI Collaboration:**
+1. **Provide comprehensive context**: Include error symptoms, what works vs what doesn't, code snippets, and debugging attempts
+2. **Request "ULTRATHINK" analysis**: Ask for deep analysis of potential root causes
+3. **Compare approaches**: Different AI models may identify issues the other missed
+4. **Cross-validate solutions**: Use insights from one AI to improve solutions from another
+
+**Example successful collaboration:**
+- **Issue**: Homepage crawler detection failing while other pages worked
+- **Gemini's insight**: Identified unreliable User-Agent string matching as root cause
+- **Solution**: Recommended Cloudflare's native `botManagement.verifiedBot` detection
+- **Result**: More robust crawler detection implementation
+
+This collaborative approach is particularly valuable for:
+- Complex routing and middleware issues
+- Cross-platform compatibility problems  
+- Performance optimization challenges
+- Security implementation reviews
+
 ## Recent Technical Improvements
 
 ### SEO & IndexNow Implementation (August 2025)
