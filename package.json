@@ -1,7 +1,7 @@
 {
   "name": "henriksoderlund-website",
-  "description": "Personal website for Henrik Söderlund",
-  "version": "0.0.0",
+  "description": "Henrik Söderlund's personal website - Technology Leader & AI Innovator. Built with React, TypeScript, Hono, and deployed on Cloudflare Workers.",
+  "version": "2.0.0",
   "cloudflare": {
     "label": "henriksoderlund-website",
     "products": [

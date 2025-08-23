@@ -110,3 +110,6 @@ public/sitemap.xml
 
 # LinkedIn profile development (contains personal information)
 linkedin/
+
+# Serena MCP assistant configuration and cache
+.serena/

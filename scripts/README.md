@@ -14,7 +14,9 @@ Both file types are automatically generated from your React components and websi
 ## Files
 
 - **`generate-llms-txt.js`** - Main generation script that analyzes the website structure and creates both llms.txt and markdown files
-- **`jsx-to-markdown.js`** - Utility module for converting React JSX components to clean Markdown format
+- **`jsx-to-markdown.js`** - Utility module for converting React JSX components to clean Markdown format with UTF-8 character encoding
+- **`check-content-changes.js`** - Smart caching script that detects content changes to avoid unnecessary regeneration
+- **`generate-sitemap.js`** - XML sitemap generator for search engine optimization
 - **`README.md`** - This documentation file
 
 ## How It Works
@@ -26,8 +28,10 @@ The llms.txt file is automatically generated during the build process through th
 ```json
 {
   "scripts": {
-    "build": "npm run generate-llms && tsc -b && vite build",
-    "generate-llms": "node scripts/generate-llms-txt.js"
+    "build": "npm run generate-llms-if-needed && npm run generate-sitemap && tsc -b && vite build",
+    "generate-llms": "node scripts/generate-llms-txt.js",
+    "generate-llms-if-needed": "node scripts/check-content-changes.js && npm run generate-llms || echo 'Skipping llms.txt generation - no content changes'",
+    "generate-sitemap": "node scripts/generate-sitemap.js"
   }
 }
 ```
@@ -121,7 +125,7 @@ The project includes GitHub Actions for automated deployment:
 - **Main Branch**: Full build, verification, and deployment to Cloudflare Workers
 - **Smart Caching**: Skips generation when no content changes
 
-See [DEPLOYMENT.md](../docs/DEPLOYMENT.md) for complete CI/CD setup instructions.
+The complete deployment process is documented in the main project documentation files (CLAUDE.md and README.md).
 
 ## Deployment
 

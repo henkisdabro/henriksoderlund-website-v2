@@ -79,10 +79,57 @@
       "Bash(gh run list:*)",
       "Bash(npx:*)",
       "Bash(npm update:*)",
-      "Bash(npm outdated:*)"
+      "Bash(npm outdated:*)",
+      "Bash(timeout 10s npm run dev)",
+      "Bash(npm audit:*)",
+      "mcp__serena"
     ],
     "deny": [],
     "ask": [],
     "defaultMode": "acceptEdits"
+  },
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Edit|Write|MultiEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": ".claude/hooks/log-tool-usage.sh"
+          }
+        ]
+      }
+    ],
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash -c 'input=$(cat); cmd=$(echo \"$input\" | jq -r \".tool_input.command // empty\"); if [[ \"$cmd\" =~ (rm|delete).*(\\*|\\.env|credentials|secret) ]]; then echo \"{\\\"action\\\": \\\"block\\\", \\\"message\\\": \\\"Dangerous command blocked: $cmd\\\"}\"; else echo \"{}\"; fi'"
+          }
+        ]
+      }
+    ],
+    "SubagentStop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash -c 'input=$(cat); agent=$(echo \"$input\" | jq -r \".subagent_name // empty\"); if [[ \"$agent\" == \"validation-gates\" ]]; then echo \"Validation gates completed. Running final checks...\" >&2; fi; echo \"{}\"'"
+          }
+        ]
+      }
+    ],
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash -c 'input=$(cat); prompt=$(echo \"$input\" | jq -r \".prompt // empty\"); if [[ \"$prompt\" =~ (test|validate|check) ]] && [[ ! \"$prompt\" =~ (skip|no|without).*(test|validation) ]]; then echo \"Reminder: Use the validation-gates subagent to ensure comprehensive testing.\" >&2; fi; echo \"{}\"'"
+          }
+        ]
+      }
+    ]
   }
 }
