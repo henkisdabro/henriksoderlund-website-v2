@@ -250,8 +250,8 @@ const Home = () => {
         </p>
         
         <div className="expertise-link-section">
-          <a href="/expertise" className="expertise-link" title="View Henrik Söderlund's technical expertise in AI, machine learning, and digital marketing platforms">
-            Explore My Technical Expertise & Skills <span style={{fontSize: '1.2em'}}>→</span>
+          <a href="/expertise" className="expertise-link">
+            Explore My Expertise <span style={{fontSize: '1.2em'}}>→</span>
           </a>
         </div>
       </section>
