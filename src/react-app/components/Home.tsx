@@ -1,8 +1,11 @@
 import { useEffect, useRef } from "react";
 import profileImage from "../assets/images/henrik-profile-small.webp";
+import SEOHead from "./SEOHead";
+import { getSEOData } from "../data/seoData";
 
 const Home = () => {
   const contentRef = useRef<HTMLDivElement>(null);
+  const seoData = getSEOData('/');
 
   useEffect(() => {
     // Keywords to highlight with breathing effect
@@ -170,11 +173,19 @@ const Home = () => {
     };
   }, []);
   return (
-    <div className="home-page" ref={contentRef}>
+    <>
+      <SEOHead 
+        title={seoData.title}
+        description={seoData.description}
+        keywords={seoData.keywords}
+        ogType={seoData.ogType}
+        schemaData={seoData.schemaData}
+      />
+      <div className="home-page" ref={contentRef}>
       <div className="hero-section">
         <img
           src={profileImage}
-          alt="Henrik Söderlund"
+          alt="Henrik Söderlund - Technology Leader & AI Innovator based in Perth, Australia"
           className="profile-image"
         />
         <h1>Henrik Söderlund</h1>
@@ -239,12 +250,13 @@ const Home = () => {
         </p>
         
         <div className="expertise-link-section">
-          <a href="/expertise" className="expertise-link">
-            Explore My Expertise <span style={{fontSize: '1.2em'}}>→</span>
+          <a href="/expertise" className="expertise-link" title="View Henrik Söderlund's technical expertise in AI, machine learning, and digital marketing platforms">
+            Explore My Technical Expertise & Skills <span style={{fontSize: '1.2em'}}>→</span>
           </a>
         </div>
       </section>
-    </div>
+      </div>
+    </>
   );
 };
 

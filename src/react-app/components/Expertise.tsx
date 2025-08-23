@@ -1,15 +1,26 @@
 import dashboardImage from '../assets/images/screenshots/dashboard.webp';
 import wikiImage from '../assets/images/screenshots/wiki.webp';
 import { expertiseData } from '../data/expertise';
+import SEOHead from './SEOHead';
+import { getSEOData } from '../data/seoData';
 
 const Expertise = () => {
   const imageMap: { [key: string]: string } = {
     dashboardImage,
     wikiImage,
   };
+  const seoData = getSEOData('/expertise');
 
   return (
-    <div className="expertise-page">
+    <>
+      <SEOHead 
+        title={seoData.title}
+        description={seoData.description}
+        keywords={seoData.keywords}
+        ogType={seoData.ogType}
+        schemaData={seoData.schemaData}
+      />
+      <div className="expertise-page">
       <h1>Expertise</h1>
       
       <section className="consultancy-section">
@@ -73,7 +84,7 @@ const Expertise = () => {
           <p><strong>{expertiseData.dashboards.featured.title}</strong></p>
           <img 
             src={imageMap[expertiseData.dashboards.featured.image]}
-            alt="Campaign & Website Performance Dashboard in Looker Studio" 
+            alt="Advanced Campaign & Website Performance Dashboard in Looker Studio showing analytics data, conversion metrics, and real-time performance indicators designed by Henrik Söderlund" 
             className="dashboard-image"
           />
         </div>
@@ -84,12 +95,13 @@ const Expertise = () => {
         <p>{expertiseData.knowledgeManagement.paragraph}</p>
         <img 
           src={imageMap[expertiseData.knowledgeManagement.image]}
-          alt="Sample Screenshot of Company Wiki developed in Notion" 
+          alt="Professional Company Wiki and Knowledge Management System developed in Notion by Henrik Söderlund, featuring organized documentation, process flows, and team collaboration tools" 
           className="wiki-image"
         />
       </section>
 
-    </div>
+      </div>
+    </>
   );
 };
 
