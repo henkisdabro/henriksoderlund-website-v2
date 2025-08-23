@@ -17,13 +17,6 @@ This is Henrik Söderlund's personal website being rebuilt with modern technolog
 - **Routing**: React Router 7.8.0 for client-side routing
 - **Development**: ESLint 9.33.0, Wrangler 4.29.0
 
-## Current Status
-
-- ✅ **Migration Complete**: Successfully migrated from Thulite/Hugo to Vite + React + Hono stack
-- ✅ **Main Branch**: Development moved to main branch (site-rebuild-vite merged)
-- ✅ **Content Migration**: All content migrated from old Markdown structure to React components
-- ✅ **Production Ready**: Site deployed and live on Cloudflare Workers
-
 ## Architecture
 
 ### Frontend (React SPA)
@@ -36,22 +29,11 @@ This is Henrik Söderlund's personal website being rebuilt with modern technolog
 - Built with Vite for fast development and optimized builds
 - Uses React 19 with TypeScript
 
-### Page Components
-
-- **Location**: `src/react-app/components/`
-- **Home**: Professional introduction with navigation to other sections
-- **Expertise**: Technical leadership, AI capabilities, and people management skills (renamed from Skills)
-- **Work Experience**: Professional history in reverse chronological order
-- **Education**: Academic background (Tertiary, Secondary, Primary)
-- **Consultation**: Services, pricing table, booking information
-- **NavigationBox**: Fixed navigation menu with page and heading links
-
 ### Backend (Cloudflare Worker)
 
 - **Location**: `src/worker/index.ts`
 - Built with Hono framework for lightweight API routes
 - Runs on Cloudflare Workers runtime
-- Serves API endpoints at `/api/*` routes
 - **Dual serving model**:
   - Regular users get React SPA with client-side routing
   - Crawlers get server-side rendered content for SEO
@@ -77,20 +59,6 @@ public/                 # Static assets served directly
 └── bot.svg            # Custom favicon
 ```
 
-### Static Assets
-
-- **Profile images**: `src/react-app/assets/images/henrik-profile-small.webp`
-- **Dashboard screenshots**: `src/react-app/assets/images/screenshots/*.webp`
-- **Verification files**: `public/google52d2217b2a4bc22f.html`, `public/ahrefs_*`
-- **SEO files**: `public/.well-known/security.txt`
-
-### Build System
-
-- **Frontend build**: Vite compiles React SPA to `dist/client/`
-- **Worker build**: TypeScript compiles worker to run on Cloudflare edge
-- **Deployment**: Wrangler handles deployment to Cloudflare Workers
-- **Assets**: Static assets served from `dist/client/` via Cloudflare Workers
-
 ## Development Commands
 
 - `npm run dev` - Start development server (Vite dev server on port 5173)
@@ -104,13 +72,6 @@ public/                 # Static assets served directly
 - `npm run generate-llms-if-needed` - Smart generation (only if content changed)
 
 **Note**: No test framework is currently configured. Tests can be added using Vitest or Jest if needed.
-
-## Configuration Files
-
-- **wrangler.json**: Cloudflare Workers configuration, defines worker name and build settings
-- **vite.config.ts**: Vite build configuration with React and Cloudflare plugins
-- **tsconfig.json**: Root TypeScript config that references app, node, and worker configs
-- **eslint.config.js**: ESLint configuration with React and TypeScript rules
 
 ## Development Workflow
 
@@ -129,192 +90,12 @@ public/                 # Static assets served directly
 - **Static files**: SEO verification files in `/public/` root and `/.well-known/`
 - **Styling**: All styles in `src/react-app/App.css` with component-specific classes
 
-## Design System & Recent Fixes
-
-- Clean, minimal design with proper typography
-- **Layout**: App content horizontally centered using flexbox on body element
-- **Navigation**: Fixed navigation box (200px width) on left side with grey hover states
-- **Navigation Styling**: 
-  - Hover color: #f5f5f5 (fresh grey, no blue)
-  - Button borders: 0.5px for subtle appearance
-  - No rounded borders on hover/focus states
-  - Section headings "Pages" and "On This Page" visible but filtered from dynamic menu items
-- **Footer**: Tech stack logos standardized to 20px with proper alignment
-- **Responsive**: Navigation hidden on mobile (<1024px)
-- **Text Alignment**: Content is left-aligned, only containers are centered
-
-## Navigation Box Features
-
-- Dynamic heading detection and navigation
-- Collapsible with expand/collapse button
-- Filters out headings named "Pages", "On This Page", "Navigation" from dynamic list
-- Smooth scroll to headings on click
-
-## Cloudflare Workers Configuration
-
-### Wrangler Configuration (wrangler.json)
-
-The project uses **wrangler.json** for Cloudflare Workers configuration:
-
-- **Name**: `henriksoderlund-website-v2`
-- **Entry Point**: `./src/worker/index.ts` (Hono.js application)
-- **Compatibility Date**: `2025-08-03` with Node.js compatibility
-- **Assets**: Static files served from `./dist/client` with SPA routing
-- **Observability**: Enabled for monitoring and debugging
-- **Source Maps**: Uploaded for better error tracking
-
-### Current Configuration Features
-
-- ✅ **Single Page Application**: Proper SPA routing with `not_found_handling`
-- ✅ **Source Maps**: Enabled for production debugging
-- ✅ **Node.js Compatibility**: For modern JavaScript features
-- ✅ **Observability**: Real-time monitoring and logs
-- ✅ **Static Assets**: Optimized asset serving from Vite build output
-
-### Deployment Flow
-
-**IMPORTANT**: Deployment is handled automatically via GitHub Actions. DO NOT use `npm run deploy` directly.
-
-**Production Deployment Process:**
-
-1. **Push to main branch** - Triggers GitHub Actions workflow
-2. **Automated CI/CD Pipeline** (`.github/workflows/deploy.yml`):
-   - Install dependencies and run linting
-   - Build project (includes llms.txt generation + Vite build to `dist/`)
-   - Verify all build artifacts (llms.txt, markdown files, sitemap.xml)
-   - Deploy to Cloudflare Workers using stored secrets
-3. **Live Site**: Available at `https://www.henriksoderlund.com/`
-4. **Static assets** cached and served efficiently from Cloudflare edge
-
-**Development/Testing Only:**
-
-- `npm run build` - Local build for testing
-- `npm run preview` - Local preview of production build
-- `npm run deploy` - Manual deploy (only for development/testing, not production)
-
-## Development Environment
-
-### Primary Development Setup
-
-- **Platform**: Windows 11
-- **Editor**: VS Code with comprehensive workspace configuration
-- **Terminal**: PowerShell (default)
-- **AI Assistant**: Claude Code (native VS Code extension)
-
-### VS Code Configuration
-
-The project includes a complete `.vscode/` workspace configuration:
-
-#### Extensions (`.vscode/extensions.json`)
-
-**Core Development:**
-
-- TypeScript, ESLint, Prettier, TailwindCSS
-- React snippets and auto-rename-tag
-- Vite and Vitest extensions
-- Cloudflare Workers official extension
-- Claude Code extension (`anthropic.claude-dev`)
-
-**Productivity:**
-
-- GitLens, Error Lens, Path IntelliSense
-- Spell checker with project-specific words
-- Auto-formatting and import organization
-
-#### Workspace Settings (`.vscode/settings.json`)
-
-- **Auto-formatting**: Format on save/paste with Prettier
-- **Code quality**: ESLint auto-fix and import organization on save
-- **TypeScript**: Optimized for React development with auto-imports
-- **File management**: Hide build artifacts, enable auto-save
-- **Claude Code**: Configured with safe defaults for AI assistance
-
-#### Debug Configuration (`.vscode/launch.json`)
-
-- **"Launch Vite Dev Server"**: Debug Vite development server
-- **"Debug Wrangler Dev"**: Debug Cloudflare Workers locally
-- **"Launch via NPM Script"**: Alternative launcher using npm scripts
-- **Windows-compatible**: Uses direct .js file paths instead of shell scripts
-
-#### Tasks (`.vscode/tasks.json`)
-
-- Build, lint, and typecheck tasks
-- Wrangler deployment and development tasks
-- Integrated with VS Code's task runner
-
-### VS Code Development Workflow
-
-1. Open project in VS Code
-2. Install recommended extensions when prompted
-3. Use `Ctrl+Shift+P` → "Tasks: Run Task" for common operations
-4. Use debugger (F5) to launch development servers with breakpoint support
-5. Claude Code extension available for AI-assisted development
-
-### Windows-Specific Notes
-
-- Debug configurations use direct JavaScript file paths for cross-platform compatibility
-- PowerShell terminal configured as default
-- CRLF line endings handled automatically by Git
-- All paths use forward slashes for consistency
-
 ## Key Dependencies
 
 - **Runtime**: React 19.1.1, Hono 4.9.1, React Router DOM 7.8.0
 - **Build tools**: Vite 7.1.2, TypeScript 5.9.2
 - **Deployment**: Wrangler 4.29.0, @cloudflare/vite-plugin
 - **Linting**: ESLint 9.33.0 with React hooks and TypeScript support
-
-## File Management & Cleanup
-
-### Generated Files (Auto-Generated)
-
-The following files are automatically generated during build and excluded from git:
-
-- `public/llms.txt` - Main llms.txt file for AI/LLM consumption
-- `public/*.md` - Individual page markdown files (index.html.md, expertise.md, etc.)
-- `.llms-cache.json` - Build cache for content-based generation optimization
-
-### Legacy Files
-
-The following directories are legacy from the old Hugo/Thulite setup and should be ignored:
-
-- `content/` - Old Markdown content files (migrated to React components)
-- `assets/` - Old Hugo assets (duplicated in `public/`)
-
-### Build Artifacts
-
-Always ensure these are properly ignored in git:
-
-- `dist/` - Vite build output (auto-generated)
-- `node_modules/` - NPM dependencies
-- `.wrangler/` - Wrangler cache and temporary files
-
-### Project Management
-
-- `TASKS.md` - Optional task tracking (can be ignored if using other tools)
-- `CLAUDE.md` - Project context for AI assistance (keep in repo)
-
-## AI/LLM Optimization Features
-
-### llms.txt Implementation
-
-Complete implementation of the [llms.txt specification](https://llmstxt.org/) for optimal AI/LLM consumption:
-
-**Generated Files:**
-
-- `/llms.txt` - Structured overview with site context, GitHub projects, and technical focus areas
-- `/index.html.md` - Homepage content in clean markdown format
-- `/expertise.md` - Technical skills and experience in markdown
-- `/work-experience.md` - Professional background in markdown
-- `/education.md` - Educational qualifications in markdown
-- `/consultancy.md` - Consulting services and approach in markdown
-
-**Generation System:**
-
-- **Smart Caching**: Only regenerates when React component content actually changes
-- **UTF-8 Encoding**: Proper handling of international characters (ö, etc.)
-- **Build Integration**: Automatic generation during `npm run build`
-- **CI/CD Ready**: GitHub Actions workflow handles generation and deployment
 
 ## Content Standards
 
@@ -345,42 +126,82 @@ All markdown files in this project must pass the following linting rules:
 - **MD034 (no-bare-urls)**: URLs must be wrapped in angle brackets `<url>` or proper markdown links `[text](url)`
 - **MD040 (fenced-code-language)**: Code blocks must specify a language (use `text` for generic content)
 
-**Example of properly formatted markdown:**
+## File Management
 
-```text
-## Main Heading
+### Generated Files (Auto-Generated)
 
-Introductory paragraph.
+The following files are automatically generated during build and excluded from git:
 
-### Sub Heading
+- `public/llms.txt` - Main llms.txt file for AI/LLM consumption
+- `public/*.md` - Individual page markdown files (index.html.md, expertise.md, etc.)
+- `.llms-cache.json` - Build cache for content-based generation optimization
 
-Another paragraph before a list.
+### Build Artifacts
 
-- First list item
-- Second list item
+Always ensure these are properly ignored in git:
 
-Code block with proper spacing:
+- `dist/` - Vite build output (auto-generated)
+- `node_modules/` - NPM dependencies
+- `.wrangler/` - Wrangler cache and temporary files
 
-```text
-code content here
-```
+## AI/LLM Optimization Features
 
-Regular paragraph with properly formatted URL: <http://localhost:5173>
+### llms.txt Implementation
 
-### Different Sub Heading
+Complete implementation of the [llms.txt specification](https://llmstxt.org/) for optimal AI/LLM consumption:
 
-Never duplicate heading text - use descriptive prefixes instead.
-```
+**Generated Files:**
 
-## Content Structure (Current Pages)
+- `/llms.txt` - Structured overview with site context, GitHub projects, and technical focus areas
+- `/index.html.md` - Homepage content in clean markdown format
+- `/expertise.md` - Technical skills and experience in markdown
+- `/work-experience.md` - Professional background in markdown
+- `/education.md` - Educational qualifications in markdown
+- `/consultancy.md` - Consulting services and approach in markdown
 
-- **Home**: Henrik's professional introduction and summary with technology leadership focus
-- **Expertise**: Technical expertise organized by categories (AI, Leadership, Advertising, Measurement, etc.)
-- **Work Experience**: Professional history from 2006-present with leadership achievements
-- **Education**: Academic background in Sweden
-- **Consultation**: Services offered with pricing table and booking information
+**Generation System:**
 
-## Recent Improvements
+- **Smart Caching**: Only regenerates when React component content actually changes
+- **UTF-8 Encoding**: Proper handling of international characters (ö, etc.)
+- **Build Integration**: Automatic generation during `npm run build`
+- **CI/CD Ready**: GitHub Actions workflow handles generation and deployment
+
+## Cloudflare Workers Configuration
+
+The project uses **wrangler.json** for Cloudflare Workers configuration:
+
+- **Name**: `henriksoderlund-website-v2`
+- **Entry Point**: `./src/worker/index.ts` (Hono.js application)
+- **Compatibility Date**: `2025-08-03` with Node.js compatibility
+- **Assets**: Static files served from `./dist/client` with SPA routing
+- **Observability**: Enabled for monitoring and debugging
+- **Source Maps**: Uploaded for better error tracking
+
+### Current Configuration Features
+
+- ✅ **Single Page Application**: Proper SPA routing with `not_found_handling`
+- ✅ **Source Maps**: Enabled for production debugging
+- ✅ **Node.js Compatibility**: For modern JavaScript features
+- ✅ **Observability**: Real-time monitoring and logs
+- ✅ **Static Assets**: Optimized asset serving from Vite build output
+
+### Deployment
+
+**IMPORTANT**: Deployment is handled automatically via GitHub Actions. DO NOT use `npm run deploy` directly.
+
+**Production Deployment Process:**
+
+1. **Push to main branch** - Triggers GitHub Actions workflow
+2. **Automated CI/CD Pipeline**: Build, lint, verify artifacts, deploy to Cloudflare Workers
+3. **Live Site**: Available at `https://www.henriksoderlund.com/`
+
+**Development/Testing Only:**
+
+- `npm run build` - Local build for testing
+- `npm run preview` - Local preview of production build
+- `npm run deploy` - Manual deploy (only for development/testing, not production)
+
+## Recent Technical Improvements
 
 ### SEO & IndexNow Implementation (August 2025)
 
@@ -399,246 +220,12 @@ Never duplicate heading text - use descriptive prefixes instead.
   - Fixed content change detection to track correct files (Expertise.tsx, data files)
   - Improved markdown generation with better UTF-8 support
 
-### Leadership Content Integration (August 2025)
+### Code Quality & Architecture
 
-- ✅ **Human Leadership Integration**:
-  - Added comprehensive leadership and people management content across homepage, expertise, and experience sections
-  - Created new `leadershipExpertise` section in `expertise.ts` with team building, client service, and strategic communication skills
-  - Enhanced work experience descriptions to highlight mentoring, team rebuilding, and stakeholder management achievements
-  - Balanced technical expertise with people leadership positioning
-- ✅ **Content Structure Enhancement**:
-  - Homepage now includes third paragraph focusing on leadership approach and team development
-  - Expertise page features dedicated leadership section with three skill categories
-  - Work experience entries emphasize concrete leadership outcomes (team retention, promotions, client relationships)
-
-### Project-Wide Modernization (feature/project-improvements)
-
-- ✅ **Code Quality & Architecture**:
-  - Centralized hardcoded data into `src/react-app/data/` directory (consultation.ts, expertise.ts, workExperience.ts)
-  - Removed unused `Navigation.tsx` component
+- ✅ **Modernization**:
+  - Centralized hardcoded data into `src/react-app/data/` directory
+  - Removed unused components
   - Modernized component typing by removing `React.FC`
-  - Optimized React imports (removed unnecessary imports, kept only required hooks)
-  - Cleaned up CSS warnings (removed empty CSS rules)
-- ✅ **SEO & Meta Improvements**:
-  - Enhanced page title in `index.html`
-  - Added comprehensive meta description and social media tags (Open Graph, Twitter cards)
-  - Updated `package.json` with descriptive name and description
-- ✅ **llms.txt Specification Compliance**:
-  - Corrected markdown filename generation per official spec
-  - Improved title extraction logic for data-driven components
-  - Smart caching system for content-based generation optimization
-
-### Brand Positioning Updates (August 2025)
-
-- ✅ **Position Refinement**: Removed "executive" and "strategy" positioning across all content
-  - Updated page titles from "Digital Strategy & Tech Executive" to "Technology Leader & AI Innovator"
-  - Changed personal descriptions from "digital strategy executive" to "technology leader"
-  - Modified llms.txt positioning from "Digital Strategy Executive" to "Technology Leader & AI Innovator"
-  - Updated all meta descriptions, Open Graph, and Twitter Card metadata
-
-- ✅ **Comprehensive SEO Enhancement**:
-  - Enhanced structured data (JSON-LD) with comprehensive person and professional service schemas
-  - Added detailed skills, awards, education, and professional affiliations in structured data
-  - Implemented rich snippets for consulting services with pricing and contact information
-  - Updated all social media metadata for consistent positioning across platforms
-
-### Previous Foundation Work
-
-- ✅ **Content Modernization**: Updated Homepage and Expertise page with technology leadership language and AI focus
-- ✅ **Page Rebranding**: Renamed "Skills" to "Expertise" with SEO-friendly 301 redirects
-- ✅ **AI Integration**: Added AI-related skills and capabilities throughout content
-- ✅ **Redirect System**: Cloudflare Workers compatible `_redirects` file for URL changes
-- ✅ **Updated Dependencies**: Latest versions of React 19.1.1, Vite 7.1.2, Hono 4.9.1, TypeScript 5.9.2
-- ✅ **Updated .gitignore**: Added modern Vite/React/Cloudflare Workers patterns
-- ✅ **Build Optimization**: Proper exclusion of build artifacts from version control
-- ✅ **Legacy Cleanup**: Identified old Hugo/Thulite files for removal
-- ✅ **Development Environment**: Complete VS Code workspace configuration
-- ✅ **SEO Setup**: Ahrefs and Google Search Console verification files in place
-- ✅ **Wrangler Configuration**: Modern wrangler.json with observability and source maps
-- ✅ **AI-Optimized Content**: Complete llms.txt specification implementation for AI/LLM consumption
-- ✅ **Automated CI/CD**: GitHub Actions workflow for build, verification, and deployment
-- ✅ **Smart Generation**: Content-based caching system for efficient builds
-
-## LinkedIn Profile Development Guidelines
-
-### Overview
-
-These guidelines ensure consistent, effective LinkedIn profile development for Henrik Söderlund, targeting Australian CTO and Head of Analytics positions. All content must reflect Australian market requirements and use British English spelling throughout.
-
-### Target Positioning
-
-- **Primary Role**: Chief Technology Officer (CTO)
-- **Secondary Role**: Head of Analytics / Head of Data Science
-- **Market Focus**: Australia (salary range AU$180k-$370k for CTO roles)
-- **Industry Focus**: Technology, Digital Media, Analytics, AI/ML Leadership
-
-### Core Messaging Framework
-
-#### Essential Value Propositions
-
-1. **Technology Leadership**: Proven ability to architect and lead technology solutions at scale
-2. **AI & Automation**: Cutting-edge expertise in AI implementation and intelligent automation
-3. **Team Development**: Track record of building, mentoring, and scaling high-performance teams
-4. **Business Impact**: Quantifiable results in revenue growth, efficiency improvements, and digital transformation
-5. **Cross-functional Excellence**: Bridge between technical teams and executive stakeholders
-
-#### Australian Market Positioning
-
-- Emphasise local market experience (Initiative Perth, KINESSO, Interpublic Group)
-- Highlight understanding of Australian business culture and regulatory environment
-- Position for both startup agility and enterprise scale
-- Reference Australian technology ecosystem and innovation landscape
-
-### Content Structure Guidelines
-
-#### Headlines (220 character limit)
-
-**Format**: `[Role] | [Key Expertise] | [Unique Value] | [Market Focus]`
-
-**Essential Elements**:
-
-- Clear role identification (CTO, Technology Leader, Head of Analytics)
-- AI/automation positioning for 2025 market
-- Leadership and team development emphasis
-- Business impact focus
-- Australian market relevance
-
-**Keyword Strategy**:
-
-- Leadership, Technology, AI, Automation, Analytics, Team Building
-- Cloud Computing, Digital Transformation, Strategy
-- Australia, Perth, Enterprise, Scale
-
-#### About Section (2,600 character limit)
-
-**Structure**:
-
-1. **Opening Hook** (1-2 sentences): Immediate value proposition and current role
-2. **Core Expertise** (3-4 sentences): Technical depth with business context
-3. **Leadership Philosophy** (2-3 sentences): People development and team building approach
-4. **Quantifiable Achievements** (2-3 sentences): Specific results and business impact
-5. **Market Positioning** (1-2 sentences): Australian focus and industry recognition
-6. **Call to Action** (1 sentence): Clear next step for interested parties
-
-**Writing Guidelines**:
-
-- Use first person implied (avoid "I" where possible)
-- Include 2-3 quantifiable metrics
-- Balance technical expertise with executive presence
-- Emphasise transformation and innovation
-- Maintain conversational yet professional tone
-
-#### Experience Descriptions
-
-**Structure per Role**:
-
-1. **Impact Statement** (1-2 sentences): Overall contribution and transformation achieved
-2. **Leadership Achievements** (2-3 bullet points): Team development, stakeholder management
-3. **Technical Implementation** (2-3 bullet points): Specific solutions and innovations
-4. **Business Results** (1-2 bullet points): Quantifiable outcomes and metrics
-
-**Content Guidelines**:
-
-- Lead with business impact, support with technical detail
-- Quantify wherever possible (percentages, dollar amounts, team sizes)
-- Emphasise leadership progression and increasing responsibility
-- Highlight innovation and transformation initiatives
-- Use action verbs: architected, transformed, scaled, mentored, optimised
-
-### Australian Market Considerations
-
-#### Cultural Fit Elements
-
-- Collaborative leadership style (Australian workplace culture values)
-- Cross-functional communication skills
-- Stakeholder management across diverse teams
-- Practical, results-oriented approach
-- Innovation balanced with commercial pragmatism
-
-#### Industry-Specific Requirements
-
-**For CTO Roles**:
-
-- Cloud computing and infrastructure modernisation
-- Cybersecurity and compliance framework knowledge
-- Digital transformation leadership
-- Product development and technical strategy
-- Vendor management and technology partnerships
-
-**For Head of Analytics Roles**:
-
-- AI/ML implementation and governance
-- Data strategy and architecture
-- Advanced analytics and business intelligence
-- Stakeholder education and communication
-- Regulatory compliance (Australian data privacy laws)
-
-### Content Review Process
-
-#### Evaluation Criteria (1-10 scale)
-
-1. **Role Alignment**: How well content matches target position requirements
-2. **Market Relevance**: Alignment with Australian business environment
-3. **Competitive Differentiation**: Unique value vs. other candidates
-4. **Executive Presence**: Leadership credibility and strategic thinking
-5. **Technical Credibility**: Depth and currency of technical expertise
-6. **Communication Clarity**: Accessibility to both technical and business audiences
-7. **Quantifiable Impact**: Specific, measurable achievements
-8. **Career Progression**: Clear trajectory and increasing responsibility
-9. **Cultural Fit**: Alignment with Australian workplace expectations
-10. **Call to Action**: Clear next steps for interested parties
-
-#### Review Process
-
-1. **Initial Draft**: Create content following guidelines
-2. **Subagent Review**: Submit to specialist CTO and Analytics recruitment experts
-3. **Scoring**: Receive detailed feedback and numerical scores
-4. **Revision**: Implement feedback and improve based on recommendations
-5. **Final Review**: Confirm improved scores before publication
-6. **Market Testing**: Monitor engagement and adjust based on results
-
-### Keyword Optimisation
-
-#### Primary Keywords
-
-- Chief Technology Officer, CTO, Technology Leader
-- Head of Analytics, Data Science Leader, Analytics Director
-- AI, Automation, Machine Learning, Digital Transformation
-- Leadership, Team Building, Mentoring, Strategy
-
-#### Secondary Keywords
-
-- Cloud Computing, DevOps, Security, Architecture
-- Python, SQL, Analytics, Business Intelligence
-- Perth, Australia, KINESSO, Initiative, Enterprise
-- Innovation, Scale, Growth, Optimisation
-
-#### Long-tail Keywords
-
-- "AI-driven digital transformation"
-- "high-performance technology teams"
-- "enterprise analytics strategy"
-- "cross-functional leadership Australia"
-
-### Quality Assurance
-
-#### Language Standards
-
-- Exclusive use of British English spelling
-- Professional tone appropriate for executive positions
-- Industry-standard terminology and frameworks
-- Clear, concise communication style
-
-#### Technical Accuracy
-
-- Current technology trends and tools
-- Accurate representation of achievements and metrics
-- Realistic positioning for experience level
-- Compliance with LinkedIn platform requirements
-
-#### Legal and Ethical Considerations
-
-- No confidential client information
-- Accurate representation of achievements
-- Appropriate attribution for team successes
-- Compliance with professional standards
+  - Optimized React imports
+  - Enhanced SEO meta tags and structured data
+  - Updated dependencies to latest versions (React 19.1.1, Vite 7.1.2, Hono 4.9.1)
