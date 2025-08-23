@@ -322,7 +322,7 @@ const getPrerenderedContent = (path: string): { title: string; content: string; 
         links: baseLinks
       };
 
-    case '/expertise':
+    case '/expertise': {
       const expertiseLinks = expertiseData.githubContributions.contributions.map(contrib => 
         `<a href="${contrib.url}" target="_blank" rel="noopener noreferrer">${contrib.title}</a>`
       );
@@ -331,6 +331,7 @@ const getPrerenderedContent = (path: string): { title: string; content: string; 
         content: generateExpertiseContent(),
         links: baseLinks.concat(expertiseLinks)
       };
+    }
 
     case '/work-experience':
       return {
