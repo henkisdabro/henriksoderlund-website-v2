@@ -338,7 +338,7 @@ const getPrerenderedContent = (path: string): { title: string; content: string; 
     case '/':
     case '/index.html':
       return {
-        title: 'Henrik Söderlund - Technology Leader & AI Innovator',
+        title: 'Henrik Söderlund | Technology Leader & AI Innovator',
         content: generateHomepageContent(),
         links: baseLinks
       };
@@ -363,7 +363,7 @@ const getPrerenderedContent = (path: string): { title: string; content: string; 
 
     case '/education':
       return {
-        title: 'Education - Henrik Söderlund',
+        title: 'Henrik Söderlund | Technology Leader & AI Innovator',
         content: `
           <h1>Education</h1>
           
