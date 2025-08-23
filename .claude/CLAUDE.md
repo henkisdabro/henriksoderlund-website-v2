@@ -150,7 +150,9 @@ public/                 # Static assets served directly
 ## Cloudflare Workers Configuration
 
 ### Wrangler Configuration (wrangler.json)
+
 The project uses **wrangler.json** for Cloudflare Workers configuration:
+
 - **Name**: `henriksoderlund-website-v2`
 - **Entry Point**: `./src/worker/index.ts` (Hono.js application)
 - **Compatibility Date**: `2025-08-03` with Node.js compatibility
@@ -158,17 +160,20 @@ The project uses **wrangler.json** for Cloudflare Workers configuration:
 - **Observability**: Enabled for monitoring and debugging
 - **Source Maps**: Uploaded for better error tracking
 
-### Current Configuration Features:
+### Current Configuration Features
+
 - ✅ **Single Page Application**: Proper SPA routing with `not_found_handling`
 - ✅ **Source Maps**: Enabled for production debugging
 - ✅ **Node.js Compatibility**: For modern JavaScript features
 - ✅ **Observability**: Real-time monitoring and logs
 - ✅ **Static Assets**: Optimized asset serving from Vite build output
 
-### Deployment Flow:
+### Deployment Flow
+
 **IMPORTANT**: Deployment is handled automatically via GitHub Actions. DO NOT use `npm run deploy` directly.
 
 **Production Deployment Process:**
+
 1. **Push to main branch** - Triggers GitHub Actions workflow
 2. **Automated CI/CD Pipeline** (`.github/workflows/deploy.yml`):
    - Install dependencies and run linting
@@ -179,6 +184,7 @@ The project uses **wrangler.json** for Cloudflare Workers configuration:
 4. **Static assets** cached and served efficiently from Cloudflare edge
 
 **Development/Testing Only:**
+
 - `npm run build` - Local build for testing
 - `npm run preview` - Local preview of production build
 - `npm run deploy` - Manual deploy (only for development/testing, not production)
@@ -186,6 +192,7 @@ The project uses **wrangler.json** for Cloudflare Workers configuration:
 ## Development Environment
 
 ### Primary Development Setup
+
 - **Platform**: Windows 11
 - **Editor**: VS Code with comprehensive workspace configuration
 - **Terminal**: PowerShell (default)
@@ -195,7 +202,9 @@ The project uses **wrangler.json** for Cloudflare Workers configuration:
 The project includes a complete `.vscode/` workspace configuration:
 
 #### Extensions (`.vscode/extensions.json`)
+
 **Core Development:**
+
 - TypeScript, ESLint, Prettier, TailwindCSS
 - React snippets and auto-rename-tag
 - Vite and Vitest extensions
@@ -203,11 +212,13 @@ The project includes a complete `.vscode/` workspace configuration:
 - Claude Code extension (`anthropic.claude-dev`)
 
 **Productivity:**
+
 - GitLens, Error Lens, Path IntelliSense
 - Spell checker with project-specific words
 - Auto-formatting and import organization
 
 #### Workspace Settings (`.vscode/settings.json`)
+
 - **Auto-formatting**: Format on save/paste with Prettier
 - **Code quality**: ESLint auto-fix and import organization on save
 - **TypeScript**: Optimized for React development with auto-imports
@@ -215,17 +226,20 @@ The project includes a complete `.vscode/` workspace configuration:
 - **Claude Code**: Configured with safe defaults for AI assistance
 
 #### Debug Configuration (`.vscode/launch.json`)
+
 - **"Launch Vite Dev Server"**: Debug Vite development server
 - **"Debug Wrangler Dev"**: Debug Cloudflare Workers locally
 - **"Launch via NPM Script"**: Alternative launcher using npm scripts
 - **Windows-compatible**: Uses direct .js file paths instead of shell scripts
 
 #### Tasks (`.vscode/tasks.json`)
+
 - Build, lint, and typecheck tasks
 - Wrangler deployment and development tasks
 - Integrated with VS Code's task runner
 
 ### Development Workflow
+
 1. Open project in VS Code
 2. Install recommended extensions when prompted
 3. Use `Ctrl+Shift+P` → "Tasks: Run Task" for common operations
@@ -233,6 +247,7 @@ The project includes a complete `.vscode/` workspace configuration:
 5. Claude Code extension available for AI-assisted development
 
 ### Windows-Specific Notes
+
 - Debug configurations use direct JavaScript file paths for cross-platform compatibility
 - PowerShell terminal configured as default
 - CRLF line endings handled automatically by Git
@@ -248,23 +263,30 @@ The project includes a complete `.vscode/` workspace configuration:
 ## File Management & Cleanup
 
 ### Generated Files (Auto-Generated)
+
 The following files are automatically generated during build and excluded from git:
+
 - `public/llms.txt` - Main llms.txt file for AI/LLM consumption
 - `public/*.md` - Individual page markdown files (index.html.md, expertise.md, etc.)
 - `.llms-cache.json` - Build cache for content-based generation optimization
 
 ### Legacy Files
+
 The following directories are legacy from the old Hugo/Thulite setup and should be ignored:
+
 - `content/` - Old Markdown content files (migrated to React components)
 - `assets/` - Old Hugo assets (duplicated in `public/`)
 
 ### Build Artifacts
+
 Always ensure these are properly ignored in git:
+
 - `dist/` - Vite build output (auto-generated)
 - `node_modules/` - NPM dependencies
 - `.wrangler/` - Wrangler cache and temporary files
 
 ### Project Management
+
 - `TASKS.md` - Optional task tracking (can be ignored if using other tools)
 - `CLAUDE.md` - Project context for AI assistance (keep in repo)
 
@@ -274,6 +296,7 @@ Always ensure these are properly ignored in git:
 Complete implementation of the [llms.txt specification](https://llmstxt.org/) for optimal AI/LLM consumption:
 
 **Generated Files:**
+
 - `/llms.txt` - Structured overview with site context, GitHub projects, and technical focus areas
 - `/index.html.md` - Homepage content in clean markdown format
 - `/expertise.md` - Technical skills and experience in markdown
@@ -282,6 +305,7 @@ Complete implementation of the [llms.txt specification](https://llmstxt.org/) fo
 - `/consultancy.md` - Consulting services and approach in markdown
 
 **Generation System:**
+
 - **Smart Caching**: Only regenerates when React component content actually changes
 - **UTF-8 Encoding**: Proper handling of international characters (ö, etc.)
 - **Build Integration**: Automatic generation during `npm run build`
@@ -290,13 +314,16 @@ Complete implementation of the [llms.txt specification](https://llmstxt.org/) fo
 ## Content Standards
 
 ### **CRITICAL RULE - Content Preservation**
-⚠️ **NEVER modify, change, or "improve" existing copywriting without explicit approval from the user.** 
+
+⚠️ **NEVER modify, change, or "improve" existing copywriting without explicit approval from the user.**
+
 - The homepage copy, About sections, and all marketing content has been carefully crafted and tested
 - Technical fixes (SEO, structure, formatting) are allowed, but content changes are NOT
 - If copywriting improvements are needed, ASK for permission first and explain exactly what you want to change
 - This includes server-side generated content in the Hono worker that mirrors React components
 
 ### Writing Style & Language
+
 - **Language**: All content must use British English spelling and conventions
 - **Common British spellings**: optimisation (not optimization), specialising (not specializing), organisation (not organization), utilising (not utilizing), realise (not realize), colour (not color), behaviour (not behavior), centre (not center)
 - **Voice**: Professional, direct, and technical without being overly formal
@@ -313,7 +340,8 @@ Complete implementation of the [llms.txt specification](https://llmstxt.org/) fo
 ## Recent Improvements
 
 ### SEO & IndexNow Implementation (August 2025)
-- ✅ **Search Engine Optimization**: 
+
+- ✅ **Search Engine Optimization**:
   - Fixed Open Graph URL not matching canonical URLs across all pages
   - Added dynamic canonical link tags with proper URL generation
   - Enhanced crawler content with proper H1 tags for SEO visibility
@@ -329,7 +357,8 @@ Complete implementation of the [llms.txt specification](https://llmstxt.org/) fo
   - Improved markdown generation with better UTF-8 support
 
 ### Leadership Content Integration (August 2025)
-- ✅ **Human Leadership Integration**: 
+
+- ✅ **Human Leadership Integration**:
   - Added comprehensive leadership and people management content across homepage, expertise, and experience sections
   - Created new `leadershipExpertise` section in `expertise.ts` with team building, client service, and strategic communication skills
   - Enhanced work experience descriptions to highlight mentoring, team rebuilding, and stakeholder management achievements
@@ -340,7 +369,8 @@ Complete implementation of the [llms.txt specification](https://llmstxt.org/) fo
   - Work experience entries emphasize concrete leadership outcomes (team retention, promotions, client relationships)
 
 ### Project-Wide Modernization (feature/project-improvements)
-- ✅ **Code Quality & Architecture**: 
+
+- ✅ **Code Quality & Architecture**:
   - Centralized hardcoded data into `src/react-app/data/` directory (consultation.ts, expertise.ts, workExperience.ts)
   - Removed unused `Navigation.tsx` component
   - Modernized component typing by removing `React.FC`
@@ -389,6 +419,7 @@ Complete implementation of the [llms.txt specification](https://llmstxt.org/) fo
 These guidelines ensure consistent, effective LinkedIn profile development for Henrik Söderlund, targeting Australian CTO and Head of Analytics positions. All content must reflect Australian market requirements and use British English spelling throughout.
 
 ### Target Positioning
+
 - **Primary Role**: Chief Technology Officer (CTO)
 - **Secondary Role**: Head of Analytics / Head of Data Science
 - **Market Focus**: Australia (salary range AU$180k-$370k for CTO roles)
@@ -397,6 +428,7 @@ These guidelines ensure consistent, effective LinkedIn profile development for H
 ### Core Messaging Framework
 
 #### Essential Value Propositions
+
 1. **Technology Leadership**: Proven ability to architect and lead technology solutions at scale
 2. **AI & Automation**: Cutting-edge expertise in AI implementation and intelligent automation
 3. **Team Development**: Track record of building, mentoring, and scaling high-performance teams
@@ -404,6 +436,7 @@ These guidelines ensure consistent, effective LinkedIn profile development for H
 5. **Cross-functional Excellence**: Bridge between technical teams and executive stakeholders
 
 #### Australian Market Positioning
+
 - Emphasise local market experience (Initiative Perth, KINESSO, Interpublic Group)
 - Highlight understanding of Australian business culture and regulatory environment
 - Position for both startup agility and enterprise scale
@@ -415,6 +448,7 @@ These guidelines ensure consistent, effective LinkedIn profile development for H
 **Format**: `[Role] | [Key Expertise] | [Unique Value] | [Market Focus]`
 
 **Essential Elements**:
+
 - Clear role identification (CTO, Technology Leader, Head of Analytics)
 - AI/automation positioning for 2025 market
 - Leadership and team development emphasis
@@ -422,6 +456,7 @@ These guidelines ensure consistent, effective LinkedIn profile development for H
 - Australian market relevance
 
 **Keyword Strategy**:
+
 - Leadership, Technology, AI, Automation, Analytics, Team Building
 - Cloud Computing, Digital Transformation, Strategy
 - Australia, Perth, Enterprise, Scale
@@ -429,6 +464,7 @@ These guidelines ensure consistent, effective LinkedIn profile development for H
 #### About Section (2,600 character limit)
 
 **Structure**:
+
 1. **Opening Hook** (1-2 sentences): Immediate value proposition and current role
 2. **Core Expertise** (3-4 sentences): Technical depth with business context
 3. **Leadership Philosophy** (2-3 sentences): People development and team building approach
