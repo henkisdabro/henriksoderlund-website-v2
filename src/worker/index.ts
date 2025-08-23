@@ -4,6 +4,11 @@ import { logger } from "hono/logger";
 import { timing } from "hono/timing";
 import type { Context } from "hono";
 
+// Import data files that React components use
+import { expertiseData } from "../react-app/data/expertise";
+import { workExperienceData } from "../react-app/data/workExperience";
+import { consultationData } from "../react-app/data/consultation";
+
 const app = new Hono<{ Bindings: Env }>();
 
 // Enhanced security headers middleware
@@ -177,7 +182,126 @@ const isCrawler = (userAgent: string): boolean => {
   return crawlerPatterns.some(pattern => ua.includes(pattern.toLowerCase()));
 };
 
-// Pre-rendered content for different routes
+// Helper function to remove emojis from content
+const removeEmojis = (text: string): string => {
+  return text
+    .replace(/[\u{1F600}-\u{1F64F}]|[\u{1F300}-\u{1F5FF}]|[\u{1F680}-\u{1F6FF}]|[\u{1F1E0}-\u{1F1FF}]|[\u{2600}-\u{26FF}]|[\u{2700}-\u{27BF}]/gu, '')
+    .replace(/[\u{1F900}-\u{1F9FF}]|[\u{1FA70}-\u{1FAFF}]/gu, '')
+    .replace(/🚀|🛠️|👥|📊|🔗|👋🏼|🇦🇺|🇸🇬|🇸🇪|🤖|💼|📈|📱|💻|⚡|🎯|🌟|📝|🔄|📄|✅/g, '')
+    .replace(/\s{2,}/g, ' ')
+    .trim();
+};
+
+// Generate content from actual data files
+const generateHomepageContent = (): string => {
+  return `
+    <h1>Henrik Söderlund</h1>
+    <p class="lead">Digital Media Leader & AI Solutions Expert. Former agency founder now architecting performance marketing solutions through automation, advanced analytics, and strategic team development in enterprise environments.</p>
+    
+    <h2>Hello!</h2>
+    <p>I'm Henrik Söderlund, a technology leader responsible for media activations at Initiative Perth (KINESSO, Interpublic Group). After founding and scaling the award-winning Creme Digital, I transitioned into senior leadership roles where I architect measurement solutions and guide high-performance teams across programmatic and performance marketing channels.</p>
+    
+    <p>With an inherent drive for optimisation and systematic thinking, I've built my career on developing sophisticated systems and automation workflows that transform how teams operate—from advanced analytics and server-side implementations to, more recently, intelligent AI-powered solutions that deliver measurable results at scale.</p>
+    
+    <p>Beyond technical innovation, my leadership approach centres on developing high-performing teams and cultivating lasting client relationships. Throughout my career, I've successfully rebuilt teams during challenging transitions, mentored 20+ professionals, and delivered compelling presentations that have secured major partnerships.</p>
+  `;
+};
+
+const generateExpertiseContent = (): string => {
+  let content = `<h1>Expertise</h1>`;
+  
+  // Add intro section
+  content += `<section><h2>${removeEmojis(expertiseData.intro.title)}</h2>`;
+  content += `<p>${expertiseData.intro.paragraph}</p></section>`;
+  
+  // Add leadership section
+  content += `<section><h2>${removeEmojis(expertiseData.leadershipExpertise.title)}</h2>`;
+  content += `<p>${expertiseData.leadershipExpertise.paragraph}</p>`;
+  
+  // Add leadership categories
+  expertiseData.leadershipExpertise.categories.forEach(category => {
+    content += `<div><h3>${category.category}</h3><ul>`;
+    category.skills.forEach(skill => {
+      content += `<li>${skill}</li>`;
+    });
+    content += `</ul></div>`;
+  });
+  content += `</section>`;
+  
+  // Add technical skills
+  content += `<section><h2>Technical Expertise & Platform Mastery</h2>`;
+  content += `<div>`;
+  expertiseData.skillsGrid.forEach(category => {
+    content += `<div><h3>${category.category}</h3><ul>`;
+    category.skills.forEach(skill => {
+      content += `<li>${skill}</li>`;
+    });
+    content += `</ul></div>`;
+  });
+  content += `</div></section>`;
+  
+  // Add platform experience
+  content += `<section><h2>${removeEmojis(expertiseData.platformExperience.title)}</h2>`;
+  content += `<p>${expertiseData.platformExperience.paragraph}</p>`;
+  content += `<ul>`;
+  expertiseData.platformExperience.platforms.forEach(platform => {
+    content += `<li>${platform}</li>`;
+  });
+  content += `</ul></section>`;
+  
+  // Add GitHub contributions
+  content += `<section><h2>${removeEmojis(expertiseData.githubContributions.title)}</h2>`;
+  expertiseData.githubContributions.contributions.forEach(contrib => {
+    content += `<div><h3><a href="${contrib.url}" target="_blank" rel="noopener noreferrer">${contrib.title}</a></h3>`;
+    content += `<p>${contrib.description}</p></div>`;
+  });
+  content += `</section>`;
+  
+  return content;
+};
+
+const generateWorkExperienceContent = (): string => {
+  let content = `<h1>Work Experience</h1>`;
+  
+  workExperienceData.forEach(job => {
+    content += `<section>`;
+    content += `<h2>${job.title}</h2>`;
+    content += `<p class="dates">${job.dates}</p>`;
+    job.description.forEach(desc => {
+      content += `<p>${desc}</p>`;
+    });
+    content += `</section>`;
+  });
+  
+  return content;
+};
+
+const generateConsultancyContent = (): string => {
+  let content = `<h1>${consultationData.intro.title}</h1>`;
+  content += `<p>${consultationData.intro.paragraph}</p>`;
+  
+  // AI Consultancy section
+  content += `<section><h2>${removeEmojis(consultationData.aiConsultancy.title)}</h2>`;
+  content += `<p>${consultationData.aiConsultancy.paragraph}</p>`;
+  content += `<h3>${consultationData.aiConsultancy.services.title}</h3><ul>`;
+  consultationData.aiConsultancy.services.items.forEach(item => {
+    content += `<li><strong>${item.name}</strong> - ${item.description}</li>`;
+  });
+  content += `</ul></section>`;
+  
+  // Analytics Consultancy section
+  content += `<section><h2>${removeEmojis(consultationData.analyticsConsultancy.title)}</h2>`;
+  content += `<p>${consultationData.analyticsConsultancy.paragraph}</p>`;
+  content += `<h3>${consultationData.analyticsConsultancy.services.title}</h3><ul>`;
+  consultationData.analyticsConsultancy.services.items.forEach(item => {
+    content += `<li>${item}</li>`;
+  });
+  content += `</ul></section>`;
+  
+  return content;
+};
+
+// Data-driven content generation using actual data files
 const getPrerenderedContent = (path: string): { title: string; content: string; links: string[] } => {
   const baseLinks = [
     '<a href="https://initiative.com/" target="_blank" rel="noopener noreferrer">Initiative</a>',
@@ -194,66 +318,24 @@ const getPrerenderedContent = (path: string): { title: string; content: string; 
     case '/index.html':
       return {
         title: 'Henrik Söderlund - Technology Leader & AI Innovator',
-        content: `
-          <h1>Henrik Söderlund</h1>
-          <p class="lead">Digital Media Leader & AI Solutions Expert. Former agency founder now architecting performance marketing solutions through automation, advanced analytics, and strategic team development in enterprise environments.</p>
-          
-          <h2>Hello! 👋🏼</h2>
-          <p>I'm Henrik Söderlund, a technology leader responsible for media activations at Initiative Perth (KINESSO, Interpublic Group). After founding and scaling the award-winning Creme Digital, I transitioned into senior leadership roles where I architect measurement solutions and guide high-performance teams across programmatic and performance marketing channels.</p>
-          
-          <p>With an inherent drive for optimisation and systematic thinking, I've built my career on developing sophisticated systems and automation workflows that transform how teams operate—from advanced analytics and server-side implementations to, more recently, intelligent AI-powered solutions that deliver measurable results at scale.</p>
-          
-          <p>Beyond technical innovation, my leadership approach centres on developing high-performing teams and cultivating lasting client relationships. Throughout my career, I've successfully rebuilt teams during challenging transitions, mentored 20+ professionals, and delivered compelling presentations that have secured major partnerships.</p>
-        `,
+        content: generateHomepageContent(),
         links: baseLinks
       };
 
     case '/expertise':
+      const expertiseLinks = expertiseData.githubContributions.contributions.map(contrib => 
+        `<a href="${contrib.url}" target="_blank" rel="noopener noreferrer">${contrib.title}</a>`
+      );
       return {
         title: 'Expertise - Henrik Söderlund',
-        content: `
-          <h1>Expertise</h1>
-          
-          <h2>🚀 Strategic Technology Leadership & AI Innovation</h2>
-          <p>As a senior technology leader, I architect comprehensive solutions that bridge cutting-edge AI capabilities with practical business outcomes. My expertise spans building intelligent automation systems, developing advanced measurement frameworks, and leading cross-functional teams to implement scalable technology solutions.</p>
-          
-          <h2>👥 Executive Leadership & People Development</h2>
-          <p>With extensive experience in executive leadership, I build, mentor, and guide high-performance teams while maintaining exceptional client relationships and stakeholder engagement. My leadership philosophy combines systematic people development with strategic business alignment.</p>
-          
-          <h2>🛠️ Technical Expertise & Platform Mastery</h2>
-          <p>Comprehensive technical skills spanning analytics platforms, programming languages, cloud infrastructure, and AI/ML technologies. Expert in Google Analytics, Google Ads, Meta platforms, Python, React, and cloud computing solutions.</p>
-          
-          <h2>📊 Advanced Dashboard & Analytics Solutions</h2>
-          <p>Specialist in creating sophisticated measurement and reporting solutions. Built advanced Campaign & Website Performance Dashboards in Looker Studio with real-time analytics and conversion tracking.</p>
-        `,
-        links: baseLinks.concat([
-          '<a href="https://github.com/henkisdabro/claude-computer-use-macos" target="_blank" rel="noopener noreferrer">Claude Computer Use macOS</a>',
-          '<a href="https://github.com/henkisdabro/aws-cost-allocation-automation" target="_blank" rel="noopener noreferrer">AWS Cost Allocation Automation</a>',
-          '<a href="https://github.com/henkisdabro/ga4-server-side-tracking-gtm" target="_blank" rel="noopener noreferrer">GA4 Server-Side Tracking GTM</a>'
-        ])
+        content: generateExpertiseContent(),
+        links: baseLinks.concat(expertiseLinks)
       };
 
     case '/work-experience':
       return {
         title: 'Work Experience - Henrik Söderlund',
-        content: `
-          <h1>Work Experience</h1>
-          
-          <h2>🇦🇺 Senior Media Activation Lead</h2>
-          <p class="dates">May 2023–Present</p>
-          <p>Initiative Perth, Kinesso, Interpublic Group - Perth, Australia</p>
-          <p>Leading strategic technology initiatives and media activation solutions for enterprise clients. Architecting measurement frameworks and developing AI-powered automation systems.</p>
-          
-          <h2>🇦🇺 Founder & Managing Director</h2>
-          <p class="dates">Jan 2018–Apr 2023</p>
-          <p>Creme Digital - Perth, Australia</p>
-          <p>Founded and scaled award-winning digital marketing agency to 15+ team members. Secured major enterprise clients and delivered innovative measurement solutions. Recognised as Advertising+Marketing AOTY Best Local Media Agency 2021.</p>
-          
-          <h2>🇸🇬 Digital Marketing Manager</h2>
-          <p class="dates">Jul 2016–Dec 2017</p>
-          <p>Envato - Singapore</p>
-          <p>Led digital marketing initiatives for Southeast Asian markets. Implemented advanced analytics and attribution models across multiple product lines.</p>
-        `,
+        content: generateWorkExperienceContent(),
         links: baseLinks
       };
 
@@ -263,15 +345,15 @@ const getPrerenderedContent = (path: string): { title: string; content: string; 
         content: `
           <h1>Education</h1>
           
-          <h2>🇸🇪 Tertiary Education</h2>
+          <h2>Tertiary Education</h2>
           <p class="dates">1999–2006</p>
           <p>Master of Music [M.Mus.] Instrument: Trombone at Lund University - Malmö, Sweden</p>
           
-          <h2>🇸🇪 Secondary Education</h2>
+          <h2>Secondary Education</h2>
           <p class="dates">1996–1999</p>
           <p>Natural Sciences at Kattegattgymnasiet - Malmö, Sweden</p>
           
-          <h2>🇸🇪 Primary Education</h2>
+          <h2>Primary Education</h2>
           <p class="dates">1987–1996</p>
           <p>Elementary at Örjanskolan - Halmstad, Sweden</p>
         `,
@@ -281,18 +363,7 @@ const getPrerenderedContent = (path: string): { title: string; content: string; 
     case '/consultancy':
       return {
         title: 'Strategic AI & Analytics Consultancy - Henrik Söderlund',
-        content: `
-          <h1>Strategic AI & Analytics Consultancy</h1>
-          
-          <h2>🤖 AI Strategy & Implementation Consulting</h2>
-          <p>Comprehensive AI consultancy services designed to transform your business operations through intelligent automation and advanced analytics. From strategic feasibility assessments to full-scale implementation and training.</p>
-          
-          <h2>📊 Advanced Analytics & Measurement Solutions</h2>
-          <p>Enterprise-grade analytics consulting specialising in attribution modeling, advanced reporting, and comprehensive measurement frameworks. Expert in Google Analytics 4, server-side tracking, and custom dashboard development.</p>
-          
-          <h2>💼 Proven Track Record</h2>
-          <p>Successfully delivered AI automation solutions resulting in 73% efficiency improvements, 89% accuracy in predictive models, and comprehensive team upskilling programs.</p>
-        `,
+        content: generateConsultancyContent(),
         links: baseLinks.concat([
           '<a href="https://calendly.com/henriksoederlund/30min" target="_blank" rel="noopener noreferrer">Book a consultation</a>'
         ])

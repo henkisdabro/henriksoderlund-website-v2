@@ -17,6 +17,10 @@ function extractJSXContent(componentPath) {
     const componentName = path.basename(componentPath, '.tsx');
     
     // Check if this is a data-driven component
+    if (componentName === 'Home') {
+      return extractHomeContent(componentPath);
+    }
+    
     if (componentName === 'WorkExperience') {
       return extractWorkExperienceContent(componentPath);
     }
@@ -29,6 +33,10 @@ function extractJSXContent(componentPath) {
       return extractSkillsContent(componentPath);
     }
     
+    if (componentName === 'Education') {
+      return extractEducationContent(componentPath);
+    }
+    
     // For static components, extract the return statement content
     const returnMatch = content.match(/return\s*\(\s*<div[^>]*>([\s\S]*?)<\/div>\s*\);/s);
     if (!returnMatch) {
@@ -38,6 +46,60 @@ function extractJSXContent(componentPath) {
     return returnMatch[1];
   } catch (error) {
     console.warn(`Warning: Could not extract JSX from ${componentPath}:`, error.message);
+    return '';
+  }
+}
+
+/**
+ * Extract home page content from the component
+ * @param {string} componentPath - Path to the Home component file
+ * @returns {string} - Generated JSX content
+ */
+function extractHomeContent(componentPath) {
+  try {
+    const content = fs.readFileSync(componentPath, 'utf8');
+    
+    // Extract the main content from the JSX return statement
+    // Look for the content between the main div tags
+    const heroMatch = content.match(/<div className="hero-section">([\s\S]*?)<\/div>/);
+    const contentMatch = content.match(/<section className="content-section">([\s\S]*?)<\/section>/);
+    
+    let jsxContent = '';
+    
+    if (heroMatch) {
+      jsxContent += heroMatch[1];
+    }
+    
+    if (contentMatch) {
+      jsxContent += contentMatch[1];
+    }
+    
+    return jsxContent;
+  } catch (error) {
+    console.warn(`Warning: Could not extract Home content:`, error.message);
+    return '';
+  }
+}
+
+/**
+ * Extract education content from the component
+ * @param {string} componentPath - Path to the Education component file
+ * @returns {string} - Generated JSX content
+ */
+function extractEducationContent(componentPath) {
+  try {
+    const content = fs.readFileSync(componentPath, 'utf8');
+    
+    // Extract the main education content
+    const mainMatch = content.match(/<div className="education-page">([\s\S]*?)<\/div>/);
+    
+    if (mainMatch) {
+      return mainMatch[1];
+    }
+    
+    return '';
+  } catch (error) {
+    console.warn(`Warning: Could not extract Education content:`, error.message);
     return '';
   }
 }
@@ -436,6 +498,25 @@ function extractSkillsContent(componentPath) {
 }
 
 /**
+ * Remove emojis from text content
+ * @param {string} text - Text that may contain emojis
+ * @returns {string} - Text with emojis removed
+ */
+function removeEmojis(text) {
+  // Remove various emoji patterns
+  return text
+    // Remove standard emojis (Unicode ranges)
+    .replace(/[\u{1F600}-\u{1F64F}]|[\u{1F300}-\u{1F5FF}]|[\u{1F680}-\u{1F6FF}]|[\u{1F1E0}-\u{1F1FF}]|[\u{2600}-\u{26FF}]|[\u{2700}-\u{27BF}]/gu, '')
+    // Remove additional emoji ranges
+    .replace(/[\u{1F900}-\u{1F9FF}]|[\u{1FA70}-\u{1FAFF}]/gu, '')
+    // Remove common emojis that might be missed
+    .replace(/🚀|🛠️|👥|📊|🔗|👋🏼|🇦🇺|🇸🇬|🇸🇪|🤖|💼|📈|📱|💻|⚡|🎯|🌟|📝|🔄|📄|✅/g, '')
+    // Clean up any extra whitespace left by emoji removal
+    .replace(/\s{2,}/g, ' ')
+    .trim();
+}
+
+/**
  * Convert JSX content to Markdown
  * @param {string} jsxContent - Raw JSX content string
  * @param {string} pageTitle - Title for the page
@@ -447,7 +528,7 @@ function jsxToMarkdown(jsxContent, pageTitle = '') {
   // Only add page title if the content doesn't already have an h1 tag
   const hasH1 = jsxContent.includes('<h1');
   if (pageTitle && !hasH1) {
-    markdown += `# ${pageTitle}\n\n`;
+    markdown += `# ${removeEmojis(pageTitle)}\n\n`;
   }
   
   // First pass: clean up JSX and preserve structure
@@ -463,32 +544,36 @@ function jsxToMarkdown(jsxContent, pageTitle = '') {
   
   // Convert JSX elements to Markdown
   content = content
-    // Convert headings (preserve newlines)
-    .replace(/<h1[^>]*>(.*?)<\/h1>/gs, '\n# $1\n')
-    .replace(/<h2[^>]*>(.*?)<\/h2>/gs, '\n## $1\n')
-    .replace(/<h3[^>]*>(.*?)<\/h3>/gs, '\n### $1\n')
-    .replace(/<h4[^>]*>(.*?)<\/h4>/gs, '\n#### $1\n')
-    .replace(/<h5[^>]*>(.*?)<\/h5>/gs, '\n##### $1\n')
-    .replace(/<h6[^>]*>(.*?)<\/h6>/gs, '\n###### $1\n')
+    // Convert headings (with proper spacing and emoji removal)
+    .replace(/<h1[^>]*>(.*?)<\/h1>/gs, (match, text) => `\n# ${removeEmojis(text.trim())}\n\n`)
+    .replace(/<h2[^>]*>(.*?)<\/h2>/gs, (match, text) => `\n## ${removeEmojis(text.trim())}\n\n`)
+    .replace(/<h3[^>]*>(.*?)<\/h3>/gs, (match, text) => `\n### ${removeEmojis(text.trim())}\n\n`)
+    .replace(/<h4[^>]*>(.*?)<\/h4>/gs, (match, text) => `\n#### ${removeEmojis(text.trim())}\n\n`)
+    .replace(/<h5[^>]*>(.*?)<\/h5>/gs, (match, text) => `\n##### ${removeEmojis(text.trim())}\n\n`)
+    .replace(/<h6[^>]*>(.*?)<\/h6>/gs, (match, text) => `\n###### ${removeEmojis(text.trim())}\n\n`)
     
-    // Convert special paragraph types
-    .replace(/<p[^>]*className="lead"[^>]*>(.*?)<\/p>/gs, '\n**$1**\n')
-    .replace(/<p[^>]*className="dates"[^>]*>(.*?)<\/p>/gs, '\n*$1*\n')
+    // Convert special paragraph types (with emoji removal)
+    .replace(/<p[^>]*className="lead"[^>]*>(.*?)<\/p>/gs, (match, text) => `\n**${removeEmojis(text.trim())}**\n\n`)
+    .replace(/<p[^>]*className="dates"[^>]*>(.*?)<\/p>/gs, (match, text) => `\n*${removeEmojis(text.trim())}*\n\n`)
     
     // Convert links (do this before paragraphs to preserve them)
-    .replace(/<a[^>]*href="([^"]*)"[^>]*>(.*?)<\/a>/gs, '[$2]($1)')
+    .replace(/<a[^>]*href="([^"]*)"[^>]*>(.*?)<\/a>/gs, (match, url, text) => `[${removeEmojis(text.trim())}](${url})`)
     
-    // Convert lists
+    // Convert lists (with emoji removal)
     .replace(/<ul[^>]*>(.*?)<\/ul>/gs, (match, listContent) => {
       const items = listContent.match(/<li[^>]*>(.*?)<\/li>/gs) || [];
-      return '\n' + items.map(item => {
+      const listItems = items.map(item => {
         const text = item.replace(/<li[^>]*>(.*?)<\/li>/gs, '$1').trim();
-        return `- ${text}`;
-      }).join('\n') + '\n';
+        return `- ${removeEmojis(text)}`;
+      }).filter(item => item !== '- '); // Remove empty items
+      return listItems.length > 0 ? '\n' + listItems.join('\n') + '\n\n' : '';
     })
     
-    // Convert regular paragraphs
-    .replace(/<p[^>]*>(.*?)<\/p>/gs, '\n$1\n')
+    // Convert regular paragraphs (with emoji removal and better spacing)
+    .replace(/<p[^>]*>(.*?)<\/p>/gs, (match, text) => {
+      const cleanText = removeEmojis(text.trim());
+      return cleanText ? `\n${cleanText}\n\n` : '';
+    })
     
     // Convert tables
     .replace(/<table[^>]*>(.*?)<\/table>/gs, (match, tableContent) => {
@@ -552,8 +637,16 @@ function jsxToMarkdown(jsxContent, pageTitle = '') {
     .replace(/\n\s*\n\s*\n+/g, '\n\n') // Multiple newlines to double newlines
     .replace(/^\s+/gm, '') // Remove leading whitespace on lines
     .replace(/\s+$/gm, '') // Remove trailing whitespace on lines
+    // Fix text spacing issues - add space after periods/commas when missing
+    .replace(/([.!?])([A-Z])/g, '$1 $2') // Add space after sentence endings
+    .replace(/([,;])([A-Za-z])/g, '$1 $2') // Add space after commas/semicolons
+    // Fix link and text spacing
+    .replace(/\)([A-Z])/g, ') $1') // Add space after closing parentheses before capital letters
+    .replace(/([a-z])(\[)/g, '$1 $2') // Add space before links
+    // Remove duplicate spaces
+    .replace(/ {2,}/g, ' ')
     .trim()
-    // Fix spacing around headers and sections
+    // Fix spacing around headers and sections  
     .replace(/\n\n\n+/g, '\n\n') // No more than double newlines
     .replace(/^# /gm, '\n# ') // Ensure headers have space before
     .replace(/^## /gm, '\n## ')
