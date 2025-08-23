@@ -9,6 +9,7 @@ interface SEOHeadProps {
   ogImage?: string;
   ogType?: string;
   schemaData?: object | object[];
+  hreflang?: string;
 }
 
 const SEOHead = ({ 
@@ -18,7 +19,8 @@ const SEOHead = ({
   canonicalUrl,
   ogImage = "https://www.henriksoderlund.com/og_image.png",
   ogType = "website",
-  schemaData
+  schemaData,
+  hreflang = "en"
 }: SEOHeadProps) => {
   const location = useLocation();
   
@@ -57,6 +59,20 @@ const SEOHead = ({
       canonical.setAttribute('rel', 'canonical');
       canonical.setAttribute('href', fullCanonicalUrl);
       document.head.appendChild(canonical);
+    }
+    
+    // Update hreflang tag
+    let hreflangLink = document.querySelector('link[rel="alternate"][hreflang]');
+    if (hreflangLink) {
+      hreflangLink.setAttribute('hreflang', hreflang);
+      hreflangLink.setAttribute('href', fullCanonicalUrl);
+    } else {
+      // Create hreflang tag if it doesn't exist
+      hreflangLink = document.createElement('link');
+      hreflangLink.setAttribute('rel', 'alternate');
+      hreflangLink.setAttribute('hreflang', hreflang);
+      hreflangLink.setAttribute('href', fullCanonicalUrl);
+      document.head.appendChild(hreflangLink);
     }
     
     // Update Open Graph title
@@ -132,7 +148,7 @@ const SEOHead = ({
       });
     }
     
-  }, [title, description, keywords, canonicalUrl, ogImage, ogType, schemaData, location.pathname]);
+  }, [title, description, keywords, canonicalUrl, ogImage, ogType, schemaData, hreflang, location.pathname]);
   
   return null; // This component doesn't render anything
 };
