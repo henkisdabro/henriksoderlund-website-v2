@@ -1,17 +1,20 @@
 <!doctype html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
   <link rel="icon" type="image/svg+xml" href="/bot.svg" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Henrik Söderlund | Technology Leader & AI Innovator</title>
-  <meta name="description" content="The personal website of Henrik Söderlund, a Technology Leader & AI Innovator based in Perth, Australia." />
+  <meta name="description"
+    content="The personal website of Henrik Söderlund, a Technology Leader & AI Innovator based in Perth, Australia." />
 
   <!-- Open Graph / Facebook -->
   <meta property="og:type" content="profile" />
   <meta property="og:url" content="https://www.henriksoderlund.com/" />
   <meta property="og:title" content="Henrik Söderlund | Digital Media Leader & AI Solutions Innovator" />
-  <meta property="og:description" content="Technology Leader specialising in AI automation, digital marketing, and technology leadership. Expert in building intelligent systems, leading high-performance teams, and delivering enterprise-scale solutions." />
+  <meta property="og:description"
+    content="Technology Leader specialising in AI automation, digital marketing, and technology leadership. Expert in building intelligent systems, leading high-performance teams, and delivering enterprise-scale solutions." />
   <meta property="og:image" content="https://www.henriksoderlund.com/og_image.png" />
   <meta property="og:image:alt" content="Henrik Söderlund - Digital Media Leader & AI Solutions Innovator" />
   <meta property="og:image:type" content="image/png" />
@@ -29,14 +32,14 @@
   <meta property="twitter:creator" content="@henkisdabro" />
   <meta property="twitter:url" content="https://www.henriksoderlund.com/" />
   <meta property="twitter:title" content="Henrik Söderlund | Digital Media Leader & AI Solutions Innovator" />
-  <meta property="twitter:description" content="Technology Leader specialising in AI automation, digital marketing, and technology leadership. Expert in building intelligent systems, leading high-performance teams, and delivering enterprise-scale solutions." />
+  <meta property="twitter:description"
+    content="Technology Leader specialising in AI automation, digital marketing, and technology leadership. Expert in building intelligent systems, leading high-performance teams, and delivering enterprise-scale solutions." />
   <meta property="twitter:image" content="https://www.henriksoderlund.com/og_image.png" />
   <meta property="twitter:image:alt" content="Henrik Söderlund - Digital Media Leader & AI Solutions Innovator" />
 
   <!-- SEO -->
   <meta name="google-site-verification" content="TVUdAh0RA_yjsXKKjybCDe7JsKnXBhYFbcRPoJy03rc" />
   <meta name="ahrefs-site-verification" content="bc08e3a49be838e1d8cfa2eabc5bf8e7d833c572e09db62742db9ed9917d6ada">
-  <link rel="canonical" href="https://www.henriksoderlund.com/" />
 
   <!-- Structured Data - Person Schema -->
   <script type="application/ld+json">
@@ -130,9 +133,9 @@
         }
       ]
     }
-  </script>
+    </script>
 
-  <!-- Structured Data - Professional Service Schema -->
+  <!-- Structured Data - Professional Service (Local Business) Schema -->
   <script type="application/ld+json">
     {
       "@context": "https://schema.org",
@@ -205,7 +208,7 @@
         "availableLanguage": ["English", "Swedish"]
       }
     }
-  </script>
+    </script>
 
   <!-- Structured Data - Website Schema -->
   <script type="application/ld+json">
@@ -225,15 +228,78 @@
         "query-input": "required name=search_term_string"
       }
     }
+    </script>
+  <link rel="preconnect" href="https://load.sgtm.henriksoderlund.com/" crossorigin>
+  <link rel="dns-prefetch" href="https://load.sgtm.henriksoderlund.com/">
+
+  <!-- Initialize dataLayer before GTM -->
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    
+    // Device type detection
+    const deviceType = /Mobile|Android|iPhone|iPad/.test(navigator.userAgent) ? 'mobile' : 
+                      /Tablet|iPad/.test(navigator.userAgent) ? 'tablet' : 'desktop';
+    
+    // Initialize with all data
+    window.dataLayer.push({
+      'page_title': document.title,
+      'page_location': window.location.href,
+      'page_path': window.location.pathname,
+      'page_referrer': document.referrer,
+      'environment': location.hostname === 'localhost' || location.hostname === '127.0.0.1' || location.hostname.includes('vite') ? 'development' : 'production',
+      'build_timestamp': '%BUILD_TIMESTAMP%', // Will be replaced server-side
+      'user_agent': navigator.userAgent,
+      'screen_resolution': screen.width + 'x' + screen.height,
+      'viewport_size': window.innerWidth + 'x' + window.innerHeight,
+      'color_depth': screen.colorDepth,
+      'timezone': Intl.DateTimeFormat().resolvedOptions().timeZone,
+      'language': navigator.language,
+      'platform': navigator.platform,
+      'device_type': deviceType,
+      'is_mobile': deviceType === 'mobile',
+      'is_tablet': deviceType === 'tablet',
+      'is_desktop': deviceType === 'desktop',
+      'connection_type': navigator.connection ? navigator.connection.effectiveType : 'unknown',
+      // Cloudflare data will be injected server-side
+      'cf_country': '%CF_COUNTRY%',
+      'cf_colo': '%CF_COLO%',
+      'cf_ray': '%CF_RAY%'
+    });
   </script>
 
-  <!-- Fathom Analytics -->
-  <script src="https://api.fouanalytics.com/api/script.js" data-site="6686HT0XP1EC4DC5Q5Z4" defer></script>
+  <!-- Google Tag Manager -->
+  <script>
+    // Only load GTM in production (not on localhost or when NODE_ENV is development)
+    if (location.hostname !== 'localhost' && location.hostname !== '127.0.0.1' && !location.hostname.includes('vite')) {
+      (function (w, d, s, l, i) { 
+        w[l] = w[l] || []; 
+        w[l].push({ 'gtm.start': new Date().getTime(), event: 'gtm.js' }); 
+        var f = d.getElementsByTagName(s)[0], j = d.createElement(s); 
+        j.async = true; 
+        j.src = "https://load.sgtm.henriksoderlund.com/dz4d7tyirczbv.js?" + i; 
+        f.parentNode.insertBefore(j, f); 
+      })(window, document, 'script', 'dataLayer', '6at4snq=aWQ9R1RNLUZXUjQ%3D&omNe=daQSaS');
+    } else {
+      console.log('GTM disabled in development environment');
+    }
+  </script>
+  <!-- End Google Tag Manager -->
 </head>
+
 <body>
-  <!-- Fathom Analytics noscript -->
+  <!-- Google Tag Manager (noscript) -->
+  <noscript>
+    <script>
+      // Only load GTM noscript in production
+      if (location.hostname !== 'localhost' && location.hostname !== '127.0.0.1' && !location.hostname.includes('vite')) {
+        document.write('<iframe src="https://load.sgtm.henriksoderlund.com/ns.html?id=GTM-FWR4" height="0" width="0" style="display:none;visibility:hidden"></iframe>');
+      }
+    </script>
+  </noscript>
+  <!-- End Google Tag Manager (noscript) -->
   <noscript><img src="https://api.fouanalytics.com/api/noscript-6686ht0xp1ec4dc5q5z4.gif" alt="Fathom Analytics tracking pixel"></noscript>
   <div id="root"></div>
   <script type="module" src="/src/react-app/main.tsx"></script>
 </body>
+
 </html>
