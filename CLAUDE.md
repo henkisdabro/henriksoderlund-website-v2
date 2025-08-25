@@ -381,6 +381,39 @@ Create a comprehensive `generateSEOMetadata()` function that extracts all metada
 
 **Testing**: Verify `llms.txt` and `.md` files have consistent character encoding.
 
+### 🚨 CRITICAL OPERATIONAL SAFETY RULE (August 2025)
+
+**⚠️ NEVER DELETE INFRASTRUCTURE FILES DURING "CLEANUP" OPERATIONS**
+
+**The Emergency**: On August 25, 2025, a "cleanup" commit accidentally deleted the essential `index.html` file, causing complete website failure with all pages returning 404 errors.
+
+**Critical Files That Must NEVER Be Deleted:**
+
+- ✅ **`index.html`** - Essential HTML template for Vite build process (305+ lines of SEO metadata, structured data, analytics)
+- ✅ **`wrangler.json`** - Cloudflare Workers deployment configuration
+- ✅ **`package.json`** - Node.js dependencies and build scripts
+- ✅ **`vite.config.ts`** - Vite build configuration
+- ✅ **`src/worker/index.ts`** - Cloudflare Worker entry point
+- ✅ **`src/react-app/main.tsx`** - React application entry point
+- ✅ **`.github/workflows/`** - CI/CD deployment pipelines
+
+**Safe Cleanup Protocol:**
+
+1. **BEFORE any cleanup commit**: Run `npm run check` to verify build still works
+2. **NEVER delete files** without explicit user approval for each file
+3. **Use git status extensively** to review what will be deleted
+4. **Focus cleanup on**: Documentation files, debug logs, temporary files only
+5. **Test immediately after cleanup**: Verify website still functions
+
+**Recovery Lessons:**
+
+- The missing `index.html` caused Vite to fail generating client assets
+- GitHub Actions deployments appeared "successful" but deployed broken workers
+- All SEO metadata, structured data, and analytics integration was lost
+- Complete site restoration required recreating 305+ lines of critical HTML
+
+**Prevention:** When in doubt about deleting ANY file, ask the user first. Website availability is more important than clean repositories.
+
 ## Project Health Status
 
 **Current Status: Excellent** (as of August 2025)

@@ -82,35 +82,16 @@
       "Bash(npm outdated:*)",
       "Bash(timeout 10s npm run dev)",
       "Bash(npm audit:*)",
-      "mcp__serena"
+      "mcp__serena",
+      "Bash(gh run view:*)",
+      "Bash(wrangler deployments list:*)",
+      "Bash(gh run:*)"
     ],
     "deny": [],
     "ask": [],
     "defaultMode": "acceptEdits"
   },
   "hooks": {
-    "PostToolUse": [
-      {
-        "matcher": "Edit|Write|MultiEdit",
-        "hooks": [
-          {
-            "type": "command",
-            "command": ".claude/hooks/log-tool-usage.sh"
-          }
-        ]
-      }
-    ],
-    "PreToolUse": [
-      {
-        "matcher": "Bash",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "bash -c 'input=$(cat); cmd=$(echo \"$input\" | jq -r \".tool_input.command // empty\"); if [[ \"$cmd\" =~ (rm|delete).*(\\*|\\.env|credentials|secret) ]]; then echo \"{\\\"action\\\": \\\"block\\\", \\\"message\\\": \\\"Dangerous command blocked: $cmd\\\"}\"; else echo \"{}\"; fi'"
-          }
-        ]
-      }
-    ],
     "SubagentStop": [
       {
         "hooks": [
