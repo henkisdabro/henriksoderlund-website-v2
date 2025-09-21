@@ -204,7 +204,7 @@ public/                 # Static assets served directly
 - **Language**: All content must use British English spelling and conventions
 - **Common British spellings**: optimisation (not optimization), specialising (not specializing), organisation (not organization), utilising (not utilizing), realise (not realize), colour (not color), behaviour (not behavior), centre (not center)
 - **Voice**: Professional, direct, and technical without being overly formal
-- **Punctuation**: Never use em-dashes (—) in text content - use regular hyphens (-) instead for consistency with character encoding
+- **Punctuation**: Never use em-dashes (—) in text content - use regular hyphens (-) instead for consistency with character encoding. The only exception is when used inbetween dates, such as e.g. 2023—2024.
 - **Consistency**: Maintain consistent terminology and spelling across all content files
 
 ### Markdown Linting Standards
@@ -300,25 +300,29 @@ The project uses **wrangler.json** for Cloudflare Workers configuration:
 When facing complex technical issues that require deep analysis, Claude Code can collaborate with Google's Gemini AI for alternative perspectives. This strategy proved highly effective for debugging crawler detection issues.
 
 **Command to use:**
+
 ```bash
 gemini -p "YOUR_DETAILED_ANALYSIS_REQUEST"
 ```
 
 **Best Practices for AI Collaboration:**
+
 1. **Provide comprehensive context**: Include error symptoms, what works vs what doesn't, code snippets, and debugging attempts
 2. **Request "ULTRATHINK" analysis**: Ask for deep analysis of potential root causes
 3. **Compare approaches**: Different AI models may identify issues the other missed
 4. **Cross-validate solutions**: Use insights from one AI to improve solutions from another
 
 **Example successful collaboration:**
+
 - **Issue**: Homepage crawler detection failing while other pages worked
 - **Gemini's insight**: Identified unreliable User-Agent string matching as root cause
 - **Solution**: Recommended Cloudflare's native `botManagement.verifiedBot` detection
 - **Result**: More robust crawler detection implementation
 
 This collaborative approach is particularly valuable for:
+
 - Complex routing and middleware issues
-- Cross-platform compatibility problems  
+- Cross-platform compatibility problems
 - Performance optimization challenges
 - Security implementation reviews
 
@@ -329,6 +333,7 @@ This collaborative approach is particularly valuable for:
 **CRITICAL ISSUE PATTERN**: When using Cloudflare Workers with assets, static files served from the assets directory bypass worker code entirely. This creates SEO and crawler content issues.
 
 **The Problem:**
+
 - `wrangler.json` with basic `assets.directory: "./dist/client"` serves ALL files statically
 - Homepage (`/`) requests get `index.html` served directly from assets, never reaching worker code
 - This bypasses crawler detection, server-side content generation, and SEO metadata injection
@@ -354,6 +359,7 @@ Use `run_worker_first` in `wrangler.json` to force specific routes through worke
 **CRITICAL REQUIREMENT**: When generating custom HTML for crawlers, include COMPLETE SEO metadata, not just basic tags.
 
 **Required Elements for Full SEO:**
+
 - ✅ Complete Open Graph tags (11+ tags including image metadata)
 - ✅ Full Twitter Card metadata (8+ tags)
 - ✅ Site verification tags (Google, Ahrefs)
@@ -365,8 +371,9 @@ Use `run_worker_first` in `wrangler.json` to force specific routes through worke
 Create a comprehensive `generateSEOMetadata()` function that extracts all metadata from the original static HTML and applies it to crawler-generated HTML.
 
 **Testing Strategy:**
+
 - Test crawlers: `curl -H "User-Agent: Googlebot/2.1" URL`
-- Count SEO tags: `curl -H "User-Agent: Googlebot/2.1" URL | grep -c "og:"` 
+- Count SEO tags: `curl -H "User-Agent: Googlebot/2.1" URL | grep -c "og:"`
 - Verify content: `curl -H "User-Agent: Googlebot/2.1" URL | grep "<h1>"`
 - Test regular users: `curl URL` (should get React SPA)
 
@@ -375,6 +382,7 @@ Create a comprehensive `generateSEOMetadata()` function that extracts all metada
 **ISSUE**: International characters (ö, em dashes, smart quotes) cause encoding problems in generated text files.
 
 **Solution**: Apply comprehensive character replacement across ALL generated files:
+
 - Create centralized `removeEmojis()` function in `jsx-to-markdown.js`
 - Export and reuse across all generation scripts (`generate-llms-txt.js`, etc.)
 - Key replacements: `ö → oe`, `" → "`, `— → -`, remove emojis
@@ -384,7 +392,7 @@ Create a comprehensive `generateSEOMetadata()` function that extracts all metada
 
 ### 🚨 CRITICAL OPERATIONAL SAFETY RULE (August 2025)
 
-**⚠️ NEVER DELETE INFRASTRUCTURE FILES DURING "CLEANUP" OPERATIONS**
+⚠️ NEVER DELETE INFRASTRUCTURE FILES DURING "CLEANUP" OPERATIONS
 
 **The Emergency**: On August 25, 2025, a "cleanup" commit accidentally deleted the essential `index.html` file, causing complete website failure with all pages returning 404 errors.
 
@@ -429,6 +437,7 @@ Create a comprehensive `generateSEOMetadata()` function that extracts all metada
 - ✅ **Production Ready**: Deployed and running smoothly on Cloudflare Workers
 
 **Development Experience:**
+
 - Fast HMR during development
 - Comprehensive linting and type checking
 - Automated build validation with `npm run check`
