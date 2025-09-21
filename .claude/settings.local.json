@@ -91,6 +91,12 @@
     "ask": [],
     "defaultMode": "acceptEdits"
   },
+  "enabledMcpjsonServers": [
+    "serena",
+    "playwright",
+    "context7",
+    "firecrawl-mcp"
+  ],
   "hooks": {
     "SubagentStop": [
       {

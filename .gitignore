@@ -113,3 +113,6 @@ linkedin/
 
 # Serena MCP assistant configuration and cache
 .serena/
+
+# Claude MCP file
+.mcp.json
