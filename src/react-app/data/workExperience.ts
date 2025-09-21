@@ -7,7 +7,7 @@ export const workExperienceData = [
     location: 'Australia',
     flag: australiaFlag,
     title: 'Media Activations Lead – Initiative Perth @ KINESSO',
-    dates: 'OCT 2023–PRESENT',
+    dates: 'OCT 2023–AUG 2025',
     description: [
       'As the leader of performance and addressable activation teams, I deliver operational excellence, strategic digital media consulting, and MarTech guidance across Western Australia. I successfully rebuild high-turnover teams from the ground up, implementing comprehensive talent development frameworks and establishing sustainable recruitment and retention strategies that reduce turnover by 75% within 12 months.',
       'I design and implement structured mentoring programs and career progression pathways for team members, resulting in 3 internal promotions and measurable skill development across all team levels. I establish cross-functional workflows between media and analytics teams, facilitating improved collaboration and knowledge sharing that enhances overall campaign performance and client satisfaction.',
