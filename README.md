@@ -6,6 +6,8 @@
 [![Hono](https://img.shields.io/badge/hono-4.9.4-FF6B00?style=flat&logo=hono&logoColor=white)](https://hono.dev/)
 [![Cloudflare Workers](https://img.shields.io/badge/cloudflare%20workers-deployed-F38020?style=flat&logo=cloudflare&logoColor=white)](https://workers.cloudflare.com/)
 [![ESLint](https://img.shields.io/badge/eslint-9.34.0-4B32C3?style=flat&logo=eslint&logoColor=white)](https://eslint.org/)
+[![React Router](https://img.shields.io/badge/react%20router-7.8.2-CA4245?style=flat&logo=react-router&logoColor=white)](https://reactrouter.com/)
+[![Wrangler](https://img.shields.io/badge/wrangler-4.32.0-F38020?style=flat&logo=cloudflare&logoColor=white)](https://developers.cloudflare.com/workers/wrangler/)
 
 Henrik Söderlund's professional portfolio website showcasing technology leadership and AI innovation expertise. Built with modern web technologies and deployed globally on Cloudflare Workers.
 
@@ -16,6 +18,7 @@ Henrik Söderlund's professional portfolio website showcasing technology leaders
 - [**Hono 4.9.4**](https://hono.dev/) - Ultralight backend framework for Cloudflare Workers with elegant API routing
 - [**React Router 7.8.2**](https://reactrouter.com/) - Client-side routing with dynamic navigation detection
 - [**Cloudflare Workers**](https://developers.cloudflare.com/workers/) - Edge computing platform with global deployment and observability
+- [**Wrangler 4.32.0**](https://developers.cloudflare.com/workers/wrangler/) - Cloudflare Workers CLI and development toolkit
 - [**ESLint 9.34.0**](https://eslint.org/) - Code quality and consistency with TypeScript support
 
 ## Project Status
@@ -57,26 +60,31 @@ public/                 # Static assets served directly
 ## Key Features
 
 ### Development Experience
+
 - 🔥 Hot Module Replacement (HMR) for rapid development
 - 📦 TypeScript 5.9.2 support with perfect compilation
 - 🛠️ ESLint 9.34.0 configuration with zero errors/warnings
+- 🚀 Wrangler 4.32.0 for seamless Cloudflare Workers deployment
 - ⚡ Zero-config deployment to Cloudflare's global network
 - 🎯 API routes with Hono's elegant routing system
 - 🔄 Full-stack development setup with unified tooling
 
 ### User Experience
+
 - 🧭 Fixed navigation box (200px width) with dynamic heading detection and smooth scrolling
 - 📱 Mobile-responsive design (navigation hidden on <1024px screens)
 - ✨ Modern React 19 patterns with optimized imports and clean component structure
 - 🎨 Clean minimal design with standardized tech logos (20px) and consistent hover states
 
 ### Architecture & Performance
+
 - 📊 **Centralized Data Architecture**: Structured data files for maintainable content management
 - 🕷️ **Hybrid Serving Model**: React SPA for users, server-rendered HTML for search engine crawlers
 - 🤖 **Intelligent Crawler Detection**: Cloudflare's native `botManagement.verifiedBot` for reliable bot detection
 - ⚡ **Worker-First Routing**: Homepage forced through worker code via `run_worker_first: ["/"]` configuration
 
 ### SEO & AI Optimization
+
 - 🌐 **Complete SEO Implementation**: Open Graph (11+ tags), Twitter Cards (8+ tags), JSON-LD structured data
 - 🔍 **IndexNow Protocol**: Instant search engine indexing with API key validation and bulk submission
 - 🤖 **AI-Optimized Content**: Full llms.txt specification compliance with smart caching
@@ -148,12 +156,14 @@ npx wrangler tail
 ## Configuration Files
 
 ### Build & Development
+
 - **vite.config.ts** - Vite configuration with React and Cloudflare plugins
 - **wrangler.json** - Cloudflare Workers deployment configuration with `run_worker_first: ["/"]` for homepage routing
-- **tsconfig.*.json** - TypeScript configurations for app, worker, and Node.js
+- **tsconfig.\*.json** - TypeScript configurations for app, worker, and Node.js
 - **eslint.config.js** - ESLint configuration for code quality
 
 ### Page Components
+
 - **Home.tsx** - Homepage with technology leadership introduction and AI-focused messaging
 - **Expertise.tsx** - Expertise page (accessible at `/expertise`) showcasing technical leadership and AI capabilities
 - **WorkExperience.tsx** - Professional experience and achievements (data-driven from `data/workExperience.ts`)
@@ -169,13 +179,15 @@ The project uses a centralized data architecture pattern for maintainable conten
 - **data/workExperience.ts** - Structured professional experience with achievements and technologies
 
 This separation enables:
+
 - Clean component-data separation
 - Easy content updates without touching presentation logic
 - Type-safe data structures with TypeScript
 - Consistent data formatting across components
 
 ### Verification & Redirects
-- **public/_redirects** - Cloudflare Workers redirect rules (`/skills` → `/expertise`)
+
+- **public/\_redirects** - Cloudflare Workers redirect rules (`/skills` → `/expertise`)
 - **public/ahrefs_bc08e3a49...** - Ahrefs SEO verification
 - **public/google52d2217b...** - Google Search Console verification
 
@@ -184,6 +196,7 @@ This separation enables:
 ### Recent Technical Improvements (August 2025)
 
 **✅ Crawler Detection & SEO Optimization**
+
 - [x] **Fixed Homepage Crawler Content Issue**: Resolved missing H1 and content for search engine crawlers
 - [x] **Assets Routing Configuration**: Implemented `run_worker_first: ["/"]` to ensure homepage goes through worker code
 - [x] **Comprehensive SEO Metadata**: Restored complete Open Graph, Twitter Cards, and structured data for crawlers
@@ -191,6 +204,7 @@ This separation enables:
 - [x] **Hybrid Serving Architecture**: Crawlers get server-rendered content, users get React SPA
 
 **✅ Analytics & Tracking**
+
 - [x] Google Tag Manager (GTM) integration with development environment support
 - [x] Comprehensive dataLayer implementation for client-side and server-side metrics
 - [x] Ahrefs and Google Search Console verification files confirmed
@@ -198,6 +212,7 @@ This separation enables:
 - [ ] **Outstanding Issue**: Cloudflare Variables Injection - CF placeholders (%CF_COUNTRY%, %CF_COLO%, %CF_RAY%) not being replaced with actual values in dataLayer
 
 **✅ SEO & Site Configuration**
+
 - [x] Enhanced meta description and social media tags (Open Graph, Twitter cards)
 - [x] Improved page titles and descriptions
 - [x] **Comprehensive Structured Data Implementation**:
@@ -210,10 +225,11 @@ This separation enables:
   - Consistent positioning across all meta tags, social media cards, and structured data
 - [x] robots.txt with AI assistant messaging
 - [x] **IndexNow Protocol Implementation**: Complete API with key validation and bulk submission support
-- [ ] Revise and improve security.txt  
+- [ ] Revise and improve security.txt
 - [x] Enhanced CORS and CSP headers with comprehensive security policies
 
 **✅ Content & Architecture**
+
 - [x] Centralized data architecture for maintainable content
 - [x] **Character Encoding Fixes**: Proper ö → oe replacement across all generated files
 - [x] **Enhanced llms.txt Generation**: Smart caching and comprehensive AI/LLM optimization
@@ -221,17 +237,20 @@ This separation enables:
 ## File Management
 
 ### Legacy Files (Can be ignored/removed)
+
 - `content/` - Old Markdown content files (migrated to React components)
 - `assets/` - Old Hugo assets (duplicated in `public/`)
 
 ### Generated Files (Auto-Generated)
+
 - `public/llms.txt` - Main llms.txt file for AI/LLM consumption
 - `public/*.md` - Individual page markdown files (index.html.md, expertise.md, etc.)
 - `.llms-cache.json` - Build cache for content-based generation optimization
 
 ### Build Artifacts (Auto-generated)
+
 - `dist/` - Vite build output
-- `node_modules/` - NPM dependencies  
+- `node_modules/` - NPM dependencies
 - `.wrangler/` - Wrangler cache and temporary files
 
 ## Additional Resources

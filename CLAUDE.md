@@ -204,6 +204,7 @@ public/                 # Static assets served directly
 - **Language**: All content must use British English spelling and conventions
 - **Common British spellings**: optimisation (not optimization), specialising (not specializing), organisation (not organization), utilising (not utilizing), realise (not realize), colour (not color), behaviour (not behavior), centre (not center)
 - **Voice**: Professional, direct, and technical without being overly formal
+- **Punctuation**: Never use em-dashes (—) in text content - use regular hyphens (-) instead for consistency with character encoding
 - **Consistency**: Maintain consistent terminology and spelling across all content files
 
 ### Markdown Linting Standards
