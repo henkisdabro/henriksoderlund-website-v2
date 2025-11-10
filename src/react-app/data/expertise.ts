@@ -155,6 +155,16 @@ export const expertiseData = {
     title: '👨🏻‍💻 Notable Tech Contributions on GitHub',
     contributions: [
       {
+        title: 'Cloudflare Workers React Boilerplate',
+        url: 'https://github.com/henkisdabro/cloudflare-workers-react-boilerplate',
+        description: 'Production-ready Cloudflare Workers boilerplate for edge-native web applications. React 19 + Vite + TypeScript with built-in AI integration (Claude API, Workers AI), D1/KV databases, and automated GitHub Actions deployment. Designed for AI-assisted development workflows with comprehensive Claude Code integration.',
+      },
+      {
+        title: 'Claude Code MCP Server Selector',
+        url: 'https://github.com/henkisdabro/Claude-Code-MCP-Server-Selector',
+        description: 'Fast, beautiful TUI for managing Model Context Protocol (MCP) servers in Claude Code. Optimises AI context window efficiency by enabling selective server activation. Demonstrates advanced understanding of AI-assisted development workflows and developer productivity optimisation.',
+      },
+      {
         title: 'Collection of Platform Click ID Parameters',
         url: 'https://github.com/henkisdabro/platform-url-click-id-parameters',
         description: 'Comprehensive global database of URL parameters for analytics filtering, exclusion criteria, and ad platform pixel trigger optimisation across multiple advertising ecosystems.',
