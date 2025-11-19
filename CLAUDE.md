@@ -12,11 +12,12 @@ This is Henrik Söderlund's personal website - a professional portfolio for a Te
 
 ## Tech Stack
 
-- **Frontend**: React 19.1.1 with TypeScript 5.9.2, built with Vite 7.1.3
-- **Backend**: Hono.js 4.9.4 (modern web framework)
+- **Runtime**: Node.js 24 LTS (with V8 13.6, npm 11)
+- **Frontend**: React 19.2.0 with TypeScript 5.9.3, built with Vite 7.2.2
+- **Backend**: Hono.js 4.10.6 (modern web framework)
 - **Deployment**: Cloudflare Workers with observability enabled
-- **Routing**: React Router 7.8.2 for client-side routing
-- **Development**: ESLint 9.34.0, Wrangler 4.32.0
+- **Routing**: React Router 7.9.6 for client-side routing
+- **Development**: ESLint 9.39.1, Wrangler 4.49.0
 
 ## Architecture
 
@@ -31,8 +32,9 @@ This is Henrik Söderlund's personal website - a professional portfolio for a Te
 - **Data Centralization**: Structured data files in `src/react-app/data/` for maintainable content
 - **Navigation System**: Fixed navigation box (200px width) with dynamic heading detection and smooth scrolling
 - **Responsive Design**: Mobile-first approach with navigation hidden on screens <1024px
-- Built with Vite for fast development and optimized builds
-- Uses React 19 with TypeScript
+- Built with Vite 7.2.2 for fast development and optimized builds
+- Uses React 19.2.0 with TypeScript 5.9.3
+- Node.js 24 LTS runtime for local development and CI/CD
 
 ### Backend (Cloudflare Worker)
 
@@ -146,10 +148,10 @@ public/                 # Static assets served directly
 
 ## Key Dependencies
 
-- **Runtime**: React 19.1.1, Hono 4.9.4, React Router DOM 7.8.2
-- **Build tools**: Vite 7.1.3, TypeScript 5.9.2
-- **Deployment**: Wrangler 4.32.0, @cloudflare/vite-plugin
-- **Linting**: ESLint 9.34.0 with React hooks and TypeScript support
+- **Runtime**: Node.js 24 LTS, React 19.2.0, Hono 4.10.6, React Router DOM 7.9.6
+- **Build tools**: Vite 7.2.2, TypeScript 5.9.3
+- **Deployment**: Wrangler 4.49.0, @cloudflare/vite-plugin 1.15.0
+- **Linting**: ESLint 9.39.1 with React hooks and TypeScript support
 
 ## Component Architecture
 
@@ -264,7 +266,7 @@ The project uses **wrangler.json** for Cloudflare Workers configuration:
 
 - **Name**: `henriksoderlund-website-v2`
 - **Entry Point**: `./src/worker/index.ts` (Hono.js application)
-- **Compatibility Date**: `2025-08-03` with Node.js compatibility
+- **Compatibility Date**: `2025-11-19` with Node.js compatibility
 - **Assets**: Static files served from `./dist/client` with SPA routing
 - **Observability**: Enabled for monitoring and debugging
 - **Source Maps**: Uploaded for better error tracking
@@ -425,16 +427,17 @@ Create a comprehensive `generateSEOMetadata()` function that extracts all metada
 
 ## Project Health Status
 
-**Current Status: Excellent** (as of August 2025)
+**Current Status: Excellent** (as of November 2025)
 
 - ✅ **Zero Technical Debt**: All builds pass successfully with no errors
-- ✅ **Modern Dependencies**: All packages are up-to-date with latest stable versions
+- ✅ **Modern Dependencies**: All packages updated to latest stable versions (November 2025)
 - ✅ **Clean Codebase**: Zero ESLint errors or warnings across all files
 - ✅ **Type Safety**: Perfect TypeScript compilation with no type errors
-- ✅ **Security**: No known vulnerabilities in dependency chain
+- ✅ **Security**: Zero vulnerabilities in dependency chain
 - ✅ **Performance**: Optimal build output with proper minification and code splitting
 - ✅ **SEO Ready**: Complete SEO metadata implementation with crawler detection
 - ✅ **Production Ready**: Deployed and running smoothly on Cloudflare Workers
+- ✅ **Latest Runtime**: Node.js 24 LTS for enhanced performance
 
 **Development Experience:**
 
@@ -442,8 +445,33 @@ Create a comprehensive `generateSEOMetadata()` function that extracts all metada
 - Comprehensive linting and type checking
 - Automated build validation with `npm run check`
 - Smart content generation with caching
+- Node.js 24 LTS with V8 13.6 engine improvements
 
 ## Recent Technical Improvements
+
+### Dependency Upgrades & Node.js 24 Migration (November 2025)
+
+- ✅ **Node.js 24 LTS Upgrade**: Successfully upgraded from Node.js 20 to 24 LTS
+  - V8 engine upgraded to 13.6 for better performance
+  - npm upgraded to version 11
+  - Created `.nvmrc` file for version management
+  - Updated all GitHub Actions workflows to use Node.js 24
+- ✅ **GitHub Actions Updates**: All actions updated to latest versions
+  - actions/checkout: v4 → v5.0.1
+  - actions/setup-node: v4 → v6.0.0
+  - cloudflare/wrangler-action: v3 → v3.14.1
+- ✅ **Dependency Updates**: All npm packages updated to latest stable versions
+  - React: 19.1.1 → 19.2.0
+  - Vite: 7.1.3 → 7.2.2
+  - Hono: 4.9.4 → 4.10.6
+  - Wrangler: 4.32.0 → 4.49.0
+  - ESLint: 9.34.0 → 9.39.1
+  - React Router: 7.8.2 → 7.9.6
+  - TypeScript ESLint: 8.40.0 → 8.47.0
+  - All @types/* and @cloudflare/* packages updated
+- ✅ **Security**: Fixed js-yaml vulnerability, zero vulnerabilities in dependency chain
+- ✅ **Cloudflare Compatibility**: Updated compatibility_date from 2025-08-03 to 2025-11-19
+- ✅ **Build Verification**: All builds passing with improved performance
 
 ### Homepage Crawler Content Resolution (August 2025)
 
@@ -478,4 +506,4 @@ Create a comprehensive `generateSEOMetadata()` function that extracts all metada
   - Modernized component typing by removing `React.FC`
   - Optimized React imports
   - Enhanced SEO meta tags and structured data
-  - Updated dependencies to latest versions (React 19.1.1, Vite 7.1.3, Hono 4.9.4)
+  - Dependencies continuously updated to latest versions

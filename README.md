@@ -1,25 +1,27 @@
 # Henrik Söderlund - Personal Website
 
-[![Vite](https://img.shields.io/badge/vite-7.1.3-646CFF?style=flat&logo=vite&logoColor=white)](https://vite.dev/)
-[![React](https://img.shields.io/badge/react-19.1.1-61DAFB?style=flat&logo=react&logoColor=white)](https://react.dev/)
-[![TypeScript](https://img.shields.io/badge/typescript-5.9.2-3178C6?style=flat&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
-[![Hono](https://img.shields.io/badge/hono-4.9.4-FF6B00?style=flat&logo=hono&logoColor=white)](https://hono.dev/)
+[![Vite](https://img.shields.io/badge/vite-7.2.2-646CFF?style=flat&logo=vite&logoColor=white)](https://vite.dev/)
+[![React](https://img.shields.io/badge/react-19.2.0-61DAFB?style=flat&logo=react&logoColor=white)](https://react.dev/)
+[![TypeScript](https://img.shields.io/badge/typescript-5.9.3-3178C6?style=flat&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
+[![Hono](https://img.shields.io/badge/hono-4.10.6-FF6B00?style=flat&logo=hono&logoColor=white)](https://hono.dev/)
 [![Cloudflare Workers](https://img.shields.io/badge/cloudflare%20workers-deployed-F38020?style=flat&logo=cloudflare&logoColor=white)](https://workers.cloudflare.com/)
-[![ESLint](https://img.shields.io/badge/eslint-9.34.0-4B32C3?style=flat&logo=eslint&logoColor=white)](https://eslint.org/)
-[![React Router](https://img.shields.io/badge/react%20router-7.8.2-CA4245?style=flat&logo=react-router&logoColor=white)](https://reactrouter.com/)
-[![Wrangler](https://img.shields.io/badge/wrangler-4.32.0-F38020?style=flat&logo=cloudflare&logoColor=white)](https://developers.cloudflare.com/workers/wrangler/)
+[![ESLint](https://img.shields.io/badge/eslint-9.39.1-4B32C3?style=flat&logo=eslint&logoColor=white)](https://eslint.org/)
+[![React Router](https://img.shields.io/badge/react%20router-7.9.6-CA4245?style=flat&logo=react-router&logoColor=white)](https://reactrouter.com/)
+[![Wrangler](https://img.shields.io/badge/wrangler-4.49.0-F38020?style=flat&logo=cloudflare&logoColor=white)](https://developers.cloudflare.com/workers/wrangler/)
+[![Node.js](https://img.shields.io/badge/node.js-24_LTS-339933?style=flat&logo=node.js&logoColor=white)](https://nodejs.org/)
 
 Henrik Söderlund's professional portfolio website showcasing technology leadership and AI innovation expertise. Built with modern web technologies and deployed globally on Cloudflare Workers.
 
 ## Tech Stack
 
-- [**React 19.1.1**](https://react.dev/) - Modern UI library with TypeScript 5.9.2, optimized imports and clean component structure
-- [**Vite 7.1.3**](https://vite.dev/) - Lightning-fast build tooling and development server with HMR
-- [**Hono 4.9.4**](https://hono.dev/) - Ultralight backend framework for Cloudflare Workers with elegant API routing
-- [**React Router 7.8.2**](https://reactrouter.com/) - Client-side routing with dynamic navigation detection
+- [**Node.js 24 LTS**](https://nodejs.org/) - Latest LTS release with enhanced V8 engine and modern JavaScript support
+- [**React 19.2.0**](https://react.dev/) - Modern UI library with TypeScript 5.9.3, optimized imports and clean component structure
+- [**Vite 7.2.2**](https://vite.dev/) - Lightning-fast build tooling and development server with HMR
+- [**Hono 4.10.6**](https://hono.dev/) - Ultralight backend framework for Cloudflare Workers with elegant API routing
+- [**React Router 7.9.6**](https://reactrouter.com/) - Client-side routing with dynamic navigation detection
 - [**Cloudflare Workers**](https://developers.cloudflare.com/workers/) - Edge computing platform with global deployment and observability
-- [**Wrangler 4.32.0**](https://developers.cloudflare.com/workers/wrangler/) - Cloudflare Workers CLI and development toolkit
-- [**ESLint 9.34.0**](https://eslint.org/) - Code quality and consistency with TypeScript support
+- [**Wrangler 4.49.0**](https://developers.cloudflare.com/workers/wrangler/) - Cloudflare Workers CLI and development toolkit
+- [**ESLint 9.39.1**](https://eslint.org/) - Code quality and consistency with TypeScript support
 
 ## Project Status
 
@@ -62,12 +64,13 @@ public/                 # Static assets served directly
 ### Development Experience
 
 - 🔥 Hot Module Replacement (HMR) for rapid development
-- 📦 TypeScript 5.9.2 support with perfect compilation
-- 🛠️ ESLint 9.34.0 configuration with zero errors/warnings
-- 🚀 Wrangler 4.32.0 for seamless Cloudflare Workers deployment
+- 📦 TypeScript 5.9.3 support with perfect compilation
+- 🛠️ ESLint 9.39.1 configuration with zero errors/warnings
+- 🚀 Wrangler 4.49.0 for seamless Cloudflare Workers deployment
 - ⚡ Zero-config deployment to Cloudflare's global network
 - 🎯 API routes with Hono's elegant routing system
 - 🔄 Full-stack development setup with unified tooling
+- 🟢 Node.js 24 LTS with enhanced performance and modern APIs
 
 ### User Experience
 
@@ -193,7 +196,17 @@ This separation enables:
 
 ## Future Tasks and Site Improvements
 
-### Recent Technical Improvements (August 2025)
+### Recent Technical Improvements (November 2025)
+
+**✅ Dependency Upgrades & Node.js 24**
+
+- [x] **Node.js 24 LTS Upgrade**: Upgraded from Node.js 20 to 24 LTS with V8 13.6 and npm 11
+- [x] **GitHub Actions Updates**: Updated to latest versions (checkout@v5, setup-node@v6, wrangler-action@v3.14.1)
+- [x] **Dependency Updates**: All packages updated to latest versions (Vite 7.2.2, Hono 4.10.6, Wrangler 4.49.0, ESLint 9.39.1)
+- [x] **Security Improvements**: Fixed js-yaml vulnerability, zero vulnerabilities in dependency chain
+- [x] **Cloudflare Compatibility**: Updated compatibility_date to 2025-11-19 for latest Workers features
+
+### Earlier Improvements (August 2025)
 
 **✅ Crawler Detection & SEO Optimization**
 
