@@ -82,13 +82,22 @@
       "WebFetch(domain:www.cloudflare.com)",
       "WebFetch(domain:www.henriksoderlund.com)",
       "WebFetch(domain:www.indexnow.org)",
-      "WebSearch"
+      "WebSearch",
+      "WebFetch(domain:www.npmjs.com)",
+      "Bash(npm view:*)"
     ],
     "deny": [],
     "ask": [],
     "defaultMode": "acceptEdits"
   },
+  "enableAllProjectMcpServers": true,
   "enabledMcpjsonServers": [],
+  "disabledMcpjsonServers": [
+    "context7",
+    "firecrawl-mcp",
+    "playwright",
+    "serena"
+  ],
   "hooks": {
     "SubagentStop": [
       {
@@ -111,13 +120,6 @@
       }
     ]
   },
-  "enableAllProjectMcpServers": true,
-  "disabledMcpjsonServers": [
-    "context7",
-    "firecrawl-mcp",
-    "playwright",
-    "serena"
-  ],
   "enabledPlugins": {
     "mcp-fetch@wookstar-claude-code-plugins": false
   }
