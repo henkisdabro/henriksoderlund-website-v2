@@ -152,8 +152,13 @@ export const expertiseData = {
     ],
   },
   githubContributions: {
-    title: '👨🏻‍💻 Notable Tech Contributions on GitHub',
+    title: '👨🏻‍💻 Open-Source Projects, Public Websites & Digital Initiatives',
     contributions: [
+      {
+        title: 'Rotto Snorkel 🤿',
+        url: 'https://www.rottosnorkel.com',
+        description: 'Comprehensive snorkelling guide for Rottnest Island providing real-time safety assessments across 39 locations. Combines live weather monitoring, wave height data, and wind analysis to deliver traffic light safety ratings, helping snorkelers make informed decisions about where to dive based on current conditions and experience level.',
+      },
       {
         title: 'Cloudflare Workers React Boilerplate',
         url: 'https://github.com/henkisdabro/cloudflare-workers-react-boilerplate',

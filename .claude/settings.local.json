@@ -88,12 +88,7 @@
     "ask": [],
     "defaultMode": "acceptEdits"
   },
-  "enabledMcpjsonServers": [
-    "serena",
-    "playwright",
-    "context7",
-    "firecrawl-mcp"
-  ],
+  "enabledMcpjsonServers": [],
   "hooks": {
     "SubagentStop": [
       {
@@ -116,5 +111,14 @@
       }
     ]
   },
-  "enableAllProjectMcpServers": true
+  "enableAllProjectMcpServers": true,
+  "disabledMcpjsonServers": [
+    "context7",
+    "firecrawl-mcp",
+    "playwright",
+    "serena"
+  ],
+  "enabledPlugins": {
+    "mcp-fetch@wookstar-claude-code-plugins": false
+  }
 }
