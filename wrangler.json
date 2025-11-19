@@ -2,7 +2,7 @@
 	"$schema": "node_modules/wrangler/config-schema.json",
 	"name": "henriksoderlund-website-v2",
 	"main": "./src/worker/index.ts",
-	"compatibility_date": "2025-08-03",
+	"compatibility_date": "2025-11-19",
 	"compatibility_flags": [
 		"nodejs_compat"
 	],
