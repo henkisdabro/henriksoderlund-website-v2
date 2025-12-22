@@ -59,7 +59,7 @@ const Expertise = () => {
         {expertiseData.githubContributions.contributions.map(contribution => (
           <div className="contribution" key={contribution.title}>
             <h3>🔗 <a href={contribution.url} target="_blank" rel="noopener noreferrer">{contribution.title}</a></h3>
-            <p dangerouslySetInnerHTML={{ __html: contribution.description }} />
+            <p>{contribution.description}</p>
           </div>
         ))}
       </section>

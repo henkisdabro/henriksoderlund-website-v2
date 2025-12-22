@@ -21,19 +21,25 @@ const NavigationBox = () => {
   ];
 
   useEffect(() => {
+    // Track mounted state to prevent stale updates on rapid route changes
+    let isMounted = true;
+
     const scanHeadings = () => {
+      // Prevent stale scans if component unmounted or route changed
+      if (!isMounted) return;
+
       const headingElements = document.querySelectorAll('h1, h2, h3, h4, h5, h6');
       const headingItems: HeadingItem[] = [];
 
       headingElements.forEach((heading, index) => {
         const text = heading.textContent || '';
         const level = parseInt(heading.tagName.charAt(1));
-        
+
         // Skip H1 and H3 headings, and headings with specific text content, to create a cleaner navigation experience.
         if (text === 'Pages' || text === 'On This Page' || text === 'Navigation' || level === 1 || level === 3) {
           return;
         }
-        
+
         // Create an ID if it doesn't exist
         let id = heading.id;
         if (!id) {
@@ -44,11 +50,15 @@ const NavigationBox = () => {
         headingItems.push({ id, text, level });
       });
 
-      setHeadings(headingItems);
+      // Only update state if still mounted
+      if (isMounted) {
+        setHeadings(headingItems);
+      }
     };
 
     // Handle responsive collapse state
     const handleResize = () => {
+      if (!isMounted) return;
       if (window.innerWidth <= 1024) {
         setIsCollapsed(true);
       } else {
@@ -58,11 +68,12 @@ const NavigationBox = () => {
 
     // Scan headings after component mounts and when route changes
     const timeout = setTimeout(scanHeadings, 100);
-    
+
     // Add resize listener
     window.addEventListener('resize', handleResize);
-    
+
     return () => {
+      isMounted = false;
       clearTimeout(timeout);
       window.removeEventListener('resize', handleResize);
     };

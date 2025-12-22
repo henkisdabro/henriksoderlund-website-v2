@@ -5,6 +5,9 @@ const Home = () => {
   const contentRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
+    // Capture ref value at effect start to avoid stale closure in cleanup
+    const contentElement = contentRef.current;
+
     // Keywords to highlight with breathing effect
     const keywords = [
       "leadership",
@@ -43,10 +46,10 @@ const Home = () => {
     let currentlyAnimating = false;
     
     const createBreathingEffect = () => {
-      if (!contentRef.current) return;
-      
+      if (!contentElement) return;
+
       // Clear any existing wrapped keywords first
-      const existingWraps = contentRef.current.querySelectorAll('.breathe-keyword');
+      const existingWraps = contentElement.querySelectorAll('.breathe-keyword');
       existingWraps.forEach(wrap => {
         const parent = wrap.parentNode;
         if (parent) {
@@ -80,38 +83,69 @@ const Home = () => {
         return textNodes;
       };
       
-      const textNodes = findTextNodes(contentRef.current);
+      const textNodes = findTextNodes(contentElement);
       
       // Process text nodes to wrap keywords (longest first to avoid conflicts)
+      // Using safe DOM manipulation instead of innerHTML to prevent XSS
       const sortedKeywords = [...keywords].sort((a, b) => b.length - a.length);
-      
+
       textNodes.forEach(textNode => {
-        let content = textNode.nodeValue || "";
+        const content = textNode.nodeValue || "";
+        const fragment = document.createDocumentFragment();
+        let lastIndex = 0;
         let hasKeyword = false;
-        
+
+        // Find all keyword matches with their positions
+        const matches: { start: number; end: number; text: string }[] = [];
         sortedKeywords.forEach(keyword => {
           const regex = new RegExp(`\\b${keyword.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\b`, 'gi');
-          if (regex.test(content)) {
-            content = content.replace(regex, `<span class="breathe-keyword">$&</span>`);
-            hasKeyword = true;
+          let match;
+          while ((match = regex.exec(content)) !== null) {
+            // Check if this position overlaps with an existing match
+            const overlaps = matches.some(m =>
+              (match!.index >= m.start && match!.index < m.end) ||
+              (match!.index + match![0].length > m.start && match!.index + match![0].length <= m.end)
+            );
+            if (!overlaps) {
+              matches.push({ start: match.index, end: match.index + match[0].length, text: match[0] });
+            }
           }
         });
-        
-        if (hasKeyword && textNode.parentNode) {
-          const wrapper = document.createElement('span');
-          wrapper.innerHTML = content;
-          const fragment = document.createDocumentFragment();
-          while (wrapper.firstChild) {
-            fragment.appendChild(wrapper.firstChild);
+
+        if (matches.length === 0) return;
+        hasKeyword = true;
+
+        // Sort matches by position
+        matches.sort((a, b) => a.start - b.start);
+
+        // Build fragment using safe DOM methods (no innerHTML)
+        matches.forEach(match => {
+          // Add text before the match
+          if (match.start > lastIndex) {
+            fragment.appendChild(document.createTextNode(content.slice(lastIndex, match.start)));
           }
+          // Add the wrapped keyword
+          const span = document.createElement('span');
+          span.className = 'breathe-keyword';
+          span.textContent = match.text; // Safe: uses textContent, not innerHTML
+          fragment.appendChild(span);
+          lastIndex = match.end;
+        });
+
+        // Add remaining text
+        if (lastIndex < content.length) {
+          fragment.appendChild(document.createTextNode(content.slice(lastIndex)));
+        }
+
+        if (hasKeyword && textNode.parentNode) {
           textNode.parentNode.replaceChild(fragment, textNode);
         }
       });
       
       // Get all keyword elements with a small delay for Safari
       setTimeout(() => {
-        if (contentRef.current) {
-          keywordElements = Array.from(contentRef.current.querySelectorAll('.breathe-keyword'));
+        if (contentElement) {
+          keywordElements = Array.from(contentElement.querySelectorAll('.breathe-keyword'));
         }
       }, 100);
     };
@@ -161,12 +195,26 @@ const Home = () => {
       
     }, 1000);
 
-    // Cleanup
+    // Cleanup - clear interval and remove DOM mutations to prevent memory leaks
     return () => {
       if (animationInterval) {
         clearInterval(animationInterval);
       }
       currentlyAnimating = false;
+
+      // Clean up wrapped keyword elements on unmount (using captured ref value)
+      if (contentElement) {
+        const existingWraps = contentElement.querySelectorAll('.breathe-keyword');
+        existingWraps.forEach(wrap => {
+          const parent = wrap.parentNode;
+          if (parent) {
+            parent.replaceChild(document.createTextNode(wrap.textContent || ''), wrap);
+            if (parent.normalize) {
+              parent.normalize(); // Merge adjacent text nodes
+            }
+          }
+        });
+      }
     };
   }, []);
   return (

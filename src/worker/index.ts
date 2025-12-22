@@ -109,10 +109,20 @@ const handleAssetFetch = async (c: Context, url: string, contentType: string, ca
     if (assetETag) {
       headers['ETag'] = assetETag;
     } else {
-      // Generate stable ETag based on content hash
-      const contentStr = typeof content === 'string' ? content : 'binary';
-      const hash = btoa(url + contentStr.length).slice(0, 16);
-      headers['ETag'] = `"${hash}"`;
+      // Generate proper ETag based on content hash using Web Crypto API
+      try {
+        const contentBytes = typeof content === 'string'
+          ? new TextEncoder().encode(content)
+          : new Uint8Array(content);
+        const hashBuffer = await crypto.subtle.digest('SHA-256', contentBytes);
+        const hashArray = Array.from(new Uint8Array(hashBuffer));
+        const hashHex = hashArray.slice(0, 8).map(b => b.toString(16).padStart(2, '0')).join('');
+        headers['ETag'] = `"${hashHex}"`;
+      } catch {
+        // Fallback if crypto API fails - use URL and content length
+        const contentLen = typeof content === 'string' ? content.length : content.byteLength;
+        headers['ETag'] = `W/"${btoa(url + contentLen).slice(0, 16)}"`;
+      }
     }
     
     return contentType.includes('text') || contentType.includes('json')
@@ -987,23 +997,55 @@ app.post("/indexnow/submit-all", async (c) => {
   }, successful > 0 ? 200 : 207);
 });
 
-// Rate limiting helper (simple implementation)
+// Rate limiting helper with automatic cleanup to prevent memory leaks
 const rateLimitMap = new Map<string, { count: number; resetTime: number }>();
+const RATE_LIMIT_MAX_ENTRIES = 10000; // Maximum entries to prevent memory exhaustion
+let lastCleanupTime = 0;
+const CLEANUP_INTERVAL = 60000; // Cleanup every 60 seconds
+
+const cleanupExpiredEntries = (now: number) => {
+  // Only run cleanup periodically to avoid performance overhead
+  if (now - lastCleanupTime < CLEANUP_INTERVAL) return;
+  lastCleanupTime = now;
+
+  // Remove expired entries
+  for (const [key, value] of rateLimitMap.entries()) {
+    if (now > value.resetTime) {
+      rateLimitMap.delete(key);
+    }
+  }
+
+  // If still over limit, remove oldest entries (LRU-style)
+  if (rateLimitMap.size > RATE_LIMIT_MAX_ENTRIES) {
+    const entriesToRemove = rateLimitMap.size - RATE_LIMIT_MAX_ENTRIES;
+    const iterator = rateLimitMap.keys();
+    for (let i = 0; i < entriesToRemove; i++) {
+      const key = iterator.next().value;
+      if (key) rateLimitMap.delete(key);
+    }
+  }
+};
 
 const rateLimit = (c: Context, limit: number = 100, windowMs: number = 60000) => {
   const clientIP = c.req.header('cf-connecting-ip') || c.req.header('x-forwarded-for') || 'unknown';
   const now = Date.now();
+
+  // Periodic cleanup of expired entries
+  cleanupExpiredEntries(now);
+
   const existing = rateLimitMap.get(clientIP);
-  
+
   if (!existing || now > existing.resetTime) {
+    // Delete expired entry before adding new one
+    if (existing) rateLimitMap.delete(clientIP);
     rateLimitMap.set(clientIP, { count: 1, resetTime: now + windowMs });
     return false; // Not rate limited
   }
-  
+
   if (existing.count >= limit) {
     return true; // Rate limited
   }
-  
+
   existing.count++;
   return false; // Not rate limited
 };
@@ -1033,6 +1075,29 @@ app.use('/metrics', async (c, next) => {
   if (rateLimit(c, 10, 60000)) { // 10 requests per minute for metrics
     return c.text('Rate limit exceeded', 429, {
       'Retry-After': '60'
+    });
+  }
+  await next();
+});
+
+// Rate limiting for IndexNow endpoints - prevent abuse of external API calls
+app.use('/indexnow', async (c, next) => {
+  if (rateLimit(c, 10, 60000)) { // 10 requests per minute for IndexNow
+    return c.text('Rate limit exceeded', 429, {
+      'Retry-After': '60',
+      'X-RateLimit-Limit': '10',
+      'X-RateLimit-Window': '60'
+    });
+  }
+  await next();
+});
+
+app.use('/indexnow/*', async (c, next) => {
+  if (rateLimit(c, 5, 60000)) { // 5 requests per minute for bulk IndexNow operations
+    return c.text('Rate limit exceeded', 429, {
+      'Retry-After': '60',
+      'X-RateLimit-Limit': '5',
+      'X-RateLimit-Window': '60'
     });
   }
   await next();
