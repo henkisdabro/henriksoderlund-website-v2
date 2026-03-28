@@ -4,34 +4,37 @@ Instructions, guardrails, and critical guidance for working with this codebase.
 
 ## Project Context
 
-Henrik Söderlund's personal portfolio website. React SPA (Vite) with Cloudflare Workers backend (Hono.js).
+Henrik Soderlund's personal portfolio website. Astro 6 with server-side rendering, prerendered pages, and Cloudflare Workers deployment via `@astrojs/cloudflare` adapter.
 
 - **Production**: <https://www.henriksoderlund.com/>
 - **Stack**: Check `package.json` for current versions
-- **Data Layer**: Business data centralized in `src/react-app/data/` (consultation.ts, expertise.ts, workExperience.ts)
-- **Routing**: React Router (client-side) + Hono (worker-side)
+- **Data Layer**: Business data centralised in `src/data/` (consultation.ts, expertise.ts, workExperience.ts)
+- **Routing**: Astro file-based routing (`src/pages/`)
+- **Rendering**: 4 of 5 pages prerendered at build time (CDN edge); consultancy page is SSR (Astro Actions for contact form)
 
 ## Critical Rules & Guardrails
 
 ### Content Preservation
 
-⚠️ **NEVER modify, change, or "improve" existing copywriting without explicit user approval.**
+**NEVER modify, change, or "improve" existing copywriting without explicit user approval.**
 
 - Homepage copy and marketing content is carefully crafted and tested
 - Technical fixes (SEO, structure, formatting) allowed - content changes require permission
-- This includes server-side generated content in Hono worker that mirrors React components
+- This includes content in Astro page components and layout files
 - ASK first and explain exactly what you want to change
 
 ### File Deletion Safety
 
-⚠️ **NEVER DELETE INFRASTRUCTURE FILES DURING CLEANUP OPERATIONS**
+**NEVER DELETE INFRASTRUCTURE FILES DURING CLEANUP OPERATIONS**
 
 **Critical Files (NEVER delete):**
 
-- `index.html` - Essential Vite template with SEO metadata (305+ lines)
+- `astro.config.mjs` - Astro configuration (output mode, adapter, integrations, env schema)
 - `wrangler.json` - Cloudflare Workers configuration
-- `package.json`, `vite.config.ts` - Build configuration
-- `src/worker/index.ts`, `src/react-app/main.tsx` - Application entry points
+- `package.json` - Build configuration and dependencies
+- `src/layouts/BaseLayout.astro` - Main layout with GTM, JSON-LD, view transitions, SEO metadata
+- `src/middleware.ts` - Security headers, CSP, canonical URL handling
+- `src/actions/index.ts` - Astro Actions (contact form with Turnstile + Resend)
 - `.github/workflows/` - CI/CD pipelines
 
 **Safe Cleanup Protocol:**
@@ -42,21 +45,21 @@ Henrik Söderlund's personal portfolio website. React SPA (Vite) with Cloudflare
 4. Focus cleanup on: Documentation files, debug logs, temporary files only
 5. When in doubt, ASK the user first
 
-**History**: August 2025 - Accidental `index.html` deletion caused complete website failure. Vite build failed silently, GitHub Actions deployed broken workers.
+**History**: August 2025 - Accidental `index.html` deletion caused complete website failure in the previous Vite-based stack.
 
 ### Deployment Process
 
-⚠️ **IMPORTANT**: Production deployment is automatic via GitHub Actions. DO NOT use `npm run deploy` directly.
+**IMPORTANT**: Production deployment is automatic via GitHub Actions. DO NOT use `npm run deploy` directly.
 
 **Production:**
 
-1. Push to main branch → GitHub Actions workflow triggers
+1. Push to main branch - GitHub Actions workflow triggers
 2. Automated CI/CD: Build, lint, verify artifacts, deploy to Cloudflare Workers
 3. Live site updated at <https://www.henriksoderlund.com/>
 
 **Development/Testing Only:**
 
-- `npm run build` - Local build testing
+- `npm run build` - Local build testing (`astro check && astro build`)
 - `npm run preview` - Local production build preview
 - `npm run deploy` - Manual deploy (development/testing only, NOT production)
 
@@ -66,25 +69,25 @@ Henrik Söderlund's personal portfolio website. React SPA (Vite) with Cloudflare
 
 - **British English only**: optimisation, specialising, organisation, utilising, realise, colour, behaviour, centre
 - **Voice**: Professional, direct, technical without excessive formality
-- **Punctuation**: Use regular hyphens (-) instead of em-dashes (—), except for date ranges (2023—2024)
+- **Punctuation**: Use regular hyphens (-) instead of em-dashes, except for date ranges (2023-2024)
 - **Consistency**: Maintain uniform terminology and spelling across all files
 
 ### Character Encoding Standards
 
-⚠️ **CRITICAL**: Apply consistent character encoding across ALL generated files (llms.txt, markdown files).
+**CRITICAL**: Apply consistent character encoding across ALL generated files (llms.txt, markdown files).
 
 **Key Replacements:**
 
-- `ö → oe`
-- `" → "` (smart quotes to straight quotes)
-- `— → -` (em-dash to hyphen)
+- `oe` for `ö`
+- Straight quotes for smart quotes
+- Hyphens for em-dashes
 - Remove emojis and Unicode symbols
 
 **Implementation:**
 
-- Use centralized `removeEmojis()` function from `jsx-to-markdown.js`
+- Use centralised `removeEmojis()` function from `src/utils/removeEmojis.ts`
 - Apply to ALL generated text: titles, descriptions, project data
-- Test with `cat public/llms.txt` and `cat public/*.md` after generation
+- Test generated markdown endpoints by fetching them in the browser or via curl
 
 ### Markdown Linting Rules
 
@@ -97,73 +100,62 @@ All markdown files must pass these linting rules:
 - **MD034**: Wrap URLs in angle brackets `<url>` or proper markdown links
 - **MD040**: Specify language for code blocks (use `text` for generic content)
 
-## Cloudflare Workers Architecture
+## Astro Architecture
 
-### Hybrid Serving Model
+### Rendering Model
 
-- **Regular Users**: React SPA with client-side routing (fast HMR)
-- **Search Engine Crawlers**: Server-side rendered HTML with complete SEO metadata
-- **Crawler Detection**: Use Cloudflare's native `botManagement.verifiedBot` (NOT User-Agent strings)
+All visitors (users and crawlers alike) receive identical full HTML. No dual rendering or bot detection needed.
 
-### Critical Configuration Pattern
+- **Prerendered pages** (built at deploy time, served from CDN edge): index, expertise, work-experience, education, 404
+- **SSR page** (processed by Cloudflare Worker on each request): consultancy (requires Astro Actions for contact form)
+- **API endpoints**: health.ts, metrics.ts, security.txt.ts, per-page markdown endpoints (`*.md.ts`)
 
-**Problem**: Static files in assets directory bypass worker code entirely, breaking crawler detection.
+### Key Configuration Patterns
 
-**Solution**: Use `run_worker_first` in `wrangler.json` to force routes through worker:
+**Output mode**: Must use `output: 'server'` (not `'static'`) because Astro Actions require a server runtime. Individual pages opt into prerendering with `export const prerender = true`.
 
-```json
-{
-  "assets": {
-    "binding": "ASSETS",
-    "directory": "./dist/client",
-    "run_worker_first": ["/"]
-  }
-}
-```
+**Trailing slashes**: Set `trailingSlash: 'never'` in `astro.config.mjs` to match existing URL structure and avoid redirects.
 
-**Key Learning**: Always test crawler behavior separately from regular user experience.
+**Headers**: The `_headers` file is NOT applied to Worker-handled routes. All security headers, CSP, and canonical URL logic must be implemented in `src/middleware.ts`.
 
-### SEO Metadata Requirements
+**View transitions**: CSS `@view-transition { navigation: auto; }` requires `<style is:global>` in the layout, not a scoped `<style>` block.
 
-When generating custom HTML for crawlers, include COMPLETE SEO metadata:
+### SEO Metadata
+
+SEO metadata is handled in `src/layouts/BaseLayout.astro` and `src/components/SEO.astro`:
 
 - Complete Open Graph tags (11+ tags including image metadata)
 - Full Twitter Card metadata (8+ tags)
 - Site verification tags (Google, Ahrefs)
 - ALL JSON-LD structured data schemas (Person, ProfessionalService, WebSite)
 - Favicon, canonical links, proper meta descriptions
-- Analytics tracking (noscript fallbacks)
+- Analytics tracking (GTM, noscript fallbacks)
 
 **Testing Commands:**
 
 ```bash
-# Test crawlers
-curl -H "User-Agent: Googlebot/2.1" http://localhost:5173
+# All visitors get the same HTML - no need for User-Agent spoofing
+curl http://localhost:4321
 
 # Count SEO tags
-curl -H "User-Agent: Googlebot/2.1" http://localhost:5173 | grep -c "og:"
+curl http://localhost:4321 | grep -c "og:"
 
 # Verify content
-curl -H "User-Agent: Googlebot/2.1" http://localhost:5173 | grep "<h1>"
-
-# Test regular users (should get React SPA)
-curl http://localhost:5173
+curl http://localhost:4321 | grep "<h1>"
 ```
 
 ## Generated Files Management
 
-### Auto-Generated Files (excluded from git)
+### Sitemap
 
-- `public/llms.txt` - Main llms.txt file for AI/LLM consumption
-- `public/*.md` - Individual page markdown files (index.html.md, expertise.md, etc.)
-- `.llms-cache.json` - Build cache for content-based generation
+- Generated automatically by `@astrojs/sitemap` integration during `astro build`
+- Configuration (priorities, filtering) in `astro.config.mjs`
 
-### Generation Workflow
+### llms.txt and Markdown Endpoints
 
-- **Smart Caching**: Only regenerates when React component content changes
-- **Build Integration**: Automatic during `npm run build`
-- **Manual Trigger**: `npm run generate-llms` (force regenerate), `npm run generate-llms-if-needed` (smart)
-- **Character Encoding**: Apply consistent encoding via `removeEmojis()` function
+- Per-page markdown available at `*.md.ts` endpoint files in `src/pages/`
+- Character encoding applied via `removeEmojis()` from `src/utils/removeEmojis.ts`
+- Markdown response utility in `src/utils/markdownResponse.ts`
 
 ## AI Collaboration Strategy
 
@@ -186,23 +178,22 @@ gemini -p "YOUR_DETAILED_ANALYSIS_REQUEST"
 
 - Complex routing and middleware issues
 - Cross-platform compatibility problems
-- Performance optimization challenges
+- Performance optimisation challenges
 - Security implementation reviews
-
-**Example Success**: Gemini identified unreliable User-Agent string matching as root cause for homepage crawler detection failure, recommended Cloudflare's native `botManagement.verifiedBot` detection.
 
 ## Development Workflow
 
 ### Validation Before Commits
 
-- **Full Check**: `npm run check` - TypeScript compilation + build + dry-run deploy
-- **Lint**: `npm run lint` - Code quality validation
-- **Build**: `npm run build` - Includes llms.txt + sitemap generation
+- **Full Check**: `npm run check` - Astro type check + build
+- **Lint**: `npm run lint` - ESLint code quality validation
+- **Build**: `npm run build` - `astro check && astro build` (includes sitemap generation)
 
 ### Data-Driven Architecture
 
-- **Component Presentation**: React components in `src/react-app/components/`
-- **Business Data**: Centralized in `src/react-app/data/` directory
+- **Page Components**: Astro pages in `src/pages/`
+- **Reusable Components**: Astro components in `src/components/`
+- **Business Data**: Centralised in `src/data/` directory
   - `consultation.ts` - Service offerings, pricing
   - `expertise.ts` - Technical skills, GitHub projects
   - `workExperience.ts` - Professional experience
@@ -210,28 +201,52 @@ gemini -p "YOUR_DETAILED_ANALYSIS_REQUEST"
 
 ### File Locations
 
-- **Frontend**: `src/react-app/` (React SPA)
-- **Backend**: `src/worker/index.ts` (Hono.js worker)
-- **Static Assets**: `/public/` (SEO verification, favicons, redirects)
+- **Pages**: `src/pages/` (Astro file-based routing)
+- **Components**: `src/components/` (Astro components)
+- **Layouts**: `src/layouts/BaseLayout.astro` (main layout)
+- **Actions**: `src/actions/index.ts` (contact form)
+- **Middleware**: `src/middleware.ts` (security headers, CSP)
+- **Data**: `src/data/` (business data files)
+- **Assets**: `src/assets/` (images, logos, flags, icons)
+- **Styles**: `src/styles/` (App.css, index.css)
+- **Utilities**: `src/utils/` (removeEmojis.ts, markdownResponse.ts)
+- **Static Assets**: `public/` (SEO verification, favicons, redirects)
 - **Build Output**: `dist/` (auto-generated, git-ignored)
 
 ## Key Technical Patterns
 
-### Modern React Architecture
+### Astro Component Architecture
 
-- Direct imports without namespace pollution
-- Functional components without `React.FC` typing
-- Full TypeScript type safety
-- Business logic separated into data files
+- File-based routing with `.astro` page components
+- Astro components for reusable UI (NavigationBox, Footer, ContactForm, SEO)
+- Vanilla JavaScript for interactivity (breathing animation, navigation scroll)
+- Native `<details>/<summary>` for accordion UI (case studies)
+- CSS View Transitions for smooth page navigation (zero-JS)
+- Astro prefetch for near-instant navigation
+
+### Environment Variables
+
+- Type-safe secrets via `astro:env/server` (configured in `astro.config.mjs` env schema)
+- `RESEND_API_KEY` - Email delivery for contact form
+- `TURNSTILE_SECRET_KEY` - Server-side Turnstile verification
+- `TURNSTILE_SITE_KEY` - Client-side Turnstile widget (public)
+
+### Spam Protection
+
+- Cloudflare Turnstile widget on contact form (replaces reCAPTCHA)
+- Server-side token verification in Astro Action
+- Rate limiting configured via Cloudflare WAF dashboard rules (not in code)
 
 ### Testing
 
 - No test framework currently configured
-- Can add Vitest or Jest if needed
+- Can add Vitest if needed
 - Use `npm run preview` for local production build testing
 
 ## Notes
 
 - Check `package.json` for dependency versions (not listed here to avoid staleness)
 - File structure discoverable via `ls` and `tree` commands
+- Dev server runs on port 4321 (Astro default)
+- Cloudflare acquired Astro in January 2026 - the `@astrojs/cloudflare` adapter is first-party
 - No test suite configured (suggest Vitest if needed)

@@ -1,0 +1,44 @@
+---
+export const prerender = true;
+import BaseLayout from '../layouts/BaseLayout.astro';
+import swedenFlag from '../assets/flags/se.svg';
+---
+
+<BaseLayout
+  title="Education | Henrik Söderlund"
+  description="Educational background of Henrik Söderlund - Master of Music from Lund University, Sweden."
+>
+  <div class="education-page">
+    <h1>Education</h1>
+
+    <section class="content-entry">
+      <h2>
+        <img src={swedenFlag.src} alt="Sweden" class="country-flag" />{" "}
+        Tertiary Education
+      </h2>
+      <p class="dates">1999–2006</p>
+      <p>Master of Music [M.Mus.] Instrument: Trombone at Lund University</p>
+      <p>Malmö, Sweden</p>
+    </section>
+
+    <section class="content-entry">
+      <h2>
+        <img src={swedenFlag.src} alt="Sweden" class="country-flag" />{" "}
+        Secondary Education
+      </h2>
+      <p class="dates">1996–1999</p>
+      <p>Natural Sciences at Kattegattgymnasiet</p>
+      <p>Malmö, Sweden</p>
+    </section>
+
+    <section class="content-entry">
+      <h2>
+        <img src={swedenFlag.src} alt="Sweden" class="country-flag" /> Primary
+        Education
+      </h2>
+      <p class="dates">1987–1996</p>
+      <p>Elementary at Örjanskolan</p>
+      <p>Halmstad, Sweden</p>
+    </section>
+  </div>
+</BaseLayout>

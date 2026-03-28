@@ -1,0 +1,48 @@
+---
+export const prerender = false;
+import BaseLayout from '../layouts/BaseLayout.astro';
+import ContactForm from '../components/ContactForm.astro';
+---
+
+<BaseLayout
+  title="Contact | Henrik Söderlund"
+  description="Get in touch with Henrik Söderlund for strategic technology consultancy, AI automation, analytics implementation, and digital transformation projects."
+>
+  <div class="contact-page">
+    <h1>Get in Touch</h1>
+
+    <section class="contact-intro">
+      <p>
+        Whether you have a specific project in mind or simply want to explore how technology can drive your business forward, I'd love to hear from you.
+      </p>
+      <p>
+        Fill out the form below and I'll get back to you within one business day. For a more in-depth conversation, you can also <a href="https://calendly.com/henriksoederlund/30min" target="_blank" rel="noopener noreferrer">book a complimentary 30-minute discovery call</a>.
+      </p>
+    </section>
+
+    <section class="contact-form-section">
+      <ContactForm />
+    </section>
+
+    <section class="contact-alternatives">
+      <h2>Other Ways to Connect</h2>
+      <div class="contact-methods">
+        <div class="contact-method">
+          <h3>Discovery Call</h3>
+          <p>Book a free 30-minute call to discuss your needs and explore how I can help.</p>
+          <a href="https://calendly.com/henriksoederlund/30min" target="_blank" rel="noopener noreferrer" class="contact-link">Book on Calendly</a>
+        </div>
+        <div class="contact-method">
+          <h3>LinkedIn</h3>
+          <p>Connect with me professionally and stay updated on my latest work.</p>
+          <a href="https://www.linkedin.com/in/henriksoderlund/" target="_blank" rel="noopener noreferrer" class="contact-link">View Profile</a>
+        </div>
+        <div class="contact-method">
+          <h3>GitHub</h3>
+          <p>Explore my open-source projects and technical contributions.</p>
+          <a href="https://github.com/henkisdabro" target="_blank" rel="noopener noreferrer" class="contact-link">View GitHub</a>
+        </div>
+      </div>
+    </section>
+  </div>
+</BaseLayout>

@@ -1,0 +1,22 @@
+---
+export const prerender = true;
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { workExperienceData } from '../data/workExperience';
+---
+
+<BaseLayout
+  title="Work Experience | Henrik Söderlund"
+  description="Professional work experience of Henrik Söderlund - Technology Leader with expertise in digital media, AI, and performance marketing across Australia and Asia."
+>
+  <div class="work-experience-page">
+    <h1>Work Experience</h1>
+
+    {workExperienceData.map(job => (
+      <section class="content-entry">
+        <h2><img src={typeof job.flag === 'string' ? job.flag : job.flag.src} alt={job.location} class="country-flag" /> {job.title}</h2>
+        <p class="dates">{job.dates}</p>
+        {job.description.map(p => <p>{p}</p>)}
+      </section>
+    ))}
+  </div>
+</BaseLayout>

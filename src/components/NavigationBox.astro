@@ -1,0 +1,182 @@
+---
+const pathname = Astro.url.pathname;
+const isHomePage = pathname === '/';
+
+const pages = [
+  { path: '/', name: 'Home', emoji: '🏠' },
+  { path: '/expertise', name: 'Expertise', emoji: '🛠️' },
+  { path: '/consultancy', name: 'Consultancy', emoji: '💬' },
+  { path: '/work-experience', name: 'Work Experience', emoji: '💼' },
+  { path: '/education', name: 'Education', emoji: '🎓' },
+  { path: '/contact', name: 'Contact', emoji: '✉️' },
+];
+---
+
+<div class="navigation-box" id="navigation-box">
+  <div class="nav-box-header">
+    <button
+      class="collapse-btn"
+      id="collapse-btn"
+      aria-label="Expand navigation"
+      aria-expanded="false"
+    >
+      <div class="hamburger-icon">
+        <span></span>
+        <span></span>
+        <span></span>
+      </div>
+    </button>
+  </div>
+
+  <div class="nav-box-content" id="nav-box-content" hidden>
+    <!-- Page Navigation -->
+    <div class="nav-section">
+      <h5>Pages</h5>
+      <ul class="nav-list">
+        {pages.map((page) => (
+          <li class={pathname === page.path ? 'active' : ''}>
+            <a href={page.path} class="nav-page-link">
+              {page.emoji} {page.name}
+            </a>
+          </li>
+        ))}
+      </ul>
+    </div>
+
+    <!-- Divider and headings - hidden on homepage, populated by JS on other pages -->
+    {!isHomePage && (
+      <>
+        <div class="nav-divider" id="nav-divider" hidden></div>
+        <div class="nav-section" id="headings-section" hidden>
+          <h5>On This Page</h5>
+          <ul class="nav-list headings-list" id="headings-list"></ul>
+        </div>
+      </>
+    )}
+  </div>
+</div>
+
+<script>
+  (function () {
+    const navBoxEl = document.getElementById('navigation-box');
+    const collapseBtnEl = document.getElementById('collapse-btn');
+    const navContentEl = document.getElementById('nav-box-content');
+
+    if (!navBoxEl || !collapseBtnEl || !navContentEl) return;
+
+    const navBox = navBoxEl as HTMLElement;
+    const collapseBtn = collapseBtnEl as HTMLElement;
+    const navContent = navContentEl as HTMLElement;
+
+    const isHomePage = window.location.pathname === '/';
+
+    // Determine initial collapsed state
+    let isCollapsed = window.innerWidth <= 1024;
+
+    function applyCollapseState() {
+      if (isCollapsed) {
+        navBox.classList.add('collapsed');
+        navContent.hidden = true;
+        collapseBtn.setAttribute('aria-label', 'Expand navigation');
+        collapseBtn.setAttribute('aria-expanded', 'false');
+      } else {
+        navBox.classList.remove('collapsed');
+        navContent.hidden = false;
+        collapseBtn.setAttribute('aria-label', 'Collapse navigation');
+        collapseBtn.setAttribute('aria-expanded', 'true');
+      }
+    }
+
+    applyCollapseState();
+
+    collapseBtn.addEventListener('click', function () {
+      isCollapsed = !isCollapsed;
+      applyCollapseState();
+    });
+
+    window.addEventListener('resize', function () {
+      const shouldCollapse = window.innerWidth <= 1024;
+      if (shouldCollapse !== isCollapsed) {
+        isCollapsed = shouldCollapse;
+        applyCollapseState();
+      }
+    });
+
+    // Auto-close on mobile when a page link is clicked
+    const pageLinks = navBox.querySelectorAll('.nav-page-link');
+    pageLinks.forEach(function (link) {
+      link.addEventListener('click', function () {
+        if (window.innerWidth <= 1024) {
+          isCollapsed = true;
+          applyCollapseState();
+        }
+      });
+    });
+
+    // Heading scan - skip on homepage
+    if (isHomePage) return;
+
+    const navDivider = document.getElementById('nav-divider');
+    const headingsSection = document.getElementById('headings-section');
+    const headingsList = document.getElementById('headings-list');
+
+    if (!headingsList) return;
+
+    function scanHeadings() {
+      const mainContent = document.querySelector('.main-content');
+      if (!mainContent) return;
+      const headingElements = mainContent.querySelectorAll('h2, h4, h5, h6');
+      const items: { id: string; text: string; level: number }[] = [];
+
+      headingElements.forEach(function (heading, index) {
+        const text = heading.textContent || '';
+        const level = parseInt(heading.tagName.charAt(1), 10);
+
+        let id = heading.id;
+        if (!id) {
+          id = 'heading-' + index;
+          heading.id = id;
+        }
+
+        items.push({ id: id, text: text, level: level });
+      });
+
+      if (!headingsList) return;
+
+      headingsList.innerHTML = '';
+
+      if (items.length > 0) {
+        items.forEach(function (item) {
+          const li = document.createElement('li');
+          li.className = 'heading-level-' + item.level;
+
+          const btn = document.createElement('button');
+          btn.type = 'button';
+          btn.className = 'heading-link';
+          btn.textContent = item.text;
+          btn.addEventListener('click', function () {
+            const el = document.getElementById(item.id);
+            if (el) {
+              el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+            if (window.innerWidth <= 1024) {
+              isCollapsed = true;
+              applyCollapseState();
+            }
+          });
+
+          li.appendChild(btn);
+          headingsList.appendChild(li);
+        });
+
+        if (navDivider) navDivider.hidden = false;
+        if (headingsSection) headingsSection.hidden = false;
+      } else {
+        if (navDivider) navDivider.hidden = true;
+        if (headingsSection) headingsSection.hidden = true;
+      }
+    }
+
+    scanHeadings();
+  })();
+</script>

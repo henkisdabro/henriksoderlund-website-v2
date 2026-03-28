@@ -1,0 +1,221 @@
+---
+import SEO from '../components/SEO.astro';
+import NavigationBox from '../components/NavigationBox.astro';
+import GitHubLink from '../components/GitHubLink.astro';
+import LinkedInLink from '../components/LinkedInLink.astro';
+import Footer from '../components/Footer.astro';
+import '../styles/index.css';
+import '../styles/App.css';
+
+interface Props {
+  title: string;
+  description: string;
+  ogType?: 'profile' | 'website';
+}
+
+const { title, description, ogType = 'website' } = Astro.props;
+
+const personSchemaJSON = JSON.stringify({
+  "@context": "https://schema.org",
+  "@type": "Person",
+  "name": "Henrik Söderlund",
+  "url": "https://www.henriksoderlund.com/",
+  "image": "https://www.henriksoderlund.com/og_image.png",
+  "jobTitle": "Digital Media Leader & AI Solutions Innovator",
+  "description": "Technology Leader specialising in AI automation, digital marketing, and technology leadership. Expert in building intelligent systems, leading high-performance teams, and delivering enterprise-scale solutions.",
+  "address": {
+    "@type": "PostalAddress",
+    "addressLocality": "Perth",
+    "addressRegion": "WA",
+    "addressCountry": "AU"
+  },
+  "worksFor": {
+    "@type": "Organization",
+    "name": "KINESSO",
+    "url": "https://kinesso.com/"
+  },
+  "affiliation": [
+    {
+      "@type": "Organization",
+      "name": "Initiative Perth"
+    }
+  ],
+  "knowsAbout": [
+    "Artificial Intelligence",
+    "Digital Marketing",
+    "Technology Leadership",
+    "Team Management",
+    "Google Analytics",
+    "Google Tag Manager",
+    "Programmatic Advertising",
+    "Marketing Technology",
+    "Data Analytics",
+    "Business Intelligence",
+    "AI Automation",
+    "Performance Marketing",
+    "Server-Side Tracking",
+    "React Development",
+    "Python Programming",
+    "Process Automation"
+  ],
+  "skills": [
+    "Strategic Technology Leadership",
+    "AI & Machine Learning Implementation",
+    "Digital Advertising & Media Buying",
+    "Advanced Analytics & Measurement",
+    "Team Building & Mentoring",
+    "Client Relationship Management",
+    "Google Ads & Meta Advertising",
+    "Marketing Technology Stack Management",
+    "Data Pipeline Architecture",
+    "Cross-Platform Attribution"
+  ],
+  "alumniOf": [
+    {
+      "@type": "EducationalOrganization",
+      "name": "Malmö Academy of Music",
+      "address": {
+        "@type": "PostalAddress",
+        "addressCountry": "SE"
+      }
+    }
+  ],
+  "knowsLanguage": [
+    {
+      "@type": "Language",
+      "name": "English"
+    },
+    {
+      "@type": "Language",
+      "name": "Swedish"
+    }
+  ],
+  "sameAs": [
+    "https://github.com/henkisdabro",
+    "https://www.linkedin.com/in/henriksoderlund/"
+  ],
+  "award": [
+    "MFA Changer Recognition 2024 (Initiative)",
+    "Advertising+Marketing AOTY Best Local Media Agency 2021 (Creme Digital)"
+  ],
+  "memberOf": [
+    {
+      "@type": "Organization",
+      "name": "Facebook Blueprint Certified Professional"
+    }
+  ]
+});
+
+const websiteSchemaJSON = JSON.stringify({
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "name": "Henrik Söderlund - Digital Media Leader & AI Solutions Innovator",
+  "url": "https://www.henriksoderlund.com/",
+  "description": "The personal website of Henrik Söderlund, a Digital Media Leader & AI Solutions Innovator based in Perth, Australia.",
+  "author": {
+    "@type": "Person",
+    "name": "Henrik Söderlund"
+  }
+});
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/bot.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+
+    <SEO title={title} description={description} ogType={ogType} />
+
+    <!-- Structured Data - Person Schema -->
+    <script type="application/ld+json" set:html={personSchemaJSON}></script>
+
+    <!-- Structured Data - Website Schema -->
+    <script type="application/ld+json" set:html={websiteSchemaJSON}></script>
+
+    <!-- Page-specific JSON-LD slot -->
+    <slot name="head" />
+
+    <link rel="preconnect" href="https://load.sgtm.henriksoderlund.com/" crossorigin />
+    <link rel="dns-prefetch" href="https://load.sgtm.henriksoderlund.com/" />
+
+    <!-- Initialize dataLayer before GTM -->
+    <script is:inline>
+      window.dataLayer = window.dataLayer || [];
+
+      // Device type detection
+      const deviceType = /Tablet|iPad/.test(navigator.userAgent) ? 'tablet' :
+                        /Mobile|Android|iPhone/.test(navigator.userAgent) ? 'mobile' : 'desktop';
+
+      // Initialize with all data
+      window.dataLayer.push({
+        'page_title': document.title,
+        'page_location': window.location.href,
+        'page_path': window.location.pathname,
+        'page_referrer': document.referrer,
+        'environment': location.hostname === 'localhost' || location.hostname === '127.0.0.1' || location.hostname.includes('vite') ? 'development' : 'production',
+        'user_agent': navigator.userAgent,
+        'screen_resolution': screen.width + 'x' + screen.height,
+        'viewport_size': window.innerWidth + 'x' + window.innerHeight,
+        'color_depth': screen.colorDepth,
+        'timezone': Intl.DateTimeFormat().resolvedOptions().timeZone,
+        'language': navigator.language,
+        'device_type': deviceType,
+        'is_mobile': deviceType === 'mobile',
+        'is_tablet': deviceType === 'tablet',
+        'is_desktop': deviceType === 'desktop',
+        'connection_type': navigator.connection ? navigator.connection.effectiveType : 'unknown'
+      });
+    </script>
+
+    <!-- Google Tag Manager -->
+    <script is:inline>
+      // Only load GTM in production (not on localhost or when NODE_ENV is development)
+      if (location.hostname !== 'localhost' && location.hostname !== '127.0.0.1' && !location.hostname.includes('vite')) {
+        (function (w, d, s, l, i) {
+          w[l] = w[l] || [];
+          w[l].push({ 'gtm.start': new Date().getTime(), event: 'gtm.js' });
+          var f = d.getElementsByTagName(s)[0], j = d.createElement(s);
+          j.async = true;
+          j.src = "https://load.sgtm.henriksoderlund.com/dz4d7tyirczbv.js?" + i;
+          f.parentNode.insertBefore(j, f);
+        })(window, document, 'script', 'dataLayer', '6at4snq=aWQ9R1RNLUZXUjQ%3D&omNe=daQSaS');
+      } else {
+        console.log('GTM disabled in development environment');
+      }
+    </script>
+    <!-- End Google Tag Manager -->
+
+    <!-- View Transitions -->
+    <style is:global>
+      @view-transition { navigation: auto; }
+      ::view-transition-old(root) { animation: none; }
+      ::view-transition-new(root) { animation: none; }
+    </style>
+  </head>
+
+  <body>
+    <!-- Google Tag Manager (noscript) -->
+    <noscript>
+      <iframe src="https://load.sgtm.henriksoderlund.com/ns.html?id=GTM-FWR4" height="0" width="0" style="display:none;visibility:hidden"></iframe>
+    </noscript>
+    <!-- End Google Tag Manager (noscript) -->
+
+    <noscript><img src="https://api.fouanalytics.com/api/noscript-6686ht0xp1ec4dc5q5z4.gif" alt="Fathom Analytics tracking pixel" /></noscript>
+
+    <div class="app">
+      <NavigationBox />
+      <GitHubLink />
+      <LinkedInLink />
+
+      <main class="main-content">
+        <slot />
+      </main>
+
+      <Footer />
+    </div>
+  </body>
+</html>

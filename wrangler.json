@@ -1,18 +1,12 @@
 {
-	"$schema": "node_modules/wrangler/config-schema.json",
-	"name": "henriksoderlund-website-v2",
-	"main": "./src/worker/index.ts",
-	"compatibility_date": "2025-11-19",
-	"compatibility_flags": [
-		"nodejs_compat"
-	],
-	"observability": {
-		"enabled": true
-	},
-	"upload_source_maps": true,
-	"assets": {
-		"binding": "ASSETS",
-		"directory": "./dist/client",
-		"run_worker_first": ["/"]
-	}
+  "name": "henriksoderlund-website-v2",
+  "compatibility_date": "2026-03-01",
+  "compatibility_flags": ["nodejs_compat"],
+  "observability": {
+    "enabled": true
+  },
+  "upload_source_maps": true,
+  "vars": {
+    "TURNSTILE_SITE_KEY": "1x00000000000000000000AA"
+  }
 }

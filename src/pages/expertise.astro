@@ -1,0 +1,98 @@
+---
+export const prerender = true;
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { expertiseData } from '../data/expertise';
+import dashboardImage from '../assets/images/screenshots/dashboard.webp';
+import wikiImage from '../assets/images/screenshots/wiki.webp';
+
+const imageMap: { [key: string]: ImageMetadata } = {
+  dashboardImage,
+  wikiImage,
+};
+---
+
+<BaseLayout
+  title="Expertise | Henrik Söderlund"
+  description="Technical expertise, platform mastery, and open-source contributions by Henrik Söderlund - Technology Leader & AI Innovator."
+>
+  <div class="expertise-page">
+    <h1>Expertise</h1>
+
+    <section class="consultancy-section">
+      <h2>{expertiseData.intro.title}</h2>
+      <p>{expertiseData.intro.paragraph}</p>
+    </section>
+
+    <section class="leadership-section">
+      <h2>{expertiseData.leadershipExpertise.title}</h2>
+      <p>{expertiseData.leadershipExpertise.paragraph}</p>
+      <div class="skills-grid">
+        {expertiseData.leadershipExpertise.categories.map(category => (
+          <div class="skill-category">
+            <h3>{category.category}</h3>
+            <div class="skills-minimal-pills">
+              {category.skills.map(skill => <span class="skill-pill-minimal">{skill}</span>)}
+            </div>
+          </div>
+        ))}
+      </div>
+    </section>
+
+    <section class="technical-skills-section">
+      <h2>🛠️ Technical Expertise & Platform Mastery</h2>
+      <div class="skills-grid">
+        {expertiseData.skillsGrid.map(category => (
+          <div class="skill-category">
+            <h3>{category.category}</h3>
+            <div class="skills-minimal-pills">
+              {category.skills.map(skill => <span class="skill-pill-minimal">{skill}</span>)}
+            </div>
+          </div>
+        ))}
+      </div>
+    </section>
+
+    <section class="platform-experience">
+      <h2>{expertiseData.platformExperience.title}</h2>
+      <p>{expertiseData.platformExperience.paragraph}</p>
+      <div class="skills-minimal-pills">
+        {expertiseData.platformExperience.platforms.map(platform => <span class="skill-pill-minimal">{platform}</span>)}
+      </div>
+    </section>
+
+    <section class="github-contributions">
+      <h2>{expertiseData.githubContributions.title}</h2>
+      {expertiseData.githubContributions.contributions.map(contribution => (
+        <div class="contribution">
+          <h3>🔗 <a href={contribution.url} target="_blank" rel="noopener noreferrer">{contribution.title}</a></h3>
+          <p>{contribution.description}</p>
+        </div>
+      ))}
+    </section>
+
+    <section class="dashboards-section">
+      <h2>{expertiseData.dashboards.title}</h2>
+      <p>{expertiseData.dashboards.paragraph}</p>
+
+      <div class="featured-build">
+        <p><strong>Featured Build:</strong></p>
+        <p><strong>{expertiseData.dashboards.featured.title}</strong></p>
+        <img
+          src={imageMap[expertiseData.dashboards.featured.image].src}
+          alt="Advanced Campaign & Website Performance Dashboard in Looker Studio showing analytics data, conversion metrics, and real-time performance indicators designed by Henrik Söderlund"
+          class="dashboard-image"
+        />
+      </div>
+    </section>
+
+    <section class="wiki-section">
+      <h2>{expertiseData.knowledgeManagement.title}</h2>
+      <p>{expertiseData.knowledgeManagement.paragraph}</p>
+      <img
+        src={imageMap[expertiseData.knowledgeManagement.image].src}
+        alt="Professional Company Wiki and Knowledge Management System developed in Notion by Henrik Söderlund, featuring organised documentation, process flows, and team collaboration tools"
+        class="wiki-image"
+      />
+    </section>
+  </div>
+</BaseLayout>

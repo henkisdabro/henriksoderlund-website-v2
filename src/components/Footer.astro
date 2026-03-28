@@ -1,0 +1,42 @@
+---
+import cloudflareLogo from '../assets/logos/cloudflare.svg';
+import claudeLogo from '../assets/logos/claude.svg';
+---
+
+<footer class="site-footer">
+  <p>
+    <span class="tech-stack powered-by">
+      Powered by:
+    </span>
+    <span class="tech-row tech-row-1">
+      <span class="tech-stack">
+        <!-- Astro logo placeholder - will be added with asset -->
+        <svg class="tech-icon" viewBox="0 0 85 107" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <path d="M27.5725 84.4478C22.3621 81.1351 20.2681 74.956 21.9516 69.0418L35.8888 18.6447L49.3453 27.5452L28.5949 86.0964C28.2934 86.9826 27.9 85.004 27.5725 84.4478Z" fill="url(#paint0_linear)"/>
+          <path d="M55.9907 86.1416C51.5621 89.1026 45.7853 88.8119 41.6743 85.4478L4.27051 55.7439L15.0784 44.6816L58.2868 84.1245C58.9831 84.7625 56.9151 85.6274 55.9907 86.1416Z" fill="url(#paint1_linear)"/>
+          <defs>
+            <linearGradient id="paint0_linear" x1="21" y1="18" x2="42" y2="87" gradientUnits="userSpaceOnUse">
+              <stop stop-color="#FF5D01"/>
+              <stop offset="1" stop-color="#FF1639"/>
+            </linearGradient>
+            <linearGradient id="paint1_linear" x1="4" y1="44" x2="59" y2="86" gradientUnits="userSpaceOnUse">
+              <stop stop-color="#FF5D01"/>
+              <stop offset="1" stop-color="#FF1639"/>
+            </linearGradient>
+          </defs>
+        </svg>
+        Astro
+      </span>
+    </span>
+    <span class="tech-row tech-row-2">
+      <span class="tech-stack">
+        <img src={cloudflareLogo.src} alt="Cloudflare Workers" class="tech-icon" />
+        Cloudflare Workers
+      </span>
+      <span class="tech-stack">
+        <img src={claudeLogo.src} alt="Claude Code" class="tech-icon" />
+        Claude Code
+      </span>
+    </span>
+  </p>
+</footer>

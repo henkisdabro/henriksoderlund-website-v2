@@ -1,0 +1,51 @@
+---
+interface Props {
+  title: string;
+  description: string;
+  ogType?: 'profile' | 'website';
+}
+
+const { title, description, ogType = 'website' } = Astro.props;
+
+const canonicalURL = new URL(Astro.url.pathname, Astro.site);
+const siteBase = Astro.site?.toString().replace(/\/$/, '') ?? 'https://www.henriksoderlund.com';
+const ogImageURL = `${siteBase}/og_image.png`;
+---
+
+<!-- Canonical -->
+<link rel="canonical" href={canonicalURL} />
+
+<!-- Open Graph -->
+<meta property="og:type" content={ogType} />
+<meta property="og:url" content={canonicalURL} />
+<meta property="og:title" content={title} />
+<meta property="og:description" content={description} />
+<meta property="og:image" content={ogImageURL} />
+<meta property="og:image:alt" content="Henrik Söderlund - Digital Media Leader & AI Solutions Innovator" />
+<meta property="og:image:type" content="image/png" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta property="og:site_name" content="Henrik Söderlund" />
+<meta property="og:locale" content="en_AU" />
+
+{ogType === 'profile' && (
+  <>
+    <meta property="profile:first_name" content="Henrik" />
+    <meta property="profile:last_name" content="Söderlund" />
+    <meta property="profile:username" content="henkisdabro" />
+  </>
+)}
+
+<!-- Twitter Card -->
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:site" content="@henkisdabro" />
+<meta name="twitter:creator" content="@henkisdabro" />
+<meta name="twitter:url" content={canonicalURL} />
+<meta name="twitter:title" content={title} />
+<meta name="twitter:description" content={description} />
+<meta name="twitter:image" content={ogImageURL} />
+<meta name="twitter:image:alt" content="Henrik Söderlund - Digital Media Leader & AI Solutions Innovator" />
+
+<!-- SEO Verification -->
+<meta name="google-site-verification" content="TVUdAh0RA_yjsXKKjybCDe7JsKnXBhYFbcRPoJy03rc" />
+<meta name="ahrefs-site-verification" content="bc08e3a49be838e1d8cfa2eabc5bf8e7d833c572e09db62742db9ed9917d6ada" />

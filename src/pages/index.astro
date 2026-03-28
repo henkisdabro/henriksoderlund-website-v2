@@ -1,0 +1,261 @@
+---
+export const prerender = true;
+import BaseLayout from '../layouts/BaseLayout.astro';
+import profileImage from '../assets/images/henrik-profile-small.webp';
+---
+
+<BaseLayout
+  title="Henrik Söderlund | Technology Leader & AI Innovator"
+  description="Personal website of Henrik Söderlund, a Technology Leader & AI Solutions Expert specialising in automation, advanced analytics, and high-performance team development."
+  ogType="profile"
+>
+  <div class="home-page" id="home-content">
+    <div class="hero-section">
+      <img
+        src={profileImage.src}
+        alt="Henrik Söderlund - Technology Leader & AI Innovator based in Perth, Australia"
+        class="profile-image"
+      />
+      <h1>Henrik Söderlund</h1>
+      <p class="lead">
+        Technology Leader & AI Solutions Expert.
+        <br />
+        Accomplished agency founder and enterprise leader now pursuing strategic consulting opportunities and senior roles, specialising in automation, advanced analytics, and high-performance team development.
+      </p>
+    </div>
+
+    <section class="content-section">
+      <h2>Hello! 👋🏼</h2>
+      <p>
+        I'm Henrik Söderlund, a technology leader with proven expertise in both entrepreneurial and enterprise environments. After founding and scaling the award-winning{" "}
+        <a
+          href="https://www.cremedigital.com?utm_source=www.henriksoderlund.com&utm_medium=referral"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          Creme Digital
+        </a>
+        , I led media activations at{" "}
+        <a
+          href="https://initiative.com/"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          Initiative
+        </a>{" "}
+        Perth (
+        <a
+          href="https://kinesso.com"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          KINESSO
+        </a>
+        ,{" "}
+        <a
+          href="https://www.interpublic.com/"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          Interpublic Group
+        </a>
+        ), where I architected measurement solutions and guided high-performance teams across programmatic and performance marketing channels. With an inherent drive for optimisation and systematic thinking, I've built my career on developing sophisticated systems and automation workflows that transform how teams operate - from advanced analytics and server-side implementations to intelligent AI-powered solutions that deliver measurable results at scale.
+      </p>
+      <p>
+        Beyond technical innovation, my leadership approach centres on
+        developing high-performing teams and cultivating lasting client
+        relationships. Throughout my career, I've successfully rebuilt teams
+        during challenging transitions, mentored 20+ professionals, and delivered compelling
+        presentations that have secured major partnerships. My exceptionally broad
+        technical skillset combined with solutions-driven mindset enables me to solve complex, multi-faceted challenges that
+        others find intractable - whether designing custom performance tracking
+        systems or implementing intelligent automation workflows that transform team operations.
+      </p>
+
+      <div class="expertise-link-section">
+        <a href="/expertise" class="expertise-link">
+          Explore My Expertise <span style="font-size: 1.2em">→</span>
+        </a>
+      </div>
+    </section>
+  </div>
+</BaseLayout>
+
+<script is:inline>
+  (function () {
+    var contentElement = document.getElementById('home-content');
+    if (!contentElement) return;
+
+    var keywords = [
+      'leadership',
+      'programmatic',
+      'automation',
+      'AI-powered',
+      'mentored',
+      'workflows',
+      'technology',
+      'measurement',
+      'systems',
+      'innovation',
+      'presentations',
+      'analytics',
+      'optimisation',
+      'solutions',
+      'teams',
+      'partnerships',
+      'scaling',
+      'technical',
+      'technology leader',
+      'AI Solutions Expert',
+      'advanced analytics',
+      'performance marketing',
+      'intelligent AI-powered solutions',
+      'high-performing teams',
+      'technical innovation',
+      'systematic thinking',
+      'sophisticated systems',
+      'measurable results',
+      'solutions-driven mindset',
+    ];
+
+    var animationInterval;
+    var keywordElements = [];
+    var currentlyAnimating = false;
+    var lastAnimatedElement = null;
+
+    var createBreathingEffect = function () {
+      if (!contentElement) return;
+
+      // Clear any existing wrapped keywords first
+      var existingWraps = contentElement.querySelectorAll('.breathe-keyword');
+      existingWraps.forEach(function (wrap) {
+        var parent = wrap.parentNode;
+        if (parent) {
+          parent.replaceChild(document.createTextNode(wrap.textContent || ''), wrap);
+          if (parent.normalize) {
+            parent.normalize();
+          }
+        }
+      });
+
+      // Safari-compatible text node finding
+      var findTextNodes = function (element) {
+        var textNodes = [];
+        var walker = document.createTreeWalker(
+          element,
+          NodeFilter.SHOW_TEXT,
+          {
+            acceptNode: function (node) {
+              return node.nodeValue && node.nodeValue.trim() &&
+                node.parentElement && !node.parentElement.classList.contains('breathe-keyword')
+                ? NodeFilter.FILTER_ACCEPT
+                : NodeFilter.FILTER_REJECT;
+            },
+          }
+        );
+
+        var node;
+        while ((node = walker.nextNode())) {
+          textNodes.push(node);
+        }
+        return textNodes;
+      };
+
+      var textNodes = findTextNodes(contentElement);
+
+      // Process text nodes to wrap keywords (longest first to avoid conflicts)
+      var sortedKeywords = keywords.slice().sort(function (a, b) {
+        return b.length - a.length;
+      });
+
+      textNodes.forEach(function (textNode) {
+        var content = textNode.nodeValue || '';
+        var fragment = document.createDocumentFragment();
+        var lastIndex = 0;
+
+        var matches = [];
+        sortedKeywords.forEach(function (keyword) {
+          var escaped = keyword.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+          var regex = new RegExp('\\b' + escaped + '\\b', 'gi');
+          var match;
+          while ((match = regex.exec(content)) !== null) {
+            var overlaps = matches.some(function (m) {
+              return (
+                (match.index >= m.start && match.index < m.end) ||
+                (match.index + match[0].length > m.start && match.index + match[0].length <= m.end)
+              );
+            });
+            if (!overlaps) {
+              matches.push({ start: match.index, end: match.index + match[0].length, text: match[0] });
+            }
+          }
+        });
+
+        if (matches.length === 0) return;
+
+        matches.sort(function (a, b) { return a.start - b.start; });
+
+        matches.forEach(function (match) {
+          if (match.start > lastIndex) {
+            fragment.appendChild(document.createTextNode(content.slice(lastIndex, match.start)));
+          }
+          var span = document.createElement('span');
+          span.className = 'breathe-keyword';
+          span.textContent = match.text;
+          fragment.appendChild(span);
+          lastIndex = match.end;
+        });
+
+        if (lastIndex < content.length) {
+          fragment.appendChild(document.createTextNode(content.slice(lastIndex)));
+        }
+
+        if (textNode.parentNode) {
+          textNode.parentNode.replaceChild(fragment, textNode);
+        }
+      });
+
+      // Get all keyword elements with a small delay for Safari
+      setTimeout(function () {
+        if (contentElement) {
+          keywordElements = Array.from(contentElement.querySelectorAll('.breathe-keyword'));
+        }
+      }, 100);
+    };
+
+    var animateRandomKeyword = function () {
+      if (currentlyAnimating || keywordElements.length === 0) return;
+
+      currentlyAnimating = true;
+
+      if (lastAnimatedElement) {
+        lastAnimatedElement.classList.remove('breathing');
+      }
+
+      var randomElement = keywordElements[Math.floor(Math.random() * keywordElements.length)];
+      lastAnimatedElement = randomElement;
+
+      requestAnimationFrame(function () {
+        requestAnimationFrame(function () {
+          randomElement.classList.add('breathing');
+        });
+      });
+
+      setTimeout(function () {
+        randomElement.classList.remove('breathing');
+        currentlyAnimating = false;
+      }, 3300);
+    };
+
+    // Initialise with 1-second delay, then start interval
+    setTimeout(function () {
+      createBreathingEffect();
+
+      setTimeout(function () {
+        animationInterval = setInterval(function () {
+          animateRandomKeyword();
+        }, 4000);
+      }, 500);
+    }, 1000);
+  })();
+</script>

@@ -1,0 +1,246 @@
+---
+export const prerender = true;
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { consultationData } from '../data/consultation';
+
+const professionalServiceSchema = {
+  "@context": "https://schema.org",
+  "@type": "ProfessionalService",
+  "name": "Henrik Söderlund - Strategic Technology Consultancy",
+  "description": "AI automation, analytics implementation, and digital transformation consulting services for businesses seeking to leverage cutting-edge technology solutions.",
+  "url": "https://www.henriksoderlund.com/",
+  "founder": {
+    "@type": "Person",
+    "name": "Henrik Söderlund",
+    "url": "https://www.henriksoderlund.com/"
+  },
+  "address": {
+    "@type": "PostalAddress",
+    "addressLocality": "Perth",
+    "addressRegion": "WA",
+    "addressCountry": "AU"
+  },
+  "areaServed": [
+    {
+      "@type": "City",
+      "name": "Perth"
+    },
+    {
+      "@type": "Country",
+      "name": "Australia"
+    },
+    {
+      "@type": "Place",
+      "name": "Global"
+    }
+  ],
+  "priceRange": "AUD 350 - 45,000",
+  "paymentAccepted": "Cash, Credit Card, Bank Transfer",
+  "currenciesAccepted": "AUD",
+  "hasOfferCatalog": {
+    "@type": "OfferCatalog",
+    "name": "Consulting Services",
+    "itemListElement": [
+      {
+        "@type": "Offer",
+        "itemOffered": {
+          "@type": "Service",
+          "name": "AI Strategy & Feasibility Assessment",
+          "description": "Strategic roadmap, ROI analysis, technical specifications"
+        },
+        "price": "3500",
+        "priceCurrency": "AUD"
+      },
+      {
+        "@type": "Offer",
+        "itemOffered": {
+          "@type": "Service",
+          "name": "Workflow Automation System",
+          "description": "End-to-end automation, integration, training, documentation"
+        },
+        "priceSpecification": {
+          "@type": "PriceSpecification",
+          "minPrice": "8500",
+          "maxPrice": "15000",
+          "priceCurrency": "AUD"
+        }
+      }
+    ]
+  },
+  "contactPoint": {
+    "@type": "ContactPoint",
+    "contactType": "Customer Service",
+    "url": "https://calendly.com/henriksoederlund/30min",
+    "availableLanguage": ["English", "Swedish"]
+  }
+};
+---
+
+<BaseLayout
+  title="Consultancy | Henrik Söderlund"
+  description="Strategic technology consultancy services by Henrik Söderlund - AI automation, analytics implementation, and digital transformation for businesses."
+>
+  <Fragment slot="head">
+    <script type="application/ld+json" set:html={JSON.stringify(professionalServiceSchema)} />
+  </Fragment>
+
+  <div class="consultation-page">
+    <h1>{consultationData.intro.title}</h1>
+
+    <section class="intro-section">
+      <p>{consultationData.intro.paragraph}</p>
+    </section>
+
+    <section class="ai-consultancy-section">
+      <h2>{consultationData.aiConsultancy.title}</h2>
+      <p>{consultationData.aiConsultancy.paragraph}</p>
+
+      <div class="ai-services">
+        <h3>{consultationData.aiConsultancy.services.title}</h3>
+        <ul>
+          {consultationData.aiConsultancy.services.items.map(item => (
+            <li><strong>{item.name}</strong><br />{item.description}</li>
+          ))}
+        </ul>
+      </div>
+
+      <h3>{consultationData.aiConsultancy.pricing.title}</h3>
+      <table class="modern-pricing-table">
+        <thead>
+          <tr>
+            {consultationData.aiConsultancy.pricing.headers.map(header => <th>{header}</th>)}
+          </tr>
+        </thead>
+        <tbody>
+          {consultationData.aiConsultancy.pricing.rows.map(row => (
+            <tr>
+              {row.map((cell, cellIndex) => (
+                <td data-label={consultationData.aiConsultancy.pricing.headers[cellIndex]}>{cell}</td>
+              ))}
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </section>
+
+    <section class="case-study-section">
+      <details>
+        <summary class="case-study-header">
+          <h2>{consultationData.caseStudy.title}</h2>
+          <span class="case-study-toggle-icon">+</span>
+        </summary>
+        <h3 class="case-study-subtitle">{consultationData.caseStudy.subtitle}</h3>
+        <div class="case-study-expandable">
+          <div class="client-overview">
+            <div class="client-info">
+              <strong>Client:</strong> {consultationData.caseStudy.client.type}<br />
+              <strong>Team Size:</strong> {consultationData.caseStudy.client.team}<br />
+              <strong>Core Challenge:</strong> {consultationData.caseStudy.client.challenge}
+            </div>
+          </div>
+
+          <div class="case-study-content">
+            <div class="challenge-section">
+              <h4>{consultationData.caseStudy.challenge.title}</h4>
+              <p>{consultationData.caseStudy.challenge.description}</p>
+              <ul class="pain-points">
+                {consultationData.caseStudy.challenge.painPoints.map(point => (
+                  <li>{point}</li>
+                ))}
+              </ul>
+            </div>
+
+            <div class="solution-section">
+              <h4>{consultationData.caseStudy.solution.title}</h4>
+              <p>{consultationData.caseStudy.solution.description}</p>
+              <div class="solution-components">
+                {consultationData.caseStudy.solution.components.map(component => (
+                  <div class="solution-component">
+                    <h5>{component.name}</h5>
+                    <p>{component.description}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <div class="results-section">
+              <h4>{consultationData.caseStudy.results.title}</h4>
+              <p>{consultationData.caseStudy.results.description}</p>
+              <div class="results-metrics">
+                {consultationData.caseStudy.results.metrics.map(metric => (
+                  <div class="metric-card">
+                    <div class="metric-value">{metric.value}</div>
+                    <div class="metric-name">{metric.metric}</div>
+                    <div class="metric-description">{metric.description}</div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <div class="technology-section">
+              <h4>{consultationData.caseStudy.technologies.title}</h4>
+              <ul class="technology-list">
+                {consultationData.caseStudy.technologies.items.map(tech => (
+                  <li>{tech}</li>
+                ))}
+              </ul>
+            </div>
+
+            <div class="testimonial-section">
+              <blockquote class="case-study-testimonial">
+                <p>"{consultationData.caseStudy.testimonial.quote}"</p>
+                <cite>— {consultationData.caseStudy.testimonial.author}</cite>
+              </blockquote>
+            </div>
+          </div>
+        </div>
+      </details>
+    </section>
+
+    <section class="traditional-services-section">
+      <h2>{consultationData.analyticsConsultancy.title}</h2>
+      <p>{consultationData.analyticsConsultancy.paragraph}</p>
+
+      <div class="analytics-services">
+        <h3>{consultationData.analyticsConsultancy.services.title}</h3>
+        <ul>
+          {consultationData.analyticsConsultancy.services.items.map(item => <li>{item}</li>)}
+        </ul>
+      </div>
+
+      <h3>{consultationData.analyticsConsultancy.pricing.title}</h3>
+      <table class="modern-pricing-table">
+        <thead>
+          <tr>
+            {consultationData.analyticsConsultancy.pricing.headers.map(header => <th>{header}</th>)}
+          </tr>
+        </thead>
+        <tbody>
+          {consultationData.analyticsConsultancy.pricing.rows.map(row => (
+            <tr>
+              {row.map((cell, cellIndex) => (
+                <td data-label={consultationData.analyticsConsultancy.pricing.headers[cellIndex]}>{cell}</td>
+              ))}
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </section>
+
+    <section class="policy-section">
+      <h2>{consultationData.qualityGuarantee.title}</h2>
+      <p>{consultationData.qualityGuarantee.paragraph}</p>
+    </section>
+
+    <section class="calendar-section">
+      <h2>Ready to Get Started?</h2>
+      <div class="calendly-intro">
+        <p>Interested in working together? Let's discuss your specific needs and explore how we can accelerate your digital transformation.</p>
+      </div>
+      <div class="cta-buttons">
+        <a href="/contact" class="cta-primary">Get in Touch</a>
+        <a href="https://calendly.com/henriksoederlund/30min" target="_blank" rel="noopener noreferrer" class="cta-secondary">Book a Discovery Call</a>
+      </div>
+    </section>
+  </div>
+</BaseLayout>

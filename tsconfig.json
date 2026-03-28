@@ -1,16 +1,7 @@
 {
-  "files": [],
-  "references": [
-    { "path": "./tsconfig.app.json" },
-    { "path": "./tsconfig.node.json" },
-    { "path": "./tsconfig.worker.json" }
-],
-"compilerOptions": {
+  "extends": "astro/tsconfigs/strict",
+  "compilerOptions": {
     "strict": true,
-    "forceConsistentCasingInFileNames": true,
-    "types": [
-        "./worker-configuration.d.ts",
-        "node"
-    ]
-}
+    "forceConsistentCasingInFileNames": true
+  }
 }

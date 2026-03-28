@@ -1,0 +1,2538 @@
+/* Reset and Base Styles */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scrollbar-gutter: stable;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  line-height: 1.6;
+  color: #333;
+  background-color: #fff;
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  overflow-x: hidden;
+}
+
+p {
+  margin-bottom: 1rem;
+}
+
+.app {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  overflow-x: hidden;
+}
+
+/* Main Navigation Styles */
+.main-nav {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  margin-bottom: 2rem;
+  padding: 1rem;
+  background-color: #f8f9fa;
+  border-bottom: 1px solid #e9ecef;
+}
+
+.main-nav a {
+  text-decoration: none;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  background-color: #007acc;
+  color: white;
+  transition: background-color 0.3s;
+  font-weight: 500;
+}
+
+.main-nav a:hover {
+  background-color: #005999;
+}
+
+/* Page Container Styles */
+.home-page,
+.skills-page,
+.expertise-page,
+.work-experience-page,
+.education-page,
+.consultation-page {
+  max-width: 800px;
+  margin: 0 auto;
+  width: 100%;
+  text-align: left; /* Reverted back to left */
+}
+
+/* Desktop top margins */
+@media (min-width: 1025px) {
+  .home-page {
+    margin-top: 4rem;
+  }
+  
+  .skills-page,
+  .expertise-page,
+  .work-experience-page,
+  .education-page,
+  .consultation-page {
+    margin-top: 2rem;
+  }
+}
+
+.home-page {
+  padding: 2rem;
+  line-height: 1.6;
+}
+
+/* Typography Hierarchy */
+h1 {
+  margin-bottom: 2rem;
+}
+
+h2 {
+  color: #555;
+}
+
+h3 {
+  color: #666;
+}
+
+h4 {
+  color: #777;
+}
+
+h5 {
+  color: #888;
+}
+
+.country-flag {
+  width: 1em;
+  height: auto;
+  margin-right: 8px;
+  vertical-align: baseline;
+}
+
+/* Home Page Styles */
+.hero-section {
+  text-align: center;
+  margin-bottom: 3rem;
+}
+
+.profile-image {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  margin-bottom: 1rem;
+  object-fit: cover;
+}
+
+.hero-section h1 {
+  margin-bottom: 1rem;
+  color: #2c3e50;
+}
+
+.lead {
+  font-size: 1.2rem;
+  color: #7f8c8d;
+  margin-bottom: 2rem;
+  font-weight: 400;
+}
+
+.content-section {
+  margin-bottom: 3rem;
+}
+
+.content-section h2 {
+  font-size: 1.8rem;
+  margin-bottom: 1rem;
+  color: #2c3e50;
+  text-align: center;
+}
+
+.content-section p {
+  margin-bottom: 1rem;
+  text-align: left;
+}
+
+.expertise-link-section {
+  text-align: center;
+  margin-top: 2rem;
+}
+
+.expertise-link {
+  display: inline-flex;
+  align-items: center;
+  text-decoration: none;
+  color: #2c3e50;
+  font-size: 1rem;
+  font-weight: 400;
+  padding: 0.6rem 1.2rem;
+  border-radius: 6px;
+  line-height: 1;
+}
+
+.expertise-link:hover {
+  background-color: #f5f5f5;
+  color: #2c3e50;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.more-about-navigation {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+/* Skills Page Styles */
+.consultancy-section {
+  margin-bottom: 2rem;
+}
+
+.consultancy-section h2,
+.platform-experience h2,
+.github-contributions h2,
+.dashboards-section h2,
+.wiki-section h2,
+.leadership-section h2,
+.technical-skills-section h2 {
+  font-size: 2rem;
+  margin-bottom: 1rem;
+  color: #2c3e50;
+}
+
+.skills-grid {
+  display: grid;
+  gap: 0.75rem;
+  margin-bottom: 0.75rem;
+}
+
+.skill-category {
+  margin-bottom: 1rem;
+}
+
+.skill-category h3 {
+  font-size: 1.3rem;
+  margin-bottom: 1rem;
+  color: #2c3e50;
+}
+
+.skill-tags,
+.platform-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.skill-tag,
+.platform-tag {
+  background-color: #e9ecef;
+  padding: 0.25rem 0.7rem;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  color: #495057;
+  font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+}
+
+.platform-experience {
+  margin-bottom: 3rem;
+}
+
+.github-contributions {
+  margin-bottom: 3rem;
+}
+
+.contribution {
+  margin-bottom: 2rem;
+  padding: 1rem;
+  background-color: #f8f9fa;
+  border-radius: 8px;
+}
+
+.contribution h3 {
+  margin-bottom: 0.5rem;
+}
+
+.contribution a {
+  color: #007acc;
+  text-decoration: none;
+}
+
+.contribution a:hover {
+  text-decoration: underline;
+}
+
+.dashboard-image,
+.wiki-image {
+  max-width: 100%;
+  height: auto;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  margin-top: 1rem;
+  margin-bottom: 3rem;
+}
+
+/* Content Entry Styles (used by Work Experience and Education pages) */
+.content-entry {
+  margin-bottom: 3rem;
+  padding-bottom: 2rem;
+  border-bottom: 1px solid #e9ecef;
+}
+
+.content-entry:last-child {
+  border-bottom: none;
+}
+
+.content-entry h2 {
+  font-size: 1.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.dates {
+  color: #7f8c8d;
+  font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+  font-style: normal;
+  margin-bottom: 1rem;
+}
+
+.content-entry ul {
+  list-style-type: disc;
+  margin-left: 2rem;
+}
+
+.content-entry li {
+  margin-bottom: 0.8rem;
+  text-align: justify;
+}
+
+/* Education Page Styles */
+.education-entry {
+  margin-bottom: 2rem;
+  padding: 1.5rem;
+  background-color: #f8f9fa;
+  border-radius: 8px;
+}
+
+.education-entry h4 {
+  font-size: 1.3rem;
+  color: #2c3e50;
+  margin-bottom: 0.5rem;
+}
+
+/* Consultation Page Styles */
+.intro-section,
+.services-section,
+.policy-section,
+.pricing-section,
+.calendar-section,
+.ai-consultancy-section,
+.traditional-services-section,
+.case-study-section {
+  margin-bottom: 3rem;
+}
+
+.services-section h2,
+.policy-section h2,
+.pricing-section h2,
+.calendar-section h2,
+.ai-consultancy-section h2,
+.traditional-services-section h2 {
+  font-size: 1.8rem;
+  margin-bottom: 1rem;
+  color: #2c3e50;
+}
+
+.ai-consultancy-section,
+.traditional-services-section {
+  margin-bottom: 3rem;
+}
+
+.ai-services,
+.analytics-services {
+  margin-bottom: 2rem;
+}
+
+.ai-services h3,
+.analytics-services h3 {
+  font-size: 1.4rem;
+  margin-bottom: 1rem;
+  color: #374151;
+}
+
+.ai-services ul,
+.analytics-services ul {
+  list-style: none;
+  padding-left: 0;
+}
+
+.ai-services li,
+.analytics-services li {
+  margin-bottom: 0.75rem;
+  padding-left: 1.5rem;
+  position: relative;
+}
+
+.ai-services li:before,
+.analytics-services li:before {
+  content: "▶";
+  position: absolute;
+  left: 0;
+  color: #667eea;
+  font-size: 0.8rem;
+}
+
+.services-section ul {
+  list-style-type: disc;
+  margin-left: 2rem;
+}
+
+.services-section li {
+  margin-bottom: 0.5rem;
+}
+
+.services-section ul ul {
+  margin-top: 0.5rem;
+}
+
+.services-section code {
+  background-color: #f8f9fa;
+  padding: 0.2rem 0.4rem;
+  border-radius: 3px;
+  font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+}
+
+/* Modern Pricing Table Styles */
+.modern-pricing-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  margin-top: 1.5rem;
+  background: #fff;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  border: 1px solid #e5e7eb;
+}
+
+.modern-pricing-table th {
+  background: #f8f9fa;
+  color: #2c3e50;
+  font-weight: 600;
+  font-size: 0.875rem;
+  padding: 1.25rem 1rem;
+  text-align: left;
+  letter-spacing: 0.025em;
+  text-transform: uppercase;
+  position: relative;
+  border-bottom: 2px solid #e5e7eb;
+}
+
+.modern-pricing-table th:first-child {
+  border-top-left-radius: 12px;
+}
+
+.modern-pricing-table th:last-child {
+  border-top-right-radius: 12px;
+}
+
+.modern-pricing-table td {
+  padding: 1.25rem 1rem;
+  text-align: left;
+  border-bottom: 1px solid #f3f4f6;
+  vertical-align: top;
+  line-height: 1.5;
+  font-size: 0.85rem;
+}
+
+
+.modern-pricing-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.modern-pricing-table tbody tr:last-child td:first-child {
+  border-bottom-left-radius: 12px;
+}
+
+.modern-pricing-table tbody tr:last-child td:last-child {
+  border-bottom-right-radius: 12px;
+}
+
+/* Investment column styling */
+.modern-pricing-table td:nth-child(3) {
+  font-weight: 600;
+  color: #059669;
+  font-size: 0.95rem;
+}
+
+/* Service column styling */
+.modern-pricing-table td:first-child {
+  font-weight: 500;
+  color: #1f2937;
+}
+
+/* Timeline column styling */
+.modern-pricing-table td:nth-child(2) {
+  color: #6b7280;
+  font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+  font-size: 0.9rem;
+}
+
+/* Legacy pricing table styles (for backwards compatibility) */
+.pricing-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  margin-top: 1.5rem;
+  background: #fff;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  border: 1px solid #e5e7eb;
+}
+
+.pricing-table th {
+  background: #f8f9fa;
+  color: #2c3e50;
+  font-weight: 600;
+  font-size: 0.875rem;
+  padding: 1.25rem 1rem;
+  text-align: left;
+  letter-spacing: 0.025em;
+  text-transform: uppercase;
+  border-bottom: 2px solid #e5e7eb;
+}
+
+.pricing-table th:first-child {
+  border-top-left-radius: 12px;
+}
+
+.pricing-table th:last-child {
+  border-top-right-radius: 12px;
+}
+
+.pricing-table td {
+  padding: 1.25rem 1rem;
+  text-align: left;
+  border-bottom: 1px solid #f3f4f6;
+  vertical-align: top;
+  line-height: 1.5;
+  font-size: 0.85rem;
+}
+
+
+.pricing-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.pricing-table tbody tr:last-child td:first-child {
+  border-bottom-left-radius: 12px;
+}
+
+.pricing-table tbody tr:last-child td:last-child {
+  border-bottom-right-radius: 12px;
+}
+
+.pricing-table td:nth-child(3) {
+  font-weight: 600;
+  color: #059669;
+  font-size: 1.05rem;
+}
+
+.consultation-booking-widget {
+  text-align: center; /* Center content within this widget */
+  margin-top: 2rem; /* Add some space above the button */
+}
+
+/* Case Study Section Styles */
+.case-study-section {
+  margin-bottom: 3rem;
+}
+
+.case-study-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.case-study-header h2 {
+  margin: 0;
+  color: #2c3e50;
+  font-size: 1.8rem;
+}
+
+.case-study-toggle {
+  background: white;
+  border: 1px solid #007acc;
+  border-radius: 4px;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 1.3rem;
+  color: #007acc;
+  font-weight: bold;
+  transition: all 0.2s ease;
+}
+
+.case-study-toggle:hover {
+  background-color: #007acc;
+  color: white;
+}
+
+.case-study-subtitle {
+  font-size: 1rem;
+  color: #333;
+  font-weight: 400;
+  margin: 0 0 1rem 0;
+  text-align: left;
+}
+
+.expand-hint {
+  font-size: 1rem;
+  color: #666;
+  font-style: normal;
+}
+
+.case-study-expandable {
+  margin-top: 1.5rem;
+}
+
+.client-overview {
+  background: white;
+  border-radius: 8px;
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+  border: 1px solid #e9ecef;
+}
+
+.client-info {
+  font-size: 0.9rem;
+  line-height: 1.6;
+  color: #333;
+}
+
+.case-study-content {
+  display: grid;
+  gap: 1.5rem;
+}
+
+.challenge-section,
+.solution-section,
+.results-section,
+.technology-section,
+.testimonial-section {
+  background: white;
+  border-radius: 8px;
+  padding: 1.5rem;
+  border: 1px solid #e9ecef;
+}
+
+.challenge-section h4,
+.solution-section h4,
+.results-section h4,
+.technology-section h4 {
+  font-size: 1.3rem;
+  color: #2c3e50;
+  margin: 0 0 1rem 0;
+  font-weight: 600;
+}
+
+.pain-points {
+  list-style: disc;
+  margin-left: 2rem;
+  margin: 1rem 0 1rem 2rem;
+}
+
+.pain-points li {
+  margin-bottom: 0.5rem;
+  color: #555;
+  line-height: 1.5;
+}
+
+.solution-components {
+  display: grid;
+  gap: 0.5rem;
+  margin-top: 1rem;
+}
+
+.solution-component {
+  background: #f8f9fa;
+  border-radius: 4px;
+  padding: 0.75rem;
+  border: 1px solid #e9ecef;
+}
+
+.solution-component h5 {
+  font-size: 1rem;
+  color: #2c3e50;
+  margin: 0 0 0.25rem 0;
+  font-weight: 600;
+}
+
+.solution-component p {
+  margin: 0;
+  color: #555;
+  font-size: 0.85rem;
+  line-height: 1.4;
+}
+
+.results-metrics {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 0.75rem;
+  margin-top: 1rem;
+}
+
+.metric-card {
+  background: #f8f9fa;
+  border: 1px solid #e9ecef;
+  border-radius: 4px;
+  padding: 1rem;
+  text-align: left;
+}
+
+.metric-value {
+  font-size: 1.3rem;
+  font-weight: 600;
+  margin-bottom: 0.25rem;
+  color: #333;
+}
+
+.metric-name {
+  font-size: 0.8rem;
+  font-weight: 500;
+  margin-bottom: 0.25rem;
+  color: #555;
+  text-transform: none;
+  letter-spacing: 0;
+}
+
+.metric-description {
+  font-size: 0.75rem;
+  color: #666;
+  line-height: 1.3;
+}
+
+.technology-list {
+  list-style: disc;
+  margin-left: 2rem;
+  margin: 1rem 0 1rem 2rem;
+  display: block;
+}
+
+.technology-list li {
+  margin-bottom: 0.5rem;
+  color: #555;
+  font-size: 0.9rem;
+  line-height: 1.4;
+}
+
+.testimonial-section {
+  background: #f8f9fa;
+  border: 1px solid #e9ecef;
+  text-align: center;
+}
+
+.case-study-testimonial {
+  margin: 0;
+  border: none;
+  padding: 0;
+}
+
+.case-study-testimonial p {
+  font-size: 1rem;
+  line-height: 1.6;
+  margin: 0 0 1rem 0;
+  font-style: italic;
+  color: #555;
+}
+
+.case-study-testimonial cite {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #2c3e50;
+  font-style: normal;
+}
+
+.gcal-scheduling-button {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif !important; /* Use !important to override inline styles if any */
+  cursor: pointer;
+}
+
+.calendly-placeholder {
+  text-align: center;
+  padding: 2rem;
+  background-color: #f8f9fa;
+  border-radius: 8px;
+  color: #7f8c8d;
+}
+
+/* Navigation Component Styles */
+.navigation-section {
+  margin-top: 3rem;
+  padding-top: 2rem;
+  border-top: 1px solid #e9ecef;
+}
+
+.navigation-section h3 {
+  text-align: center;
+  margin-bottom: 1.5rem;
+  color: #2c3e50;
+}
+
+.centered-navigation {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+  margin-bottom: 1rem;
+}
+
+.nav-button {
+  text-decoration: none;
+  padding: 0.8rem 1.5rem;
+  border-radius: 6px;
+  background-color: white;
+  color: #333;
+  transition: all 0.3s;
+  font-weight: 500;
+  border: 0.5px solid #333;
+  cursor: pointer;
+  display: inline-block;
+}
+
+.nav-button:hover {
+  background-color: #f8f9fa;
+  color: #333;
+  transform: translateY(-2px);
+}
+
+.nav-button.primary {
+  background-color: white;
+  color: #333;
+  border: 0.5px solid #333;
+}
+
+.nav-button.primary:hover {
+  background-color: #f8f9fa;
+  color: #333;
+}
+
+.resume-button {
+  background-color: #ffc107;
+  color: #212529;
+  padding: 0.8rem 1.5rem;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+  font-weight: 500;
+  transition: all 0.3s;
+}
+
+.resume-button:hover {
+  background-color: #e0a800;
+  transform: translateY(-2px);
+}
+
+/* Links */
+a {
+  color: #007acc;
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+/* Navigation Box Styles */
+.navigation-box {
+  position: fixed;
+  top: 20px;
+  left: 20px;
+  width: 240px;
+  max-height: calc(100vh - 40px);
+  background: rgba(255, 255, 255, 0.9);
+  -webkit-backdrop-filter: blur(5px);
+  backdrop-filter: blur(5px);
+  border: 1px solid #e1e5e9;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  z-index: 1000;
+  overflow: hidden;
+  font-size: 0.8rem;
+}
+
+/* Ultrawide gutter positioning for navigation */
+@media (min-width: 1400px) {
+  .navigation-box {
+    left: max(20px, calc((100vw - 1200px) / 2 - 280px));
+  }
+}
+
+.navigation-box.collapsed {
+  width: auto;
+  height: auto;
+}
+
+.nav-box-header {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  padding: 8px 12px;
+  background: rgba(248, 249, 250, 0.65);
+  border-bottom: 1px solid #e1e5e9;
+  min-height: 16px;
+}
+
+.nav-box-header h4 {
+  margin: 0;
+  font-size: 0.8rem;
+  font-weight: 400;
+  color: #2c3e50;
+}
+
+.collapse-btn {
+  background: none;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  padding: 8px;
+  color: #666;
+  font-size: 12px;
+  border-radius: 3px;
+  transition: background-color 0.2s;
+  position: relative;
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Hamburger Icon */
+.hamburger-icon {
+  width: 16px;
+  height: 12px;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.hamburger-icon span {
+  display: block;
+  height: 2px;
+  width: 100%;
+  background-color: #666;
+  transition: all 0.3s ease;
+  transform-origin: center;
+}
+
+/* Collapsed state - hamburger */
+.navigation-box.collapsed .hamburger-icon span:nth-child(1) {
+  transform: translateY(0);
+}
+
+.navigation-box.collapsed .hamburger-icon span:nth-child(2) {
+  opacity: 1;
+}
+
+.navigation-box.collapsed .hamburger-icon span:nth-child(3) {
+  transform: translateY(0);
+}
+
+/* Expanded state - X */
+.navigation-box:not(.collapsed) .hamburger-icon span:nth-child(1) {
+  transform: translateY(5px) rotate(45deg);
+}
+
+.navigation-box:not(.collapsed) .hamburger-icon span:nth-child(2) {
+  opacity: 0;
+}
+
+.navigation-box:not(.collapsed) .hamburger-icon span:nth-child(3) {
+  transform: translateY(-5px) rotate(-45deg);
+}
+
+
+.collapse-btn:hover {
+  background-color: #e9ecef;
+}
+
+.collapse-btn:focus {
+  outline: none;
+  background-color: #e9ecef;
+}
+
+.nav-box-content {
+  max-height: calc(100vh - 100px);
+  overflow-y: auto;
+  padding: 8px 0;
+}
+
+.nav-section {
+  margin-bottom: 12px;
+}
+
+.nav-section h5 {
+  margin: 0 0 6px 0;
+  padding: 0 16px;
+  font-size: 0.7rem;
+  font-weight: 400;
+  color: #666;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.nav-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.nav-list li {
+  margin: 0;
+}
+
+.nav-list a, .heading-link {
+  display: block;
+  padding: 6px 16px;
+  color: #333;
+  text-decoration: none;
+  transition: background-color 0.2s;
+  border: none !important;
+  border-radius: 0 !important;
+  background: none;
+  width: 100%;
+  text-align: left;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: inherit;
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+.nav-list a:hover, .heading-link:hover {
+  background-color: #f5f5f5;
+  text-decoration: none;
+  border: none !important;
+  border-radius: 0 !important;
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+.heading-link:focus, .heading-link:active {
+  outline: none !important;
+  border: none !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+}
+
+.nav-list li.active a {
+  background-color: #e8e8e8;
+  color: #333;
+  font-weight: 500;
+  border-left: 3px solid #666;
+}
+
+.nav-divider {
+  height: 1px;
+  background-color: #e1e5e9;
+  margin: 8px 16px;
+}
+
+/* Heading levels indentation */
+.headings-list .heading-level-1 .heading-link {
+  padding-left: 16px;
+  font-weight: 600;
+  font-size: 0.85rem;
+}
+
+.headings-list .heading-level-2 .heading-link {
+  padding-left: 28px;
+  font-weight: 400;
+  font-size: 0.82rem;
+}
+
+.headings-list .heading-level-3 .heading-link {
+  padding-left: 40px;
+  font-weight: 400;
+  font-size: 0.8rem;
+}
+
+.headings-list .heading-level-4 .heading-link {
+  padding-left: 52px;
+  font-size: 0.78rem;
+}
+
+.headings-list .heading-level-5 .heading-link {
+  padding-left: 64px;
+  font-size: 0.76rem;
+}
+
+.headings-list .heading-level-6 .heading-link {
+  padding-left: 76px;
+  font-size: 0.74rem;
+}
+
+/* Main content area - adjust for navigation box */
+.main-content {
+  width: 100%;
+  margin-left: 0;
+  transition: margin-left 0.3s ease;
+}
+
+/* Responsive adjustments */
+@media (min-width: 1025px) {
+  /* Keep content centered - navigation box will overlay */
+}
+
+@media (max-width: 1024px) {
+  .navigation-box {
+    position: fixed;
+    top: 10px;
+    left: 10px;
+    right: auto;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    z-index: 1001;
+    transition: all 0.3s ease;
+  }
+  
+  .navigation-box:not(.collapsed) {
+    width: 320px;
+    height: auto;
+    border-radius: 12px;
+    top: 10px;
+    left: 10px;
+    max-height: calc(100vh - 20px);
+  }
+  
+  .navigation-box.collapsed .nav-box-content {
+    display: none;
+  }
+  
+  .navigation-box.collapsed .nav-box-header {
+    justify-content: center;
+    align-items: center;
+    padding: 0;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    border-bottom: none;
+    background: rgba(255, 255, 255, 0.95);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  }
+  
+  .navigation-box.collapsed .collapse-btn {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    padding: 0;
+  }
+  
+  .main-content {
+    margin-left: 0;
+    padding-top: 4rem;
+  }
+  
+  .home-page h1,
+  .skills-page h1,
+  .expertise-page h1,
+  .work-experience-page h1,
+  .education-page h1,
+  .consultation-page h1 {
+    margin-top: 1rem;
+  }
+}
+
+/* GitHub Link Styles */
+.github-link {
+  position: absolute;
+  top: 35px;
+  right: 35px;
+  z-index: 1000;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Ultrawide gutter positioning for GitHub button */
+@media (min-width: 1400px) {
+  .github-link {
+    right: max(20px, calc((100vw - 1200px) / 2 - 80px));
+  }
+}
+
+.github-link:hover {
+  text-decoration: none;
+}
+
+.github-icon {
+  width: 28px;
+  height: 28px;
+  color: #333;
+  opacity: 0.7;
+  transition: all 0.3s ease;
+}
+
+.github-link:hover::before {
+  content: '';
+  position: absolute;
+  top: -10px;
+  left: -10px;
+  right: -10px;
+  bottom: -10px;
+  background-color: #e9ecef;
+  border-radius: 50%;
+  z-index: -1;
+}
+
+.github-link:hover .github-icon {
+  color: #000;
+}
+
+/* LinkedIn Link Styles */
+.linkedin-link {
+  position: absolute;
+  top: 35px;
+  right: 75px; /* Position next to GitHub icon */
+  z-index: 1000;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Ultrawide gutter positioning for LinkedIn button */
+@media (min-width: 1400px) {
+  .linkedin-link {
+    right: max(60px, calc((100vw - 1200px) / 2 - 40px));
+  }
+}
+
+.linkedin-link:hover {
+  text-decoration: none;
+}
+
+.linkedin-icon {
+  width: 28px;
+  height: 28px;
+  color: #333;
+  opacity: 0.7;
+  transition: all 0.3s ease;
+}
+
+.linkedin-link:hover::before {
+  content: '';
+  position: absolute;
+  top: -10px;
+  left: -10px;
+  right: -10px;
+  bottom: -10px;
+  background-color: #e9ecef;
+  border-radius: 50%;
+  z-index: -1;
+}
+
+.linkedin-link:hover .linkedin-icon {
+  color: #000;
+}
+
+/* Footer Styles */
+.site-footer {
+  text-align: center;
+  padding: 2rem 1rem;
+  margin-top: 3rem;
+  color: #888;
+  font-size: 0.7rem;
+  width: 100%;
+  position: relative;
+}
+
+.site-footer::before {
+  content: "";
+  position: relative;
+  display: block;
+  width: 300px;
+  height: 1px;
+  background: linear-gradient(to right, transparent, #e0e0e0 25%, #e0e0e0 75%, transparent);
+  margin: 0 auto 1.5rem auto;
+}
+
+.site-footer p {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  margin: 0;
+}
+
+.tech-stack {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin: 0 0.3rem;
+  vertical-align: middle;
+  line-height: 1;
+  font-size: 0.75rem;
+}
+
+.tech-icon {
+  width: 14px;
+  height: 14px;
+  vertical-align: middle;
+  filter: grayscale(100%) opacity(0.85);
+}
+
+/* Claude icon uses currentColor, so we need to set the color directly */
+.tech-stack img[alt="Claude Code"] {
+  color: #888 !important;
+  opacity: 0.45 !important;
+  filter: none !important;
+}
+
+/* Tech row styling for desktop */
+.tech-row {
+  display: inline;
+}
+
+.tech-row .tech-stack {
+  margin: 0 0.3rem;
+}
+
+.cloudflare-icon {
+  width: 20px;
+  height: 20px;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .home-page,
+  .skills-page,
+  .expertise-page,
+  .work-experience-page,
+  .education-page,
+  .consultation-page {
+    padding: 1rem;
+  }
+
+
+  .lead {
+    font-size: 1rem;
+  }
+
+  h1 {
+    font-size: 2.4rem;
+  }
+
+  h2 {
+    font-size: 1.3em;
+  }
+  
+  .consultancy-section h2,
+  .platform-experience h2,
+  .github-contributions h2,
+  .dashboards-section h2,
+  .wiki-section h2,
+  .leadership-section h2,
+  .technical-skills-section h2 {
+    font-size: 1.3em;
+  }
+
+  h3 {
+    font-size: 1.2rem;
+  }
+
+  h4 {
+    font-size: 1.1rem;
+  }
+
+  .main-nav {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .more-about-navigation {
+    grid-template-columns: 1fr;
+  }
+
+  .centered-navigation {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  /* Footer tech stack mobile styling */
+  .site-footer p {
+    flex-direction: column;
+    gap: 0.5rem;
+    align-items: center;
+  }
+
+  .powered-by {
+    margin-bottom: 0.5rem;
+  }
+
+  .tech-row {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 0.6rem;
+    margin: 0.2rem 0;
+  }
+
+  .tech-row .tech-stack {
+    margin: 0;
+  }
+
+  /* Mobile-responsive table styles */
+  .modern-pricing-table,
+  .pricing-table {
+    display: block;
+    width: 100%;
+    box-shadow: none;
+    border: none;
+    border-radius: 0;
+    background: transparent;
+  }
+
+  .modern-pricing-table thead,
+  .pricing-table thead {
+    display: none;
+  }
+
+  .modern-pricing-table tbody,
+  .pricing-table tbody {
+    display: block;
+  }
+
+  .modern-pricing-table tr,
+  .pricing-table tr {
+    display: block;
+    margin-bottom: 1rem;
+    padding: 1rem;
+    background: #fff;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  }
+
+  .modern-pricing-table tr:last-child,
+  .pricing-table tr:last-child {
+    margin-bottom: 0;
+  }
+
+  .modern-pricing-table td,
+  .pricing-table td {
+    display: block;
+    padding: 0.5rem 0;
+    border: none;
+    text-align: left;
+    position: relative;
+    padding-left: 45%;
+    font-size: 0.9rem;
+    line-height: 1.4;
+  }
+
+  .modern-pricing-table td:before,
+  .pricing-table td:before {
+    content: attr(data-label);
+    position: absolute;
+    left: 0;
+    width: 40%;
+    padding-right: 10px;
+    white-space: nowrap;
+    font-weight: 600;
+    color: #374151;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.025em;
+  }
+
+  .modern-pricing-table td:first-child,
+  .pricing-table td:first-child {
+    font-weight: 600;
+    color: #1f2937;
+    font-size: 1rem;
+    margin-bottom: 0.5rem;
+    padding-left: 0;
+    border-bottom: 1px solid #f3f4f6;
+    padding-bottom: 0.5rem;
+  }
+
+  .modern-pricing-table td:first-child:before,
+  .pricing-table td:first-child:before {
+    display: none;
+  }
+
+  .modern-pricing-table td:nth-child(3),
+  .pricing-table td:nth-child(3) {
+    font-weight: 600;
+    color: #059669;
+    font-size: 1rem;
+  }
+
+  .modern-pricing-table td:nth-child(2),
+  .pricing-table td:nth-child(2) {
+    color: #6b7280;
+    font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+    font-size: 0.85rem;
+  }
+
+  /* GitHub link mobile styles */
+  .github-link {
+    position: absolute;
+    top: 27px;
+    right: 30px;
+  }
+
+  .github-icon {
+    width: 24px;
+    height: 24px;
+  }
+
+  /* LinkedIn link mobile styles */
+  .linkedin-link {
+    position: absolute;
+    top: 27px;
+    right: 60px; /* Position next to GitHub icon */
+  }
+
+  .linkedin-icon {
+    width: 24px;
+    height: 24px;
+  }
+
+  /* Case study mobile responsive styles */
+  .case-study-section {
+    margin-bottom: 2rem;
+  }
+
+  .case-study-header {
+    flex-direction: row;
+    align-items: center;
+  }
+
+  .case-study-toggle {
+    width: 32px;
+    height: 32px;
+    font-size: 1.1rem;
+  }
+
+  .client-overview,
+  .challenge-section,
+  .solution-section,
+  .results-section,
+  .technology-section,
+  .testimonial-section {
+    padding: 1rem;
+  }
+
+  .results-metrics {
+    grid-template-columns: 1fr;
+    gap: 0.75rem;
+  }
+
+  .metric-card {
+    padding: 1rem;
+  }
+
+  .metric-value {
+    font-size: 1.2rem;
+  }
+
+  .solution-components {
+    gap: 0.75rem;
+  }
+
+  .case-study-testimonial p {
+    font-size: 0.9rem;
+  }
+}
+
+/* ========================= PRINT STYLES ========================= */
+@media print {
+  /* Page setup with minimal header/footer spacing */
+  @page {
+    margin: 1.8cm 1.5cm 1.8cm 1.5cm;
+    size: A4;
+    @top-center {
+      content: "Henrik Söderlund • www.henriksoderlund.com";
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      font-size: 8pt;
+      color: #666;
+      margin-bottom: 0.4cm;
+    }
+    @bottom-center {
+      content: "Page " counter(page) " of " counter(pages);
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      font-size: 7pt;
+      color: #999;
+      margin-top: 0.4cm;
+    }
+  }
+
+  /* Reset and base styles for print */
+  * {
+    -webkit-print-color-adjust: exact !important;
+    color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  /* Root and body adjustments */
+  html, body {
+    width: 100% !important;
+    height: auto !important;
+    font-size: 10pt !important;
+    line-height: 1.3 !important;
+    color: #000 !important;
+    background: #fff !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    overflow: visible !important;
+  }
+
+  #root {
+    width: 100% !important;
+    max-width: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    display: block !important;
+  }
+
+  .app {
+    width: 100% !important;
+    max-width: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    display: block !important;
+    box-shadow: none !important;
+    border: none !important;
+  }
+
+  /* Hide interactive and navigation elements */
+  .navigation-box,
+  .github-link,
+  .linkedin-link,
+  .nav-button,
+  .resume-button,
+  .gcal-scheduling-button,
+  .calendly-inline-widget,
+  .calendly-placeholder,
+  .consultation-booking-widget,
+  .main-nav,
+  .navigation-section,
+  .centered-navigation,
+  .more-about-navigation,
+  .site-footer,
+  button,
+  input[type="button"],
+  input[type="submit"],
+  .collapse-btn {
+    display: none !important;
+  }
+
+  /* Main content styling */
+  .main-content {
+    width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    max-width: none !important;
+  }
+
+  /* Adjust content positioning for reduced header space */
+  .main-content > *:first-child {
+    margin-top: 0 !important;
+  }
+  
+  /* Ensure H1 headings are positioned appropriately */
+  .main-content h1:first-child,
+  .main-content > *:first-child h1 {
+    margin-top: 0 !important;
+    padding-top: 0 !important;
+  }
+
+  /* Page containers */
+  .home-page,
+  .skills-page,
+  .expertise-page,
+  .work-experience-page,
+  .education-page,
+  .consultation-page {
+    width: 100% !important;
+    max-width: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  /* Typography for print - compact sizing */
+  h1 {
+    font-size: 18pt !important;
+    line-height: 1.2 !important;
+    margin: 0 0 10pt 0 !important;
+    color: #000 !important;
+    font-weight: bold !important;
+    page-break-after: avoid;
+  }
+
+  h2 {
+    font-size: 14pt !important;
+    line-height: 1.2 !important;
+    margin: 12pt 0 8pt 0 !important;
+    color: #000 !important;
+    font-weight: bold !important;
+    page-break-after: avoid;
+  }
+
+  h3 {
+    font-size: 12pt !important;
+    line-height: 1.2 !important;
+    margin: 10pt 0 6pt 0 !important;
+    color: #000 !important;
+    font-weight: bold !important;
+    page-break-after: avoid;
+  }
+
+  h4 {
+    font-size: 11pt !important;
+    line-height: 1.2 !important;
+    margin: 8pt 0 4pt 0 !important;
+    color: #000 !important;
+    font-weight: bold !important;
+    page-break-after: avoid;
+  }
+
+  h5, h6 {
+    font-size: 10pt !important;
+    line-height: 1.2 !important;
+    margin: 6pt 0 3pt 0 !important;
+    color: #000 !important;
+    font-weight: bold !important;
+    page-break-after: avoid;
+  }
+
+  p {
+    margin: 0 0 6pt 0 !important;
+    line-height: 1.3 !important;
+    font-size: 9pt !important;
+    color: #000 !important;
+    text-align: justify !important;
+    orphans: 2;
+    widows: 2;
+  }
+
+  /* Lead paragraph styling */
+  .lead {
+    font-size: 10pt !important;
+    line-height: 1.3 !important;
+    margin: 0 0 8pt 0 !important;
+    font-weight: normal !important;
+    color: #000 !important;
+  }
+
+  /* Lists */
+  ul, ol {
+    margin: 6pt 0 6pt 16pt !important;
+    padding: 0 !important;
+  }
+
+  li {
+    margin: 2pt 0 !important;
+    font-size: 9pt !important;
+    line-height: 1.3 !important;
+    color: #000 !important;
+    text-align: justify !important;
+  }
+
+  /* Skills and content sections */
+  .skills-grid {
+    display: block !important;
+    margin: 0 0 10pt 0 !important;
+  }
+
+  .skill-category {
+    margin: 0 0 8pt 0 !important;
+    padding: 4pt 0 !important;
+    background: none !important;
+    border: none !important;
+    box-shadow: none !important;
+  }
+
+  .skill-category h3 {
+    margin: 0 0 4pt 0 !important;
+    font-size: 11pt !important;
+    color: #000 !important;
+    font-weight: bold !important;
+  }
+
+  .skill-tags,
+  .platform-tags {
+    display: block !important;
+    margin: 0 !important;
+  }
+
+  .skill-tag,
+  .platform-tag {
+    display: inline !important;
+    background: none !important;
+    border: none !important;
+    padding: 0 !important;
+    margin: 0 4pt 0 0 !important;
+    font-size: 8pt !important;
+    color: #000 !important;
+    border-radius: 0 !important;
+    font-family: inherit !important;
+  }
+
+  .skill-tag:after,
+  .platform-tag:after {
+    content: " • ";
+    color: #666;
+  }
+
+  .skill-tag:last-child:after,
+  .platform-tag:last-child:after {
+    content: "";
+  }
+
+  /* Content entries */
+  .content-entry,
+  .education-entry {
+    margin: 0 0 10pt 0 !important;
+    padding: 0 0 8pt 0 !important;
+    border-bottom: 0.5pt solid #ccc !important;
+    background: none !important;
+  }
+
+  .content-entry:last-child,
+  .education-entry:last-child {
+    border-bottom: none !important;
+  }
+
+  .dates {
+    font-size: 8pt !important;
+    color: #666 !important;
+    font-family: inherit !important;
+    margin: 0 0 4pt 0 !important;
+  }
+
+  /* Tables for pricing - override mobile responsive styles for print */
+  .modern-pricing-table,
+  .pricing-table {
+    width: 100% !important;
+    border-collapse: collapse !important;
+    margin: 8pt 0 !important;
+    background: none !important;
+    box-shadow: none !important;
+    border-radius: 0 !important;
+    display: table !important;
+  }
+
+  .modern-pricing-table thead,
+  .pricing-table thead {
+    display: table-header-group !important;
+  }
+
+  .modern-pricing-table tbody,
+  .pricing-table tbody {
+    display: table-row-group !important;
+  }
+
+  .modern-pricing-table tr,
+  .pricing-table tr {
+    display: table-row !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    background: none !important;
+    border: none !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+  }
+
+  .modern-pricing-table th,
+  .pricing-table th {
+    display: table-cell !important;
+    background: #f5f5f5 !important;
+    color: #000 !important;
+    font-weight: bold !important;
+    font-size: 8pt !important;
+    padding: 4pt 6pt !important;
+    text-align: left !important;
+    border: 0.5pt solid #ccc !important;
+    position: relative !important;
+    padding-left: 6pt !important;
+  }
+
+  .modern-pricing-table td,
+  .pricing-table td {
+    display: table-cell !important;
+    padding: 4pt 6pt !important;
+    font-size: 8pt !important;
+    border: 0.5pt solid #ccc !important;
+    color: #000 !important;
+    background: none !important;
+    text-align: left !important;
+    position: relative !important;
+    padding-left: 6pt !important;
+  }
+
+  /* Remove mobile table pseudo-elements */
+  .modern-pricing-table td:before,
+  .pricing-table td:before {
+    display: none !important;
+    content: none !important;
+  }
+
+  /* Images */
+  img {
+    max-width: 100% !important;
+    height: auto !important;
+    page-break-inside: avoid;
+  }
+
+  .profile-image {
+    width: 60pt !important;
+    height: 60pt !important;
+    border-radius: 50% !important;
+    margin: 0 0 6pt 0 !important;
+    background: white !important;
+    border: 1pt solid #ddd !important;
+    box-shadow: none !important;
+  }
+
+  .dashboard-image,
+  .wiki-image {
+    max-width: 100% !important;
+    height: auto !important;
+    margin: 6pt 0 !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    border: 0.5pt solid #ccc !important;
+  }
+
+  /* Links */
+  a {
+    color: #000 !important;
+    text-decoration: underline !important;
+  }
+
+  a[href]:after {
+    content: " (" attr(href) ")";
+    font-size: 7pt;
+    color: #666;
+  }
+
+  /* Hide URLs for relative links and anchors */
+  a[href^="#"]:after,
+  a[href^="/"]:after {
+    content: "";
+  }
+
+  /* Special handling for GitHub contribution links - show full URL clearly */
+  .github-contributions .contribution h3 a[href]:after {
+    content: " → " attr(href);
+    font-size: 8pt !important;
+    color: #333 !important;
+    font-weight: normal !important;
+    display: block !important;
+    margin-top: 2pt !important;
+  }
+
+  /* Hero section adjustments - center content like website */
+  .hero-section {
+    text-align: center !important;
+    margin: 0 0 10pt 0 !important;
+  }
+
+  .hero-section h1 {
+    text-align: center !important;
+  }
+
+  .hero-section .lead {
+    text-align: center !important;
+    margin: 0 auto 8pt auto !important;
+    max-width: none !important;
+  }
+
+  /* Content sections */
+  .content-section {
+    margin: 0 0 10pt 0 !important;
+  }
+
+  .content-section h2 {
+    text-align: left !important;
+    font-size: 12pt !important;
+  }
+
+  .content-section p {
+    text-align: justify !important;
+  }
+
+  /* ASCII art for 404 page */
+  .ascii-art pre {
+    font-family: 'Courier New', monospace !important;
+    font-size: 6pt !important;
+    line-height: 1 !important;
+    color: #000 !important;
+    margin: 6pt 0 !important;
+    white-space: pre !important;
+  }
+
+  /* Service lists */
+  .ai-services,
+  .analytics-services {
+    margin: 0 0 8pt 0 !important;
+  }
+
+  .ai-services ul,
+  .analytics-services ul {
+    list-style: disc !important;
+    margin-left: 20pt !important;
+    padding: 0 !important;
+  }
+
+  .ai-services li,
+  .analytics-services li {
+    margin: 2pt 0 !important;
+    padding: 0 !important;
+    position: relative !important;
+  }
+
+  .ai-services li:before,
+  .analytics-services li:before {
+    display: none !important;
+  }
+
+  /* Country flags */
+  .country-flag {
+    width: 10pt !important;
+    height: auto !important;
+    margin-right: 3pt !important;
+    vertical-align: baseline !important;
+  }
+
+  /* Remove forced page breaks - allow natural flow */
+
+  /* Prevent orphans and widows - relaxed for compact layout */
+  h1, h2, h3, h4, h5, h6 {
+    orphans: 2;
+    widows: 2;
+  }
+
+  p, li {
+    orphans: 2;
+    widows: 2;
+  }
+
+  /* Ensure content fits properly */
+  .not-found-container {
+    padding: 0 !important;
+    margin: 0 !important;
+    min-height: auto !important;
+    display: block !important;
+  }
+
+  .error-message h1,
+  .error-message p {
+    color: #000 !important;
+  }
+
+  /* Case study print styles */
+  .case-study-section {
+    margin: 8pt 0 !important;
+    page-break-inside: avoid;
+  }
+
+  .case-study-header {
+    display: block !important;
+  }
+
+  .case-study-toggle {
+    display: none !important;
+  }
+
+  .case-study-subtitle {
+    font-size: 11pt !important;
+    color: #000 !important;
+    font-weight: normal !important;
+    margin: 2pt 0 6pt 0 !important;
+    text-align: left !important;
+  }
+
+  .case-study-expandable {
+    display: block !important;
+    margin-top: 0 !important;
+  }
+
+  .client-overview,
+  .challenge-section,
+  .solution-section,
+  .results-section,
+  .technology-section,
+  .testimonial-section {
+    background: none !important;
+    border: none !important;
+    border-radius: 0 !important;
+    padding: 4pt 0 !important;
+    box-shadow: none !important;
+    margin: 4pt 0 !important;
+  }
+
+  .client-info {
+    font-size: 8pt !important;
+    line-height: 1.3 !important;
+    color: #000 !important;
+  }
+
+  .case-study-content {
+    display: block !important;
+    gap: 0 !important;
+  }
+
+  .pain-points,
+  .technology-list {
+    list-style: disc !important;
+    margin-left: 16pt !important;
+    padding: 0 !important;
+    display: block !important;
+  }
+
+  .pain-points li,
+  .technology-list li {
+    margin: 2pt 0 !important;
+    padding: 0 !important;
+    font-size: 8pt !important;
+    color: #000 !important;
+  }
+
+  .solution-components {
+    display: block !important;
+    gap: 0 !important;
+    margin-top: 4pt !important;
+  }
+
+  .solution-component {
+    background: none !important;
+    border: none !important;
+    border-radius: 0 !important;
+    padding: 2pt 0 !important;
+    padding-left: 6pt !important;
+    margin: 2pt 0 !important;
+  }
+
+  .solution-component h5 {
+    font-size: 9pt !important;
+    color: #000 !important;
+    margin: 0 0 2pt 0 !important;
+    font-weight: bold !important;
+  }
+
+  .solution-component p {
+    margin: 0 !important;
+    color: #000 !important;
+    font-size: 8pt !important;
+    line-height: 1.3 !important;
+  }
+
+  .results-metrics {
+    display: block !important;
+    grid-template-columns: none !important;
+    gap: 0 !important;
+    margin-top: 4pt !important;
+  }
+
+  .metric-card {
+    background: none !important;
+    border: 0.5pt solid #ccc !important;
+    border-radius: 0 !important;
+    padding: 4pt 6pt !important;
+    text-align: left !important;
+    margin: 2pt 0 !important;
+    display: block !important;
+  }
+
+  .metric-value {
+    font-size: 11pt !important;
+    font-weight: bold !important;
+    margin-bottom: 2pt !important;
+    color: #000 !important;
+    display: inline !important;
+    margin-right: 6pt !important;
+  }
+
+  .metric-name {
+    font-size: 8pt !important;
+    font-weight: bold !important;
+    margin-bottom: 1pt !important;
+    text-transform: none !important;
+    letter-spacing: 0 !important;
+    color: #000 !important;
+    display: inline !important;
+    margin-right: 6pt !important;
+  }
+
+  .metric-description {
+    font-size: 7pt !important;
+    line-height: 1.3 !important;
+    color: #333 !important;
+    display: block !important;
+    margin-top: 1pt !important;
+  }
+
+  .testimonial-section {
+    background: none !important;
+    border: 0.5pt solid #ccc !important;
+    text-align: center !important;
+    padding: 6pt !important;
+  }
+
+  .case-study-testimonial p {
+    font-size: 9pt !important;
+    line-height: 1.3 !important;
+    margin: 0 0 3pt 0 !important;
+    font-style: italic !important;
+    color: #000 !important;
+  }
+
+  .case-study-testimonial cite {
+    font-size: 8pt !important;
+    font-weight: normal !important;
+    font-style: normal !important;
+    color: #333 !important;
+  }
+}
+
+/* Contact Page */
+.contact-page {
+  max-width: 800px;
+  margin: 0 auto;
+  width: 100%;
+  text-align: left;
+}
+
+@media (min-width: 1025px) {
+  .contact-page {
+    margin-top: 2rem;
+  }
+}
+
+.contact-intro {
+  margin-bottom: 2.5rem;
+  font-size: 1.05rem;
+  line-height: 1.7;
+}
+
+.contact-intro a {
+  color: #007acc;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.contact-intro a:hover {
+  color: #005999;
+}
+
+.contact-form-section {
+  margin-bottom: 3rem;
+}
+
+/* Contact Form */
+.contact-form {
+  background: #f8f9fb;
+  border: 1px solid #e1e5e9;
+  border-radius: 12px;
+  padding: 2rem;
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.25rem;
+}
+
+@media (max-width: 600px) {
+  .form-row {
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+}
+
+.form-group {
+  margin-bottom: 1.25rem;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 0.4rem;
+  font-weight: 600;
+  font-size: 0.9rem;
+  color: #374151;
+}
+
+.form-group input,
+.form-group textarea {
+  width: 100%;
+  padding: 0.75rem 0.9rem;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  font-family: inherit;
+  font-size: 0.95rem;
+  color: #1f2937;
+  background: #fff;
+  box-sizing: border-box;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.form-group input::placeholder,
+.form-group textarea::placeholder {
+  color: #9ca3af;
+}
+
+.form-group input:focus,
+.form-group textarea:focus {
+  outline: none;
+  border-color: #007acc;
+  box-shadow: 0 0 0 3px rgba(0, 122, 204, 0.12);
+}
+
+.form-group textarea {
+  resize: vertical;
+  min-height: 120px;
+}
+
+.form-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-top: 0.5rem;
+}
+
+.submit-btn {
+  padding: 0.75rem 2rem;
+  background-color: #007acc;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s, transform 0.1s;
+}
+
+.submit-btn:hover {
+  background-color: #005999;
+}
+
+.submit-btn:active {
+  transform: scale(0.98);
+}
+
+.form-success {
+  padding: 2rem;
+  background-color: #f0fdf4;
+  border: 1px solid #bbf7d0;
+  border-radius: 12px;
+  color: #166534;
+  text-align: center;
+}
+
+.form-success-icon {
+  font-size: 2.5rem;
+  margin-bottom: 0.5rem;
+  color: #16a34a;
+}
+
+.form-success h3 {
+  margin: 0 0 0.5rem 0;
+  font-size: 1.2rem;
+  color: #166534;
+}
+
+.form-success p {
+  margin: 0;
+  color: #15803d;
+}
+
+.form-error {
+  padding: 1.25rem 1.5rem;
+  background-color: #fef2f2;
+  border: 1px solid #fecaca;
+  border-radius: 12px;
+  color: #991b1b;
+  margin-bottom: 1.5rem;
+}
+
+.form-error a {
+  color: #991b1b;
+  font-weight: 600;
+}
+
+/* Contact Alternatives */
+.contact-alternatives {
+  margin-top: 1rem;
+  padding-top: 2rem;
+  border-top: 1px solid #e5e7eb;
+}
+
+.contact-alternatives h2 {
+  font-size: 1.5rem;
+  color: #2c3e50;
+  margin-bottom: 1.25rem;
+}
+
+.contact-methods {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.25rem;
+}
+
+@media (max-width: 700px) {
+  .contact-methods {
+    grid-template-columns: 1fr;
+  }
+}
+
+.contact-method {
+  background: #f8f9fb;
+  border: 1px solid #e1e5e9;
+  border-radius: 10px;
+  padding: 1.5rem;
+}
+
+.contact-method h3 {
+  font-size: 1.05rem;
+  color: #2c3e50;
+  margin: 0 0 0.5rem 0;
+}
+
+.contact-method p {
+  font-size: 0.9rem;
+  color: #6b7280;
+  margin: 0 0 1rem 0;
+  line-height: 1.5;
+}
+
+.contact-link {
+  display: inline-block;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #007acc;
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+  transition: border-color 0.2s;
+}
+
+.contact-link:hover {
+  border-bottom-color: #007acc;
+}
+
+/* CTA Buttons (consultancy page) */
+.cta-buttons {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+  margin-top: 1rem;
+}
+
+.cta-primary {
+  display: inline-block;
+  padding: 0.75rem 2rem;
+  background-color: #007acc;
+  color: white;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  text-decoration: none;
+  transition: background-color 0.2s;
+}
+
+.cta-primary:hover {
+  background-color: #005999;
+  color: white;
+}
+
+.cta-secondary {
+  display: inline-block;
+  padding: 0.75rem 2rem;
+  background-color: transparent;
+  color: #007acc;
+  border: 2px solid #007acc;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  text-decoration: none;
+  transition: background-color 0.2s, color 0.2s;
+}
+
+.cta-secondary:hover {
+  background-color: #007acc;
+  color: white;
+}
+
+/* Details/Summary accordion for case study */
+.case-study-section details > summary {
+  cursor: pointer;
+  list-style: none;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.case-study-section details > summary::-webkit-details-marker {
+  display: none;
+}
+
+.case-study-section details > summary::marker {
+  display: none;
+  content: '';
+}
+
+.case-study-toggle-icon {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #007acc;
+  min-width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid #007acc;
+  border-radius: 50%;
+  transition: all 0.2s ease;
+}
+
+details[open] .case-study-toggle-icon {
+  transform: rotate(45deg);
+}
+
+.cf-turnstile {
+  margin: 1rem 0;
+}
+}

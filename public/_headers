@@ -1,6 +1,6 @@
 # Cloudflare Workers Headers Configuration
 # Security-focused headers for Henrik Söderlund's personal website
-# React 19.1.1 + Vite 7.1.2 + Hono.js 4.9.1 + Cloudflare Workers
+# Astro 6 + Cloudflare Workers
 
 # Preview/Staging Environment - Prevent search engine indexing
 https://:project.pages.dev/*
@@ -15,7 +15,7 @@ https://:project.pages.dev/*
   Referrer-Policy: strict-origin
   
   # Content Security Policy - Production ready with analytics and external services
-  # - Vite React build support (unsafe-inline, unsafe-eval)
+  # - Astro build support (unsafe-inline, unsafe-eval)
   # - Faux Analytics and Google Analytics integration
   # - Server-side Google Tag Manager (sgtm.henriksoderlund.com)
   # - Calendly integration support
@@ -48,7 +48,7 @@ https://:project.pages.dev/*
   
   # Custom headers for Henrik Söderlund's site
   X-Powered-By: Cloudflare Workers
-  X-Site-Tech: React + Vite + Hono + Cloudflare
+  X-Site-Tech: Astro 6 + Cloudflare Workers
 
 # Static Assets - Aggressive caching
 /assets/*
@@ -102,7 +102,7 @@ https://:project.pages.dev/*
 /google*.html
   Cache-Control: public, max-age=31536000, immutable
 
-# Hono.js API endpoints - Secure headers for backend routes
+# API endpoints - Secure headers for backend routes
 /api/*
   X-Frame-Options: DENY
   X-Content-Type-Options: nosniff
@@ -115,7 +115,7 @@ https://:project.pages.dev/*
   Access-Control-Allow-Methods: GET, POST, OPTIONS
   Access-Control-Allow-Headers: Content-Type, Authorization
 
-# React SPA routes - Ensure proper headers for client-side routing
+# Page routes - Cache control for prerendered pages
 /expertise
   Cache-Control: public, max-age=300, must-revalidate
 
@@ -132,10 +132,6 @@ https://:project.pages.dev/*
 /
   Cache-Control: public, max-age=300, must-revalidate
 
-# Vite specific assets generated during build
-/src/*
-  Cache-Control: public, max-age=31536000, immutable
-
-# React specific assets
-/react/*
+# Astro generated assets
+/_astro/*
   Cache-Control: public, max-age=31536000, immutable
