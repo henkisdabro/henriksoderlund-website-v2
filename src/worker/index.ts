@@ -184,7 +184,7 @@ const isCrawler = (c: Context): boolean => {
   const userAgent = c.req.header('user-agent') || '';
   const crawlerPatterns = [
     'AhrefsBot',
-    'AhrefsSiteAudit', 
+    'AhrefsSiteAudit',
     'Googlebot',
     'bingbot',
     'Baiduspider',
@@ -198,7 +198,20 @@ const isCrawler = (c: Context): boolean => {
     'SemrushBot',
     'MJ12bot',
     'DotBot',
-    'rogerbot'
+    'rogerbot',
+    'GPTBot',
+    'OAI-SearchBot',
+    'ChatGPT-User',
+    'PerplexityBot',
+    'ClaudeBot',
+    'anthropic-ai',
+    'Applebot',
+    'Amazonbot',
+    'meta-externalagent',
+    'cohere-ai',
+    'Bytespider',
+    'PetalBot',
+    'FacebookBot'
   ];
   
   const ua = userAgent.toLowerCase();
@@ -373,7 +386,7 @@ const getPrerenderedContent = (path: string): { title: string; content: string; 
 
     case '/education':
       return {
-        title: 'Henrik Söderlund | Technology Leader & AI Innovator',
+        title: 'Education - Henrik Söderlund',
         content: `
           <h1>Education</h1>
           
@@ -417,19 +430,32 @@ const getPrerenderedContent = (path: string): { title: string; content: string; 
 const generateSEOMetadata = (path: string, title: string, fullUrl: string): string => {
   const ogTitle = path === '/' ? 'Henrik Söderlund | Digital Media Leader & AI Solutions Innovator' : title;
   const twitterTitle = ogTitle;
-  
+
+  // Page-specific descriptions for better search result CTR
+  const descriptions: Record<string, string> = {
+    '/': 'The personal website of Henrik Soederlund, a Digital Media Leader & AI Solutions Innovator based in Perth, Australia. Expert in AI automation, digital marketing, and technology leadership.',
+    '/expertise': 'Technical expertise and leadership skills of Henrik Soederlund - AI automation, programmatic advertising, advanced analytics, team leadership, and platform mastery across 19+ advertising platforms.',
+    '/work-experience': 'Professional career history of Henrik Soederlund - from founding award-winning Creme Digital to leading media activations at Initiative Perth (KINESSO, Interpublic Group).',
+    '/education': 'Educational background of Henrik Soederlund - Master of Music from Lund University, Sweden. Tertiary, secondary, and primary education details.',
+    '/consultancy': 'Strategic AI and analytics consultancy services by Henrik Soederlund. AI strategy assessments, workflow automation, analytics implementation, and digital transformation consulting in Perth, Australia.'
+  };
+  const description = descriptions[path] || descriptions['/'];
+
+  // og:type should be "profile" only for homepage, "website" for other pages
+  const ogType = path === '/' ? 'profile' : 'website';
+
   return `
   <meta charset="UTF-8" />
   <link rel="icon" type="image/svg+xml" href="/bot.svg" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>${title}</title>
-  <meta name="description" content="The personal website of Henrik Söderlund, a Technology Leader & AI Innovator based in Perth, Australia." />
+  <meta name="description" content="${description}" />
 
   <!-- Open Graph / Facebook -->
-  <meta property="og:type" content="profile" />
+  <meta property="og:type" content="${ogType}" />
   <meta property="og:url" content="${fullUrl}" />
   <meta property="og:title" content="${ogTitle}" />
-  <meta property="og:description" content="Technology Leader specialising in AI automation, digital marketing, and technology leadership. Expert in building intelligent systems, leading high-performance teams, and delivering enterprise-scale solutions." />
+  <meta property="og:description" content="${description}" />
   <meta property="og:image" content="https://www.henriksoderlund.com/og_image.png" />
   <meta property="og:image:alt" content="Henrik Söderlund - Digital Media Leader & AI Solutions Innovator" />
   <meta property="og:image:type" content="image/png" />
@@ -442,14 +468,14 @@ const generateSEOMetadata = (path: string, title: string, fullUrl: string): stri
   <meta property="profile:username" content="henkisdabro" />
 
   <!-- Twitter -->
-  <meta property="twitter:card" content="summary_large_image" />
-  <meta property="twitter:site" content="@henkisdabro" />
-  <meta property="twitter:creator" content="@henkisdabro" />
-  <meta property="twitter:url" content="${fullUrl}" />
-  <meta property="twitter:title" content="${twitterTitle}" />
-  <meta property="twitter:description" content="Technology Leader specialising in AI automation, digital marketing, and technology leadership. Expert in building intelligent systems, leading high-performance teams, and delivering enterprise-scale solutions." />
-  <meta property="twitter:image" content="https://www.henriksoderlund.com/og_image.png" />
-  <meta property="twitter:image:alt" content="Henrik Söderlund - Digital Media Leader & AI Solutions Innovator" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:site" content="@henkisdabro" />
+  <meta name="twitter:creator" content="@henkisdabro" />
+  <meta name="twitter:url" content="${fullUrl}" />
+  <meta name="twitter:title" content="${twitterTitle}" />
+  <meta name="twitter:description" content="${description}" />
+  <meta name="twitter:image" content="https://www.henriksoderlund.com/og_image.png" />
+  <meta name="twitter:image:alt" content="Henrik Söderlund - Digital Media Leader & AI Solutions Innovator" />
 
   <!-- SEO -->
   <meta name="google-site-verification" content="TVUdAh0RA_yjsXKKjybCDe7JsKnXBhYFbcRPoJy03rc" />
@@ -636,11 +662,6 @@ const generateSEOMetadata = (path: string, title: string, fullUrl: string): stri
       "author": {
         "@type": "Person",
         "name": "Henrik Söderlund"
-      },
-      "potentialAction": {
-        "@type": "SearchAction",
-        "target": "https://www.henriksoderlund.com/?s={search_term_string}",
-        "query-input": "required name=search_term_string"
       }
     }
   </script>`;
@@ -798,7 +819,7 @@ app.get("/metrics", (c) => {
 // Add security.txt endpoint for security researchers
 app.get("/.well-known/security.txt", (c) => {
   const securityTxt = `Contact: https://www.henriksoderlund.com/consultancy
-Expires: 2026-01-01T00:00:00.000Z
+Expires: 2027-03-28T00:00:00.000Z
 Preferred-Languages: en, sv
 Canonical: https://www.henriksoderlund.com/.well-known/security.txt
 Policy: https://www.henriksoderlund.com/
