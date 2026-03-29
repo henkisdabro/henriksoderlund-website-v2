@@ -1,3 +1,5 @@
+import { GITHUB_URL } from './links';
+
 export const expertiseData = {
   intro: {
     title: '🚀 Strategic Technology Leadership & AI Innovation',
@@ -161,32 +163,32 @@ export const expertiseData = {
       },
       {
         title: 'Cloudflare Workers React Boilerplate',
-        url: 'https://github.com/henkisdabro/cloudflare-workers-react-boilerplate',
+        url: `${GITHUB_URL}/cloudflare-workers-react-boilerplate`,
         description: 'Production-ready Cloudflare Workers boilerplate for edge-native web applications. React 19 + Vite + TypeScript with built-in AI integration (Claude API, Workers AI), D1/KV databases, and automated GitHub Actions deployment. Designed for AI-assisted development workflows with comprehensive Claude Code integration.',
       },
       {
         title: 'Claude Code MCP Server Selector',
-        url: 'https://github.com/henkisdabro/Claude-Code-MCP-Server-Selector',
+        url: `${GITHUB_URL}/Claude-Code-MCP-Server-Selector`,
         description: 'Fast, beautiful TUI for managing Model Context Protocol (MCP) servers in Claude Code. Optimises AI context window efficiency by enabling selective server activation. Demonstrates advanced understanding of AI-assisted development workflows and developer productivity optimisation.',
       },
       {
         title: 'Collection of Platform Click ID Parameters',
-        url: 'https://github.com/henkisdabro/platform-url-click-id-parameters',
+        url: `${GITHUB_URL}/platform-url-click-id-parameters`,
         description: 'Comprehensive global database of URL parameters for analytics filtering, exclusion criteria, and ad platform pixel trigger optimisation across multiple advertising ecosystems.',
       },
       {
         title: 'IPmeta Tag Template for GA4',
-        url: 'https://github.com/henkisdabro/gtm-templates-ipmeta-ga4',
+        url: `${GITHUB_URL}/gtm-templates-ipmeta-ga4`,
         description: "Official Google Tag Manager Community template for advanced spam and bot traffic filtering, integrating IPmeta's sophisticated traffic validation service with GA4 measurement protocols.",
       },
       {
         title: 'Google Chat Tag Template & Formatting Guideline',
-        url: 'https://github.com/henkisdabro/gtm-templates-web-google-chat-webhook',
+        url: `${GITHUB_URL}/gtm-templates-web-google-chat-webhook`,
         description: 'Production-ready Google Tag Manager template enabling real-time conversion and form submission notifications through Google Workspace Chat. Provides immediate campaign performance visibility and rapid issue detection for client and agency teams.',
       },
       {
         title: 'GTM-integration-Hugo',
-        url: 'https://github.com/henkisdabro/GTM-integration-Hugo',
+        url: `${GITHUB_URL}/GTM-integration-Hugo`,
         description: 'Advanced Google Tag Manager integration framework for Hugo static sites, featuring environment-specific deployment, server-side tagging variables, and custom GTM script hosting capabilities. Supports sophisticated staging/production workflows with seamless GTM environment management.',
       },
     ],

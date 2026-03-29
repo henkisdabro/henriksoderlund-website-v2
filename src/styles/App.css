@@ -2326,19 +2326,9 @@ a:hover {
 }
 
 .submit-btn {
-  padding: 0.75rem 2rem;
-  background-color: #007acc;
-  color: white;
-  border: none;
-  border-radius: 8px;
-  font-size: 1rem;
-  font-weight: 600;
   cursor: pointer;
+  border: none;
   transition: background-color 0.2s, transform 0.1s;
-}
-
-.submit-btn:hover {
-  background-color: #005999;
 }
 
 .submit-btn:active {
@@ -2444,7 +2434,31 @@ a:hover {
   border-bottom-color: #007acc;
 }
 
-/* CTA Buttons (consultancy page) */
+/* CTA / Action Buttons */
+.submit-btn,
+.cta-primary,
+.cta-secondary {
+  display: inline-block;
+  padding: 0.75rem 2rem;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  text-decoration: none;
+  transition: background-color 0.2s, color 0.2s;
+}
+
+.submit-btn,
+.cta-primary {
+  background-color: #007acc;
+  color: white;
+}
+
+.submit-btn:hover,
+.cta-primary:hover {
+  background-color: #005999;
+  color: white;
+}
+
 .cta-buttons {
   display: flex;
   gap: 1rem;
@@ -2452,34 +2466,10 @@ a:hover {
   margin-top: 1rem;
 }
 
-.cta-primary {
-  display: inline-block;
-  padding: 0.75rem 2rem;
-  background-color: #007acc;
-  color: white;
-  border-radius: 8px;
-  font-size: 1rem;
-  font-weight: 600;
-  text-decoration: none;
-  transition: background-color 0.2s;
-}
-
-.cta-primary:hover {
-  background-color: #005999;
-  color: white;
-}
-
 .cta-secondary {
-  display: inline-block;
-  padding: 0.75rem 2rem;
   background-color: transparent;
   color: #007acc;
   border: 2px solid #007acc;
-  border-radius: 8px;
-  font-size: 1rem;
-  font-weight: 600;
-  text-decoration: none;
-  transition: background-color 0.2s, color 0.2s;
 }
 
 .cta-secondary:hover {

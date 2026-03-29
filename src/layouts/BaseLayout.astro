@@ -4,6 +4,7 @@ import NavigationBox from '../components/NavigationBox.astro';
 import GitHubLink from '../components/GitHubLink.astro';
 import LinkedInLink from '../components/LinkedInLink.astro';
 import Footer from '../components/Footer.astro';
+import { GITHUB_URL, LINKEDIN_URL } from '../data/links';
 import '../styles/index.css';
 import '../styles/App.css';
 
@@ -91,8 +92,8 @@ const personSchemaJSON = JSON.stringify({
     }
   ],
   "sameAs": [
-    "https://github.com/henkisdabro",
-    "https://www.linkedin.com/in/henriksoderlund/"
+    GITHUB_URL,
+    LINKEDIN_URL
   ],
   "award": [
     "MFA Changer Recognition 2024 (Initiative)",

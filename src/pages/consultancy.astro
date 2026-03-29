@@ -2,6 +2,7 @@
 export const prerender = true;
 import BaseLayout from '../layouts/BaseLayout.astro';
 import { consultationData } from '../data/consultation';
+import { CALENDLY_URL } from '../data/links';
 
 const professionalServiceSchema = {
   "@context": "https://schema.org",
@@ -70,7 +71,7 @@ const professionalServiceSchema = {
   "contactPoint": {
     "@type": "ContactPoint",
     "contactType": "Customer Service",
-    "url": "https://calendly.com/henriksoederlund/30min",
+    "url": CALENDLY_URL,
     "availableLanguage": ["English", "Swedish"]
   }
 };
@@ -239,7 +240,7 @@ const professionalServiceSchema = {
       </div>
       <div class="cta-buttons">
         <a href="/contact" class="cta-primary">Get in Touch</a>
-        <a href="https://calendly.com/henriksoederlund/30min" target="_blank" rel="noopener noreferrer" class="cta-secondary">Book a Discovery Call</a>
+        <a href={CALENDLY_URL} target="_blank" rel="noopener noreferrer" class="cta-secondary">Book a Discovery Call</a>
       </div>
     </section>
   </div>
