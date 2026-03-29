@@ -126,44 +126,6 @@ h3 {
   }
 }
 
-/* Calendly Widget Styling */
-.calendar-section {
-  margin: 3rem 0;
-}
-
-.calendly-intro {
-  margin-bottom: 2rem;
-}
-
-.calendly-inline-widget {
-  min-width: 320px;
-  height: 700px;
-  margin: 2rem 0;
-  border-radius: 8px;
-  overflow: hidden;
-  box-shadow: 0 4px 6px var(--color-shadow);
-}
-
-.consultation-booking-widget {
-  background: var(--color-bg-primary);
-}
-
-/* Responsive adjustments for mobile */
-@media (max-width: 768px) {
-  .calendly-inline-widget {
-    margin: 1rem -1rem;
-    border-radius: 0;
-  }
-}
-
-/* Homepage styling */
-.lead {
-  font-size: 1.1em;
-  line-height: 1.4;
-  max-width: 600px;
-  margin: 0 auto;
-}
-
 button {
   border-radius: 8px;
   border: 1px solid transparent;
@@ -181,30 +143,6 @@ button:hover {
 button:focus,
 button:focus-visible {
   outline: 4px auto -webkit-focus-ring-color;
-}
-
-/* Skills and Leadership Sections */
-.skills-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-  gap: 2rem;
-  margin: 2rem 0;
-  max-width: 100%;
-}
-
-.skill-category {
-  background: var(--color-bg-code);
-  border-radius: 8px;
-  padding: 1.5rem;
-  border: 1px solid var(--color-accent-subtle);
-  box-shadow: 0 1px 3px var(--color-shadow);
-}
-
-.skill-category h3 {
-  margin: 0 0 1rem 0;
-  font-size: 1.2em;
-  color: var(--color-link-default);
-  font-weight: 600;
 }
 
 /* Mobile responsive adjustments */
@@ -229,29 +167,6 @@ button:focus-visible {
     margin: 1rem 0 0.4rem 0;
   }
 
-  .lead {
-    font-size: 1em;
-    max-width: 100%;
-  }
-
-  .skills-grid {
-    grid-template-columns: 1fr;
-    gap: 1.5rem;
-    margin: 1.5rem 0;
-  }
-
-  .skill-category {
-    padding: 1rem;
-  }
-}
-
-/* Desktop responsive adjustments for wider screens */
-@media (min-width: 1200px) {
-  .skills-grid {
-    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-    max-width: 1400px;
-    margin: 2rem auto;
-  }
 }
 
 /* Skills Pill Display */

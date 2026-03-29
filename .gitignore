@@ -5,7 +5,6 @@ node_modules/
 
 # Production builds
 dist/
-dist-ssr/
 build/
 out/
 
@@ -88,24 +87,8 @@ wrangler.toml.bak
 *.tmp
 *.temp
 
-# React/Vite specific
-.vercel/
-.turbo/
-
-# Legacy content (old Hugo/Thulite files)
-content/
-/assets/
-
 # Project management files (keep in repo but could be ignored if preferred)
 # TASKS.md
-
-# Generated files (regenerated during build)
-public/llms.txt
-public/*.md
-public/sitemap.xml
-
-# LLMs generation cache
-.llms-cache.json
 
 # LinkedIn profile development (contains personal information)
 linkedin/

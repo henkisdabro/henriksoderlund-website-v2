@@ -37,9 +37,8 @@
 		},
 		{
 			"label": "typecheck",
-			"type": "shell",
-			"command": "npx",
-			"args": ["tsc", "--noEmit"],
+			"type": "npm",
+			"script": "check",
 			"group": "test",
 			"presentation": {
 				"reveal": "always"

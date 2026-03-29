@@ -38,34 +38,8 @@ p {
   overflow-x: hidden;
 }
 
-/* Main Navigation Styles */
-.main-nav {
-  display: flex;
-  gap: 1rem;
-  justify-content: center;
-  margin-bottom: 2rem;
-  padding: 1rem;
-  background-color: var(--color-bg-secondary);
-  border-bottom: 1px solid var(--color-border-primary);
-}
-
-.main-nav a {
-  text-decoration: none;
-  padding: 0.5rem 1rem;
-  border-radius: 4px;
-  background-color: var(--color-accent);
-  color: var(--color-accent-text);
-  transition: background-color 0.3s;
-  font-weight: 500;
-}
-
-.main-nav a:hover {
-  background-color: var(--color-accent-hover);
-}
-
 /* Page Container Styles */
 .home-page,
-.skills-page,
 .expertise-page,
 .work-experience-page,
 .education-page,
@@ -83,7 +57,6 @@ p {
     margin-top: 4rem;
   }
 
-  .skills-page,
   .expertise-page,
   .work-experience-page,
   .education-page,
@@ -147,8 +120,10 @@ h5 {
 
 .lead {
   font-size: 1.2rem;
+  line-height: 1.4;
+  max-width: 600px;
+  margin: 0 auto 2rem auto;
   color: var(--color-text-secondary);
-  margin-bottom: 2rem;
   font-weight: 400;
 }
 
@@ -192,13 +167,6 @@ h5 {
   font-weight: 600;
 }
 
-.more-about-navigation {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 1rem;
-  margin-top: 1rem;
-}
-
 /* Skills Page Styles */
 .consultancy-section {
   margin-bottom: 2rem;
@@ -218,11 +186,18 @@ h5 {
 
 .skills-grid {
   display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
   gap: 0.75rem;
   margin-bottom: 0.75rem;
+  max-width: 100%;
 }
 
 .skill-category {
+  background: var(--color-bg-code);
+  border-radius: 8px;
+  padding: 1.5rem;
+  border: 1px solid var(--color-accent-subtle);
+  box-shadow: 0 1px 3px var(--color-shadow);
   margin-bottom: 1rem;
 }
 
@@ -230,23 +205,6 @@ h5 {
   font-size: 1.3rem;
   margin-bottom: 1rem;
   color: var(--color-text-heading);
-}
-
-.skill-tags,
-.platform-tags {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem;
-}
-
-.skill-tag,
-.platform-tag {
-  background-color: var(--color-tag-bg);
-  padding: 0.25rem 0.7rem;
-  border-radius: 20px;
-  font-size: 0.8rem;
-  color: var(--color-tag-text);
-  font-family: var(--font-mono);
 }
 
 .platform-experience {
@@ -320,25 +278,9 @@ h5 {
   text-align: justify;
 }
 
-/* Education Page Styles */
-.education-entry {
-  margin-bottom: 2rem;
-  padding: 1.5rem;
-  background-color: var(--color-bg-secondary);
-  border-radius: 8px;
-}
-
-.education-entry h4 {
-  font-size: 1.3rem;
-  color: var(--color-text-heading);
-  margin-bottom: 0.5rem;
-}
-
 /* Consultation Page Styles */
 .intro-section,
-.services-section,
 .policy-section,
-.pricing-section,
 .calendar-section,
 .ai-consultancy-section,
 .traditional-services-section,
@@ -346,9 +288,7 @@ h5 {
   margin-bottom: 3rem;
 }
 
-.services-section h2,
 .policy-section h2,
-.pricing-section h2,
 .calendar-section h2,
 .ai-consultancy-section h2,
 .traditional-services-section h2 {
@@ -394,26 +334,6 @@ h5 {
   left: 0;
   color: var(--color-marker);
   font-size: 0.8rem;
-}
-
-.services-section ul {
-  list-style-type: disc;
-  margin-left: 2rem;
-}
-
-.services-section li {
-  margin-bottom: 0.5rem;
-}
-
-.services-section ul ul {
-  margin-top: 0.5rem;
-}
-
-.services-section code {
-  background-color: var(--color-bg-secondary);
-  padding: 0.2rem 0.4rem;
-  border-radius: 3px;
-  font-family: var(--font-mono);
 }
 
 /* Modern Pricing Table Styles */
@@ -492,72 +412,6 @@ h5 {
   font-size: 0.9rem;
 }
 
-/* Legacy pricing table styles (for backwards compatibility) */
-.pricing-table {
-  width: 100%;
-  border-collapse: separate;
-  border-spacing: 0;
-  margin-top: 1.5rem;
-  background: var(--color-bg-primary);
-  border-radius: 12px;
-  overflow: hidden;
-  box-shadow: 0 4px 6px -1px var(--color-shadow), 0 2px 4px -1px var(--color-shadow);
-  border: 1px solid var(--color-border-secondary);
-}
-
-.pricing-table th {
-  background: var(--color-bg-secondary);
-  color: var(--color-text-heading);
-  font-weight: 600;
-  font-size: 0.875rem;
-  padding: 1.25rem 1rem;
-  text-align: left;
-  letter-spacing: 0.025em;
-  text-transform: uppercase;
-  border-bottom: 2px solid var(--color-border-secondary);
-}
-
-.pricing-table th:first-child {
-  border-top-left-radius: 12px;
-}
-
-.pricing-table th:last-child {
-  border-top-right-radius: 12px;
-}
-
-.pricing-table td {
-  padding: 1.25rem 1rem;
-  text-align: left;
-  border-bottom: 1px solid var(--color-border-subtle);
-  vertical-align: top;
-  line-height: 1.5;
-  font-size: 0.85rem;
-}
-
-
-.pricing-table tbody tr:last-child td {
-  border-bottom: none;
-}
-
-.pricing-table tbody tr:last-child td:first-child {
-  border-bottom-left-radius: 12px;
-}
-
-.pricing-table tbody tr:last-child td:last-child {
-  border-bottom-right-radius: 12px;
-}
-
-.pricing-table td:nth-child(3) {
-  font-weight: 600;
-  color: var(--color-price);
-  font-size: 1.05rem;
-}
-
-.consultation-booking-widget {
-  text-align: center; /* Center content within this widget */
-  margin-top: 2rem; /* Add some space above the button */
-}
-
 /* Case Study Section Styles */
 .case-study-section {
   margin-bottom: 3rem;
@@ -603,12 +457,6 @@ h5 {
   font-weight: 400;
   margin: 0 0 1rem 0;
   text-align: left;
-}
-
-.expand-hint {
-  font-size: 1rem;
-  color: var(--color-text-tertiary);
-  font-style: normal;
 }
 
 .case-study-expandable {
@@ -770,88 +618,6 @@ h5 {
   font-weight: 600;
   color: var(--color-text-heading);
   font-style: normal;
-}
-
-.gcal-scheduling-button {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif !important; /* Use !important to override inline styles if any */
-  cursor: pointer;
-}
-
-.calendly-placeholder {
-  text-align: center;
-  padding: 2rem;
-  background-color: var(--color-bg-secondary);
-  border-radius: 8px;
-  color: var(--color-text-secondary);
-}
-
-/* Navigation Component Styles */
-.navigation-section {
-  margin-top: 3rem;
-  padding-top: 2rem;
-  border-top: 1px solid var(--color-border-primary);
-}
-
-.navigation-section h3 {
-  text-align: center;
-  margin-bottom: 1.5rem;
-  color: var(--color-text-heading);
-}
-
-.centered-navigation {
-  display: flex;
-  justify-content: center;
-  gap: 1rem;
-  flex-wrap: wrap;
-  margin-bottom: 1rem;
-}
-
-.nav-button {
-  text-decoration: none;
-  padding: 0.8rem 1.5rem;
-  border-radius: 6px;
-  background-color: var(--color-bg-primary);
-  color: var(--color-text-primary);
-  transition: all 0.3s;
-  font-weight: 500;
-  border: 0.5px solid var(--color-text-primary);
-  cursor: pointer;
-  display: inline-block;
-}
-
-.nav-button:hover {
-  background-color: var(--color-bg-secondary);
-  color: var(--color-text-primary);
-  transform: translateY(-2px);
-}
-
-.nav-button.primary {
-  background-color: var(--color-bg-primary);
-  color: var(--color-text-primary);
-  border: 0.5px solid var(--color-text-primary);
-}
-
-.nav-button.primary:hover {
-  background-color: var(--color-bg-secondary);
-  color: var(--color-text-primary);
-}
-
-.resume-button {
-  background-color: var(--color-resume-bg);
-  color: var(--color-resume-text);
-  padding: 0.8rem 1.5rem;
-  border-radius: 6px;
-  border: none;
-  cursor: pointer;
-  font-weight: 500;
-  transition: all 0.3s;
-}
-
-.resume-button:hover {
-  background-color: var(--color-resume-hover);
-  transform: translateY(-2px);
 }
 
 /* Links */
@@ -1166,7 +932,6 @@ a:hover {
   }
   
   .home-page h1,
-  .skills-page h1,
   .expertise-page h1,
   .work-experience-page h1,
   .education-page h1,
@@ -1301,7 +1066,6 @@ a:hover {
 /* Responsive Design */
 @media (max-width: 768px) {
   .home-page,
-  .skills-page,
   .expertise-page,
   .work-experience-page,
   .education-page,
@@ -1341,20 +1105,6 @@ a:hover {
     font-size: 1.1rem;
   }
 
-  .main-nav {
-    flex-direction: column;
-    align-items: center;
-  }
-
-  .more-about-navigation {
-    grid-template-columns: 1fr;
-  }
-
-  .centered-navigation {
-    flex-direction: column;
-    align-items: center;
-  }
-
   /* Footer tech stack mobile styling */
   .site-footer p {
     flex-direction: column;
@@ -1379,8 +1129,7 @@ a:hover {
   }
 
   /* Mobile-responsive table styles */
-  .modern-pricing-table,
-  .pricing-table {
+  .modern-pricing-table {
     display: block;
     width: 100%;
     box-shadow: none;
@@ -1389,18 +1138,15 @@ a:hover {
     background: transparent;
   }
 
-  .modern-pricing-table thead,
-  .pricing-table thead {
+  .modern-pricing-table thead {
     display: none;
   }
 
-  .modern-pricing-table tbody,
-  .pricing-table tbody {
+  .modern-pricing-table tbody {
     display: block;
   }
 
-  .modern-pricing-table tr,
-  .pricing-table tr {
+  .modern-pricing-table tr {
     display: block;
     margin-bottom: 1rem;
     padding: 1rem;
@@ -1410,13 +1156,11 @@ a:hover {
     box-shadow: 0 2px 4px var(--color-shadow);
   }
 
-  .modern-pricing-table tr:last-child,
-  .pricing-table tr:last-child {
+  .modern-pricing-table tr:last-child {
     margin-bottom: 0;
   }
 
-  .modern-pricing-table td,
-  .pricing-table td {
+  .modern-pricing-table td {
     display: block;
     padding: 0.5rem 0;
     border: none;
@@ -1427,8 +1171,7 @@ a:hover {
     line-height: 1.4;
   }
 
-  .modern-pricing-table td:before,
-  .pricing-table td:before {
+  .modern-pricing-table td:before {
     content: attr(data-label);
     position: absolute;
     left: 0;
@@ -1442,8 +1185,7 @@ a:hover {
     letter-spacing: 0.025em;
   }
 
-  .modern-pricing-table td:first-child,
-  .pricing-table td:first-child {
+  .modern-pricing-table td:first-child {
     font-weight: 600;
     color: var(--color-text-strong);
     font-size: 1rem;
@@ -1453,20 +1195,17 @@ a:hover {
     padding-bottom: 0.5rem;
   }
 
-  .modern-pricing-table td:first-child:before,
-  .pricing-table td:first-child:before {
+  .modern-pricing-table td:first-child:before {
     display: none;
   }
 
-  .modern-pricing-table td:nth-child(3),
-  .pricing-table td:nth-child(3) {
+  .modern-pricing-table td:nth-child(3) {
     font-weight: 600;
     color: var(--color-price);
     font-size: 1rem;
   }
 
-  .modern-pricing-table td:nth-child(2),
-  .pricing-table td:nth-child(2) {
+  .modern-pricing-table td:nth-child(2) {
     color: var(--color-text-tertiary);
     font-family: var(--font-mono);
     font-size: 0.85rem;
@@ -1570,14 +1309,6 @@ a:hover {
     overflow: visible !important;
   }
 
-  #root {
-    width: 100% !important;
-    max-width: none !important;
-    margin: 0 !important;
-    padding: 0 !important;
-    display: block !important;
-  }
-
   .app {
     width: 100% !important;
     max-width: none !important;
@@ -1592,16 +1323,6 @@ a:hover {
   .navigation-box,
   .github-link,
   .linkedin-link,
-  .nav-button,
-  .resume-button,
-  .gcal-scheduling-button,
-  .calendly-inline-widget,
-  .calendly-placeholder,
-  .consultation-booking-widget,
-  .main-nav,
-  .navigation-section,
-  .centered-navigation,
-  .more-about-navigation,
   .site-footer,
   button,
   input[type="button"],
@@ -1632,7 +1353,6 @@ a:hover {
 
   /* Page containers */
   .home-page,
-  .skills-page,
   .expertise-page,
   .work-experience-page,
   .education-page,
@@ -1744,47 +1464,15 @@ a:hover {
     font-weight: bold !important;
   }
 
-  .skill-tags,
-  .platform-tags {
-    display: block !important;
-    margin: 0 !important;
-  }
-
-  .skill-tag,
-  .platform-tag {
-    display: inline !important;
-    background: none !important;
-    border: none !important;
-    padding: 0 !important;
-    margin: 0 4pt 0 0 !important;
-    font-size: 8pt !important;
-    color: #000 !important;
-    border-radius: 0 !important;
-    font-family: inherit !important;
-  }
-
-  .skill-tag:after,
-  .platform-tag:after {
-    content: " • ";
-    color: #666;
-  }
-
-  .skill-tag:last-child:after,
-  .platform-tag:last-child:after {
-    content: "";
-  }
-
   /* Content entries */
-  .content-entry,
-  .education-entry {
+  .content-entry {
     margin: 0 0 10pt 0 !important;
     padding: 0 0 8pt 0 !important;
     border-bottom: 0.5pt solid #ccc !important;
     background: none !important;
   }
 
-  .content-entry:last-child,
-  .education-entry:last-child {
+  .content-entry:last-child {
     border-bottom: none !important;
   }
 
@@ -1796,8 +1484,7 @@ a:hover {
   }
 
   /* Tables for pricing - override mobile responsive styles for print */
-  .modern-pricing-table,
-  .pricing-table {
+  .modern-pricing-table {
     width: 100% !important;
     border-collapse: collapse !important;
     margin: 8pt 0 !important;
@@ -1807,18 +1494,15 @@ a:hover {
     display: table !important;
   }
 
-  .modern-pricing-table thead,
-  .pricing-table thead {
+  .modern-pricing-table thead {
     display: table-header-group !important;
   }
 
-  .modern-pricing-table tbody,
-  .pricing-table tbody {
+  .modern-pricing-table tbody {
     display: table-row-group !important;
   }
 
-  .modern-pricing-table tr,
-  .pricing-table tr {
+  .modern-pricing-table tr {
     display: table-row !important;
     margin: 0 !important;
     padding: 0 !important;
@@ -1828,8 +1512,7 @@ a:hover {
     box-shadow: none !important;
   }
 
-  .modern-pricing-table th,
-  .pricing-table th {
+  .modern-pricing-table th {
     display: table-cell !important;
     background: #f5f5f5 !important;
     color: #000 !important;
@@ -1842,8 +1525,7 @@ a:hover {
     padding-left: 6pt !important;
   }
 
-  .modern-pricing-table td,
-  .pricing-table td {
+  .modern-pricing-table td {
     display: table-cell !important;
     padding: 4pt 6pt !important;
     font-size: 8pt !important;
@@ -1856,8 +1538,7 @@ a:hover {
   }
 
   /* Remove mobile table pseudo-elements */
-  .modern-pricing-table td:before,
-  .pricing-table td:before {
+  .modern-pricing-table td:before {
     display: none !important;
     content: none !important;
   }

@@ -151,11 +151,4 @@ export const consultationData = {
       author: 'Operations Manager, Global Advertising Agency',
     },
   },
-  scheduling: {
-    title: '📅 Schedule Your Strategic Session',
-    paragraphs: [
-      'Ready to transform your business with AI and advanced analytics? Let\'s discuss your specific needs and explore how we can accelerate your digital transformation.',
-      '<strong>Book a complimentary 30-minute discovery call to get started.</strong>',
-    ],
-  },
 };

@@ -3,38 +3,36 @@
 		// Core Development
 		"esbenp.prettier-vscode",
 		"dbaeumer.vscode-eslint",
-		
-		// React Development
-		"dsznajder.es7-react-js-snippets",
+
+		// Astro Development
+		"astro-build.astro-vscode",
 		"formulahendry.auto-rename-tag",
-		
+
 		// Cloudflare Workers
 		"cloudflare.vscode-cloudflare-workers",
-		
+
 		// AI Assistant
 		"anthropic.claude-dev",
-		
+
 		// Code Quality & Productivity
 		"streetsidesoftware.code-spell-checker",
 		"usernamehw.errorlens",
-    "ms-vscode.vscode-typescript",
 		"christian-kohler.path-intellisense",
 		"ms-vscode.vscode-json",
-		
+
 		// Git & Version Control
 		"eamodio.gitlens",
 		"github.vscode-pull-request-github",
-		
+
 		// File Management
 		"christian-kohler.npm-intellisense",
 		"ms-vscode.vscode-package-json",
-		
+
 		// Optional but Helpful
 		"ms-vscode.vscode-markdown",
 		"redhat.vscode-yaml"
 	],
 	"unwantedRecommendations": [
-		"ms-vscode.vscode-typescript",
 		"hookyqr.beautify"
 	]
 }
