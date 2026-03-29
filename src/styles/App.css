@@ -404,9 +404,9 @@ h5 {
   background: var(--color-bg-secondary);
   border: 1px solid var(--color-border-primary);
   border-radius: 50%;
-  width: 3rem;
-  height: 3rem;
-  font-size: 1.6rem;
+  width: 3.5rem;
+  height: 3.5rem;
+  font-size: 1.8rem;
   line-height: 1;
   padding: 0;
   color: var(--color-text-secondary);
@@ -442,19 +442,20 @@ h5 {
 }
 
 .carousel-dot {
-  width: 0.5rem;
-  height: 0.5rem;
+  width: 0.6rem;
+  height: 0.6rem;
   border-radius: 50%;
   border: none;
-  background: var(--color-border-primary);
+  background-color: var(--color-text-muted);
   cursor: pointer;
-  padding: 0.75rem;
-  background-clip: content-box;
-  transition: background 0.2s ease, transform 0.2s ease;
+  padding: 0;
+  opacity: 0.4;
+  transition: background-color 0.2s ease, opacity 0.2s ease, transform 0.2s ease;
 }
 
 .carousel-dot--active {
-  background: var(--color-accent);
+  background-color: var(--color-accent);
+  opacity: 1;
   transform: scale(1.3);
 }
 
@@ -487,9 +488,40 @@ h5 {
   color: var(--color-text-tertiary);
 }
 
-.opensource-footer {
+.github-activity {
+  margin-top: 2rem;
+}
+
+.github-activity h3 {
+  font-size: 1.2rem;
+  margin-bottom: 0.4rem;
+  color: var(--color-text-heading);
+}
+
+.github-activity-description {
   font-size: 0.9rem;
   color: var(--color-text-muted);
+  margin-bottom: 1rem;
+}
+
+.github-chart-link {
+  display: block;
+}
+
+.github-chart {
+  width: 100%;
+  max-width: 720px;
+  border-radius: 8px;
+  opacity: 0.85;
+  transition: opacity 0.2s ease;
+}
+
+:root[data-theme="dark"] .github-chart {
+  filter: invert(1) hue-rotate(180deg);
+}
+
+.github-chart-link:hover .github-chart {
+  opacity: 1;
 }
 
 /* Reduced motion */
@@ -498,7 +530,8 @@ h5 {
   .showcase-card,
   .showcase-card-image img,
   .showcase-cta,
-  .carousel-dot {
+  .carousel-dot,
+  .github-chart {
     transition: none;
   }
 
