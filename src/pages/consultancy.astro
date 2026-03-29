@@ -4,23 +4,59 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import { consultationData } from '../data/consultation';
 import { CALENDLY_URL } from '../data/links';
 
-const professionalServiceSchema = {
+// Parse pricing string to structured offer data
+function parsePrice(investment: string): Record<string, string> {
+  const cleaned = investment.replace(/[,\s]/g, '').replace('AUD', '').trim();
+  if (cleaned.includes('-')) {
+    const [min, max] = cleaned.split('-').map(s => s.trim());
+    return { minPrice: min, maxPrice: max };
+  }
+  if (cleaned.startsWith('Startingat')) {
+    return { minPrice: cleaned.replace('Startingat', '') };
+  }
+  return { price: cleaned };
+}
+
+function buildOffer(row: string[]): Record<string, unknown> {
+  const [name, , investment, deliverables] = row;
+  const priceData = parsePrice(investment);
+  const offer: Record<string, unknown> = {
+    "@type": "Offer",
+    "itemOffered": {
+      "@type": "Service",
+      "name": name,
+      "description": deliverables
+    }
+  };
+  if ('price' in priceData) {
+    offer.price = priceData.price;
+    offer.priceCurrency = "AUD";
+  } else {
+    offer.priceSpecification = {
+      "@type": "PriceSpecification",
+      ...priceData,
+      "priceCurrency": "AUD"
+    };
+  }
+  return offer;
+}
+
+const allOffers = [
+  ...consultationData.aiConsultancy.pricing.rows.map(buildOffer),
+  ...consultationData.analyticsConsultancy.pricing.rows.map(buildOffer),
+];
+
+const serviceSchema = {
   "@context": "https://schema.org",
-  "@type": "ProfessionalService",
+  "@type": "Service",
+  "@id": "https://www.henriksoderlund.com/consultancy#service",
   "name": "Henrik Söderlund - Strategic Technology Consultancy",
   "description": "AI automation, analytics implementation, and digital transformation consulting services for businesses seeking to leverage cutting-edge technology solutions.",
-  "url": "https://www.henriksoderlund.com/",
-  "founder": {
-    "@type": "Person",
-    "name": "Henrik Söderlund",
-    "url": "https://www.henriksoderlund.com/"
+  "url": "https://www.henriksoderlund.com/consultancy",
+  "provider": {
+    "@id": "https://www.henriksoderlund.com/#person"
   },
-  "address": {
-    "@type": "PostalAddress",
-    "addressLocality": "Perth",
-    "addressRegion": "WA",
-    "addressCountry": "AU"
-  },
+  "serviceType": "Technology Consulting",
   "areaServed": [
     {
       "@type": "City",
@@ -29,44 +65,12 @@ const professionalServiceSchema = {
     {
       "@type": "Country",
       "name": "Australia"
-    },
-    {
-      "@type": "Place",
-      "name": "Global"
     }
   ],
-  "priceRange": "AUD 350 - 45,000",
-  "paymentAccepted": "Cash, Credit Card, Bank Transfer",
-  "currenciesAccepted": "AUD",
   "hasOfferCatalog": {
     "@type": "OfferCatalog",
     "name": "Consulting Services",
-    "itemListElement": [
-      {
-        "@type": "Offer",
-        "itemOffered": {
-          "@type": "Service",
-          "name": "AI Strategy & Feasibility Assessment",
-          "description": "Strategic roadmap, ROI analysis, technical specifications"
-        },
-        "price": "3500",
-        "priceCurrency": "AUD"
-      },
-      {
-        "@type": "Offer",
-        "itemOffered": {
-          "@type": "Service",
-          "name": "Workflow Automation System",
-          "description": "End-to-end automation, integration, training, documentation"
-        },
-        "priceSpecification": {
-          "@type": "PriceSpecification",
-          "minPrice": "8500",
-          "maxPrice": "15000",
-          "priceCurrency": "AUD"
-        }
-      }
-    ]
+    "itemListElement": allOffers
   },
   "contactPoint": {
     "@type": "ContactPoint",
@@ -82,7 +86,7 @@ const professionalServiceSchema = {
   description="Strategic technology consultancy services by Henrik Söderlund - AI automation, analytics implementation, and digital transformation for businesses."
 >
   <Fragment slot="head">
-    <script type="application/ld+json" set:html={JSON.stringify(professionalServiceSchema)} />
+    <script type="application/ld+json" set:html={JSON.stringify(serviceSchema)} />
   </Fragment>
 
   <div class="consultation-page">

@@ -21,6 +21,7 @@ const { title, description, ogType = 'website' } = Astro.props;
 const personSchemaJSON = JSON.stringify({
   "@context": "https://schema.org",
   "@type": "Person",
+  "@id": "https://www.henriksoderlund.com/#person",
   "name": "Henrik Söderlund",
   "url": "https://www.henriksoderlund.com/",
   "image": "https://www.henriksoderlund.com/og_image.png",
@@ -47,22 +48,18 @@ const personSchemaJSON = JSON.stringify({
     "Artificial Intelligence",
     "Digital Marketing",
     "Technology Leadership",
-    "Team Management",
     "Google Analytics",
     "Google Tag Manager",
     "Programmatic Advertising",
     "Marketing Technology",
     "Data Analytics",
     "Business Intelligence",
-    "AI Automation",
     "Performance Marketing",
     "Server-Side Tracking",
     "React Development",
-    "Python Programming",
-    "Process Automation"
+    "Python Programming"
   ],
   "skills": [
-    "Strategic Technology Leadership",
     "AI & Machine Learning Implementation",
     "Digital Advertising & Media Buying",
     "Advanced Analytics & Measurement",
@@ -71,14 +68,20 @@ const personSchemaJSON = JSON.stringify({
     "Google Ads & Meta Advertising",
     "Marketing Technology Stack Management",
     "Data Pipeline Architecture",
-    "Cross-Platform Attribution"
+    "Cross-Platform Attribution",
+    "Process Automation"
   ],
   "alumniOf": [
     {
-      "@type": "EducationalOrganization",
-      "name": "Malmö Academy of Music",
+      "@type": "CollegeOrUniversity",
+      "name": "Lund University",
+      "department": {
+        "@type": "EducationalOrganization",
+        "name": "Malmö Academy of Music"
+      },
       "address": {
         "@type": "PostalAddress",
+        "addressLocality": "Malmö",
         "addressCountry": "SE"
       }
     }
@@ -100,24 +103,18 @@ const personSchemaJSON = JSON.stringify({
   "award": [
     "MFA Changer Recognition 2024 (Initiative)",
     "Advertising+Marketing AOTY Best Local Media Agency 2021 (Creme Digital)"
-  ],
-  "memberOf": [
-    {
-      "@type": "Organization",
-      "name": "Facebook Blueprint Certified Professional"
-    }
   ]
 });
 
 const websiteSchemaJSON = JSON.stringify({
   "@context": "https://schema.org",
   "@type": "WebSite",
+  "@id": "https://www.henriksoderlund.com/#website",
   "name": "Henrik Söderlund - Digital Media Leader & AI Solutions Innovator",
   "url": "https://www.henriksoderlund.com/",
   "description": "The personal website of Henrik Söderlund, a Digital Media Leader & AI Solutions Innovator based in Perth, Australia.",
   "author": {
-    "@type": "Person",
-    "name": "Henrik Söderlund"
+    "@id": "https://www.henriksoderlund.com/#person"
   }
 });
 ---
@@ -191,36 +188,15 @@ const websiteSchemaJSON = JSON.stringify({
     <!-- Initialize dataLayer before GTM -->
     <script is:inline>
       window.dataLayer = window.dataLayer || [];
-
-      // Device type detection
-      const deviceType = /Tablet|iPad/.test(navigator.userAgent) ? 'tablet' :
-                        /Mobile|Android|iPhone/.test(navigator.userAgent) ? 'mobile' : 'desktop';
-
-      // Initialize with all data
       window.dataLayer.push({
-        'page_title': document.title,
-        'page_location': window.location.href,
-        'page_path': window.location.pathname,
-        'page_referrer': document.referrer,
-        'environment': location.hostname === 'localhost' || location.hostname === '127.0.0.1' || location.hostname.includes('vite') ? 'development' : 'production',
-        'user_agent': navigator.userAgent,
-        'screen_resolution': screen.width + 'x' + screen.height,
-        'viewport_size': window.innerWidth + 'x' + window.innerHeight,
-        'color_depth': screen.colorDepth,
-        'timezone': Intl.DateTimeFormat().resolvedOptions().timeZone,
-        'language': navigator.language,
-        'device_type': deviceType,
-        'is_mobile': deviceType === 'mobile',
-        'is_tablet': deviceType === 'tablet',
-        'is_desktop': deviceType === 'desktop',
-        'connection_type': navigator.connection ? navigator.connection.effectiveType : 'unknown'
+        'environment': location.hostname === 'localhost' || location.hostname === '127.0.0.1' || location.hostname.endsWith('.workers.dev') ? 'development' : 'production'
       });
     </script>
 
     <!-- Google Tag Manager -->
     <script is:inline>
       // Only load GTM in production (not on localhost or when NODE_ENV is development)
-      if (location.hostname !== 'localhost' && location.hostname !== '127.0.0.1' && !location.hostname.includes('vite')) {
+      if (location.hostname !== 'localhost' && location.hostname !== '127.0.0.1' && !location.hostname.endsWith('.workers.dev')) {
         (function (w, d, s, l, i) {
           w[l] = w[l] || [];
           w[l].push({ 'gtm.start': new Date().getTime(), event: 'gtm.js' });
