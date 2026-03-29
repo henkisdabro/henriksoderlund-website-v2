@@ -42,7 +42,7 @@ export const server = {
 
       const resend = new Resend(RESEND_API_KEY);
       const { error } = await resend.emails.send({
-        from: 'noreply@henriksoderlund.com',
+        from: 'Henrik Soderlund <noreply@utmhub.co>',
         to: CONTACT_EMAIL,
         replyTo: input.email,
         subject: `Website contact from ${input.name}`,
