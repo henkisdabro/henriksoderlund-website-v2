@@ -1175,98 +1175,60 @@ a:hover {
   }
 }
 
-/* GitHub Link Styles */
-.github-link {
-  position: absolute;
-  top: 35px;
-  right: 35px;
-  z-index: 1000;
-  text-decoration: none;
+/* Shared toolbar icon button (theme toggle, social links) */
+.icon-button {
   display: flex;
   align-items: center;
   justify-content: center;
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  border: 1px solid var(--color-border-primary);
+  border-radius: 8px;
+  background: var(--color-bg-elevated);
+  color: var(--color-icon);
+  cursor: pointer;
+  box-shadow: 0 1px 3px var(--color-shadow);
+  transition: color 0.3s ease, background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
 }
 
-/* Ultrawide gutter positioning for GitHub button */
+.icon-button:hover {
+  color: var(--color-icon-hover);
+  background: var(--color-btn-hover-bg);
+  border-color: var(--color-border-secondary);
+}
+
+/* Social Link Styles (GitHub + LinkedIn) */
+.github-link,
+.linkedin-link {
+  position: absolute;
+  z-index: 1000;
+  top: 27px;
+  text-decoration: none;
+}
+
+.github-link { right: 35px; }
+.linkedin-link { right: 80px; }
+
+/* Ultrawide gutter positioning */
 @media (min-width: 1400px) {
   .github-link {
     right: max(20px, calc((100vw - 1200px) / 2 - 80px));
   }
-}
-
-.github-link:hover {
-  text-decoration: none;
-}
-
-.github-icon {
-  width: 28px;
-  height: 28px;
-  color: var(--color-icon);
-  opacity: 0.7;
-  transition: all 0.3s ease;
-}
-
-.github-link:hover::before {
-  content: '';
-  position: absolute;
-  top: -10px;
-  left: -10px;
-  right: -10px;
-  bottom: -10px;
-  background-color: var(--color-btn-hover-bg);
-  border-radius: 50%;
-  z-index: -1;
-}
-
-.github-link:hover .github-icon {
-  color: var(--color-icon-hover);
-}
-
-/* LinkedIn Link Styles */
-.linkedin-link {
-  position: absolute;
-  top: 35px;
-  right: 75px; /* Position next to GitHub icon */
-  z-index: 1000;
-  text-decoration: none;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-/* Ultrawide gutter positioning for LinkedIn button */
-@media (min-width: 1400px) {
   .linkedin-link {
-    right: max(60px, calc((100vw - 1200px) / 2 - 40px));
+    right: max(65px, calc((100vw - 1200px) / 2 - 35px));
   }
 }
 
+.github-link:hover,
 .linkedin-link:hover {
   text-decoration: none;
 }
 
+.github-icon,
 .linkedin-icon {
-  width: 28px;
-  height: 28px;
-  color: var(--color-icon);
-  opacity: 0.7;
-  transition: all 0.3s ease;
-}
-
-.linkedin-link:hover::before {
-  content: '';
-  position: absolute;
-  top: -10px;
-  left: -10px;
-  right: -10px;
-  bottom: -10px;
-  background-color: var(--color-btn-hover-bg);
-  border-radius: 50%;
-  z-index: -1;
-}
-
-.linkedin-link:hover .linkedin-icon {
-  color: var(--color-icon-hover);
+  width: 18px;
+  height: 18px;
 }
 
 /* Footer Styles */
@@ -1510,28 +1472,13 @@ a:hover {
     font-size: 0.85rem;
   }
 
-  /* GitHub link mobile styles */
+  /* Social link mobile styles */
   .github-link {
-    position: absolute;
-    top: 27px;
     right: 30px;
   }
 
-  .github-icon {
-    width: 24px;
-    height: 24px;
-  }
-
-  /* LinkedIn link mobile styles */
   .linkedin-link {
-    position: absolute;
-    top: 27px;
-    right: 60px; /* Position next to GitHub icon */
-  }
-
-  .linkedin-icon {
-    width: 24px;
-    height: 24px;
+    right: 75px;
   }
 
   /* Case study mobile responsive styles */

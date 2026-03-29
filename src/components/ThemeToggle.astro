@@ -2,7 +2,7 @@
 ---
 
 <button
-  class="theme-toggle"
+  class="icon-button theme-toggle"
   id="theme-toggle"
   type="button"
   aria-label="Switch to dark mode"
@@ -30,26 +30,8 @@
   .theme-toggle {
     position: fixed;
     top: 27px;
-    right: 145px;
+    right: 125px;
     z-index: 1000;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 36px;
-    height: 36px;
-    padding: 0;
-    border: 1px solid var(--color-border-primary);
-    border-radius: 8px;
-    background: var(--color-bg-elevated);
-    color: var(--color-icon);
-    cursor: pointer;
-    box-shadow: 0 1px 3px var(--color-shadow);
-  }
-
-  .theme-toggle:hover {
-    color: var(--color-icon-hover);
-    background: var(--color-btn-hover-bg);
-    border-color: var(--color-border-secondary);
   }
 
   :global([data-theme="light"]) .theme-icon--sun {
@@ -69,17 +51,9 @@
   }
 
   /* Mobile positioning */
-  @media (max-width: 1024px) {
+  @media (max-width: 768px) {
     .theme-toggle {
-      top: 27px;
-      right: 100px;
-    }
-  }
-
-  @media (max-width: 480px) {
-    .theme-toggle {
-      top: 20px;
-      right: 90px;
+      right: 120px;
     }
   }
 </style>
