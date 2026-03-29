@@ -4,9 +4,10 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import { consultationData } from '../data/consultation';
 import { CALENDLY_URL } from '../data/links';
 
-const serviceNames = consultationData.services.pillars.flatMap(pillar =>
-  [{ "@type": "Offer", "itemOffered": { "@type": "Service", "name": pillar.name, "description": pillar.description } }]
-);
+const serviceNames = consultationData.services.pillars.map(pillar => ({
+  "@type": "Offer",
+  "itemOffered": { "@type": "Service", "name": pillar.name, "description": pillar.description }
+}));
 
 const serviceSchema = {
   "@context": "https://schema.org",

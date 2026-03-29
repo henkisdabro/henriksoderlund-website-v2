@@ -542,6 +542,9 @@ h5 {
   margin-bottom: 1rem;
 }
 
+.ideal-clients-section h2,
+.services-section h2,
+.engagement-section h2,
 .policy-section h2,
 .calendar-section h2 {
   font-size: 1.8rem;
@@ -549,13 +552,23 @@ h5 {
   color: var(--color-text-heading);
 }
 
-/* Who I Work With */
-.ideal-clients-section h2 {
-  font-size: 1.8rem;
+.ideal-clients-section h2,
+.services-section h2 {
   margin-bottom: 1.5rem;
-  color: var(--color-text-heading);
 }
 
+/* Shared card styles */
+.client-profile,
+.service-pillar,
+.engagement-model,
+.client-overview {
+  background: var(--color-bg-primary);
+  border: 1px solid var(--color-border-primary);
+  border-radius: 8px;
+  padding: 1.5rem;
+}
+
+/* Who I Work With */
 .client-profiles {
   display: grid;
   gap: 1rem;
@@ -563,9 +576,6 @@ h5 {
 
 .client-profile {
   padding: 1.25rem;
-  background: var(--color-bg-primary);
-  border: 1px solid var(--color-border-primary);
-  border-radius: 8px;
   line-height: 1.6;
   color: var(--color-text-primary);
 }
@@ -575,22 +585,9 @@ h5 {
 }
 
 /* Service Pillars */
-.services-section h2 {
-  font-size: 1.8rem;
-  margin-bottom: 1.5rem;
-  color: var(--color-text-heading);
-}
-
 .service-pillars {
   display: grid;
   gap: 2rem;
-}
-
-.service-pillar {
-  background: var(--color-bg-primary);
-  border: 1px solid var(--color-border-primary);
-  border-radius: 8px;
-  padding: 1.5rem;
 }
 
 .service-pillar h3 {
@@ -630,23 +627,10 @@ h5 {
 }
 
 /* Engagement Models */
-.engagement-section h2 {
-  font-size: 1.8rem;
-  margin-bottom: 1rem;
-  color: var(--color-text-heading);
-}
-
 .engagement-models {
   display: grid;
   gap: 1.5rem;
   margin-top: 1.5rem;
-}
-
-.engagement-model {
-  background: var(--color-bg-primary);
-  border: 1px solid var(--color-border-primary);
-  border-radius: 8px;
-  padding: 1.5rem;
 }
 
 .engagement-model h3 {
@@ -691,11 +675,7 @@ h5 {
 }
 
 .client-overview {
-  background: var(--color-bg-primary);
-  border-radius: 8px;
-  padding: 1.5rem;
   margin-bottom: 2rem;
-  border: 1px solid var(--color-border-primary);
 }
 
 .client-info {
@@ -732,7 +712,6 @@ h5 {
 
 .pain-points {
   list-style: disc;
-  margin-left: 2rem;
   margin: 1rem 0 1rem 2rem;
 }
 
@@ -1762,31 +1741,6 @@ a:hover {
     white-space: pre !important;
   }
 
-  /* Service lists */
-  .ai-services,
-  .analytics-services {
-    margin: 0 0 8pt 0 !important;
-  }
-
-  .ai-services ul,
-  .analytics-services ul {
-    list-style: disc !important;
-    margin-left: 20pt !important;
-    padding: 0 !important;
-  }
-
-  .ai-services li,
-  .analytics-services li {
-    margin: 2pt 0 !important;
-    padding: 0 !important;
-    position: relative !important;
-  }
-
-  .ai-services li:before,
-  .analytics-services li:before {
-    display: none !important;
-  }
-
   /* Country flags */
   .country-flag {
     width: 10pt !important;
@@ -1825,27 +1779,6 @@ a:hover {
   .case-study-section {
     margin: 8pt 0 !important;
     page-break-inside: avoid;
-  }
-
-  .case-study-header {
-    display: block !important;
-  }
-
-  .case-study-toggle {
-    display: none !important;
-  }
-
-  .case-study-subtitle {
-    font-size: 11pt !important;
-    color: #000 !important;
-    font-weight: normal !important;
-    margin: 2pt 0 6pt 0 !important;
-    text-align: left !important;
-  }
-
-  .case-study-expandable {
-    display: block !important;
-    margin-top: 0 !important;
   }
 
   .client-overview,
