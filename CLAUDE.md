@@ -10,7 +10,7 @@ Henrik Soderlund's personal portfolio website. Astro 6 with server-side renderin
 - **Stack**: Check `package.json` for current versions
 - **Data Layer**: Business data centralised in `src/data/` (consultation.ts, expertise.ts, workExperience.ts)
 - **Routing**: Astro file-based routing (`src/pages/`)
-- **Rendering**: 4 of 5 pages prerendered at build time (CDN edge); consultancy page is SSR (Astro Actions for contact form)
+- **Rendering**: 5 of 6 pages prerendered at build time (CDN edge); contact page is SSR (Astro Actions for contact form)
 
 ## Critical Rules & Guardrails
 
@@ -106,8 +106,8 @@ All markdown files must pass these linting rules:
 
 All visitors (users and crawlers alike) receive identical full HTML. No dual rendering or bot detection needed.
 
-- **Prerendered pages** (built at deploy time, served from CDN edge): index, expertise, work-experience, education, 404
-- **SSR page** (processed by Cloudflare Worker on each request): consultancy (requires Astro Actions for contact form)
+- **Prerendered pages** (built at deploy time, served from CDN edge): index, expertise, consultancy, work-experience, education, 404
+- **SSR page** (processed by Cloudflare Worker on each request): contact (requires Astro Actions for contact form)
 - **API endpoints**: health.ts, metrics.ts, security.txt.ts, per-page markdown endpoints (`*.md.ts`)
 
 ### Key Configuration Patterns

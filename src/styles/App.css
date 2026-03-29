@@ -71,7 +71,8 @@ p {
 .expertise-page,
 .work-experience-page,
 .education-page,
-.consultation-page {
+.consultation-page,
+.contact-page {
   max-width: 800px;
   margin: 0 auto;
   width: 100%;
@@ -83,12 +84,13 @@ p {
   .home-page {
     margin-top: 4rem;
   }
-  
+
   .skills-page,
   .expertise-page,
   .work-experience-page,
   .education-page,
-  .consultation-page {
+  .consultation-page,
+  .contact-page {
     margin-top: 2rem;
   }
 }
@@ -1338,7 +1340,8 @@ a:hover {
   .expertise-page,
   .work-experience-page,
   .education-page,
-  .consultation-page {
+  .consultation-page,
+  .contact-page {
     padding: 1rem;
   }
 
@@ -1683,7 +1686,8 @@ a:hover {
   .expertise-page,
   .work-experience-page,
   .education-page,
-  .consultation-page {
+  .consultation-page,
+  .contact-page {
     width: 100% !important;
     max-width: none !important;
     margin: 0 !important;
@@ -2228,19 +2232,6 @@ a:hover {
 }
 
 /* Contact Page */
-.contact-page {
-  max-width: 800px;
-  margin: 0 auto;
-  width: 100%;
-  text-align: left;
-}
-
-@media (min-width: 1025px) {
-  .contact-page {
-    margin-top: 2rem;
-  }
-}
-
 .contact-intro {
   margin-bottom: 2.5rem;
   font-size: 1.05rem;

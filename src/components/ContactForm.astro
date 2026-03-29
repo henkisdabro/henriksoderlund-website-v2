@@ -38,10 +38,9 @@ const error = result?.error;
       <textarea id="message" name="message" required maxlength="2000" rows="6" placeholder="Tell me about your project or question..."></textarea>
     </div>
     <div class="form-footer">
-      <div class="cf-turnstile" data-sitekey={TURNSTILE_SITE_KEY}></div>
+      <div class="cf-turnstile" data-sitekey={TURNSTILE_SITE_KEY} data-theme="light"></div>
       <button type="submit" class="submit-btn">Send Message</button>
     </div>
+    <script is:inline src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
   </form>
 )}
-
-<script is:inline src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
