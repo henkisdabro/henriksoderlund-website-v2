@@ -1,5 +1,8 @@
 # Cloudflare Workers compatible redirects
 
+# Sitemap
+/sitemap.xml /sitemap-index.xml 301
+
 # Current site rebranding redirects
 /skills /expertise 301
 /skills/ /expertise/ 301
