@@ -43,7 +43,8 @@ export default {
     if (contentType.includes('text/html')) {
       const nonce = crypto.randomUUID();
       headers.set('Content-Security-Policy', buildCSP(nonce));
-      headers.set('Cache-Control', 'no-store');
+      headers.set('Cache-Control', 'no-store, no-cache, must-revalidate, max-age=0');
+      headers.set('CDN-Cache-Control', 'no-store');
 
       const prepared = new Response(response.body, {
         status: response.status,
