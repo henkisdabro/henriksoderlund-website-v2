@@ -30,7 +30,7 @@
   .theme-toggle {
     position: fixed;
     top: 27px;
-    right: 131px;
+    right: 35px;
     z-index: 1000;
   }
 
@@ -50,10 +50,17 @@
     display: none;
   }
 
+  /* Ultrawide gutter positioning - stay next to GitHub/LinkedIn */
+  @media (min-width: 1400px) {
+    .theme-toggle {
+      right: max(17px, calc((100vw - 1200px) / 2 - 83px));
+    }
+  }
+
   /* Mobile positioning */
   @media (max-width: 768px) {
     .theme-toggle {
-      right: 120px;
+      right: 30px;
     }
   }
 </style>

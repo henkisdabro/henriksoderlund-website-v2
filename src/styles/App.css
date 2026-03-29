@@ -1241,16 +1241,16 @@ a:hover {
   text-decoration: none;
 }
 
-.github-link { right: 35px; }
-.linkedin-link { right: 83px; }
+.github-link { right: 83px; }
+.linkedin-link { right: 131px; }
 
 /* Ultrawide gutter positioning */
 @media (min-width: 1400px) {
   .github-link {
-    right: max(20px, calc((100vw - 1200px) / 2 - 80px));
+    right: max(65px, calc((100vw - 1200px) / 2 - 35px));
   }
   .linkedin-link {
-    right: max(65px, calc((100vw - 1200px) / 2 - 35px));
+    right: max(113px, calc((100vw - 1200px) / 2 + 13px));
   }
 }
 
@@ -1425,11 +1425,11 @@ a:hover {
 
   /* Social link mobile styles */
   .github-link {
-    right: 30px;
+    right: 75px;
   }
 
   .linkedin-link {
-    right: 75px;
+    right: 120px;
   }
 
   /* Case study mobile responsive styles */
