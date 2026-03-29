@@ -3,8 +3,10 @@ import SEO from '../components/SEO.astro';
 import NavigationBox from '../components/NavigationBox.astro';
 import GitHubLink from '../components/GitHubLink.astro';
 import LinkedInLink from '../components/LinkedInLink.astro';
+import ThemeToggle from '../components/ThemeToggle.astro';
 import Footer from '../components/Footer.astro';
 import { GITHUB_URL, LINKEDIN_URL } from '../data/links';
+import '../styles/theme.css';
 import '../styles/index.css';
 import '../styles/App.css';
 
@@ -124,6 +126,50 @@ const websiteSchemaJSON = JSON.stringify({
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
+
+    <!-- Theme detection - must run before any paint to prevent FOUC -->
+    <script is:inline>
+      (function() {
+        var theme = localStorage.getItem('theme');
+        if (!theme) {
+          theme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+        }
+        document.documentElement.setAttribute('data-theme', theme);
+
+        window.__setTheme = function(t) {
+          // Enable transitions only during theme switch
+          document.documentElement.classList.add('theme-transitioning');
+          document.documentElement.setAttribute('data-theme', t);
+          localStorage.setItem('theme', t);
+          setTimeout(function() { document.documentElement.classList.remove('theme-transitioning'); }, 350);
+          // Re-render Turnstile widget with new theme
+          var tw = document.querySelector('.cf-turnstile');
+          if (tw) {
+            tw.setAttribute('data-theme', t);
+            if (window.turnstile) {
+              try {
+                window.turnstile.remove();
+                window.turnstile.render(tw, { sitekey: tw.getAttribute('data-sitekey'), theme: t });
+              } catch(e) { console.warn('Turnstile re-render failed:', e); }
+            }
+          }
+          var btn = document.getElementById('theme-toggle');
+          if (btn) btn.setAttribute('aria-label', 'Switch to ' + (t === 'dark' ? 'light' : 'dark') + ' mode');
+        };
+
+        window.__toggleTheme = function() {
+          var current = document.documentElement.getAttribute('data-theme');
+          window.__setTheme(current === 'dark' ? 'light' : 'dark');
+        };
+
+        window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', function(e) {
+          if (!localStorage.getItem('theme')) {
+            window.__setTheme(e.matches ? 'dark' : 'light');
+          }
+        });
+      })();
+    </script>
+
     <link rel="icon" type="image/svg+xml" href="/bot.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>{title}</title>
@@ -209,6 +255,7 @@ const websiteSchemaJSON = JSON.stringify({
 
     <div class="app">
       <NavigationBox />
+      <ThemeToggle />
       <GitHubLink />
       <LinkedInLink />
 

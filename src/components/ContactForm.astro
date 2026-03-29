@@ -41,6 +41,12 @@ const error = result?.error;
       <div class="cf-turnstile" data-sitekey={TURNSTILE_SITE_KEY} data-theme="light"></div>
       <button type="submit" class="submit-btn">Send Message</button>
     </div>
+    <script is:inline>
+      // Sync Turnstile data-theme before the API script reads it
+      var tw = document.querySelector('.cf-turnstile');
+      var t = document.documentElement.getAttribute('data-theme');
+      if (tw && t) tw.setAttribute('data-theme', t);
+    </script>
     <script is:inline src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
   </form>
 )}

@@ -1,0 +1,229 @@
+/* ==========================================================================
+   Theme Design Tokens
+   CSS custom properties for light/dark mode theming
+   ========================================================================== */
+
+/* Font Faces - JetBrains Mono for dark mode */
+@font-face {
+  font-family: 'JetBrains Mono';
+  src: url('/fonts/JetBrainsMono-Regular.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'JetBrains Mono';
+  src: url('/fonts/JetBrainsMono-Medium.woff2') format('woff2');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'JetBrains Mono';
+  src: url('/fonts/JetBrainsMono-Italic.woff2') format('woff2');
+  font-weight: 400;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'JetBrains Mono';
+  src: url('/fonts/JetBrainsMono-SemiBoldItalic.woff2') format('woff2');
+  font-weight: 600;
+  font-style: italic;
+  font-display: swap;
+}
+
+/* ==========================================================================
+   Light Theme (default)
+   ========================================================================== */
+
+:root[data-theme="light"] {
+  color-scheme: light;
+
+  /* Backgrounds */
+  --color-bg-primary: #ffffff;
+  --color-bg-secondary: #f8f9fa;
+  --color-bg-tertiary: #f5f5f5;
+  --color-bg-elevated: #ffffff;
+  --color-bg-overlay: rgba(255, 255, 255, 0.9);
+  --color-bg-nav-header: rgba(248, 249, 250, 0.65);
+  --color-bg-code: rgba(0, 0, 0, 0.04);
+
+  /* Text */
+  --color-text-primary: #333333;
+  --color-text-secondary: #555555;
+  --color-text-tertiary: #666666;
+  --color-text-muted: #777777;
+  --color-text-faint: #888888;
+  --color-text-heading: #2c3e50;
+  --color-text-label: #374151;
+  --color-text-strong: #1f2937;
+
+  /* Accent */
+  --color-accent: #007acc;
+  --color-accent-hover: #005999;
+  --color-accent-subtle: rgba(0, 122, 204, 0.12);
+  --color-accent-text: #ffffff;
+
+  /* Borders */
+  --color-border-primary: #e1e5e9;
+  --color-border-secondary: #e5e7eb;
+  --color-border-subtle: #f3f4f6;
+  --color-border-input: #d1d5db;
+
+  /* Status */
+  --color-success-bg: #f0fdf4;
+  --color-success-text: #166534;
+  --color-success-border: #bbf7d0;
+  --color-success-icon: #16a34a;
+  --color-success-hover: #15803d;
+
+  --color-error-bg: #fef2f2;
+  --color-error-text: #991b1b;
+  --color-error-border: #fecaca;
+
+  /* Tags & Pills */
+  --color-tag-bg: #e9ecef;
+  --color-tag-text: #495057;
+  --color-pill-bg: #f1f3f4;
+  --color-pill-text: #666666;
+  --color-pill-border: #e5e7eb;
+
+  /* Misc */
+  --color-price: #059669;
+  --color-icon: #333333;
+  --color-icon-hover: #000000;
+  --color-icon-muted: #888888;
+  --color-nav-active-bg: #e8e8e8;
+  --color-nav-active-border: #666666;
+  --color-nav-hover-bg: #f5f5f5;
+  --color-btn-bg: #f9f9f9;
+  --color-btn-hover-bg: #e9ecef;
+  --color-shadow: rgba(0, 0, 0, 0.1);
+  --color-shadow-heavy: rgba(0, 0, 0, 0.15);
+  --color-gradient-divider: #e0e0e0;
+  --color-resume-bg: #ffc107;
+  --color-resume-hover: #e0a800;
+  --color-resume-text: #1a1a1a;
+  --color-marker: #667eea;
+  --color-link-default: #646cff;
+  --color-link-hover: #535bf2;
+
+  /* Breathing animation */
+  --color-breathe-glow: rgba(66, 133, 244, 0.18);
+  --color-breathe-shadow: rgba(66, 133, 244, 0.10);
+  --color-breathe-border: rgba(66, 133, 244, 0.18);
+  --color-breathe-bg: rgba(66, 133, 244, 0.06);
+
+  /* Fonts */
+  --font-body: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+  --font-body-alt: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  --font-mono: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+  --font-code: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
+}
+
+/* ==========================================================================
+   Dark Theme
+   ========================================================================== */
+
+:root[data-theme="dark"] {
+  color-scheme: dark;
+
+  /* Backgrounds */
+  --color-bg-primary: #0f1117;
+  --color-bg-secondary: #1a1d27;
+  --color-bg-tertiary: #232733;
+  --color-bg-elevated: #1e2230;
+  --color-bg-overlay: rgba(15, 17, 23, 0.92);
+  --color-bg-nav-header: rgba(26, 29, 39, 0.75);
+  --color-bg-code: rgba(255, 255, 255, 0.06);
+
+  /* Text */
+  --color-text-primary: #e4e4e7;
+  --color-text-secondary: #a1a1aa;
+  --color-text-tertiary: #71717a;
+  --color-text-muted: #52525b;
+  --color-text-faint: #62626b;
+  --color-text-heading: #f4f4f5;
+  --color-text-label: #d4d4d8;
+  --color-text-strong: #f4f4f5;
+
+  /* Accent */
+  --color-accent: #38bdf8;
+  --color-accent-hover: #7dd3fc;
+  --color-accent-subtle: rgba(56, 189, 248, 0.15);
+  --color-accent-text: #0f1117;
+
+  /* Borders */
+  --color-border-primary: #2d3348;
+  --color-border-secondary: #3a3f54;
+  --color-border-subtle: #1e2230;
+  --color-border-input: #3a3f54;
+
+  /* Status */
+  --color-success-bg: rgba(22, 163, 74, 0.1);
+  --color-success-text: #4ade80;
+  --color-success-border: rgba(74, 222, 128, 0.2);
+  --color-success-icon: #4ade80;
+  --color-success-hover: #86efac;
+
+  --color-error-bg: rgba(153, 27, 27, 0.15);
+  --color-error-text: #fca5a5;
+  --color-error-border: rgba(252, 165, 165, 0.2);
+
+  /* Tags & Pills */
+  --color-tag-bg: #232733;
+  --color-tag-text: #a1a1aa;
+  --color-pill-bg: #1e2230;
+  --color-pill-text: #a1a1aa;
+  --color-pill-border: #2d3348;
+
+  /* Misc */
+  --color-price: #34d399;
+  --color-icon: #d4d4d8;
+  --color-icon-hover: #ffffff;
+  --color-icon-muted: #71717a;
+  --color-nav-active-bg: #232733;
+  --color-nav-active-border: #38bdf8;
+  --color-nav-hover-bg: #1a1d27;
+  --color-btn-bg: #232733;
+  --color-btn-hover-bg: #2d3348;
+  --color-shadow: rgba(0, 0, 0, 0.4);
+  --color-shadow-heavy: rgba(0, 0, 0, 0.5);
+  --color-gradient-divider: #2d3348;
+  --color-resume-bg: #ca8a04;
+  --color-resume-hover: #a16207;
+  --color-resume-text: #fef9c3;
+  --color-marker: #818cf8;
+  --color-link-default: #818cf8;
+  --color-link-hover: #a5b4fc;
+
+  /* Breathing animation */
+  --color-breathe-glow: rgba(56, 189, 248, 0.2);
+  --color-breathe-shadow: rgba(56, 189, 248, 0.12);
+  --color-breathe-border: rgba(56, 189, 248, 0.2);
+  --color-breathe-bg: rgba(56, 189, 248, 0.08);
+
+  /* Fonts - coding font in dark mode */
+  --font-body: 'JetBrains Mono', 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+  --font-body-alt: 'JetBrains Mono', monospace;
+  --font-mono: 'JetBrains Mono', 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+  --font-code: 'JetBrains Mono', source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
+}
+
+/* ==========================================================================
+   Theme Transitions
+   ========================================================================== */
+
+/* Transitions only active during theme switch (class added/removed by JS) */
+@media (prefers-reduced-motion: no-preference) {
+  html.theme-transitioning,
+  html.theme-transitioning *,
+  html.theme-transitioning *::before,
+  html.theme-transitioning *::after {
+    transition: color 0.3s ease, background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease !important;
+  }
+}
