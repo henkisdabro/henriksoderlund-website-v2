@@ -40,8 +40,8 @@ export default defineConfig({
 
   env: {
     schema: {
-      RESEND_API_KEY: envField.string({ context: 'server', access: 'secret' }),
-      TURNSTILE_SECRET_KEY: envField.string({ context: 'server', access: 'secret' }),
+      RESEND_API_KEY: envField.string({ context: 'server', access: 'secret', optional: true, default: '' }),
+      TURNSTILE_SECRET_KEY: envField.string({ context: 'server', access: 'secret', optional: true, default: '' }),
       TURNSTILE_SITE_KEY: envField.string({ context: 'client', access: 'public' }),
     },
   },
