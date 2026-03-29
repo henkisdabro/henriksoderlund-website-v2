@@ -166,8 +166,6 @@ const websiteSchemaJSON = JSON.stringify({
 
     <!-- Preload critical fonts to reduce render-blocking -->
     <link rel="preload" href="/fonts/JetBrainsMono-Regular.woff2" as="font" type="font/woff2" crossorigin />
-    <link rel="preload" href="/fonts/JetBrainsMono-Medium.woff2" as="font" type="font/woff2" crossorigin />
-    <link rel="preload" href="/fonts/JetBrainsMono-Bold.woff2" as="font" type="font/woff2" crossorigin />
     <title>{title}</title>
     <meta name="description" content={description} />
 
@@ -182,8 +180,12 @@ const websiteSchemaJSON = JSON.stringify({
     <!-- Page-specific JSON-LD slot -->
     <slot name="head" />
 
-    <link rel="preconnect" href="https://load.sgtm.henriksoderlund.com/" crossorigin />
+    <link rel="preconnect" href="https://load.sgtm.henriksoderlund.com/" />
+    <link rel="preconnect" href="https://sgtm.henriksoderlund.com" crossorigin />
+    <link rel="preconnect" href="https://api.fouanalytics.com" crossorigin />
     <link rel="dns-prefetch" href="https://load.sgtm.henriksoderlund.com/" />
+    <link rel="dns-prefetch" href="https://sgtm.henriksoderlund.com" />
+    <link rel="dns-prefetch" href="https://api.fouanalytics.com" />
 
     <!-- Initialize dataLayer before GTM -->
     <script is:inline>
@@ -193,21 +195,26 @@ const websiteSchemaJSON = JSON.stringify({
       });
     </script>
 
-    <!-- Google Tag Manager -->
+    <!-- Google Tag Manager (deferred to avoid blocking initial render) -->
     <script is:inline>
-      // Only load GTM in production (not on localhost or when NODE_ENV is development)
       if (location.hostname !== 'localhost' && location.hostname !== '127.0.0.1' && !location.hostname.endsWith('.workers.dev')) {
-        (function (w, d, s, l, i) {
-          w[l] = w[l] || [];
-          w[l].push({ 'gtm.start': new Date().getTime(), event: 'gtm.js' });
-          var f = d.getElementsByTagName(s)[0], j = d.createElement(s);
-          j.async = true;
-          j.src = "https://load.sgtm.henriksoderlund.com/dz4d7tyirczbv.js?" + i;
-          f.parentNode.insertBefore(j, f);
-        })(window, document, 'script', 'dataLayer', '6at4snq=aWQ9R1RNLUZXUjQ%3D&omNe=daQSaS');
+        var loadGTM = function() {
+          (function (w, d, s, l, i) {
+            w[l] = w[l] || [];
+            w[l].push({ 'gtm.start': new Date().getTime(), event: 'gtm.js' });
+            var f = d.getElementsByTagName(s)[0], j = d.createElement(s);
+            j.async = true;
+            j.src = "https://load.sgtm.henriksoderlund.com/dz4d7tyirczbv.js?" + i;
+            f.parentNode.insertBefore(j, f);
+          })(window, document, 'script', 'dataLayer', '6at4snq=aWQ9R1RNLUZXUjQ%3D&omNe=daQSaS');
+        }
+        if ('requestIdleCallback' in window) {
+          requestIdleCallback(loadGTM);
+        } else {
+          setTimeout(loadGTM, 1500);
+        }
       }
     </script>
-    <!-- End Google Tag Manager -->
 
     <!-- View Transitions -->
     <style is:global>

@@ -213,3 +213,371 @@ const serviceSchema = {
     </section>
   </div>
 </BaseLayout>
+
+<style is:global>
+/* Consultation Page Styles */
+.consultancy-hero {
+  margin-bottom: 3rem;
+}
+
+.consultancy-hero h1 {
+  margin-bottom: 1rem;
+  color: var(--color-text-heading);
+}
+
+.ideal-clients-section,
+.services-section,
+.engagement-section,
+.policy-section,
+.calendar-section,
+.case-study-section {
+  margin-bottom: 3rem;
+}
+
+.hero-subtitle {
+  font-size: 1.2rem;
+  font-weight: 500;
+  color: var(--color-text-heading);
+  line-height: 1.5;
+  margin-bottom: 1rem;
+}
+
+.ideal-clients-section h2,
+.services-section h2,
+.engagement-section h2,
+.policy-section h2,
+.calendar-section h2 {
+  font-size: 1.8rem;
+  margin-bottom: 1rem;
+  color: var(--color-text-heading);
+}
+
+.ideal-clients-section h2,
+.services-section h2 {
+  margin-bottom: 1.5rem;
+}
+
+/* Shared card styles */
+.client-profile,
+.service-pillar,
+.engagement-model,
+.client-overview {
+  background: var(--color-bg-primary);
+  border: 1px solid var(--color-border-primary);
+  border-radius: 8px;
+  padding: 1.5rem;
+}
+
+/* Who I Work With */
+.client-profiles {
+  display: grid;
+  gap: 1rem;
+}
+
+.client-profile {
+  padding: 1.25rem;
+  line-height: 1.6;
+  color: var(--color-text-primary);
+}
+
+.client-profile strong {
+  color: var(--color-text-heading);
+}
+
+/* Service Pillars */
+.service-pillars {
+  display: grid;
+  gap: 2rem;
+}
+
+.service-pillar h3 {
+  font-size: 1.4rem;
+  color: var(--color-text-heading);
+  margin: 0 0 0.75rem 0;
+}
+
+.pillar-description {
+  font-size: 1rem;
+  color: var(--color-text-primary);
+  font-weight: 500;
+  margin-bottom: 1rem;
+  line-height: 1.5;
+}
+
+.service-pillar ul {
+  list-style: none;
+  padding-left: 0;
+  margin: 0;
+}
+
+.service-pillar li {
+  margin-bottom: 0.6rem;
+  padding-left: 1.5rem;
+  position: relative;
+  color: var(--color-text-secondary);
+  line-height: 1.5;
+}
+
+.service-pillar li:before {
+  content: "\25B6";
+  position: absolute;
+  left: 0;
+  color: var(--color-marker);
+  font-size: 0.8rem;
+}
+
+/* Engagement Models */
+.engagement-models {
+  display: grid;
+  gap: 1.5rem;
+  margin-top: 1.5rem;
+}
+
+.engagement-model h3 {
+  font-size: 1.3rem;
+  color: var(--color-text-heading);
+  margin: 0 0 0.75rem 0;
+}
+
+.engagement-model p {
+  color: var(--color-text-primary);
+  line-height: 1.6;
+}
+
+.engagement-details {
+  font-size: 0.9rem;
+  color: var(--color-text-secondary);
+  margin-top: 0.5rem;
+}
+
+/* Case Study Section Styles */
+.case-study-section {
+  margin-bottom: 3rem;
+}
+
+.case-study-headline {
+  margin-bottom: 1.5rem;
+}
+
+.headline-metrics {
+  font-size: 1.3rem;
+  font-weight: 600;
+  color: var(--color-text-heading);
+  margin-bottom: 0.5rem;
+  line-height: 1.4;
+}
+
+.case-study-headline h2 {
+  font-size: 1.2rem;
+  color: var(--color-text-secondary);
+  font-weight: 400;
+  margin: 0;
+}
+
+.client-overview {
+  margin-bottom: 2rem;
+}
+
+.client-info {
+  font-size: 0.9rem;
+  line-height: 1.6;
+  color: var(--color-text-primary);
+}
+
+.case-study-content {
+  display: grid;
+  gap: 1.5rem;
+}
+
+.challenge-section,
+.solution-section,
+.results-section,
+.technology-section,
+.testimonial-section {
+  background: var(--color-bg-primary);
+  border-radius: 8px;
+  padding: 1.5rem;
+  border: 1px solid var(--color-border-primary);
+}
+
+.challenge-section h3,
+.solution-section h3,
+.results-section h3,
+.technology-section h3 {
+  font-size: 1.3rem;
+  color: var(--color-text-heading);
+  margin: 0 0 1rem 0;
+  font-weight: 600;
+}
+
+.pain-points {
+  list-style: disc;
+  margin: 1rem 0 1rem 2rem;
+}
+
+.pain-points li {
+  margin-bottom: 0.5rem;
+  color: var(--color-text-secondary);
+  line-height: 1.5;
+}
+
+.solution-components {
+  display: grid;
+  gap: 0.5rem;
+  margin-top: 1rem;
+}
+
+.solution-component {
+  background: var(--color-bg-secondary);
+  border-radius: 4px;
+  padding: 0.75rem;
+  border: 1px solid var(--color-border-primary);
+}
+
+.solution-component h4 {
+  font-size: 1rem;
+  color: var(--color-text-heading);
+  margin: 0 0 0.25rem 0;
+  font-weight: 600;
+}
+
+.solution-component p {
+  margin: 0;
+  color: var(--color-text-secondary);
+  font-size: 0.85rem;
+  line-height: 1.4;
+}
+
+.results-metrics {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 0.75rem;
+  margin-top: 1rem;
+}
+
+.metric-card {
+  background: var(--color-bg-secondary);
+  border: 1px solid var(--color-border-primary);
+  border-radius: 4px;
+  padding: 1rem;
+  text-align: left;
+}
+
+.metric-value {
+  font-size: 1.3rem;
+  font-weight: 600;
+  margin-bottom: 0.25rem;
+  color: var(--color-text-primary);
+}
+
+.metric-name {
+  font-size: 0.8rem;
+  font-weight: 500;
+  margin-bottom: 0.25rem;
+  color: var(--color-text-secondary);
+  text-transform: none;
+  letter-spacing: 0;
+}
+
+.metric-description {
+  font-size: 0.75rem;
+  color: var(--color-text-tertiary);
+  line-height: 1.3;
+}
+
+.technology-list {
+  list-style: disc;
+  margin-left: 2rem;
+  margin: 1rem 0 1rem 2rem;
+  display: block;
+}
+
+.technology-list li {
+  margin-bottom: 0.5rem;
+  color: var(--color-text-secondary);
+  font-size: 0.9rem;
+  line-height: 1.4;
+}
+
+.testimonial-section {
+  background: var(--color-bg-secondary);
+  border: 1px solid var(--color-border-primary);
+  text-align: center;
+}
+
+.case-study-testimonial {
+  margin: 0;
+  border: none;
+  padding: 0;
+}
+
+.case-study-testimonial p {
+  font-size: 1rem;
+  line-height: 1.6;
+  margin: 0 0 1rem 0;
+  font-style: italic;
+  color: var(--color-text-secondary);
+}
+
+.case-study-testimonial cite {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--color-text-heading);
+  font-style: normal;
+}
+
+/* Details/Summary accordion for case study */
+.case-study-section details > summary {
+  cursor: pointer;
+  list-style: none;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.case-study-section details > summary::-webkit-details-marker {
+  display: none;
+}
+
+.case-study-section details > summary::marker {
+  display: none;
+  content: '';
+}
+
+/* Consultancy page mobile responsive */
+@media (max-width: 768px) {
+  .case-study-section {
+    margin-bottom: 2rem;
+  }
+
+  .client-overview,
+  .challenge-section,
+  .solution-section,
+  .results-section,
+  .technology-section,
+  .testimonial-section {
+    padding: 1rem;
+  }
+
+  .results-metrics {
+    grid-template-columns: 1fr;
+    gap: 0.75rem;
+  }
+
+  .metric-card {
+    padding: 1rem;
+  }
+
+  .metric-value {
+    font-size: 1.2rem;
+  }
+
+  .solution-components {
+    gap: 0.75rem;
+  }
+
+  .case-study-testimonial p {
+    font-size: 0.9rem;
+  }
+}
+</style>

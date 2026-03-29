@@ -47,3 +47,232 @@ import { CALENDLY_URL, LINKEDIN_URL, GITHUB_URL } from '../data/links';
     </section>
   </div>
 </BaseLayout>
+
+<style is:global>
+/* Contact Page */
+.contact-intro {
+  margin-bottom: 2.5rem;
+  font-size: 1.05rem;
+  line-height: 1.7;
+}
+
+.contact-intro a {
+  color: var(--color-accent);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.contact-intro a:hover {
+  color: var(--color-accent-hover);
+}
+
+.contact-form-section {
+  margin-bottom: 3rem;
+}
+
+/* Contact Form */
+.contact-form {
+  background: var(--color-bg-secondary);
+  border: 1px solid var(--color-border-primary);
+  border-radius: 12px;
+  padding: 2rem;
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.25rem;
+}
+
+@media (max-width: 600px) {
+  .form-row {
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+}
+
+.form-group {
+  margin-bottom: 1.25rem;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 0.4rem;
+  font-weight: 600;
+  font-size: 0.9rem;
+  color: var(--color-text-label);
+}
+
+.form-group input,
+.form-group textarea {
+  width: 100%;
+  padding: 0.75rem 0.9rem;
+  border: 1px solid var(--color-border-input);
+  border-radius: 8px;
+  font-family: inherit;
+  font-size: 0.95rem;
+  color: var(--color-text-strong);
+  background: var(--color-bg-primary);
+  box-sizing: border-box;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.form-group input::placeholder,
+.form-group textarea::placeholder {
+  color: var(--color-text-muted);
+}
+
+.form-group input:focus,
+.form-group textarea:focus {
+  outline: none;
+  border-color: var(--color-accent);
+  box-shadow: 0 0 0 3px var(--color-accent-subtle);
+}
+
+.form-group textarea {
+  resize: vertical;
+  min-height: 120px;
+}
+
+.form-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-top: 0.5rem;
+}
+
+.submit-btn {
+  cursor: pointer;
+}
+
+.submit-btn:active {
+  transform: scale(0.98);
+}
+
+.form-success {
+  padding: 2rem;
+  background-color: var(--color-success-bg);
+  border: 1px solid var(--color-success-border);
+  border-radius: 12px;
+  color: var(--color-success-text);
+  text-align: center;
+}
+
+.form-success-icon {
+  font-size: 2.5rem;
+  margin-bottom: 0.5rem;
+  color: var(--color-success-icon);
+}
+
+.form-success h3 {
+  margin: 0 0 0.5rem 0;
+  font-size: 1.2rem;
+  color: var(--color-success-text);
+}
+
+.form-success p {
+  margin: 0;
+  color: var(--color-success-hover);
+}
+
+.form-error {
+  padding: 1.25rem 1.5rem;
+  background-color: var(--color-error-bg);
+  border: 1px solid var(--color-error-border);
+  border-radius: 12px;
+  color: var(--color-error-text);
+  margin-bottom: 1.5rem;
+}
+
+.form-error a {
+  color: var(--color-error-text);
+  font-weight: 600;
+}
+
+/* Contact Alternatives */
+.contact-alternatives {
+  margin-top: 1rem;
+  padding-top: 2rem;
+  border-top: 1px solid var(--color-border-secondary);
+}
+
+.contact-alternatives h2 {
+  font-size: 1.5rem;
+  color: var(--color-text-heading);
+  margin-bottom: 1.25rem;
+}
+
+.contact-methods {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.25rem;
+}
+
+@media (max-width: 700px) {
+  .contact-methods {
+    grid-template-columns: 1fr;
+  }
+}
+
+.contact-method {
+  background: var(--color-bg-secondary);
+  border: 1px solid var(--color-border-primary);
+  border-radius: 10px;
+  padding: 1.5rem;
+}
+
+.contact-method h3 {
+  font-size: 1.05rem;
+  color: var(--color-text-heading);
+  margin: 0 0 0.5rem 0;
+}
+
+.contact-method p {
+  font-size: 0.9rem;
+  color: var(--color-text-tertiary);
+  margin: 0 0 1rem 0;
+  line-height: 1.5;
+}
+
+.contact-link {
+  display: inline-block;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--color-accent);
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+  transition: border-color 0.2s;
+}
+
+.contact-link:hover {
+  border-bottom-color: var(--color-accent);
+}
+
+.cf-turnstile {
+  margin: 1rem 0;
+  max-width: 100%;
+}
+
+.cf-turnstile iframe {
+  border-radius: 8px;
+  max-width: 100%;
+}
+
+@media (max-width: 768px) {
+  .contact-form {
+    padding: 1.25rem;
+  }
+
+  .form-footer {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .cf-turnstile {
+    transform: scale(0.9);
+    transform-origin: left top;
+  }
+}
+</style>

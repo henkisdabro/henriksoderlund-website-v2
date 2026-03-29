@@ -307,3 +307,439 @@ import { sectionIcons } from '../utils/sectionIcons';
 
   initCarousel();
 </script>
+
+<style is:global>
+/* Skills Page Styles */
+.consultancy-section {
+  margin-bottom: 2rem;
+}
+
+.consultancy-section h2,
+.platform-experience h2,
+.github-contributions h2,
+.leadership-section h2,
+.technical-skills-section h2,
+.ai-tooling-section h2 {
+  font-size: 2rem;
+  margin-bottom: 1rem;
+  color: var(--color-text-heading);
+}
+
+.skills-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 0.75rem;
+  margin-bottom: 0.75rem;
+  max-width: 100%;
+}
+
+.skill-category {
+  background: var(--color-bg-code);
+  border-radius: 8px;
+  padding: 1.5rem;
+  border: 1px solid var(--color-accent-subtle);
+  box-shadow: 0 1px 3px var(--color-shadow);
+  margin-bottom: 1rem;
+}
+
+.skill-category h3 {
+  font-size: 1.3rem;
+  margin-top: -0.15rem;
+  margin-bottom: 1rem;
+  color: var(--color-text-heading);
+}
+
+.platform-experience {
+  margin-bottom: 3rem;
+}
+
+.github-contributions {
+  margin-bottom: 3rem;
+}
+
+/* Showcase Section (Featured Product) */
+.showcase-section {
+  margin-top: 2rem;
+  margin-bottom: 2rem;
+}
+
+.showcase-section h2 {
+  font-size: 2rem;
+  margin-bottom: 1.5rem;
+  color: var(--color-text-heading);
+}
+
+/* Carousel layout */
+.carousel {
+  position: relative;
+}
+
+.carousel-viewport {
+  overflow: hidden;
+  margin: 0 -20%;
+  padding: 0 20%;
+  -webkit-mask-image: linear-gradient(to right, transparent, black 8%, black 92%, transparent);
+  mask-image: linear-gradient(to right, transparent, black 8%, black 92%, transparent);
+}
+
+.carousel-track {
+  display: flex;
+  transition: transform 0.35s ease-out;
+}
+
+.showcase-card {
+  display: block;
+  text-decoration: none;
+  color: inherit;
+  background: var(--color-bg-primary);
+  border: 1px solid var(--color-border-primary);
+  box-shadow: 0 0 0 1px var(--color-border-primary);
+  border-radius: 12px;
+  overflow: hidden;
+  flex: 0 0 100%;
+  min-width: 0;
+  opacity: 0.45;
+  transform: scale(0.92);
+  filter: blur(1px);
+  transition: opacity 0.35s ease, transform 0.35s ease, filter 0.35s ease,
+              box-shadow 0.2s ease-out;
+  cursor: pointer;
+}
+
+.showcase-card--active {
+  opacity: 1;
+  transform: scale(1);
+  filter: blur(0);
+  box-shadow: none;
+}
+
+.showcase-card--active:hover {
+  box-shadow: 0 16px 32px var(--color-shadow-heavy),
+              0 0 24px color-mix(in srgb, var(--card-accent) 20%, transparent);
+  text-decoration: none;
+}
+
+.showcase-card-image {
+  overflow: hidden;
+  aspect-ratio: 16 / 9;
+  background: var(--color-bg-tertiary);
+}
+
+.showcase-card-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease-out;
+}
+
+.showcase-card--active:hover .showcase-card-image img {
+  transform: scale(1.05);
+}
+
+.showcase-card-placeholder {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, var(--color-bg-tertiary), var(--color-bg-secondary));
+}
+
+.showcase-card-placeholder-text {
+  font-size: 2rem;
+  font-weight: 600;
+  color: var(--color-text-muted);
+  letter-spacing: 0.05em;
+}
+
+.showcase-card-content {
+  padding: 1.5rem 2rem 2rem;
+}
+
+.showcase-card-header {
+  margin-bottom: 0.75rem;
+}
+
+.showcase-type-badge {
+  display: inline-block;
+  font-size: 0.7rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--card-accent);
+  background: color-mix(in srgb, var(--card-accent) 10%, transparent);
+  padding: 0.2rem 0.6rem;
+  border-radius: 4px;
+  margin-bottom: 0.5rem;
+}
+
+.showcase-card-header h3 {
+  font-size: 1.6rem;
+  color: var(--color-text-heading);
+  margin: 0;
+}
+
+.showcase-tagline {
+  font-size: 1rem;
+  color: var(--color-text-secondary);
+  margin-bottom: 0.75rem;
+  font-weight: 500;
+}
+
+.showcase-description {
+  font-size: 0.9rem;
+  color: var(--color-text-tertiary);
+  line-height: 1.6;
+  margin-bottom: 1rem;
+}
+
+.showcase-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin-bottom: 1rem;
+}
+
+.showcase-tag {
+  display: inline-block;
+  background: var(--color-pill-bg);
+  border: 1px solid var(--color-pill-border);
+  color: var(--color-pill-text);
+  padding: 0.15rem 0.5rem;
+  border-radius: 4px;
+  font-size: 0.7rem;
+  font-family: var(--font-mono);
+}
+
+.showcase-cta {
+  display: inline-block;
+  color: var(--card-accent);
+  font-weight: 600;
+  font-size: 0.9rem;
+  transition: letter-spacing 0.3s ease;
+}
+
+.showcase-card--active:hover .showcase-cta {
+  letter-spacing: 0.5px;
+}
+
+.showcase-card--static.showcase-card--active {
+  cursor: default;
+}
+
+/* Carousel navigation buttons */
+.carousel-btn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 2;
+  background: var(--color-bg-secondary);
+  border: 1px solid var(--color-border-primary);
+  border-radius: 50%;
+  width: 3.5rem;
+  height: 3.5rem;
+  font-size: 1.8rem;
+  line-height: 1;
+  padding: 0;
+  color: var(--color-text-secondary);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 8px var(--color-shadow);
+  opacity: 0.75;
+  transition: background 0.15s ease, color 0.15s ease, opacity 0.15s ease;
+}
+
+.carousel-btn:hover {
+  background: var(--color-bg-tertiary);
+  color: var(--color-text-heading);
+  opacity: 1;
+}
+
+.carousel-btn--prev {
+  left: -1.25rem;
+}
+
+.carousel-btn--next {
+  right: -1.25rem;
+}
+
+/* Carousel dots */
+.carousel-dots {
+  display: flex;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-top: 1.25rem;
+}
+
+.carousel-dot {
+  width: 0.6rem;
+  height: 0.6rem;
+  border-radius: 50%;
+  border: none;
+  background-color: var(--color-text-muted);
+  cursor: pointer;
+  padding: 0;
+  opacity: 0.4;
+  transition: background-color 0.2s ease, opacity 0.2s ease, transform 0.2s ease;
+}
+
+.carousel-dot--active {
+  background-color: var(--color-accent);
+  opacity: 1;
+  transform: scale(1.3);
+}
+
+/* Open Source & Community Section */
+.opensource-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 0.75rem;
+  margin-bottom: 1.5rem;
+}
+
+.opensource-tile {
+  display: flex;
+  flex-direction: column;
+  background: var(--color-bg-code);
+  border: 1px solid var(--color-accent-subtle);
+  border-radius: 8px;
+  padding: 1.25rem 1.5rem;
+  text-decoration: none;
+  color: inherit;
+  box-shadow: 0 1px 3px var(--color-shadow);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.opensource-tile:hover {
+  border-color: var(--color-text-link);
+  box-shadow: 0 2px 8px var(--color-shadow);
+  text-decoration: none;
+}
+
+.opensource-tile-header {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin-bottom: 0.5rem;
+}
+
+.opensource-tile-icon {
+  flex-shrink: 0;
+  color: var(--color-text-muted);
+}
+
+.opensource-tile-header h3 {
+  font-size: 1rem;
+  margin: 0;
+  line-height: 1.3;
+  color: var(--color-text-heading);
+}
+
+.opensource-tile-description {
+  font-size: 0.875rem;
+  color: var(--color-text-tertiary);
+  line-height: 1.5;
+  margin: 0 0 auto;
+  padding-bottom: 0.75rem;
+}
+
+.opensource-tile-link {
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: var(--color-text-link);
+}
+
+.github-activity {
+  margin-top: 2rem;
+}
+
+.github-activity h3 {
+  font-size: 1.2rem;
+  margin-bottom: 0.4rem;
+  color: var(--color-text-heading);
+}
+
+.github-activity-description {
+  font-size: 0.9rem;
+  color: var(--color-text-muted);
+  margin-bottom: 1rem;
+}
+
+.github-chart-link {
+  display: block;
+}
+
+.github-chart {
+  width: 100%;
+  border-radius: 8px;
+  opacity: 0.85;
+  transition: opacity 0.2s ease;
+}
+
+:root[data-theme="dark"] .github-chart {
+  filter: invert(1) hue-rotate(180deg);
+}
+
+.github-chart-link:hover .github-chart {
+  opacity: 1;
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .carousel-track,
+  .showcase-card,
+  .showcase-card-image img,
+  .showcase-cta,
+  .carousel-dot,
+  .github-chart,
+  .opensource-tile {
+    transition: none;
+  }
+
+  .showcase-card--active:hover .showcase-card-image img {
+    transform: none;
+  }
+}
+
+/* Expertise page mobile responsive */
+@media (max-width: 768px) {
+  .consultancy-section h2,
+  .platform-experience h2,
+  .github-contributions h2,
+  .leadership-section h2,
+  .technical-skills-section h2,
+  .ai-tooling-section h2 {
+    font-size: 1.3em;
+  }
+
+  .showcase-section h2 {
+    font-size: 1.3em;
+  }
+
+  .carousel-btn {
+    opacity: 0.9;
+  }
+
+  .carousel-btn--prev {
+    left: -0.5rem;
+  }
+
+  .carousel-btn--next {
+    right: -0.5rem;
+  }
+
+  .showcase-card-content {
+    padding: 1rem 1.25rem 1.5rem;
+  }
+
+  .showcase-card-header h3 {
+    font-size: 1.3rem;
+  }
+
+  .showcase-card-placeholder-text {
+    font-size: 1.5rem;
+  }
+}
+</style>

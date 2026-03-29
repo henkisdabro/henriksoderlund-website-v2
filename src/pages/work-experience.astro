@@ -3,6 +3,7 @@ export const prerender = true;
 import BaseLayout from '../layouts/BaseLayout.astro';
 import { workExperienceData } from '../data/workExperience';
 import { slugify } from '../utils/slugify';
+import '../styles/content-entry.css';
 ---
 
 <BaseLayout
@@ -21,3 +22,4 @@ import { slugify } from '../utils/slugify';
     ))}
   </div>
 </BaseLayout>
+

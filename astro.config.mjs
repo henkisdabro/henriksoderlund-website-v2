@@ -30,11 +30,21 @@ export default defineConfig({
     }),
   ],
 
+  build: {
+    inlineStylesheets: 'always',
+  },
+
   image: {
     service: passthroughImageService(),
   },
 
   prefetch: false,
+
+  vite: {
+    build: {
+      sourcemap: true,
+    },
+  },
 
   env: {
     schema: {
