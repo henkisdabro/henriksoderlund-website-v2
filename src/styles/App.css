@@ -566,6 +566,10 @@ a:hover {
   margin: 0 0.3rem;
 }
 
+.footer-legal {
+  margin-top: 1.5rem;
+}
+
 .cloudflare-icon {
   width: 20px;
   height: 20px;
