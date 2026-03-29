@@ -32,6 +32,9 @@ jobs:
 
       - name: Build project
         run: npm run build
+        env:
+          PUBLIC_TURNSTILE_SITE_KEY: '0x4AAAAAACxasQskYMJsn7bk'
+          TURNSTILE_SITE_KEY: '0x4AAAAAACxasQskYMJsn7bk'
 
       - name: Verify build artifacts
         run: |
