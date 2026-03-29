@@ -2,6 +2,7 @@ import { defineAction, ActionError } from 'astro:actions';
 import { z } from 'astro/zod';
 import { Resend } from 'resend';
 import { RESEND_API_KEY, TURNSTILE_SECRET_KEY } from 'astro:env/server';
+import { CONTACT_EMAIL } from '../data/links';
 
 export const server = {
   contact: defineAction({
@@ -42,7 +43,7 @@ export const server = {
       const resend = new Resend(RESEND_API_KEY);
       const { error } = await resend.emails.send({
         from: 'contact@henriksoderlund.com',
-        to: 'henrik@henriksoderlund.com',
+        to: CONTACT_EMAIL,
         replyTo: input.email,
         subject: `Website contact from ${input.name}`,
         text: `From: ${input.name} (${input.email})\n\n${input.message}`,

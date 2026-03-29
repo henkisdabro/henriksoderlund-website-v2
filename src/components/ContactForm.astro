@@ -1,6 +1,7 @@
 ---
 import { actions } from 'astro:actions';
 import { TURNSTILE_SITE_KEY } from 'astro:env/client';
+import { CONTACT_EMAIL } from '../data/links';
 
 const result = Astro.getActionResult(actions.contact);
 const success = result?.data?.success;
@@ -8,7 +9,7 @@ const error = result?.error;
 ---
 
 {success && (
-  <div class="form-success">
+  <div class="form-success" role="alert">
     <div class="form-success-icon">&#10003;</div>
     <h3>Message sent successfully</h3>
     <p>Thank you for reaching out. I'll get back to you within one business day.</p>
@@ -16,8 +17,14 @@ const error = result?.error;
 )}
 
 {error && (
-  <div class="form-error">
-    <p><strong>Something went wrong.</strong> Please try again or email me directly at <a href="mailto:henrik@henriksoderlund.com">henrik@henriksoderlund.com</a>.</p>
+  <div class="form-error" role="alert">
+    {error.code === 'FORBIDDEN' ? (
+      <p><strong>Verification failed.</strong> Please refresh the page and try again.</p>
+    ) : error.code === 'BAD_REQUEST' ? (
+      <p><strong>Please check your input.</strong> {error.message}</p>
+    ) : (
+      <p><strong>Something went wrong.</strong> Please try again or email me directly at <a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a>.</p>
+    )}
   </div>
 )}
 
@@ -38,15 +45,21 @@ const error = result?.error;
       <textarea id="message" name="message" required maxlength="2000" rows="6" placeholder="Tell me about your project or question..."></textarea>
     </div>
     <div class="form-footer">
-      <div class="cf-turnstile" data-sitekey={TURNSTILE_SITE_KEY} data-theme="light"></div>
+      <div class="cf-turnstile" data-sitekey={TURNSTILE_SITE_KEY}></div>
       <button type="submit" class="submit-btn">Send Message</button>
     </div>
     <script is:inline>
-      // Sync Turnstile data-theme before the API script reads it
-      var tw = document.querySelector('.cf-turnstile');
-      var t = document.documentElement.getAttribute('data-theme');
-      if (tw && t) tw.setAttribute('data-theme', t);
+      // Explicit render callback - captures widget ID for theme toggle re-renders
+      function onTurnstileLoad() {
+        var tw = document.querySelector('.cf-turnstile');
+        if (!tw) return;
+        var theme = document.documentElement.getAttribute('data-theme') || 'light';
+        window.__turnstileWidgetId = window.turnstile.render(tw, {
+          sitekey: tw.getAttribute('data-sitekey'),
+          theme: theme
+        });
+      }
     </script>
-    <script is:inline src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
+    <script is:inline src="https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit&onload=onTurnstileLoad" async defer></script>
   </form>
 )}

@@ -145,11 +145,10 @@ const websiteSchemaJSON = JSON.stringify({
           // Re-render Turnstile widget with new theme
           var tw = document.querySelector('.cf-turnstile');
           if (tw) {
-            tw.setAttribute('data-theme', t);
-            if (window.turnstile) {
+            if (window.turnstile && window.__turnstileWidgetId) {
               try {
-                window.turnstile.remove();
-                window.turnstile.render(tw, { sitekey: tw.getAttribute('data-sitekey'), theme: t });
+                window.turnstile.remove(window.__turnstileWidgetId);
+                window.__turnstileWidgetId = window.turnstile.render(tw, { sitekey: tw.getAttribute('data-sitekey'), theme: t });
               } catch(e) { console.warn('Turnstile re-render failed:', e); }
             }
           }
