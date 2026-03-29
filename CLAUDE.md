@@ -33,7 +33,7 @@ Henrik Soderlund's personal portfolio website. Astro 6 with server-side renderin
 - `wrangler.json` - Cloudflare Workers configuration
 - `package.json` - Build configuration and dependencies
 - `src/layouts/BaseLayout.astro` - Main layout with GTM, JSON-LD, view transitions, SEO metadata
-- `src/middleware.ts` - Security headers, CSP, canonical URL handling
+- `src/worker.ts` - Custom Worker entry: CSP nonces, security headers, HTMLRewriter
 - `src/actions/index.ts` - Astro Actions (contact form with Turnstile + Resend)
 - `.github/workflows/` - CI/CD pipelines
 
@@ -116,7 +116,11 @@ All visitors (users and crawlers alike) receive identical full HTML. No dual ren
 
 **Trailing slashes**: Set `trailingSlash: 'never'` in `astro.config.mjs` to match existing URL structure and avoid redirects.
 
-**Headers**: The `_headers` file is NOT applied to Worker-handled routes. All security headers, CSP, and canonical URL logic must be implemented in `src/middleware.ts`.
+**Security headers and CSP**: Handled at the Worker level in `src/worker.ts`, NOT in Astro middleware. Astro middleware does NOT run for prerendered pages on Cloudflare (they are served via `env.ASSETS.fetch()`, bypassing the Astro render pipeline). The custom Worker entry wraps `@astrojs/cloudflare/handler` and applies headers to ALL responses.
+
+**CSP nonces**: Per-request nonces generated via `crypto.randomUUID()`. Cloudflare's `HTMLRewriter` injects `nonce=""` attributes on all executable `<script>` tags (excluding `type="application/ld+json"`). CSP uses `'strict-dynamic'` so GTM child scripts inherit trust automatically.
+
+**`run_worker_first` and dev mode**: The `run_worker_first: true` assets config is required in production so the Worker processes prerendered pages. However, it MUST NOT be in the source `wrangler.json` because the Cloudflare Vite plugin picks it up in dev mode and routes Vite's own assets through the Worker, causing universal 404s. It is added only to the built output via `scripts/patch-wrangler.mjs` (post-build step).
 
 **View transitions**: CSS `@view-transition { navigation: auto; }` requires `<style is:global>` in the layout, not a scoped `<style>` block.
 
@@ -185,9 +189,9 @@ gemini -p "YOUR_DETAILED_ANALYSIS_REQUEST"
 
 ### Validation Before Commits
 
-- **Full Check**: `npm run check` - Astro type check + build
+- **Full Check**: `npm run check` - Astro type check + build + wrangler patch
 - **Lint**: `npm run lint` - ESLint code quality validation
-- **Build**: `npm run build` - `astro check && astro build` (includes sitemap generation)
+- **Build**: `npm run build` - `astro check && astro build` + post-build wrangler patch (includes sitemap generation)
 
 ### Data-Driven Architecture
 
@@ -205,7 +209,8 @@ gemini -p "YOUR_DETAILED_ANALYSIS_REQUEST"
 - **Components**: `src/components/` (Astro components)
 - **Layouts**: `src/layouts/BaseLayout.astro` (main layout)
 - **Actions**: `src/actions/index.ts` (contact form)
-- **Middleware**: `src/middleware.ts` (security headers, CSP)
+- **Worker Entry**: `src/worker.ts` (CSP nonces, security headers, HTMLRewriter)
+- **Build Scripts**: `scripts/patch-wrangler.mjs` (post-build wrangler config patch)
 - **Data**: `src/data/` (business data files)
 - **Assets**: `src/assets/` (images, logos, flags, icons)
 - **Styles**: `src/styles/` (App.css, index.css)
@@ -223,6 +228,17 @@ gemini -p "YOUR_DETAILED_ANALYSIS_REQUEST"
 - Native `<details>/<summary>` for accordion UI (case studies)
 - CSS View Transitions for smooth page navigation (zero-JS)
 - Astro prefetch for near-instant navigation
+
+### Content Security Policy (CSP)
+
+- Per-request cryptographic nonces replace `'unsafe-inline'` in `script-src`
+- `src/worker.ts` is the custom Worker entry point (set via `"main"` in `wrangler.json`)
+- Wraps `@astrojs/cloudflare/handler`'s `handle()` function
+- `HTMLRewriter` injects `nonce=""` on all `<script>` tags except `type="application/ld+json"` (streaming, no buffering)
+- `'strict-dynamic'` in CSP means scripts loaded by nonced scripts (e.g., GTM child scripts) are auto-trusted
+- `Cache-Control: no-store` on HTML responses ensures nonces in HTML always match the CSP header
+- Host allowlists in `script-src` are kept as fallbacks for browsers not supporting `'strict-dynamic'`
+- Adapter's `config.main` uses nullish coalescing (`??`), so setting `main` in `wrangler.json` is safe
 
 ### Environment Variables
 

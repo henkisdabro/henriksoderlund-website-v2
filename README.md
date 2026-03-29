@@ -31,10 +31,12 @@ src/
   components/                # Astro components (NavigationBox, Footer, ContactForm, SEO, etc.)
   data/                      # Centralised data files (consultation.ts, expertise.ts, workExperience.ts)
   layouts/BaseLayout.astro   # Main layout with GTM, JSON-LD, view transitions
-  middleware.ts              # Security headers, CSP, canonical URL handling
+  worker.ts                  # Custom Worker entry: CSP nonces, security headers, HTMLRewriter
   pages/                     # File-based routing (.astro pages, API endpoints, markdown endpoints)
   styles/                    # App.css, index.css
   utils/                     # removeEmojis.ts, markdownResponse.ts
+scripts/
+  patch-wrangler.mjs         # Post-build: adds run_worker_first to built wrangler config
 public/                      # Static assets (verification files, favicons, redirects)
 ```
 
@@ -64,7 +66,8 @@ public/                      # Static assets (verification files, favicons, redi
 
 ### Security
 
-- **Security Headers**: CSP, X-Frame-Options, HSTS, and more via Astro middleware
+- **CSP Nonces**: Per-request cryptographic nonces via custom Worker entry (`src/worker.ts`) using Cloudflare's `HTMLRewriter` for streaming nonce injection - replaces `'unsafe-inline'` with `'nonce-{uuid}' 'strict-dynamic'`
+- **Security Headers**: X-Frame-Options, HSTS, Referrer-Policy, Permissions-Policy applied at Worker level to ALL responses (including prerendered pages)
 - **Rate Limiting**: Configured via Cloudflare WAF dashboard rules
 - **Turnstile Verification**: Server-side token validation in Astro Actions
 
@@ -78,10 +81,10 @@ public/                      # Static assets (verification files, favicons, redi
 ## Development Commands
 
 - `npm run dev` - Start Astro dev server (port 4321)
-- `npm run build` - Build for production (`astro check && astro build`)
+- `npm run build` - Build for production (`astro check && astro build` + wrangler config patch)
 - `npm run preview` - Preview production build locally
 - `npm run lint` - Run ESLint for code quality checks
-- `npm run check` - Astro type check + build
+- `npm run check` - Astro type check + build + wrangler config patch
 - `npm run deploy` - Build and deploy to Cloudflare Workers
 - `npm run cf-typegen` - Generate Cloudflare Workers types
 
