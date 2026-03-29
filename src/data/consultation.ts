@@ -183,6 +183,34 @@ export const consultationData = {
       author: 'Operations Manager, Global Advertising Agency',
     },
   },
+  faq: {
+    title: 'Frequently Asked Questions',
+    items: [
+    {
+      question: 'What services do you offer?',
+      answer: 'I deliver AI and intelligent automation, analytics and measurement frameworks, AI coding assistant setup and team upskilling, and digital product development. Each engagement is tailored to the specific needs of the business rather than following a one-size-fits-all approach.',
+    },
+    {
+      question: 'How do engagements typically work?',
+      answer: 'Every engagement starts with a discovery conversation to understand your situation, objectives, and constraints. From there, we agree on the right model: strategic advisory for ongoing guidance, project-based for defined deliverables, or embedded/fractional for part-time technical leadership within your team.',
+    },
+    {
+      question: 'Do you work remotely or only in Perth?',
+      answer: 'I am based in Perth, Australia, and work with clients both locally and remotely. Most advisory and project-based engagements are delivered remotely, while embedded/fractional roles can include on-site days depending on location and requirements.',
+    },
+    {
+      question: 'What industries do you work with?',
+      answer: 'I work across a range of industries including digital agencies, marketing teams, scaling businesses, and organisations navigating AI adoption. Past engagements have spanned advertising, media, wildlife conservation, SaaS, and enterprise operations.',
+    },
+    {
+      question: 'What results can I expect?',
+      answer: 'Results vary by engagement, but past projects have delivered measurable outcomes including 75% reductions in administrative time, AUD 285,000 in recovered revenue, and 60% faster project delivery. Every engagement is structured around clear, quantifiable goals agreed upfront.',
+    },
+    {
+      question: 'How do I get started?',
+      answer: 'The easiest way to start is by booking a complimentary 30-minute discovery call. You will leave with actionable recommendations for your situation, regardless of whether we work together. Alternatively, you can send a message through the contact form.',
+    },
+  ]},
   qualityGuarantee: {
     title: 'Quality Guarantee',
     paragraph: 'Every engagement is backed by my commitment to excellence. If the delivered solution does not meet the agreed specifications or your satisfaction, I will work to resolve any issues at no additional cost.',

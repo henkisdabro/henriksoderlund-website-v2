@@ -9,6 +9,19 @@ const serviceNames = consultationData.services.pillars.map(pillar => ({
   "itemOffered": { "@type": "Service", "name": pillar.name, "description": pillar.description }
 }));
 
+const faqSchema = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": consultationData.faq.items.map(item => ({
+    "@type": "Question",
+    "name": item.question,
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": item.answer,
+    },
+  })),
+};
+
 const serviceSchema = {
   "@context": "https://schema.org",
   "@type": "Service",
@@ -52,6 +65,7 @@ const serviceSchema = {
 >
   <Fragment slot="head">
     <script type="application/ld+json" set:html={JSON.stringify(serviceSchema)} />
+    <script type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
   </Fragment>
 
   <div class="consultation-page">
@@ -62,7 +76,7 @@ const serviceSchema = {
     </section>
 
     <section class="ideal-clients-section">
-      <h2>{consultationData.idealClients.title}</h2>
+      <h2 id="ideal-clients">{consultationData.idealClients.title}</h2>
       <div class="client-profiles">
         {consultationData.idealClients.profiles.map(profile => (
           <div class="client-profile">
@@ -73,7 +87,7 @@ const serviceSchema = {
     </section>
 
     <section class="services-section">
-      <h2>{consultationData.services.title}</h2>
+      <h2 id="services">{consultationData.services.title}</h2>
       <div class="service-pillars">
         {consultationData.services.pillars.map(pillar => (
           <div class="service-pillar">
@@ -90,7 +104,7 @@ const serviceSchema = {
     </section>
 
     <section class="engagement-section">
-      <h2>{consultationData.engagementModels.title}</h2>
+      <h2 id="engagement-models">{consultationData.engagementModels.title}</h2>
       <p>{consultationData.engagementModels.intro}</p>
       <div class="engagement-models">
         {consultationData.engagementModels.models.map(model => (
@@ -104,7 +118,7 @@ const serviceSchema = {
     </section>
 
     <section class="case-study-section">
-      <h2>Case Study</h2>
+      <h2 id="case-study">Case Study</h2>
       <div class="case-study-headline">
         <p class="headline-metrics">{consultationData.caseStudy.headline}</p>
         <h3>{consultationData.caseStudy.title}</h3>
@@ -175,12 +189,22 @@ const serviceSchema = {
     </section>
 
     <section class="policy-section">
-      <h2>{consultationData.qualityGuarantee.title}</h2>
+      <h2 id="quality-guarantee">{consultationData.qualityGuarantee.title}</h2>
       <p>{consultationData.qualityGuarantee.paragraph}</p>
     </section>
 
+    <section class="faq-section">
+      <h2 id="faq">{consultationData.faq.title}</h2>
+      {consultationData.faq.items.map(item => (
+        <details class="faq-item">
+          <summary>{item.question}</summary>
+          <p>{item.answer}</p>
+        </details>
+      ))}
+    </section>
+
     <section class="calendar-section">
-      <h2>Let's Talk</h2>
+      <h2 id="contact">Let's Talk</h2>
       <p>Book a complimentary 30-minute discovery call. You will leave with actionable recommendations for your situation, regardless of whether we work together.</p>
       <div class="cta-buttons">
         <a href={CALENDLY_URL} target="_blank" rel="noopener noreferrer" class="cta-primary">Book a Discovery Call</a>

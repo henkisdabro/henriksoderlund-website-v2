@@ -18,6 +18,7 @@ export default defineConfig({
           '/work-experience': 0.8,
           '/contact': 0.8,
           '/education': 0.7,
+          '/privacy': 0.3,
         };
         const path = new URL(item.url).pathname;
         return { ...item, priority: priorities[path] || 0.5 };

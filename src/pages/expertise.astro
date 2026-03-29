@@ -21,19 +21,19 @@ import { sectionIcons } from '../utils/sectionIcons';
 ---
 
 <BaseLayout
-  title="Expertise | Henrik Söderlund"
+  title="Technical Expertise | Henrik Söderlund"
   description="Technical expertise, platform mastery, and open-source contributions by Henrik Söderlund - Technology Leader & AI Innovator."
 >
   <div class="expertise-page">
     <h1>Expertise</h1>
 
     <section class="consultancy-section">
-      <h2><span class="section-icon" aria-hidden="true" set:html={sectionIcons.rocket} />{expertiseData.intro.title}</h2>
+      <h2 id="overview"><span class="section-icon" aria-hidden="true" set:html={sectionIcons.rocket} />{expertiseData.intro.title}</h2>
       <p>{expertiseData.intro.paragraph}</p>
     </section>
 
     <section class="showcase-section">
-      <h2><span class="section-icon" aria-hidden="true" set:html={sectionIcons.layers} />{expertiseData.showcase.title}</h2>
+      <h2 id="showcase-projects"><span class="section-icon" aria-hidden="true" set:html={sectionIcons.layers} />{expertiseData.showcase.title}</h2>
       <div class="carousel">
         <div class="carousel-viewport">
           <div class="carousel-track">
@@ -96,7 +96,7 @@ import { sectionIcons } from '../utils/sectionIcons';
     </section>
 
     <section class="leadership-section">
-      <h2><span class="section-icon" aria-hidden="true" set:html={sectionIcons.users} />{expertiseData.leadershipExpertise.title}</h2>
+      <h2 id="leadership"><span class="section-icon" aria-hidden="true" set:html={sectionIcons.users} />{expertiseData.leadershipExpertise.title}</h2>
       <p>{expertiseData.leadershipExpertise.paragraph}</p>
       <div class="skills-grid">
         {expertiseData.leadershipExpertise.categories.map(category => (
@@ -111,7 +111,7 @@ import { sectionIcons } from '../utils/sectionIcons';
     </section>
 
     <section class="technical-skills-section">
-      <h2><span class="section-icon" aria-hidden="true" set:html={sectionIcons.wrench} />Technical Expertise & Platform Mastery</h2>
+      <h2 id="technical-skills"><span class="section-icon" aria-hidden="true" set:html={sectionIcons.wrench} />Technical Expertise & Platform Mastery</h2>
       <div class="skills-grid">
         {expertiseData.skillsGrid.map(category => (
           <div class="skill-category">
@@ -125,7 +125,7 @@ import { sectionIcons } from '../utils/sectionIcons';
     </section>
 
     <section class="ai-tooling-section">
-      <h2><span class="section-icon" aria-hidden="true" set:html={sectionIcons.cpu} />{expertiseData.aiTooling.title}</h2>
+      <h2 id="ai-tooling"><span class="section-icon" aria-hidden="true" set:html={sectionIcons.cpu} />{expertiseData.aiTooling.title}</h2>
       <p>{expertiseData.aiTooling.paragraph}</p>
       <div class="skills-grid">
         {expertiseData.aiTooling.categories.map(category => (
@@ -140,7 +140,7 @@ import { sectionIcons } from '../utils/sectionIcons';
     </section>
 
     <section class="platform-experience">
-      <h2><span class="section-icon" aria-hidden="true" set:html={sectionIcons.trendingUp} />{expertiseData.platformExperience.title}</h2>
+      <h2 id="platform-experience"><span class="section-icon" aria-hidden="true" set:html={sectionIcons.trendingUp} />{expertiseData.platformExperience.title}</h2>
       <p>{expertiseData.platformExperience.paragraph}</p>
       <div class="skills-minimal-pills">
         {expertiseData.platformExperience.platforms.map(platform => <span class="skill-pill-minimal">{platform}</span>)}
@@ -148,7 +148,7 @@ import { sectionIcons } from '../utils/sectionIcons';
     </section>
 
     <section class="github-contributions">
-      <h2><span class="section-icon" aria-hidden="true" set:html={sectionIcons.gitBranch} />{expertiseData.githubContributions.title}</h2>
+      <h2 id="github-contributions"><span class="section-icon" aria-hidden="true" set:html={sectionIcons.gitBranch} />{expertiseData.githubContributions.title}</h2>
 
       <div class="opensource-grid">
         {expertiseData.githubContributions.contributions.map(contribution => (
@@ -171,6 +171,8 @@ import { sectionIcons } from '../utils/sectionIcons';
             src="https://ghchart.rshah.org/henkisdabro"
             alt="Henrik's GitHub contribution graph showing daily activity over the past year"
             class="github-chart"
+            width="663"
+            height="104"
             loading="lazy"
             decoding="async"
           />

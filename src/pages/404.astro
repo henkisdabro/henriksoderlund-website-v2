@@ -26,6 +26,15 @@ import BaseLayout from '../layouts/BaseLayout.astro';
       <div class="error-message">
         <h1>Oops! Page not found</h1>
         <p>The page you're looking for doesn't exist.</p>
+        <nav aria-label="Suggested pages" class="not-found-nav">
+          <p><a href="/">Return to homepage</a></p>
+          <ul>
+            <li><a href="/expertise">Expertise</a></li>
+            <li><a href="/consultancy">Consultancy</a></li>
+            <li><a href="/work-experience">Work Experience</a></li>
+            <li><a href="/contact">Get in Touch</a></li>
+          </ul>
+        </nav>
       </div>
     </div>
   </div>

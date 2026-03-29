@@ -50,7 +50,7 @@ jobs:
         run: |
           sleep 5
           failed=0
-          for path in / /expertise /consultancy /work-experience /education /contact; do
+          for path in / /expertise /consultancy /work-experience /education /contact /privacy; do
             url="https://www.henriksoderlund.com${path}"
             tmpfile=$(mktemp)
             status=$(curl -s --compressed -o "$tmpfile" -w "%{http_code}" --max-time 15 "$url")

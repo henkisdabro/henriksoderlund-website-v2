@@ -26,6 +26,9 @@ function setSecurityHeaders(headers: Headers, request: Request): void {
   headers.set('Referrer-Policy', 'strict-origin-when-cross-origin');
   headers.set('Permissions-Policy', 'camera=(), microphone=(), geolocation=(), payment=()');
   headers.set('Strict-Transport-Security', 'max-age=31536000; includeSubDomains; preload');
+  headers.set('Cross-Origin-Opener-Policy', 'same-origin');
+  headers.set('Cross-Origin-Resource-Policy', 'cross-origin');
+  headers.set('X-Permitted-Cross-Domain-Policies', 'none');
 
   const host = request.headers.get('host');
   if (host === 'www.henriksoderlund.com') {

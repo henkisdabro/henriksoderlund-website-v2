@@ -14,6 +14,7 @@ const htmlPages = [
   { path: 'dist/client/consultancy/index.html', minBytes: 10000 },
   { path: 'dist/client/work-experience/index.html', minBytes: 5000 },
   { path: 'dist/client/education/index.html', minBytes: 2000 },
+  { path: 'dist/client/privacy/index.html', minBytes: 2000 },
   { path: 'dist/client/404.html', minBytes: 1000 },
 ];
 

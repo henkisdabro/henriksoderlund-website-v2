@@ -2,6 +2,7 @@
 export const prerender = true;
 import BaseLayout from '../layouts/BaseLayout.astro';
 import { workExperienceData } from '../data/workExperience';
+import { slugify } from '../utils/slugify';
 ---
 
 <BaseLayout
@@ -13,7 +14,7 @@ import { workExperienceData } from '../data/workExperience';
 
     {workExperienceData.map(job => (
       <section class="content-entry">
-        <h2><img src={typeof job.flag === 'string' ? job.flag : job.flag.src} alt={job.location} class="country-flag" width="16" height="12" /> {job.title}</h2>
+        <h2 id={slugify(job.title)}><img src={typeof job.flag === 'string' ? job.flag : job.flag.src} alt={job.location} class="country-flag" width="16" height="12" /> {job.title}</h2>
         <p class="dates">{job.dates}</p>
         {job.description.map(p => <p>{p}</p>)}
       </section>
