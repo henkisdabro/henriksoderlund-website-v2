@@ -39,6 +39,7 @@ export default {
     const contentType = response.headers.get('content-type') || '';
     const headers = new Headers(response.headers);
     setSecurityHeaders(headers, request);
+    headers.delete('speculation-rules');
 
     if (contentType.includes('text/html')) {
       const nonce = crypto.randomUUID();
