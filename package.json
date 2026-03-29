@@ -32,10 +32,10 @@
   },
   "scripts": {
     "dev": "astro dev",
-    "build": "astro check && astro build",
+    "build": "astro check && astro build && node scripts/patch-wrangler.mjs",
     "preview": "astro preview",
-    "check": "astro check && astro build",
-    "deploy": "astro build && wrangler deploy",
+    "check": "astro check && astro build && node scripts/patch-wrangler.mjs",
+    "deploy": "astro build && node scripts/patch-wrangler.mjs && wrangler deploy",
     "lint": "eslint .",
     "cf-typegen": "wrangler types"
   },
