@@ -158,9 +158,19 @@ const imageMap: Record<string, ImageMetadata> = {
         ))}
       </ul>
 
-      <p class="opensource-footer">
-        View more on <a href={GITHUB_URL} target="_blank" rel="noopener noreferrer">GitHub</a>.
-      </p>
+      <div class="github-activity">
+        <h3>GitHub Contribution Activity</h3>
+        <p class="github-activity-description">Daily contributions across public and private repositories over the past year. View my full profile on <a href={GITHUB_URL} target="_blank" rel="noopener noreferrer">GitHub</a>.</p>
+        <a href={GITHUB_URL} target="_blank" rel="noopener noreferrer" class="github-chart-link">
+          <img
+            src="https://ghchart.rshah.org/henkisdabro"
+            alt="Henrik's GitHub contribution graph showing daily activity over the past year"
+            class="github-chart"
+            loading="lazy"
+            decoding="async"
+          />
+        </a>
+      </div>
     </section>
   </div>
 </BaseLayout>
