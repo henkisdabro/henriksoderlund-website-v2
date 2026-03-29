@@ -8,7 +8,7 @@ const CSP_TEMPLATE = [
   "img-src 'self' data: https://www.googletagmanager.com https://*.google-analytics.com https://ssl.gstatic.com https://www.gstatic.com *.google.com *.google.com.au https://ghchart.rshah.org https://api.fouanalytics.com",
   "font-src 'self' data: https://fonts.gstatic.com",
   "frame-src 'self' https://sgtm.henriksoderlund.com https://load.sgtm.henriksoderlund.com https://www.googletagmanager.com https://challenges.cloudflare.com",
-  "worker-src 'self' blob:",
+  "worker-src 'self' blob: https://sgtm.henriksoderlund.com",
   "child-src 'self' blob:",
   "object-src 'none'",
   "manifest-src 'self'",
