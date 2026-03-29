@@ -19,6 +19,13 @@ export const server = {
         .min(1, 'Please complete the verification'),
     }),
     handler: async (input, context) => {
+      if (!RESEND_API_KEY || !TURNSTILE_SECRET_KEY) {
+        throw new ActionError({
+          code: 'INTERNAL_SERVER_ERROR',
+          message: 'Server configuration error',
+        });
+      }
+
       const ip = context.request.headers.get('CF-Connecting-IP') ?? '';
       const verifyRes = await fetch(
         'https://challenges.cloudflare.com/turnstile/v0/siteverify',

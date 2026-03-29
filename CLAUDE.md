@@ -42,7 +42,7 @@ Critical files that must NEVER be deleted:
 
 **Production deployment is automatic via GitHub Actions on push to `main`.** DO NOT use `npm run deploy` for production.
 
-The CI pipeline: lint, build, verify artifacts (markdown endpoints, llms.txt), deploy via `wrangler-action`, smoke test all 6 pages.
+The CI pipeline: lint, build, verify artifacts (HTML pages + markdown + text with minimum size thresholds), deploy via `wrangler-action`, smoke test all pages (HTTP status + body size).
 
 For local testing only: `npm run build`, `npm run preview`, `npm run deploy`.
 
@@ -164,9 +164,13 @@ Applied to ALL responses by `src/worker.ts`:
 
 Type-safe via `astro:env/server` (schema in `astro.config.mjs`):
 
-- `RESEND_API_KEY` - Email delivery for contact form
-- `TURNSTILE_SECRET_KEY` - Server-side Turnstile verification
+- `RESEND_API_KEY` - Email delivery for contact form (optional at build, required at runtime)
+- `TURNSTILE_SECRET_KEY` - Server-side Turnstile verification (optional at build, required at runtime)
 - `TURNSTILE_SITE_KEY` - Client-side Turnstile widget (public)
+
+**CRITICAL - Env vars and prerendering**: Server secrets (`RESEND_API_KEY`, `TURNSTILE_SECRET_KEY`) MUST be `optional: true` in the env schema. The Cloudflare adapter's prerender subprocess reads secrets from `.dev.vars`, NOT from process environment variables. In CI (which has no `.dev.vars`), required secrets cause `EnvInvalidVariables` errors that silently produce 0-byte HTML files while the build still exits 0. The runtime validation for these secrets is in `src/actions/index.ts`.
+
+> **History**: March 2026 - Required env vars in the schema caused all prerendered pages to deploy as empty files. The build exited 0, smoke tests only checked HTTP status (not body size), so the outage went undetected until manual inspection.
 
 ### Redirects
 
@@ -185,6 +189,7 @@ src/
   utils/                        # removeEmojis, markdownResponse, pageMarkdown
   worker.ts                     # Custom Worker entry (CSP nonces, security headers, HTMLRewriter)
 scripts/patch-wrangler.mjs      # Post-build wrangler config patch (run_worker_first)
+scripts/verify-build.mjs        # Build artifact verification (size thresholds, completeness)
 public/_redirects               # 15 redirect rules
 public/fonts/                   # JetBrains Mono WOFF2 (6 weights)
 .github/workflows/deploy.yml   # CI/CD: lint, build, verify, deploy, smoke test
@@ -202,12 +207,13 @@ public/fonts/                   # JetBrains Mono WOFF2 (6 weights)
 
 ### Validation Commands
 
-- `npm run check` - Full validation: Astro type check + build + wrangler patch
-- `npm run build` - Production build: `astro check && astro build` + wrangler patch
+- `npm run check` - Full validation: Astro type check + build + wrangler patch + artifact verification
+- `npm run build` - Production build: `astro check && astro build` + wrangler patch + artifact verification
 - `npm run lint` - ESLint code quality
 - `npm run dev` - Dev server on port 4321
 - `npm run preview` - Preview production build locally
 - `npm run cf-typegen` - Generate Cloudflare Workers types
+- `node scripts/verify-build.mjs` - Standalone build artifact verification (checks HTML pages, markdown endpoints, text files, server bundle, and `run_worker_first` patch)
 
 ### Data-Driven Architecture
 
@@ -244,7 +250,7 @@ Valuable for: complex routing issues, cross-platform compatibility, performance 
 
 - Dev server: port 4321 (Astro default)
 - Cloudflare acquired Astro in January 2026 - `@astrojs/cloudflare` is first-party
-- No test suite configured (suggest Vitest if needed)
+- Build verification via `scripts/verify-build.mjs` (runs automatically in `npm run build`)
 - `npm run preview` for local production build testing
 - Check `package.json` for dependency versions (not listed here to avoid staleness)
 - Image format: WebP for screenshots, SVG/PNG for logos, with lazy loading and `decoding="async"`

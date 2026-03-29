@@ -34,22 +34,9 @@ jobs:
         run: npm run build
         env:
           TURNSTILE_SITE_KEY: '0x4AAAAAACxasQskYMJsn7bk'
-          RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
-          TURNSTILE_SECRET_KEY: ${{ secrets.TURNSTILE_SECRET_KEY }}
 
       - name: Verify build artifacts
-        run: |
-          failed=0
-          for file in expertise.md work-experience.md education.md consultancy.md contact.md index.html.md llms.txt llms-full.txt; do
-            found=$(find dist -name "$file" -type f 2>/dev/null | head -1)
-            if [ -z "$found" ]; then
-              echo "::error::$file not found in build output"
-              failed=1
-            else
-              echo "OK: $found ($(wc -c < "$found") bytes)"
-            fi
-          done
-          [ "$failed" -eq 0 ] || exit 1
+        run: node scripts/verify-build.mjs
 
       - name: Deploy to Cloudflare Workers
         if: github.ref == 'refs/heads/main' && github.event_name == 'push'
@@ -61,11 +48,43 @@ jobs:
       - name: Post-deploy smoke test
         if: github.ref == 'refs/heads/main' && github.event_name == 'push'
         run: |
+          sleep 5
           failed=0
           for path in / /expertise /consultancy /work-experience /education /contact; do
             url="https://www.henriksoderlund.com${path}"
-            status=$(curl -s -o /dev/null -w "%{http_code}" --max-time 10 "$url")
-            [ "$status" -eq 200 ] && echo "OK: $url" || { echo "::error::FAIL: $url ($status)"; failed=1; }
+            tmpfile=$(mktemp)
+            status=$(curl -s --compressed -o "$tmpfile" -w "%{http_code}" --max-time 15 "$url")
+            size=$(wc -c < "$tmpfile")
+            rm -f "$tmpfile"
+
+            if [ "$status" -ne 200 ]; then
+              echo "::error::FAIL: $url (HTTP $status)"
+              failed=1
+            elif [ "$size" -lt 1000 ]; then
+              echo "::error::FAIL: $url (HTTP $status but only $size bytes - page is empty)"
+              failed=1
+            else
+              echo "OK: $url ($status, $size bytes)"
+            fi
+          done
+
+          echo "=== Checking API endpoints ==="
+          for path in /health /llms.txt; do
+            url="https://www.henriksoderlund.com${path}"
+            tmpfile=$(mktemp)
+            status=$(curl -s --compressed -o "$tmpfile" -w "%{http_code}" --max-time 10 "$url")
+            size=$(wc -c < "$tmpfile")
+            rm -f "$tmpfile"
+
+            if [ "$status" -ne 200 ]; then
+              echo "::error::FAIL: $url (HTTP $status)"
+              failed=1
+            elif [ "$size" -eq 0 ]; then
+              echo "::error::FAIL: $url (HTTP $status but empty body)"
+              failed=1
+            else
+              echo "OK: $url ($status, $size bytes)"
+            fi
           done
           [ "$failed" -eq 0 ] || exit 1
 
