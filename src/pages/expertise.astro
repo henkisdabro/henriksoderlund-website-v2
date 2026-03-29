@@ -2,13 +2,21 @@
 export const prerender = true;
 import BaseLayout from '../layouts/BaseLayout.astro';
 import { expertiseData } from '../data/expertise';
+import { GITHUB_URL } from '../data/links';
 import dashboardImage from '../assets/images/screenshots/dashboard.webp';
 import wikiImage from '../assets/images/screenshots/wiki.webp';
+import utmhubImage from '../assets/images/screenshots/utmhub.webp';
+import rottoSnorkelImage from '../assets/images/screenshots/rotto-snorkel.webp';
+import automationDiagramImage from '../assets/images/screenshots/automation-diagram.webp';
 
-const imageMap: { [key: string]: ImageMetadata } = {
+const imageMap: Record<string, ImageMetadata> = {
   dashboardImage,
   wikiImage,
+  utmhubImage,
+  rottoSnorkelImage,
+  automationDiagramImage,
 };
+
 ---
 
 <BaseLayout
@@ -21,6 +29,69 @@ const imageMap: { [key: string]: ImageMetadata } = {
     <section class="consultancy-section">
       <h2>{expertiseData.intro.title}</h2>
       <p>{expertiseData.intro.paragraph}</p>
+    </section>
+
+    <section class="showcase-section">
+      <h2>{expertiseData.showcase.title}</h2>
+      <div class="carousel">
+        <div class="carousel-viewport">
+          <div class="carousel-track">
+            {expertiseData.showcase.projects.map((project, i) => {
+              const hasImage = project.image && imageMap[project.image];
+              const isLink = !!project.url;
+              const Tag = isLink ? 'a' : 'div';
+              const linkProps = isLink ? { href: project.url, target: '_blank', rel: 'noopener noreferrer' } : {};
+              return (
+                <Tag
+                  {...linkProps}
+                  class={`showcase-card${i === 0 ? ' showcase-card--active' : ''}${isLink ? '' : ' showcase-card--static'}`}
+                  style={`--card-accent: ${project.accentColour}`}
+                  data-index={i}
+                  aria-hidden={i !== 0 ? "true" : undefined}
+                  tabindex={i !== 0 ? -1 : undefined}
+                  inert={i !== 0 ? true : undefined}
+                >
+                  <div class="showcase-card-image">
+                    {hasImage ? (
+                      <img
+                        src={imageMap[project.image].src}
+                        alt={`${project.title} screenshot`}
+                        width={imageMap[project.image].width}
+                        height={imageMap[project.image].height}
+                        loading="lazy"
+                        decoding="async"
+                      />
+                    ) : (
+                      <div class="showcase-card-placeholder">
+                        <span class="showcase-card-placeholder-text">{project.title}</span>
+                      </div>
+                    )}
+                  </div>
+                  <div class="showcase-card-content">
+                    <div class="showcase-card-header">
+                      <span class="showcase-type-badge">{project.type}</span>
+                      <h3>{project.title}</h3>
+                    </div>
+                    <p class="showcase-tagline">{project.tagline}</p>
+                    <p class="showcase-description">{project.description}</p>
+                    <div class="showcase-tags">
+                      {project.tags.map((tag: string) => <span class="showcase-tag">{tag}</span>)}
+                    </div>
+                    {isLink && <span class="showcase-cta">Visit {project.title} &rarr;</span>}
+                  </div>
+                </Tag>
+              );
+            })}
+          </div>
+        </div>
+        <button class="carousel-btn carousel-btn--prev" aria-label="Previous project" type="button">&lsaquo;</button>
+        <button class="carousel-btn carousel-btn--next" aria-label="Next project" type="button">&rsaquo;</button>
+        <div class="carousel-dots">
+          {expertiseData.showcase.projects.map((_, i) => (
+            <button class={`carousel-dot${i === 0 ? ' carousel-dot--active' : ''}`} aria-label={`Go to slide ${i + 1}`} data-slide={i} type="button" />
+          ))}
+        </div>
+      </div>
     </section>
 
     <section class="leadership-section">
@@ -52,6 +123,21 @@ const imageMap: { [key: string]: ImageMetadata } = {
       </div>
     </section>
 
+    <section class="ai-tooling-section">
+      <h2>{expertiseData.aiTooling.title}</h2>
+      <p>{expertiseData.aiTooling.paragraph}</p>
+      <div class="skills-grid">
+        {expertiseData.aiTooling.categories.map(category => (
+          <div class="skill-category">
+            <h3>{category.category}</h3>
+            <div class="skills-minimal-pills">
+              {category.skills.map(skill => <span class="skill-pill-minimal">{skill}</span>)}
+            </div>
+          </div>
+        ))}
+      </div>
+    </section>
+
     <section class="platform-experience">
       <h2>{expertiseData.platformExperience.title}</h2>
       <p>{expertiseData.platformExperience.paragraph}</p>
@@ -62,37 +148,100 @@ const imageMap: { [key: string]: ImageMetadata } = {
 
     <section class="github-contributions">
       <h2>{expertiseData.githubContributions.title}</h2>
-      {expertiseData.githubContributions.contributions.map(contribution => (
-        <div class="contribution">
-          <h3>🔗 <a href={contribution.url} target="_blank" rel="noopener noreferrer">{contribution.title}</a></h3>
-          <p>{contribution.description}</p>
-        </div>
-      ))}
-    </section>
 
-    <section class="dashboards-section">
-      <h2>{expertiseData.dashboards.title}</h2>
-      <p>{expertiseData.dashboards.paragraph}</p>
+      <ul class="opensource-list">
+        {expertiseData.githubContributions.contributions.map(contribution => (
+          <li>
+            <a href={contribution.url} target="_blank" rel="noopener noreferrer">{contribution.title}</a>
+            <span class="opensource-description"> - {contribution.description}</span>
+          </li>
+        ))}
+      </ul>
 
-      <div class="featured-build">
-        <p><strong>Featured Build:</strong></p>
-        <p><strong>{expertiseData.dashboards.featured.title}</strong></p>
-        <img
-          src={imageMap[expertiseData.dashboards.featured.image].src}
-          alt="Advanced Campaign & Website Performance Dashboard in Looker Studio showing analytics data, conversion metrics, and real-time performance indicators designed by Henrik Söderlund"
-          class="dashboard-image"
-        />
-      </div>
-    </section>
-
-    <section class="wiki-section">
-      <h2>{expertiseData.knowledgeManagement.title}</h2>
-      <p>{expertiseData.knowledgeManagement.paragraph}</p>
-      <img
-        src={imageMap[expertiseData.knowledgeManagement.image].src}
-        alt="Professional Company Wiki and Knowledge Management System developed in Notion by Henrik Söderlund, featuring organised documentation, process flows, and team collaboration tools"
-        class="wiki-image"
-      />
+      <p class="opensource-footer">
+        View more on <a href={GITHUB_URL} target="_blank" rel="noopener noreferrer">GitHub</a>.
+      </p>
     </section>
   </div>
 </BaseLayout>
+
+<script>
+  function initCarousel(): void {
+    const carousel = document.querySelector<HTMLElement>('.carousel');
+    if (!carousel) return;
+
+    const trackEl = carousel.querySelector<HTMLElement>('.carousel-track');
+    const cards = carousel.querySelectorAll<HTMLElement>('.showcase-card');
+    const dots = carousel.querySelectorAll<HTMLElement>('.carousel-dot');
+    const prevBtn = carousel.querySelector<HTMLElement>('.carousel-btn--prev');
+    const nextBtn = carousel.querySelector<HTMLElement>('.carousel-btn--next');
+    if (!trackEl || cards.length === 0) return;
+
+    // Re-bind after the null guard so TypeScript narrows the type in closures
+    const track: HTMLElement = trackEl;
+    const total = cards.length;
+    let current = 0;
+
+    function goTo(index: number): void {
+      current = ((index % total) + total) % total;
+      track.style.transform = `translateX(-${current * 100}%)`;
+
+      cards.forEach((card, i) => {
+        const isActive = i === current;
+        card.classList.toggle('showcase-card--active', isActive);
+        card.setAttribute('aria-hidden', String(!isActive));
+        card.setAttribute('tabindex', isActive ? '0' : '-1');
+        card.inert = !isActive;
+      });
+
+      dots.forEach((dot, i) => {
+        dot.classList.toggle('carousel-dot--active', i === current);
+      });
+    }
+
+    cards.forEach(card => {
+      card.addEventListener('click', (e) => {
+        const index = Number(card.dataset.index);
+        if (index !== current) {
+          e.preventDefault();
+          goTo(index);
+        }
+      });
+    });
+
+    prevBtn?.addEventListener('click', () => goTo(current - 1));
+    nextBtn?.addEventListener('click', () => goTo(current + 1));
+
+    dots.forEach(dot => {
+      dot.addEventListener('click', () => goTo(Number(dot.dataset.slide)));
+    });
+
+    carousel.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowLeft') goTo(current - 1);
+      if (e.key === 'ArrowRight') goTo(current + 1);
+    });
+
+    const AUTO_DELAY = 5000;
+    let timer = setInterval(() => goTo(current + 1), AUTO_DELAY);
+
+    function pauseAuto(): void { clearInterval(timer); }
+    function resumeAuto(): void {
+      clearInterval(timer);
+      timer = setInterval(() => goTo(current + 1), AUTO_DELAY);
+    }
+
+    carousel.addEventListener('mouseenter', pauseAuto);
+    carousel.addEventListener('mouseleave', resumeAuto);
+    carousel.addEventListener('focusin', pauseAuto);
+    carousel.addEventListener('focusout', resumeAuto);
+
+    // Clean up on view transition navigation
+    document.addEventListener('astro:before-preparation', () => {
+      clearInterval(timer);
+    }, { once: true });
+
+    goTo(0);
+  }
+
+  initCarousel();
+</script>

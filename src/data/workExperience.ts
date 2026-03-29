@@ -6,21 +6,23 @@ export const workExperienceData = [
   {
     location: 'Australia',
     flag: australiaFlag,
-    title: 'Media Activations Lead – Initiative Perth @ KINESSO',
-    dates: 'OCT 2023–AUG 2025',
+    title: 'Independent AI & Technology Consultant',
+    dates: 'SEP 2025–PRESENT',
     description: [
-      'As the leader of performance and addressable activation teams, I deliver operational excellence, strategic digital media consulting, and MarTech guidance across Western Australia. I successfully rebuild high-turnover teams from the ground up, implementing comprehensive talent development frameworks and establishing sustainable recruitment and retention strategies that reduce turnover by 75% within 12 months.',
-      'I design and implement structured mentoring programs and career progression pathways for team members, resulting in 3 internal promotions and measurable skill development across all team levels. I establish cross-functional workflows between media and analytics teams, facilitating improved collaboration and knowledge sharing that enhances overall campaign performance and client satisfaction.',
-      'I regularly conduct client presentations and stakeholder alignment sessions, managing relationships with senior executives and marketing directors across major Western Australian brands. I contribute to thought leadership initiatives that earned Initiative MFA "Changer" recognition in 2024, while continuously aligning team capabilities with evolving client requirements and market demands. Working closely with Initiative\'s Head of Perth, I ensure seamless service delivery and business growth through periods of organizational change and team scaling.',
+      'Running an independent consultancy delivering AI-powered solutions, automation systems, and digital products. Architecting and shipping agentic workflows, intelligent automation systems, and AI-powered tools that solve real operational problems for clients across diverse sectors.',
+      'Currently partnering with organisations spanning digital agencies, wildlife conservation, and other industries to deliver end-to-end solutions including AI automation, advanced analytics and measurement frameworks, and custom web applications. Projects range from intelligent workflow systems and data pipeline architecture to consumer-facing digital products.',
+      'Independently launched products including UTMHub.co, a SaaS platform helping marketing teams build trackable URLs with GA4 channel attribution, and Rottosnorkel.com, a live snorkelling guide for Rottnest Island providing real-time safety ratings across 39 locations. Leading with rapid prototyping, building working solutions quickly, validating with data, and iterating based on evidence.',
     ],
   },
   {
     location: 'Australia',
     flag: australiaFlag,
-    title: 'Group Performance Lead @ Reprise Digital',
-    dates: 'MAR 2023–SEP 2023',
+    title: 'Media Activations Lead – Initiative Perth @ KINESSO',
+    dates: 'MAR 2023–AUG 2025',
     description: [
-      'Held a leadership position at Reprise Digital Australia, the digitally-led full-service digital performance, advertising and solutions agency within the Mediabrands Australia group, under the Interpublic Group (IPG), managing the Perth office team. The role involved driving team integration, thought leadership across digital advertising, media strategy/buying and martech solutions, new revenue opportunities and broad project management across enterprise level clients whilst collaborating closely with the teams at Initiative.',
+      'Initially joined as Group Performance Lead at Reprise Digital (Mediabrands, Interpublic Group) in March 2023, managing the Perth office team and driving team integration, thought leadership, and new revenue opportunities across enterprise-level clients. Following the Reprise/KINESSO merger in October 2023, transitioned to Media Activations Lead, overseeing performance and addressable activation teams delivering operational excellence, strategic digital media consulting, and MarTech guidance across Western Australia.',
+      'Successfully rebuilt high-turnover teams from the ground up, implementing comprehensive talent development frameworks and establishing sustainable recruitment and retention strategies that reduced turnover by 75% within 12 months. Designed and implemented structured mentoring programmes and career progression pathways for team members, resulting in 3 internal promotions and measurable skill development across all team levels. Established cross-functional workflows between media and analytics teams, facilitating improved collaboration and knowledge sharing that enhanced overall campaign performance and client satisfaction.',
+      'Regularly conducted client presentations and stakeholder alignment sessions, managing relationships with senior executives and marketing directors across major Western Australian brands. Contributed to thought leadership initiatives that earned Initiative MFA "Changer" recognition in 2024, while continuously aligning team capabilities with evolving client requirements and market demands. Working closely with Initiative\'s Head of Perth, ensured seamless service delivery and business growth through periods of organisational change and team scaling.',
     ],
   },
   {

@@ -25,56 +25,49 @@ const personSchemaJSON = JSON.stringify({
   "name": "Henrik Söderlund",
   "url": "https://www.henriksoderlund.com/",
   "image": "https://www.henriksoderlund.com/og_image.png",
-  "jobTitle": "Digital Media Leader & AI Solutions Innovator",
-  "description": "Technology Leader specialising in AI automation, digital marketing, and technology leadership. Expert in building intelligent systems, leading high-performance teams, and delivering enterprise-scale solutions.",
+  "jobTitle": "Technology Leader & Automation Architect",
+  "description": "Technology Leader and Automation Architect building automation, analytics infrastructure, and digital products that free teams to focus on higher-value work. Agency founder and enterprise operator based in Perth, Australia.",
   "address": {
     "@type": "PostalAddress",
     "addressLocality": "Perth",
     "addressRegion": "WA",
     "addressCountry": "AU"
   },
-  "worksFor": {
-    "@type": "Organization",
-    "name": "KINESSO",
-    "url": "https://kinesso.com/"
-  },
-  "affiliation": [
-    {
-      "@type": "Organization",
-      "name": "Initiative Perth"
+  "hasOccupation": {
+    "@type": "Occupation",
+    "name": "Independent AI & Technology Consultant",
+    "description": "Independent consultant delivering AI automation, analytics infrastructure, and digital products",
+    "occupationLocation": {
+      "@type": "City",
+      "name": "Perth"
     }
-  ],
+  },
   "knowsAbout": [
     "Artificial Intelligence",
-    "Digital Marketing",
+    "Workflow Automation",
+    "AI Coding Assistants",
     "Technology Leadership",
+    "Analytics Infrastructure",
+    "Server-Side Tracking",
     "Google Analytics",
     "Google Tag Manager",
+    "Measurement Frameworks",
+    "Cloudflare Workers",
+    "LLM API Integration",
+    "Digital Products",
     "Programmatic Advertising",
     "Marketing Technology",
-    "Data Analytics",
-    "Business Intelligence",
-    "Performance Marketing",
-    "Server-Side Tracking",
-    "React Development",
-    "Python Programming"
-  ],
-  "skills": [
-    "AI & Machine Learning Implementation",
-    "Digital Advertising & Media Buying",
-    "Advanced Analytics & Measurement",
-    "Team Building & Mentoring",
-    "Client Relationship Management",
-    "Google Ads & Meta Advertising",
-    "Marketing Technology Stack Management",
     "Data Pipeline Architecture",
-    "Cross-Platform Attribution",
-    "Process Automation"
+    "Team Building & Mentoring",
+    "Process Automation",
+    "Python Programming",
+    "React Development"
   ],
   "alumniOf": [
     {
       "@type": "CollegeOrUniversity",
       "name": "Lund University",
+      "sameAs": "https://www.lu.se/",
       "department": {
         "@type": "EducationalOrganization",
         "name": "Malmö Academy of Music"
@@ -89,11 +82,13 @@ const personSchemaJSON = JSON.stringify({
   "knowsLanguage": [
     {
       "@type": "Language",
-      "name": "English"
+      "name": "English",
+      "alternateName": "en"
     },
     {
       "@type": "Language",
-      "name": "Swedish"
+      "name": "Swedish",
+      "alternateName": "sv"
     }
   ],
   "sameAs": [
@@ -101,8 +96,8 @@ const personSchemaJSON = JSON.stringify({
     LINKEDIN_URL
   ],
   "award": [
-    "MFA Changer Recognition 2024 (Initiative)",
-    "Advertising+Marketing AOTY Best Local Media Agency 2021 (Creme Digital)"
+    "MFA Changer Recognition 2024 - Initiative Australia",
+    "Advertising+Marketing AOTY Best Local Media Agency 2021 - Creme Digital"
   ]
 });
 
@@ -110,9 +105,9 @@ const websiteSchemaJSON = JSON.stringify({
   "@context": "https://schema.org",
   "@type": "WebSite",
   "@id": "https://www.henriksoderlund.com/#website",
-  "name": "Henrik Söderlund - Digital Media Leader & AI Solutions Innovator",
+  "name": "Henrik Söderlund - Technology Leader & Automation Architect",
   "url": "https://www.henriksoderlund.com/",
-  "description": "The personal website of Henrik Söderlund, a Digital Media Leader & AI Solutions Innovator based in Perth, Australia.",
+  "description": "The personal website of Henrik Söderlund, a Technology Leader and Automation Architect based in Perth, Australia.",
   "author": {
     "@id": "https://www.henriksoderlund.com/#person"
   }
@@ -168,6 +163,10 @@ const websiteSchemaJSON = JSON.stringify({
 
     <link rel="icon" type="image/svg+xml" href="/bot.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <!-- Preload critical fonts to reduce render-blocking -->
+    <link rel="preload" href="/fonts/JetBrainsMono-Regular.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="/fonts/JetBrainsMono-Medium.woff2" as="font" type="font/woff2" crossorigin />
     <title>{title}</title>
     <meta name="description" content={description} />
 
@@ -205,8 +204,6 @@ const websiteSchemaJSON = JSON.stringify({
           j.src = "https://load.sgtm.henriksoderlund.com/dz4d7tyirczbv.js?" + i;
           f.parentNode.insertBefore(j, f);
         })(window, document, 'script', 'dataLayer', '6at4snq=aWQ9R1RNLUZXUjQ%3D&omNe=daQSaS');
-      } else {
-        console.log('GTM disabled in development environment');
       }
     </script>
     <!-- End Google Tag Manager -->

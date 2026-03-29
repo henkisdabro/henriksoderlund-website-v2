@@ -5,29 +5,36 @@ import profileImage from '../assets/images/henrik-profile-small.webp';
 ---
 
 <BaseLayout
-  title="Henrik Söderlund | Technology Leader & AI Innovator"
-  description="Personal website of Henrik Söderlund, a Technology Leader & AI Solutions Expert specialising in automation, advanced analytics, and high-performance team development."
+  title="Henrik Söderlund | Technology Leader & Automation Architect"
+  description="Henrik Söderlund builds automation, analytics infrastructure, and digital products that free teams to focus on higher-value work. Agency founder and enterprise operator based in Perth, Australia."
   ogType="profile"
 >
   <div class="home-page" id="home-content">
     <div class="hero-section">
       <img
         src={profileImage.src}
-        alt="Henrik Söderlund - Technology Leader & AI Innovator based in Perth, Australia"
+        alt="Henrik Söderlund - Technology Leader & Automation Architect based in Perth, Australia"
         class="profile-image"
+        width="150"
+        height="150"
+        fetchpriority="high"
+        decoding="async"
       />
       <h1>Henrik Söderlund</h1>
       <p class="lead">
-        Technology Leader & AI Solutions Expert.
+        Technology Leader & Automation Architect.
         <br />
-        Accomplished agency founder and enterprise leader now pursuing strategic consulting opportunities and senior roles, specialising in automation, advanced analytics, and high-performance team development.
+        I build automation, analytics infrastructure, and digital products that free teams to focus on higher-value work - and give them the systems thinking to keep improving long after the engagement ends.
       </p>
     </div>
 
     <section class="content-section">
       <h2>Hello! 👋🏼</h2>
       <p>
-        I'm Henrik Söderlund, a technology leader with proven expertise in both entrepreneurial and enterprise environments. After founding and scaling the award-winning{" "}
+        Businesses come to me when manual work is consuming hours that should go toward growth, when reporting can't keep pace with decision-making, and when teams need someone who can see the full picture and fix it properly. I work across the full surface - workflow automation with AI, server-side tracking, measurement frameworks, custom reporting, security hardening - and what I leave behind goes beyond the deliverables: working systems, full documentation, streamlined operations, and teams that have started thinking in systems themselves. Staff who were buried in repetitive processes start identifying their own efficiencies. That compounding effect is where the real value sits.
+      </p>
+      <p>
+        The range comes from building on both sides. I founded and grew the award-winning{" "}
         <a
           href="https://www.cremedigital.com?utm_source=www.henriksoderlund.com&utm_medium=referral"
           target="_blank"
@@ -35,7 +42,7 @@ import profileImage from '../assets/images/henrik-profile-small.webp';
         >
           Creme Digital
         </a>
-        , I led media activations at{" "}
+        , then moved into enterprise media at{" "}
         <a
           href="https://initiative.com/"
           target="_blank"
@@ -59,17 +66,7 @@ import profileImage from '../assets/images/henrik-profile-small.webp';
         >
           Interpublic Group
         </a>
-        ), where I architected measurement solutions and guided high-performance teams across programmatic and performance marketing channels. With an inherent drive for optimisation and systematic thinking, I've built my career on developing sophisticated systems and automation workflows that transform how teams operate - from advanced analytics and server-side implementations to intelligent AI-powered solutions that deliver measurable results at scale.
-      </p>
-      <p>
-        Beyond technical innovation, my leadership approach centres on
-        developing high-performing teams and cultivating lasting client
-        relationships. Throughout my career, I've successfully rebuilt teams
-        during challenging transitions, mentored 20+ professionals, and delivered compelling
-        presentations that have secured major partnerships. My exceptionally broad
-        technical skillset combined with solutions-driven mindset enables me to solve complex, multi-faceted challenges that
-        others find intractable - whether designing custom performance tracking
-        systems or implementing intelligent automation workflows that transform team operations.
+        ), where I built measurement systems for large-scale programmatic campaigns and led teams through difficult transitions. Agency founder and enterprise operator - that combination means I know what is technically possible and what is actually worth doing. I don't stop at implementation. I keep going until the operation runs the way it should, and the team has learned to spot the next automation themselves.
       </p>
 
       <div class="expertise-link-section">
@@ -87,35 +84,26 @@ import profileImage from '../assets/images/henrik-profile-small.webp';
     if (!contentElement) return;
 
     var keywords = [
-      'leadership',
-      'programmatic',
       'automation',
-      'AI-powered',
-      'mentored',
-      'workflows',
-      'technology',
-      'measurement',
-      'systems',
-      'innovation',
-      'presentations',
-      'analytics',
-      'optimisation',
-      'solutions',
-      'teams',
-      'partnerships',
-      'scaling',
-      'technical',
-      'technology leader',
-      'AI Solutions Expert',
-      'advanced analytics',
-      'performance marketing',
-      'intelligent AI-powered solutions',
-      'high-performing teams',
-      'technical innovation',
-      'systematic thinking',
-      'sophisticated systems',
-      'measurable results',
-      'solutions-driven mindset',
+      'analytics infrastructure',
+      'digital products',
+      'systems thinking',
+      'workflow automation',
+      'server-side tracking',
+      'measurement frameworks',
+      'custom reporting',
+      'security hardening',
+      'working systems',
+      'full documentation',
+      'streamlined operations',
+      'compounding effect',
+      'implementation',
+      'programmatic campaigns',
+      'enterprise operator',
+      'efficiencies',
+      'decision-making',
+      'higher-value work',
+      'full surface',
     ];
 
     var animationInterval;
@@ -248,14 +236,24 @@ import profileImage from '../assets/images/henrik-profile-small.webp';
     };
 
     // Initialise with 1-second delay, then start interval
-    setTimeout(function () {
+    var initTimeout;
+    var startTimeout;
+
+    initTimeout = setTimeout(function () {
       createBreathingEffect();
 
-      setTimeout(function () {
+      startTimeout = setTimeout(function () {
         animationInterval = setInterval(function () {
           animateRandomKeyword();
         }, 4000);
       }, 500);
     }, 1000);
+
+    // Clean up on view transition navigation
+    document.addEventListener('astro:before-preparation', function () {
+      clearTimeout(initTimeout);
+      clearTimeout(startTimeout);
+      clearInterval(animationInterval);
+    }, { once: true });
   })();
 </script>

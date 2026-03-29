@@ -35,7 +35,12 @@ p {
   display: flex;
   flex-direction: column;
   align-items: center;
-  overflow-x: hidden;
+}
+
+@media (max-width: 768px) {
+  .app {
+    padding: 0 1rem;
+  }
 }
 
 /* Page Container Styles */
@@ -114,6 +119,15 @@ h5 {
 }
 
 .hero-section h1 {
+  margin-bottom: 1rem;
+  color: var(--color-text-heading);
+}
+
+.consultancy-hero {
+  margin-bottom: 3rem;
+}
+
+.consultancy-hero h1 {
   margin-bottom: 1rem;
   color: var(--color-text-heading);
 }
@@ -387,12 +401,12 @@ h5 {
   top: 50%;
   transform: translateY(-50%);
   z-index: 2;
-  background: var(--color-bg-primary);
+  background: var(--color-bg-secondary);
   border: 1px solid var(--color-border-primary);
   border-radius: 50%;
-  width: 2.5rem;
-  height: 2.5rem;
-  font-size: 1.4rem;
+  width: 3rem;
+  height: 3rem;
+  font-size: 1.6rem;
   line-height: 1;
   padding: 0;
   color: var(--color-text-secondary);
@@ -401,12 +415,14 @@ h5 {
   align-items: center;
   justify-content: center;
   box-shadow: 0 2px 8px var(--color-shadow);
-  transition: background 0.15s ease, color 0.15s ease;
+  opacity: 0.75;
+  transition: background 0.15s ease, color 0.15s ease, opacity 0.15s ease;
 }
 
 .carousel-btn:hover {
-  background: var(--color-bg-secondary);
+  background: var(--color-bg-tertiary);
   color: var(--color-text-heading);
+  opacity: 1;
 }
 
 .carousel-btn--prev {
@@ -432,7 +448,8 @@ h5 {
   border: none;
   background: var(--color-border-primary);
   cursor: pointer;
-  padding: 0;
+  padding: 0.75rem;
+  background-clip: content-box;
   transition: background 0.2s ease, transform 0.2s ease;
 }
 
@@ -991,8 +1008,21 @@ a:hover {
   margin: 0;
 }
 
+.nav-icon {
+  display: inline-flex;
+  align-items: center;
+  margin-right: 8px;
+  color: var(--color-text-tertiary);
+  flex-shrink: 0;
+}
+
+.nav-list li.active .nav-icon {
+  color: var(--color-text-primary);
+}
+
 .nav-list a, .heading-link {
-  display: block;
+  display: flex;
+  align-items: center;
   padding: 6px 16px;
   color: var(--color-text-primary);
   text-decoration: none;
@@ -1029,7 +1059,6 @@ a:hover {
   background-color: var(--color-nav-active-bg);
   color: var(--color-text-primary);
   font-weight: 500;
-  border-left: 3px solid var(--color-nav-active-border);
 }
 
 .nav-divider {
@@ -1087,48 +1116,49 @@ a:hover {
 @media (max-width: 1024px) {
   .navigation-box {
     position: fixed;
-    top: 10px;
+    top: 22px;
     left: 10px;
     right: auto;
-    width: 50px;
-    height: 50px;
-    border-radius: 50%;
+    width: 42px;
+    height: 42px;
+    border-radius: 8px;
     z-index: 1001;
-    transition: all 0.3s ease;
+    transition: width 0.3s ease, height 0.3s ease, border-radius 0.3s ease;
   }
-  
+
   .navigation-box:not(.collapsed) {
     width: 320px;
     height: auto;
     border-radius: 12px;
-    top: 10px;
+    top: 22px;
     left: 10px;
-    max-height: calc(100vh - 20px);
+    max-height: calc(100vh - 32px);
   }
-  
+
   .navigation-box.collapsed .nav-box-content {
     display: none;
   }
-  
+
   .navigation-box.collapsed .nav-box-header {
     justify-content: center;
     align-items: center;
     padding: 0;
-    width: 50px;
-    height: 50px;
-    border-radius: 50%;
+    width: 42px;
+    height: 42px;
+    border-radius: 8px;
     border-bottom: none;
-    background: var(--color-bg-overlay);
-    box-shadow: 0 2px 8px var(--color-shadow-heavy);
+    background: var(--color-bg-elevated);
+    border: 1px solid var(--color-border-primary);
+    box-shadow: 0 1px 3px var(--color-shadow);
   }
-  
+
   .navigation-box.collapsed .collapse-btn {
     display: flex;
     justify-content: center;
     align-items: center;
     width: 100%;
     height: 100%;
-    border-radius: 50%;
+    border-radius: 8px;
     padding: 0;
   }
   
@@ -1151,8 +1181,8 @@ a:hover {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 36px;
-  height: 36px;
+  width: 40px;
+  height: 40px;
   padding: 0;
   border: 1px solid var(--color-border-primary);
   border-radius: 8px;
@@ -1179,7 +1209,7 @@ a:hover {
 }
 
 .github-link { right: 35px; }
-.linkedin-link { right: 80px; }
+.linkedin-link { right: 83px; }
 
 /* Ultrawide gutter positioning */
 @media (min-width: 1400px) {
@@ -1198,8 +1228,8 @@ a:hover {
 
 .github-icon,
 .linkedin-icon {
-  width: 18px;
-  height: 18px;
+  width: 20px;
+  height: 20px;
 }
 
 /* Footer Styles */
@@ -1277,7 +1307,7 @@ a:hover {
   .education-page,
   .consultation-page,
   .contact-page {
-    padding: 1rem;
+    padding: 0.75rem;
   }
 
 
@@ -1306,9 +1336,7 @@ a:hover {
   }
 
   .carousel-btn {
-    width: 2rem;
-    height: 2rem;
-    font-size: 1.1rem;
+    opacity: 0.9;
   }
 
   .carousel-btn--prev {
@@ -2015,8 +2043,6 @@ a:hover {
 
 .submit-btn {
   cursor: pointer;
-  border: none;
-  transition: background-color 0.2s, transform 0.1s;
 }
 
 .submit-btn:active {
@@ -2128,11 +2154,12 @@ a:hover {
 .cta-secondary {
   display: inline-block;
   padding: 0.75rem 2rem;
+  border: 2px solid var(--color-accent);
   border-radius: 8px;
   font-size: 1rem;
   font-weight: 600;
   text-decoration: none;
-  transition: background-color 0.2s, color 0.2s;
+  transition: background-color 0.2s, color 0.2s, border-color 0.2s, transform 0.1s;
 }
 
 .submit-btn,
@@ -2144,25 +2171,28 @@ a:hover {
 .submit-btn:hover,
 .cta-primary:hover {
   background-color: var(--color-accent-hover);
+  border-color: var(--color-accent-hover);
   color: var(--color-accent-text);
+  text-decoration: none;
 }
 
 .cta-buttons {
   display: flex;
   gap: 1rem;
   flex-wrap: wrap;
+  align-items: center;
   margin-top: 1rem;
 }
 
 .cta-secondary {
   background-color: transparent;
   color: var(--color-accent);
-  border: 2px solid var(--color-accent);
 }
 
 .cta-secondary:hover {
   background-color: var(--color-accent);
   color: var(--color-accent-text);
+  text-decoration: none;
 }
 
 /* Details/Summary accordion for case study */
@@ -2185,9 +2215,38 @@ a:hover {
 
 .cf-turnstile {
   margin: 1rem 0;
+  max-width: 100%;
 }
 
 .cf-turnstile iframe {
   border-radius: 8px;
+  max-width: 100%;
 }
+
+@media (max-width: 768px) {
+  .contact-form {
+    padding: 1.25rem;
+  }
+
+  .form-footer {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .cf-turnstile {
+    transform: scale(0.9);
+    transform-origin: left top;
+  }
+}
+
+/* ==========================================================================
+   Dark Mode Font Metric Compensation
+   JetBrains Mono has a larger x-height than Inter, so tighten line-height
+   and letter-spacing to keep vertical rhythm consistent across themes.
+   Uses attribute selector (not CSS variables) to avoid View Transition flicker.
+   ========================================================================== */
+
+:root[data-theme="dark"] body {
+  line-height: 1.55;
+  letter-spacing: -0.01em;
 }

@@ -116,6 +116,7 @@
   --font-body-alt: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
   --font-mono: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
   --font-code: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
+
 }
 
 /* ==========================================================================
@@ -137,9 +138,9 @@
   /* Text */
   --color-text-primary: #e4e4e7;
   --color-text-secondary: #a1a1aa;
-  --color-text-tertiary: #71717a;
-  --color-text-muted: #52525b;
-  --color-text-faint: #62626b;
+  --color-text-tertiary: #8b8b94;
+  --color-text-muted: #7b7b84;
+  --color-text-faint: #7b7b84;
   --color-text-heading: #f4f4f5;
   --color-text-label: #d4d4d8;
   --color-text-strong: #f4f4f5;
@@ -198,6 +199,7 @@
   --font-body-alt: 'JetBrains Mono', monospace;
   --font-mono: 'JetBrains Mono', 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
   --font-code: 'JetBrains Mono', source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
+
 }
 
 /* ==========================================================================

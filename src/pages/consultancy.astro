@@ -14,12 +14,12 @@ const serviceSchema = {
   "@type": "Service",
   "@id": "https://www.henriksoderlund.com/consultancy#service",
   "name": "Henrik Söderlund - Strategic Technology Consultancy",
-  "description": "AI automation, analytics implementation, and digital transformation consulting services for businesses seeking to leverage cutting-edge technology solutions.",
+  "description": "AI automation, analytics infrastructure, team upskilling, and digital product consulting. Working systems that deliver measurable outcomes for businesses seeking to leverage cutting-edge technology solutions.",
   "url": "https://www.henriksoderlund.com/consultancy",
   "provider": {
     "@id": "https://www.henriksoderlund.com/#person"
   },
-  "serviceType": "Technology Consulting",
+  "serviceType": "AI Automation & Technology Consulting",
   "areaServed": [
     {
       "@type": "City",
@@ -35,11 +35,13 @@ const serviceSchema = {
     "name": "Consulting Services",
     "itemListElement": serviceNames
   },
-  "contactPoint": {
-    "@type": "ContactPoint",
-    "contactType": "Customer Service",
-    "url": CALENDLY_URL,
-    "availableLanguage": ["English", "Swedish"]
+  "availableChannel": {
+    "@type": "ServiceChannel",
+    "serviceUrl": CALENDLY_URL,
+    "availableLanguage": [
+      { "@type": "Language", "name": "English", "alternateName": "en" },
+      { "@type": "Language", "name": "Swedish", "alternateName": "sv" }
+    ]
   }
 };
 ---
@@ -53,7 +55,7 @@ const serviceSchema = {
   </Fragment>
 
   <div class="consultation-page">
-    <section class="hero-section">
+    <section class="consultancy-hero">
       <h1>{consultationData.hero.title}</h1>
       <p class="hero-subtitle">{consultationData.hero.subtitle}</p>
       <p>{consultationData.hero.statement}</p>
@@ -102,9 +104,10 @@ const serviceSchema = {
     </section>
 
     <section class="case-study-section">
+      <h2>Case Study</h2>
       <div class="case-study-headline">
         <p class="headline-metrics">{consultationData.caseStudy.headline}</p>
-        <h2>{consultationData.caseStudy.title}</h2>
+        <h3>{consultationData.caseStudy.title}</h3>
       </div>
 
       <div class="client-overview">

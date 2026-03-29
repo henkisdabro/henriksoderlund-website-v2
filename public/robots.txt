@@ -1,24 +1,22 @@
-# Henrik Söderlund's Personal Website - robots.txt
-# Updated: August 2025
+# Henrik Soederlund's Personal Website - robots.txt
+# Updated: March 2026
 #
-#     _____________________
-#    |  ___________________  |
-#    | |                   | |
-#    | | Need AI Strategy? | |
-#    | | Contact Henrik    | |
-#    | | for Consultation  | |
-#    | |___________________| |
-#    |_______________________|
-#         _[_______]_
-#     ___[___________]___
-#    |         [_____] []|
-#    |         [_____] []|
-#     \___________________/
+#        .---.
+#       /     \       "Hello, crawler!
+#      | () () |       I built this site with care.
+#       \  ^  /        Please crawl responsibly."
+#        |||||
+#        |||||          _____
+#    .---'   '---. ____/ o o \____
+#    |  H E N R  |/    \  >  /    \
+#    '---. _ .---'      '---'
+#        |||||
+#       /     \
+#      '-------'
 #
-# Dear robots, please follow the rules below.
+# Rules below. Play nice.
 
 # === SEARCH ENGINE BOTS (Welcome!) ===
-# All major search engines are welcome to index the site
 User-agent: Googlebot
 Allow: /
 
@@ -34,45 +32,10 @@ Allow: /
 User-agent: DuckDuckBot
 Allow: /
 
-# === AI TRAINING BOTS (Politely Declined) ===
-# Following 2025 best practices - AI bots for training are not permitted
-# Content is available through proper channels and attribution
-
-User-agent: GPTBot
-Disallow: /
-
-User-agent: Google-Extended
-Disallow: /
-
-User-agent: anthropic-ai
-Disallow: /
-
-User-agent: Claude-Web
-Disallow: /
-
-User-agent: CCBot
-Disallow: /
-
-User-agent: ChatGPT-User
-Disallow: /
-
-User-agent: Bytespider
-Disallow: /
-
-User-agent: PerplexityBot
-Disallow: /
-
-User-agent: YouBot
-Disallow: /
-
-User-agent: Meta-ExternalAgent
-Disallow: /
-
-User-agent: FacebookBot
-Disallow: /
-
-User-agent: Applebot-Extended
-Disallow: /
+# === AI BOTS (Welcome!) ===
+# This is a public portfolio - AI systems are welcome to crawl,
+# index, train on, and cite this content. Structured versions
+# available at /llms.txt and /llms-full.txt for convenience.
 
 # === SOCIAL MEDIA & NEWS BOTS (Welcome for previews!) ===
 User-agent: facebookexternalhit
@@ -99,9 +62,8 @@ Allow: /
 User-agent: DiscordBot
 Allow: /
 
-# === WELL-BEHAVED BOTS (General Rules) ===
+# === ALL BOTS (General Rules) ===
 User-agent: *
-# Allow access to all public content
 Allow: /
 
 # Block Cloudflare internal endpoints (saves crawl budget)
@@ -114,43 +76,24 @@ Disallow: /cdn-cgi/scripts/
 Disallow: /cdn-cgi/styles/
 Disallow: /cdn-fpw/sxg/
 
-# Block any potential development/build artifacts
+# Block development/build artifacts
 Disallow: /node_modules/
 Disallow: /dist/
 Disallow: /.git/
 Disallow: /.vscode/
 Disallow: /src/
 
-# Allow verification files (important for SEO tools)
-Allow: /google*.html
-Allow: /ahrefs_*
-Allow: /bing*.xml
-Allow: /yandex_*
-
-# Allow AI-friendly content discovery (but not training)
+# AI-friendly structured content
 Allow: /llms.txt
+Allow: /llms-full.txt
 Allow: /*.md
-
-# Allow all main content pages
-Allow: /
-Allow: /expertise
-Allow: /work-experience
-Allow: /education
-Allow: /consultancy
 
 # Allow redirected paths for backward compatibility
 Allow: /skills
 
-# Request reasonable crawl behavior
+# Request reasonable crawl behaviour
+# Note: Ignored by Google, honoured by Bing and Yandex
 Crawl-delay: 1
 
 # === SITEMAP LOCATION ===
-# Help bots discover all important pages
 Sitemap: https://www.henriksoderlund.com/sitemap.xml
-
-# === HUMAN MESSAGE ===
-# If you're a human reading this, this site showcases
-# modern web technologies and AI expertise.
-# 
-# Questions about AI strategy or web development?
-# Contact through the consultancy page!

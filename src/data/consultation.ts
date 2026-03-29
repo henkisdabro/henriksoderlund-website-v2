@@ -49,6 +49,16 @@ export const consultationData = {
         ],
       },
       {
+        name: 'AI Coding Assistants & Team Upskilling',
+        description: 'Get your team productive with AI coding assistants, personal AI workflows, and structured knowledge systems.',
+        outcomes: [
+          'Claude Code, Codex, and Gemini CLI setup with team-wide best practices and conventions',
+          'Hands-on training for developers adopting AI-assisted development workflows',
+          'Personal and professional productivity systems using Claude and AI assistants',
+          'Custom knowledge management and Life OS architectures built on AI-native tooling',
+        ],
+      },
+      {
         name: 'Digital Products & Web Applications',
         description: 'Production-grade digital products built for performance, shipped fast, and validated with data.',
         outcomes: [

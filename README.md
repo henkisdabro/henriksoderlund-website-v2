@@ -42,7 +42,7 @@ public/                      # Static assets (verification files, favicons, redi
 
 ### Architecture and Performance
 
-- **Hybrid Rendering**: 4 of 5 pages prerendered at build time (sub-10ms TTFB from CDN edge); consultancy page SSR for contact form
+- **Hybrid Rendering**: 5 of 6 pages prerendered at build time (sub-10ms TTFB from CDN edge); contact page SSR for form handling
 - **Zero-JS Navigation**: CSS View Transitions (`@view-transition { navigation: auto; }`) for smooth page transitions without JavaScript
 - **Astro Prefetch**: Near-instant navigation with configurable prefetch strategy
 - **Identical HTML for All Visitors**: No dual rendering or crawler detection needed - every visitor gets full, semantic HTML

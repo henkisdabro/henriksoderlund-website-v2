@@ -2,17 +2,28 @@
 const pathname = Astro.url.pathname;
 const isHomePage = pathname === '/';
 
+const svgAttrs = 'width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"';
+
+const icons: Record<string, string> = {
+  '/': `<svg ${svgAttrs}><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>`,
+  '/expertise': `<svg ${svgAttrs}><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"></path></svg>`,
+  '/consultancy': `<svg ${svgAttrs}><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>`,
+  '/work-experience': `<svg ${svgAttrs}><rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path></svg>`,
+  '/education': `<svg ${svgAttrs}><path d="M22 10l-10-5L2 10l10 5 10-5z"></path><path d="M6 12v5c0 0 3 3 6 3s6-3 6-3v-5"></path></svg>`,
+  '/contact': `<svg ${svgAttrs}><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>`,
+};
+
 const pages = [
-  { path: '/', name: 'Home', emoji: '🏠' },
-  { path: '/expertise', name: 'Expertise', emoji: '🛠️' },
-  { path: '/consultancy', name: 'Consultancy', emoji: '💬' },
-  { path: '/work-experience', name: 'Work Experience', emoji: '💼' },
-  { path: '/education', name: 'Education', emoji: '🎓' },
-  { path: '/contact', name: 'Contact', emoji: '✉️' },
+  { path: '/', name: 'Home' },
+  { path: '/expertise', name: 'Expertise' },
+  { path: '/consultancy', name: 'Consultancy' },
+  { path: '/work-experience', name: 'Work Experience' },
+  { path: '/education', name: 'Education' },
+  { path: '/contact', name: 'Contact' },
 ];
 ---
 
-<div class="navigation-box" id="navigation-box">
+<div class="navigation-box collapsed" id="navigation-box">
   <div class="nav-box-header">
     <button
       class="collapse-btn"
@@ -28,7 +39,7 @@ const pages = [
     </button>
   </div>
 
-  <div class="nav-box-content" id="nav-box-content" hidden>
+  <div class="nav-box-content" id="nav-box-content">
     <!-- Page Navigation -->
     <div class="nav-section">
       <h5>Pages</h5>
@@ -36,7 +47,8 @@ const pages = [
         {pages.map((page) => (
           <li class={pathname === page.path ? 'active' : ''}>
             <a href={page.path} class="nav-page-link">
-              {page.emoji} {page.name}
+              <span class="nav-icon" aria-hidden="true" set:html={icons[page.path]} />
+              {page.name}
             </a>
           </li>
         ))}
@@ -56,54 +68,49 @@ const pages = [
   </div>
 </div>
 
-<script>
+<script is:inline>
   (function () {
-    const navBoxEl = document.getElementById('navigation-box');
-    const collapseBtnEl = document.getElementById('collapse-btn');
-    const navContentEl = document.getElementById('nav-box-content');
+    var navBox = document.getElementById('navigation-box');
+    var collapseBtn = document.getElementById('collapse-btn');
 
-    if (!navBoxEl || !collapseBtnEl || !navContentEl) return;
+    if (!navBox || !collapseBtn) return;
 
-    const navBox = navBoxEl as HTMLElement;
-    const collapseBtn = collapseBtnEl as HTMLElement;
-    const navContent = navContentEl as HTMLElement;
+    var isHomePage = window.location.pathname === '/';
 
-    const isHomePage = window.location.pathname === '/';
+    // Read persisted state, fall back to viewport check
+    var stored = sessionStorage.getItem('nav-collapsed');
+    var isCollapsed = stored !== null ? stored === 'true' : window.innerWidth <= 1024;
 
-    // Determine initial collapsed state
-    let isCollapsed = window.innerWidth <= 1024;
-
-    function applyCollapseState() {
+    function applyCollapseState(persist) {
       if (isCollapsed) {
         navBox.classList.add('collapsed');
-        navContent.hidden = true;
         collapseBtn.setAttribute('aria-label', 'Expand navigation');
         collapseBtn.setAttribute('aria-expanded', 'false');
       } else {
         navBox.classList.remove('collapsed');
-        navContent.hidden = false;
         collapseBtn.setAttribute('aria-label', 'Collapse navigation');
         collapseBtn.setAttribute('aria-expanded', 'true');
       }
+      if (persist) sessionStorage.setItem('nav-collapsed', String(isCollapsed));
     }
 
-    applyCollapseState();
+    applyCollapseState(false);
 
     collapseBtn.addEventListener('click', function () {
       isCollapsed = !isCollapsed;
-      applyCollapseState();
+      applyCollapseState(true);
     });
 
     window.addEventListener('resize', function () {
-      const shouldCollapse = window.innerWidth <= 1024;
+      var shouldCollapse = window.innerWidth <= 1024;
       if (shouldCollapse !== isCollapsed) {
         isCollapsed = shouldCollapse;
-        applyCollapseState();
+        applyCollapseState(true);
       }
     });
 
     // Auto-close on mobile when a page link is clicked
-    const pageLinks = navBox.querySelectorAll('.nav-page-link');
+    var pageLinks = navBox.querySelectorAll('.nav-page-link');
     pageLinks.forEach(function (link) {
       link.addEventListener('click', function () {
         if (window.innerWidth <= 1024) {
@@ -116,23 +123,23 @@ const pages = [
     // Heading scan - skip on homepage
     if (isHomePage) return;
 
-    const navDivider = document.getElementById('nav-divider');
-    const headingsSection = document.getElementById('headings-section');
-    const headingsList = document.getElementById('headings-list');
+    var navDivider = document.getElementById('nav-divider');
+    var headingsSection = document.getElementById('headings-section');
+    var headingsList = document.getElementById('headings-list');
 
     if (!headingsList) return;
 
     function scanHeadings() {
-      const mainContent = document.querySelector('.main-content');
+      var mainContent = document.querySelector('.main-content');
       if (!mainContent) return;
-      const headingElements = mainContent.querySelectorAll('h2, h4, h5, h6');
-      const items: { id: string; text: string; level: number }[] = [];
+      var headingElements = mainContent.querySelectorAll('h2, h4, h5, h6');
+      var items = [];
 
       headingElements.forEach(function (heading, index) {
-        const text = heading.textContent || '';
-        const level = parseInt(heading.tagName.charAt(1), 10);
+        var text = heading.textContent || '';
+        var level = parseInt(heading.tagName.charAt(1), 10);
 
-        let id = heading.id;
+        var id = heading.id;
         if (!id) {
           id = 'heading-' + index;
           heading.id = id;
@@ -147,15 +154,15 @@ const pages = [
 
       if (items.length > 0) {
         items.forEach(function (item) {
-          const li = document.createElement('li');
+          var li = document.createElement('li');
           li.className = 'heading-level-' + item.level;
 
-          const btn = document.createElement('button');
+          var btn = document.createElement('button');
           btn.type = 'button';
           btn.className = 'heading-link';
           btn.textContent = item.text;
           btn.addEventListener('click', function () {
-            const el = document.getElementById(item.id);
+            var el = document.getElementById(item.id);
             if (el) {
               el.scrollIntoView({ behavior: 'smooth', block: 'start' });
             }

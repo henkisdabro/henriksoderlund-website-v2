@@ -1,6 +1,6 @@
 :root {
   font-family: var(--font-body-alt);
-  line-height: 1.5;
+  line-height: 1.6;
   font-weight: 400;
 
   color: var(--color-text-primary);
@@ -147,8 +147,12 @@ button:focus-visible {
 
 /* Mobile responsive adjustments */
 @media (max-width: 768px) {
+  html {
+    font-size: 15px;
+  }
+
   body {
-    padding: 0 1rem;
+    padding: 0 0.75rem;
   }
 
   h1 {
