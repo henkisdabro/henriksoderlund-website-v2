@@ -1,67 +1,89 @@
 export const consultationData = {
-  intro: {
+  hero: {
     title: 'Strategic Technology Consultancy',
-    paragraph: 'Transform your business with cutting-edge technology solutions. I provide strategic consultation and implementation services for AI automation, business intelligence, and digital transformation initiatives. From concept to deployment, I deliver enterprise-grade solutions that drive measurable results.',
+    subtitle: 'Most businesses know AI and automation can transform their operations. Few have someone who can make it actually work.',
+    statement: 'I build working systems that deliver measurable outcomes - not slide decks, not proof-of-concepts that never ship. From intelligent automation that recovers six-figure revenue to measurement frameworks that drive real decisions, I deliver solutions that justify their investment within months.',
   },
-  aiConsultancy: {
-    title: '🤖 AI & Automation Consultancy',
-    paragraph: 'Leverage artificial intelligence to automate workflows, enhance decision-making, and create competitive advantages. I specialize in building intelligent systems that integrate seamlessly with your existing business processes.',
-    services: {
-      title: 'Core AI Services',
-      items: [
-        { name: 'AI-Enabled Automation Systems', description: 'Custom workflows that reduce manual tasks by 70-90%' },
-        { name: 'Intelligent Process Migration', description: 'Seamless transition of business processes to AI-enhanced systems' },
-        { name: 'Retrieval-Augmented Generation (RAG)', description: 'Knowledge systems that provide instant, accurate information access' },
-        { name: 'AI Agent Development', description: 'Autonomous systems for customer service, data analysis, and task automation' },
-        { name: 'Machine Learning Integration', description: 'Predictive analytics and intelligent decision support systems' },
-        { name: 'Natural Language Processing', description: 'Document analysis, content generation, and communication automation' },
-      ],
-    },
-    pricing: {
-      title: 'AI Consultancy Pricing & Timelines',
-      headers: ['Service', 'Timeline', 'Investment', 'Deliverables'],
-      rows: [
-        ['AI Strategy & Feasibility Assessment', '1-2 weeks', 'AUD 3,500', 'Strategic roadmap, ROI analysis, technical specifications'],
-        ['Workflow Automation System', '3-6 weeks', 'AUD 8,500 - 15,000', 'End-to-end automation, integration, training, documentation'],
-        ['RAG Knowledge System', '4-8 weeks', 'AUD 12,000 - 25,000', 'Custom RAG implementation, API integration, user interface'],
-        ['AI Agent Development', '6-12 weeks', 'AUD 18,000 - 35,000', 'Multi-agent system, monitoring dashboard, performance analytics'],
-        ['Enterprise AI Migration', '8-16 weeks', 'Starting at AUD 45,000', 'Full system migration, staff training, ongoing support'],
-      ],
-    },
+  idealClients: {
+    title: 'Who I Work With',
+    profiles: [
+      {
+        label: 'Scaling businesses',
+        description: 'needing AI and automation to reduce operational overhead and unlock growth without proportionally increasing headcount',
+      },
+      {
+        label: 'Marketing and media teams',
+        description: 'requiring enterprise-grade analytics, server-side tracking, and measurement frameworks that stand up to scrutiny',
+      },
+      {
+        label: 'Agencies and consultancies',
+        description: 'looking for a technical partner to architect and deliver complex client solutions across AI, data, and digital platforms',
+      },
+      {
+        label: 'Organisations at an inflection point',
+        description: 'where the cost of inaction on AI adoption is becoming a competitive risk',
+      },
+    ],
   },
-  analyticsConsultancy: {
-    title: '📊 Analytics & Digital Intelligence',
-    paragraph: 'Comprehensive analytics solutions that provide actionable insights and drive data-informed decision making across your organization.',
-    services: {
-      title: 'Core Analytics Services',
-      items: [
-        'Google Analytics - Advanced implementations, custom reporting, and conversion optimization',
-        'Google Tag Manager - Enterprise-grade tracking solutions, server-side implementations',
-        'Business Intelligence Dashboards - Real-time reporting and performance monitoring systems',
-        'Data Pipeline Architecture - Scalable data collection and processing solutions',
-        'Conversion Rate Optimisation - Data-driven testing and optimisation strategies',
-      ],
-    },
-    pricing: {
-      title: 'Analytics Consultation Pricing',
-      headers: ['Service', 'Timeline', 'Investment', 'Deliverables'],
-      rows: [
-        ['Strategic Analytics Consultation', '1 hour', 'AUD 350', 'Expert guidance, Q&A, strategic recommendations'],
-        ['GA4 Enterprise Audit', '1-2 weeks', 'AUD 2,800', 'Comprehensive audit report, optimisation roadmap'],
-        ['Advanced Measurement Planning', '2-3 weeks', 'AUD 4,500', 'Custom measurement framework, KPI mapping, implementation guide'],
-        ['GTM Server-Side Implementation', '3-4 weeks', 'AUD 6,500', 'Complete server-side setup, testing, documentation'],
-        ['Meta CAPI & Advanced Tracking', '2-3 weeks', 'AUD 4,200', 'Full CAPI implementation, event validation, optimisation'],
-        ['Enterprise Analytics Implementation', '4-8 weeks', 'Starting at AUD 12,000', 'Complete analytics ecosystem, training, ongoing support'],
-      ],
-    },
+  services: {
+    title: 'What I Deliver',
+    pillars: [
+      {
+        name: 'AI & Intelligent Automation',
+        description: 'Systems that reduce manual work by 70-90% and recover revenue you did not know you were losing.',
+        outcomes: [
+          'Workflow automation that replaces hours of manual coordination with intelligent orchestration',
+          'RAG knowledge systems that give teams instant access to institutional knowledge',
+          'AI agent development for customer service, data processing, and task automation',
+          'Enterprise AI migration with staff training and ongoing support',
+        ],
+      },
+      {
+        name: 'Analytics & Measurement',
+        description: 'Measurement frameworks that drive real decisions, not dashboards that gather dust.',
+        outcomes: [
+          'GA4 enterprise implementations with custom reporting and conversion optimisation',
+          'Server-side tracking (GTM SS, Meta CAPI) for accurate attribution in a cookieless world',
+          'Advanced measurement planning with KPI mapping and implementation',
+          'Business intelligence dashboards with real-time performance monitoring',
+        ],
+      },
+      {
+        name: 'Digital Products & Web Applications',
+        description: 'Production-grade digital products built for performance, shipped fast, and validated with data.',
+        outcomes: [
+          'SaaS platforms and consumer-facing web applications on modern cloud infrastructure',
+          'Data pipeline architecture for scalable collection and processing',
+          'Rapid prototyping with evidence-based iteration',
+          'Full-stack development on Cloudflare Workers, React, and Node.js',
+        ],
+      },
+    ],
   },
-  qualityGuarantee: {
-    title: '🛡️ Quality Guarantee',
-    paragraph: 'Every engagement is backed by my commitment to excellence. If the delivered solution doesn\'t meet the agreed specifications or your satisfaction, I\'ll work to resolve any issues at no additional cost.',
+  engagementModels: {
+    title: 'How We Work Together',
+    intro: 'Every engagement starts with a discovery conversation to understand your situation, objectives, and constraints. From there, we agree on the right model for your needs.',
+    models: [
+      {
+        name: 'Strategic Advisory',
+        description: 'Ongoing access to senior technical guidance without the overhead of a full-time hire. Ideal for leadership teams navigating AI adoption, technology decisions, or digital transformation.',
+        details: 'Regular strategy sessions, architecture reviews, and on-call advisory. I integrate with your leadership rhythm - board meetings, planning cycles, and key decision points.',
+      },
+      {
+        name: 'Project-Based',
+        description: 'Defined scope, clear deliverables, phased execution. Each engagement follows a structured approach: diagnostic, planning, build, and handover with documentation and training.',
+        details: 'Projects begin with a paid diagnostic phase that produces a roadmap and go/no-go recommendation. No surprises, no scope creep - just a clear path from problem to working solution.',
+      },
+      {
+        name: 'Embedded / Fractional',
+        description: 'Part-time technical leadership embedded within your team. The strategic capability of a senior technology hire at a fraction of the cost, starting in days rather than months.',
+        details: 'I work alongside your team 1-3 days per week, owning outcomes across architecture decisions, team development, and hands-on delivery. Includes structured knowledge transfer so your team grows with each engagement.',
+      },
+    ],
   },
   caseStudy: {
-    title: '🎯 Real-World Success Story',
-    subtitle: 'Transforming Advertising Agency Operations Through Intelligent Automation',
+    headline: '75% reduction in administrative time. AUD 285,000 in recovered revenue.',
+    title: 'Transforming Advertising Agency Operations Through Intelligent Automation',
     client: {
       type: 'Global Advertising Agency',
       team: '150+ creative and account management professionals',
@@ -150,5 +172,9 @@ export const consultationData = {
       quote: 'The workflow automation Henrik implemented has significantly improved our project delivery times and reduced administrative overhead. The investment paid for itself within four months, and our ROI continues to grow as the system scales with our business.',
       author: 'Operations Manager, Global Advertising Agency',
     },
+  },
+  qualityGuarantee: {
+    title: 'Quality Guarantee',
+    paragraph: 'Every engagement is backed by my commitment to excellence. If the delivered solution does not meet the agreed specifications or your satisfaction, I will work to resolve any issues at no additional cost.',
   },
 };

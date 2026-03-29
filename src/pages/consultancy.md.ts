@@ -5,23 +5,22 @@ import { consultationData } from '../data/consultation';
 export const prerender = true;
 
 export const GET: APIRoute = () => {
-  const { intro, aiConsultancy, analyticsConsultancy, caseStudy } = consultationData;
+  const { hero, idealClients, services, engagementModels, caseStudy } = consultationData;
 
-  const aiServices = aiConsultancy.services.items
-    .map((item) => `- ${item.name}: ${item.description}`)
+  const clientProfiles = idealClients.profiles
+    .map((p) => `- **${p.label}** ${p.description}`)
     .join('\n');
 
-  const aiPricingRows = aiConsultancy.pricing.rows
-    .map((row) => `| ${row.join(' | ')} |`)
-    .join('\n');
+  const servicePillars = services.pillars
+    .map((pillar) => {
+      const outcomes = pillar.outcomes.map((o) => `  - ${o}`).join('\n');
+      return `### ${pillar.name}\n\n${pillar.description}\n\n${outcomes}`;
+    })
+    .join('\n\n');
 
-  const analyticsServices = analyticsConsultancy.services.items
-    .map((item) => `- ${item}`)
-    .join('\n');
-
-  const analyticsPricingRows = analyticsConsultancy.pricing.rows
-    .map((row) => `| ${row.join(' | ')} |`)
-    .join('\n');
+  const engagements = engagementModels.models
+    .map((m) => `### ${m.name}\n\n${m.description}\n\n${m.details}`)
+    .join('\n\n');
 
   const painPoints = caseStudy.challenge.painPoints
     .map((p) => `- ${p}`)
@@ -37,66 +36,52 @@ export const GET: APIRoute = () => {
 
   return markdownResponse(`# Consultancy - Henrik Soederlund
 
-## ${intro.title}
+## ${hero.title}
 
-${intro.paragraph}
+${hero.subtitle}
 
-## AI & Automation Consultancy
+${hero.statement}
 
-${aiConsultancy.paragraph}
+## ${idealClients.title}
 
-### Core AI Services
+${clientProfiles}
 
-${aiServices}
+## ${services.title}
 
-### AI Consultancy Pricing & Timelines
+${servicePillars}
 
-| ${aiConsultancy.pricing.headers.join(' | ')} |
-| --- | --- | --- | --- |
-${aiPricingRows}
+## ${engagementModels.title}
 
-## Analytics & Digital Intelligence
+${engagementModels.intro}
 
-${analyticsConsultancy.paragraph}
+${engagements}
 
-### Core Analytics Services
+## Success Story: ${caseStudy.title}
 
-${analyticsServices}
-
-### Analytics Consultation Pricing
-
-| ${analyticsConsultancy.pricing.headers.join(' | ')} |
-| --- | --- | --- | --- |
-${analyticsPricingRows}
-
-## Real-World Success Story
-
-### ${caseStudy.subtitle}
+${caseStudy.headline}
 
 Client: ${caseStudy.client.type}
 Team: ${caseStudy.client.team}
 Challenge: ${caseStudy.client.challenge}
 
-#### The Challenge
+### The Challenge
 
 ${caseStudy.challenge.description}
 
-Pain points:
-
 ${painPoints}
 
-#### The Solution
+### The Solution
 
 ${caseStudy.solution.description}
 
-Solution components:
-
 ${solutionComponents}
 
-#### The Results
+### The Results
 
 ${caseStudy.results.description}
 
 ${results}
+
+> "${caseStudy.testimonial.quote}" - ${caseStudy.testimonial.author}
 `);
 };
