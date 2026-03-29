@@ -16,7 +16,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v6
         with:
-          fetch-depth: 0
+          fetch-depth: 1
 
       - name: Setup Node.js
         uses: actions/setup-node@v6
@@ -27,38 +27,29 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Run linting
+      - name: Lint
         run: npm run lint
 
-      - name: Build project
+      - name: Build
         run: npm run build
         env:
-          PUBLIC_TURNSTILE_SITE_KEY: '0x4AAAAAACxasQskYMJsn7bk'
           TURNSTILE_SITE_KEY: '0x4AAAAAACxasQskYMJsn7bk'
+          RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
+          TURNSTILE_SECRET_KEY: ${{ secrets.TURNSTILE_SECRET_KEY }}
 
       - name: Verify build artifacts
         run: |
-          echo "Checking build output..."
-          ls -la dist/client/ 2>/dev/null || ls -la dist/
-
-          echo "Verifying critical files..."
           failed=0
-          for file in "expertise.md" "work-experience.md" "education.md" "consultancy.md" "contact.md" "index.html.md" "llms.txt" "llms-full.txt"; do
+          for file in expertise.md work-experience.md education.md consultancy.md contact.md index.html.md llms.txt llms-full.txt; do
             found=$(find dist -name "$file" -type f 2>/dev/null | head -1)
             if [ -z "$found" ]; then
-              echo "ERROR: $file not found in build output"
+              echo "::error::$file not found in build output"
               failed=1
             else
-              echo "Found: $found ($(wc -c < "$found") bytes)"
+              echo "OK: $found ($(wc -c < "$found") bytes)"
             fi
           done
-
-          if [ "$failed" -eq 1 ]; then
-            echo "Build artifact verification failed"
-            exit 1
-          fi
-
-          echo "All critical checks passed"
+          [ "$failed" -eq 0 ] || exit 1
 
       - name: Deploy to Cloudflare Workers
         if: github.ref == 'refs/heads/main' && github.event_name == 'push'
@@ -66,40 +57,30 @@ jobs:
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          wranglerVersion: ''
 
       - name: Post-deploy smoke test
         if: github.ref == 'refs/heads/main' && github.event_name == 'push'
         run: |
-          echo "Running post-deploy smoke tests..."
           failed=0
-          for path in "/" "/expertise" "/consultancy" "/work-experience" "/education" "/contact"; do
+          for path in / /expertise /consultancy /work-experience /education /contact; do
             url="https://www.henriksoderlund.com${path}"
             status=$(curl -s -o /dev/null -w "%{http_code}" --max-time 10 "$url")
-            if [ "$status" -eq 200 ]; then
-              echo "OK: $url ($status)"
-            else
-              echo "FAIL: $url (HTTP $status)"
-              failed=1
-            fi
+            [ "$status" -eq 200 ] && echo "OK: $url" || { echo "::error::FAIL: $url ($status)"; failed=1; }
           done
-
-          if [ "$failed" -eq 1 ]; then
-            echo "Smoke test failed - some pages returned non-200 status"
-            exit 1
-          fi
-
-          echo "All smoke tests passed"
+          [ "$failed" -eq 0 ] || exit 1
 
       - name: Deployment Summary
         if: github.ref == 'refs/heads/main' && github.event_name == 'push'
         run: |
-          echo "## Deployment Successful" >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
-          echo "### Available URLs" >> $GITHUB_STEP_SUMMARY
-          echo "- [Homepage](https://www.henriksoderlund.com/)" >> $GITHUB_STEP_SUMMARY
-          echo "- [Expertise](https://www.henriksoderlund.com/expertise)" >> $GITHUB_STEP_SUMMARY
-          echo "- [Consultancy](https://www.henriksoderlund.com/consultancy)" >> $GITHUB_STEP_SUMMARY
-          echo "- [Work Experience](https://www.henriksoderlund.com/work-experience)" >> $GITHUB_STEP_SUMMARY
-          echo "- [Education](https://www.henriksoderlund.com/education)" >> $GITHUB_STEP_SUMMARY
-          echo "- [Contact](https://www.henriksoderlund.com/contact)" >> $GITHUB_STEP_SUMMARY
+          cat >> "$GITHUB_STEP_SUMMARY" << 'EOF'
+          ## Deployment Successful
+
+          | Page | URL |
+          |------|-----|
+          | Homepage | https://www.henriksoderlund.com/ |
+          | Expertise | https://www.henriksoderlund.com/expertise |
+          | Consultancy | https://www.henriksoderlund.com/consultancy |
+          | Work Experience | https://www.henriksoderlund.com/work-experience |
+          | Education | https://www.henriksoderlund.com/education |
+          | Contact | https://www.henriksoderlund.com/contact |
+          EOF
