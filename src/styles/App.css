@@ -1360,11 +1360,9 @@ a:hover {
   filter: grayscale(100%) opacity(0.85);
 }
 
-/* Claude icon uses currentColor, so we need to set the color directly */
-.tech-stack img[alt="Claude Code"] {
-  color: var(--color-text-faint) !important;
-  opacity: 0.45 !important;
-  filter: none !important;
+/* Inline SVGs using currentColor inherit text colour; skip grayscale filter */
+.tech-stack svg.tech-icon {
+  filter: none;
 }
 
 /* Tech row styling for desktop */
