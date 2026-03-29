@@ -1,179 +1,285 @@
 # Henrik Soderlund - Personal Website
 
-[![Astro](https://img.shields.io/badge/astro-6.1.1-BC52EE?style=flat&logo=astro&logoColor=white)](https://astro.build/)
-[![TypeScript](https://img.shields.io/badge/typescript-5.9.3-3178C6?style=flat&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
+[![Live Site](https://img.shields.io/badge/live-henriksoderlund.com-0ea5e9?style=flat&logo=googlechrome&logoColor=white)](https://www.henriksoderlund.com/)
+[![Astro](https://img.shields.io/badge/astro-6-BC52EE?style=flat&logo=astro&logoColor=white)](https://astro.build/)
+[![TypeScript](https://img.shields.io/badge/typescript-5.9-3178C6?style=flat&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
 [![Cloudflare Workers](https://img.shields.io/badge/cloudflare%20workers-deployed-F38020?style=flat&logo=cloudflare&logoColor=white)](https://workers.cloudflare.com/)
-[![ESLint](https://img.shields.io/badge/eslint-9.39.1-4B32C3?style=flat&logo=eslint&logoColor=white)](https://eslint.org/)
-[![Wrangler](https://img.shields.io/badge/wrangler-4.49.0-F38020?style=flat&logo=cloudflare&logoColor=white)](https://developers.cloudflare.com/workers/wrangler/)
+[![CI/CD](https://img.shields.io/github/actions/workflow/status/henkisdabro/henriksoderlund-website-v2/deploy.yml?branch=main&label=deploy&logo=githubactions&logoColor=white)](https://github.com/henkisdabro/henriksoderlund-website-v2/actions)
 [![Node.js](https://img.shields.io/badge/node.js-24_LTS-339933?style=flat&logo=node.js&logoColor=white)](https://nodejs.org/)
+[![ESLint](https://img.shields.io/badge/eslint-9-4B32C3?style=flat&logo=eslint&logoColor=white)](https://eslint.org/)
+[![License](https://img.shields.io/badge/licence-private-lightgrey?style=flat)](#)
 
-Henrik Soderlund's professional portfolio website showcasing technology leadership and AI innovation expertise. Built with Astro 6, prerendered for performance, and deployed globally on Cloudflare Workers.
+Professional portfolio website for Henrik Soderlund - technology leader and AI innovation specialist. Built with Astro 6, deployed globally on Cloudflare Workers with hybrid rendering, per-request CSP nonces, server-side GTM, and dark mode theming.
+
+> Migrated from a React SPA (Vite) to Astro 6 in March 2026 for better performance, SEO, and maintainability.
+
+## Architecture
+
+```text
+                    +-------------------+
+                    |   Cloudflare CDN  |
+                    | (prerendered HTML)|
+                    +--------+----------+
+                             |
+              +--------------+--------------+
+              |                             |
+     +--------v--------+          +--------v--------+
+     |  Static Pages   |          |  SSR Contact    |
+     |  (5 pages, CDN) |          |  (Astro Actions)|
+     +--------+--------+          +--------+--------+
+              |                             |
+              +--------------+--------------+
+                             |
+                    +--------v--------+
+                    |  Custom Worker   |
+                    |  (src/worker.ts) |
+                    |  CSP nonces,     |
+                    |  security headers|
+                    +--------+--------+
+                             |
+                    +--------v--------+
+                    |  HTMLRewriter    |
+                    |  (nonce inject)  |
+                    +-----------------+
+```
 
 ## Tech Stack
 
-- [**Astro 6**](https://astro.build/) - Content-focused web framework with hybrid rendering (prerendered + SSR)
-- [**@astrojs/cloudflare**](https://docs.astro.build/en/guides/integrations-guide/cloudflare/) - First-party Cloudflare Workers adapter
-- [**@astrojs/sitemap**](https://docs.astro.build/en/guides/integrations-guide/sitemap/) - Automatic XML sitemap generation
-- [**TypeScript 5.9.3**](https://www.typescriptlang.org/) - Full type safety across components, actions, and middleware
-- [**Cloudflare Workers**](https://developers.cloudflare.com/workers/) - Edge computing platform with global deployment
-- [**Cloudflare Turnstile**](https://developers.cloudflare.com/turnstile/) - Privacy-preserving spam protection for contact form
-- [**Resend**](https://resend.com/) - Email delivery for contact form submissions
-- [**Wrangler 4**](https://developers.cloudflare.com/workers/wrangler/) - Cloudflare Workers CLI and development toolkit
-- [**ESLint 9**](https://eslint.org/) - Code quality and consistency with TypeScript support
-- [**Node.js 24 LTS**](https://nodejs.org/) - Runtime with modern JavaScript support
+| Layer | Technology | Purpose |
+|-------|-----------|---------|
+| Framework | [Astro 6](https://astro.build/) | Hybrid rendering (prerendered + SSR) |
+| Adapter | [@astrojs/cloudflare](https://docs.astro.build/en/guides/integrations-guide/cloudflare/) | First-party Cloudflare Workers adapter |
+| Runtime | [Cloudflare Workers](https://developers.cloudflare.com/workers/) | Edge computing with global deployment |
+| Language | [TypeScript 5.9](https://www.typescriptlang.org/) | Strict type safety across all code |
+| Security | Custom Worker + HTMLRewriter | Per-request CSP nonces, security headers |
+| Spam Protection | [Cloudflare Turnstile](https://developers.cloudflare.com/turnstile/) | Privacy-preserving contact form protection |
+| Email | [Resend](https://resend.com/) | Contact form email delivery |
+| Form Validation | [Zod](https://zod.dev/) (via Astro Actions) | Schema-based input validation |
+| Analytics | Server-side GTM + [Fathom](https://usefathom.com/) | Privacy-focused analytics on custom sGTM domain |
+| SEO | [@astrojs/sitemap](https://docs.astro.build/en/guides/integrations-guide/sitemap/) + JSON-LD | Automatic sitemap, structured data |
+| Fonts | [JetBrains Mono](https://www.jetbrains.com/lp/mono/) | Coding font for dark mode (6 weights) |
+| Linting | [ESLint 9](https://eslint.org/) | Code quality with TypeScript support |
+| CI/CD | [GitHub Actions](https://github.com/features/actions) | Automated build, lint, deploy, smoke tests |
+| CLI | [Wrangler 4](https://developers.cloudflare.com/workers/wrangler/) | Cloudflare Workers development toolkit |
+
+## Key Features
+
+### Performance
+
+- **Hybrid rendering** - 5 of 6 pages prerendered at build time (sub-10ms TTFB from CDN edge); contact page SSR for form handling
+- **Zero-JS page transitions** - CSS View Transitions (`@view-transition { navigation: auto; }`)
+- **Prefetch** - Near-instant navigation via Astro's built-in prefetch on hover
+- **Identical HTML for all visitors** - No dual rendering or crawler detection
+- **Optimised images** - WebP format, lazy loading, `decoding="async"`, proper dimensions
+
+### Analytics and Tracking
+
+- **Server-side Google Tag Manager (sGTM)** - Custom domain (`load.sgtm.henriksoderlund.com`) for first-party data collection
+- **Fathom Analytics** - Privacy-focused analytics via `api.fouanalytics.com` with noscript fallback
+- **dataLayer** - Global `window.dataLayer` with environment detection (production vs development)
+- **Custom events** - `contact_form_submission` event with session-based deduplication
+- **Cloudflare Insights** - Platform-level observability
+
+### Contact Form
+
+- **Astro Actions** - Server-side form handling with progressive enhancement
+- **Zod validation** - Schema-based: name (1-100 chars), email (valid, max 200), message (10-2000 chars)
+- **Cloudflare Turnstile** - Privacy-preserving CAPTCHA with theme-aware re-rendering on dark/light mode toggle
+- **Resend integration** - Email delivery to `admin@henriksoderlund.com` with reply-to from submitter
+- **IP forwarding** - `CF-Connecting-IP` header passed to Turnstile for verification
+- **Error handling** - Typed `ActionError` codes (FORBIDDEN, BAD_REQUEST, INTERNAL_SERVER_ERROR)
+
+### Security
+
+- **CSP nonces** - Per-request cryptographic nonces via custom Worker entry using Cloudflare HTMLRewriter (streaming, no buffering)
+- **`'strict-dynamic'`** - GTM child scripts inherit trust automatically
+- **Security headers** - X-Frame-Options (DENY), HSTS (1 year + preload), Referrer-Policy, Permissions-Policy (camera/mic/geo/payment disabled), X-Content-Type-Options
+- **security.txt** - RFC 9116 compliant at `/.well-known/security.txt` with contact, policy, and expiration
+- **Turnstile** - Server-side token verification in Astro Actions
+- **Rate limiting** - Cloudflare WAF dashboard rules
+- **Canonical Link header** - Set at Worker level for `www.henriksoderlund.com`
+
+### SEO and AI
+
+- **JSON-LD structured data** - Person (with location, languages, education, awards), ProfessionalService, WebSite schemas
+- **Open Graph** (11+ tags including profile metadata), **Twitter Cards** (summary large image, 8+ tags)
+- **Automatic sitemap** via `@astrojs/sitemap` with per-page priorities (1.0 for home down to 0.7 for education)
+- **Site verification** - Google Search Console and Ahrefs
+- **AI-optimised content** - Per-page markdown endpoints following the [llms.txt](https://llmstxt.org/) specification
+- **robots.txt** - Explicit AI-friendly rules ("AI systems are welcome")
+- **Cloudflare Crawler Hints** - Enabled via dashboard
+- **Canonical links** - Self-referential on all pages
+
+### Design and UX
+
+- **Dark mode** with JetBrains Mono coding font (6 weights) and theme toggle with sun/moon icons
+- **Light mode** with clean, minimal serif typography
+- **Theme persistence** - localStorage with system preference detection via `prefers-color-scheme`
+- **FOUC prevention** - Theme detection script runs before paint
+- **Breathing animation** - Homepage keywords glow with 3-second cubic-bezier animation, random selection every 4 seconds
+- **Project carousel** - Expertise page showcase with auto-advance (5s), keyboard navigation (arrow keys), dot indicators, pause on hover/focus
+- **Collapsible navigation** - Sidebar with "On This Page" heading scan, session-persisted state, auto-close on mobile after navigation
+- **Mobile-responsive** - Navigation hidden on <1024px
+- **Native accordions** - `<details>/<summary>` for case study content
+- **GitHub contribution chart** - 1-year heatmap from `ghchart.rshah.org` with dark mode CSS filter inversion
+- **Smooth scrolling** - Dynamic heading detection with scroll-to-section
+
+### Accessibility
+
+- **ARIA labels** - Comprehensive on buttons (carousel, navigation, theme toggle)
+- **Keyboard navigation** - Arrow keys for carousel, tab/enter for navigation
+- **Reduced motion** - `prefers-reduced-motion` compliance across all animations
+- **Inert attribute** - Inactive carousel cards properly marked inert
+- **External links** - `rel="noopener noreferrer"` on all external links
+- **Semantic HTML** - Proper heading hierarchy, section tags, main content areas
+- **Alt text** - Descriptive alt text on all images
 
 ## Project Structure
 
 ```text
 src/
-  actions/index.ts           # Astro Actions (contact form with Turnstile + Resend)
-  assets/                    # Flags, icons, images, logos
-  components/                # Astro components (NavigationBox, Footer, ContactForm, SEO, etc.)
-  data/                      # Centralised data files (consultation.ts, expertise.ts, workExperience.ts)
-  layouts/BaseLayout.astro   # Main layout with GTM, JSON-LD, view transitions
-  worker.ts                  # Custom Worker entry: CSP nonces, security headers, HTMLRewriter
-  pages/                     # File-based routing (.astro pages, API endpoints, markdown endpoints)
-  styles/                    # App.css, index.css
-  utils/                     # removeEmojis.ts, markdownResponse.ts
+  actions/index.ts              # Astro Actions (contact form with Turnstile + Resend + Zod)
+  assets/                       # Images, logos, icons, flags
+    flags/                      #   Country flags (Swedish flag on education)
+    icons/                      #   UI icons
+    images/screenshots/         #   Project screenshots (WebP)
+    logos/                      #   Brand logos (Cloudflare, Claude - SVG/PNG)
+  components/                   # Astro components
+    ContactForm.astro           #   Form with Turnstile, validation, dataLayer tracking
+    Footer.astro                #   Site footer with tech stack logos
+    GitHubLink.astro            #   GitHub profile link
+    LinkedInLink.astro          #   LinkedIn profile link
+    NavigationBox.astro         #   Collapsible sidebar with heading scan
+    SEO.astro                   #   Open Graph, Twitter Cards, verification tags
+    ThemeToggle.astro           #   Dark/light mode toggle with sun/moon icons
+  data/                         # Centralised business data
+    consultation.ts             #   Service offerings, methodology, case studies
+    expertise.ts                #   Technical skills, GitHub projects, AI tooling
+    links.ts                    #   External URLs (Calendly, LinkedIn, GitHub)
+    workExperience.ts           #   Professional experience with achievements
+  layouts/BaseLayout.astro      # Main layout: sGTM, Fathom, JSON-LD, view transitions, SEO
+  pages/                        # File-based routing
+    index.astro                 #   Homepage with breathing animation
+    expertise.astro             #   Skills and project carousel
+    consultancy.astro           #   Service offerings and case studies
+    work-experience.astro       #   Professional experience timeline
+    education.astro             #   Educational background
+    contact.astro               #   Contact form (SSR)
+    404.astro                   #   Custom not-found page with ASCII art
+    *.md.ts                     #   Per-page markdown endpoints (llms.txt)
+    llms.txt.ts                 #   AI entry point with ASCII art logo
+    llms-full.txt.ts            #   Complete site content for LLMs
+    health.ts                   #   Service status endpoint
+    metrics.ts                  #   Worker metrics (CF-Ray, CF-IPCountry, CF-IPColo)
+    .well-known/security.txt.ts #   RFC 9116 security contact
+  styles/
+    App.css                     #   Main application styles (~44KB)
+    index.css                   #   Base/reset styles
+    theme.css                   #   Light/dark mode design tokens (40+ CSS variables)
+  utils/
+    markdownResponse.ts         #   Markdown HTTP response helper
+    pageMarkdown.ts             #   Page content to markdown converter
+    removeEmojis.ts             #   Character encoding normalisation
+  worker.ts                     # Custom Worker entry: CSP nonces, security headers, HTMLRewriter
 scripts/
-  patch-wrangler.mjs         # Post-build: adds run_worker_first to built wrangler config
-public/                      # Static assets (verification files, favicons, redirects)
+  patch-wrangler.mjs            # Post-build: injects run_worker_first into built wrangler config
+public/
+  _redirects                    # 15 redirect rules (legacy paths, /skills to /expertise)
+  fonts/                        # JetBrains Mono WOFF2 files (6 weights)
+  *.html                        # SEO verification files (Google, Ahrefs)
+  favicon.svg                   # HS monogram favicon
+.github/workflows/deploy.yml   # CI/CD: lint, build, verify, deploy, smoke test
 ```
 
-## Key Features
+## Pages
 
-### Architecture and Performance
+| Page | Path | Rendering | Description |
+|------|------|-----------|-------------|
+| Home | `/` | Prerendered | Landing page with breathing keyword animation |
+| Expertise | `/expertise` | Prerendered | Technical skills, project carousel, GitHub chart |
+| Consultancy | `/consultancy` | Prerendered | Service offerings, case studies, Calendly booking |
+| Work Experience | `/work-experience` | Prerendered | Professional experience timeline |
+| Education | `/education` | Prerendered | Educational background |
+| Contact | `/contact` | SSR | Contact form with Turnstile + Resend |
+| 404 | `/404` | Prerendered | Custom not-found page with ASCII art |
 
-- **Hybrid Rendering**: 5 of 6 pages prerendered at build time (sub-10ms TTFB from CDN edge); contact page SSR for form handling
-- **Zero-JS Navigation**: CSS View Transitions (`@view-transition { navigation: auto; }`) for smooth page transitions without JavaScript
-- **Astro Prefetch**: Near-instant navigation with configurable prefetch strategy
-- **Identical HTML for All Visitors**: No dual rendering or crawler detection needed - every visitor gets full, semantic HTML
-- **Centralised Data Architecture**: Structured TypeScript data files for maintainable content management
+### API Endpoints
 
-### Contact Form
-
-- **Astro Actions**: Server-side form handling with Zod validation and progressive enhancement
-- **Cloudflare Turnstile**: Privacy-preserving spam protection (replaces reCAPTCHA)
-- **Resend Integration**: Reliable email delivery
-- **Type-Safe Secrets**: Environment variables validated via `astro:env/server`
-
-### SEO and AI Optimisation
-
-- **Complete SEO Implementation**: Open Graph (11+ tags), Twitter Cards (8+ tags), JSON-LD structured data
-- **Automatic Sitemap**: Generated by `@astrojs/sitemap` with configurable priorities
-- **AI-Optimised Content**: Per-page markdown endpoints following the llms.txt specification
-- **Crawler Hints**: Cloudflare Crawler Hints enabled via dashboard (replaces custom IndexNow)
-
-### Security
-
-- **CSP Nonces**: Per-request cryptographic nonces via custom Worker entry (`src/worker.ts`) using Cloudflare's `HTMLRewriter` for streaming nonce injection - replaces `'unsafe-inline'` with `'nonce-{uuid}' 'strict-dynamic'`
-- **Security Headers**: X-Frame-Options, HSTS, Referrer-Policy, Permissions-Policy applied at Worker level to ALL responses (including prerendered pages)
-- **Rate Limiting**: Configured via Cloudflare WAF dashboard rules
-- **Turnstile Verification**: Server-side token validation in Astro Actions
-
-### User Experience
-
-- Fixed navigation box (200px width) with dynamic heading detection and smooth scrolling
-- Mobile-responsive design (navigation hidden on <1024px screens)
-- Native `<details>/<summary>` for case study accordions
-- Clean minimal design with consistent hover states
-
-## Development Commands
-
-- `npm run dev` - Start Astro dev server (port 4321)
-- `npm run build` - Build for production (`astro check && astro build` + wrangler config patch)
-- `npm run preview` - Preview production build locally
-- `npm run lint` - Run ESLint for code quality checks
-- `npm run check` - Astro type check + build + wrangler config patch
-- `npm run deploy` - Build and deploy to Cloudflare Workers
-- `npm run cf-typegen` - Generate Cloudflare Workers types
+| Endpoint | Description |
+|----------|-------------|
+| `/health` | Service status |
+| `/metrics` | Worker metrics (CF-Ray, CF-IPCountry, CF-IPColo) |
+| `/.well-known/security.txt` | RFC 9116 security contact |
+| `/llms.txt` | AI entry point with page directory |
+| `/llms-full.txt` | Complete site content for LLMs |
+| `/*.md` | Per-page markdown versions |
 
 ## Getting Started
 
-Install dependencies:
+### Prerequisites
+
+- [Node.js 24 LTS](https://nodejs.org/)
+- npm (included with Node.js)
+
+### Development
 
 ```bash
-npm install
+npm install           # Install dependencies
+npm run dev           # Start dev server at http://localhost:4321
 ```
 
-Start the development server:
+### Build and Preview
 
 ```bash
-npm run dev
+npm run build         # Production build (astro check + astro build + wrangler patch)
+npm run preview       # Preview production build locally
+npm run lint          # ESLint code quality check
+npm run check         # Full validation (type check + build + wrangler patch)
+npm run cf-typegen    # Generate Cloudflare Workers types
 ```
 
-Your application will be available at <http://localhost:4321>.
+### Deployment
 
-## Production
+Production deployment is **fully automated** via GitHub Actions on push to `main`:
 
-Build your project for production:
+1. Checkout, install, lint
+2. Build with artifact verification (markdown endpoints, llms.txt)
+3. Deploy to Cloudflare Workers via `wrangler-action`
+4. Post-deploy smoke tests on all 6 pages
+
+Manual deploy for development/testing only:
 
 ```bash
-npm run build
+npm run deploy        # Build + deploy to Cloudflare Workers
+npx wrangler tail     # Live log streaming
 ```
 
-Preview your build locally:
+## Environment Variables
 
-```bash
-npm run preview
-```
+| Variable | Context | Description |
+|----------|---------|-------------|
+| `RESEND_API_KEY` | Server secret | Email delivery for contact form |
+| `TURNSTILE_SECRET_KEY` | Server secret | Server-side Turnstile verification |
+| `TURNSTILE_SITE_KEY` | Client public | Turnstile widget site key |
 
-Deploy your project to Cloudflare Workers:
+Configured via `astro:env` schema in `astro.config.mjs` for type-safe access.
 
-```bash
-npm run deploy
-```
+CI/CD secrets (GitHub Actions):
 
-Monitor your workers:
+| Secret | Description |
+|--------|-------------|
+| `CLOUDFLARE_API_TOKEN` | Wrangler deploy authentication |
+| `CLOUDFLARE_ACCOUNT_ID` | Cloudflare account identifier |
 
-```bash
-npx wrangler tail
-```
+## Redirects
 
-## Configuration Files
+15 permanent (301) redirect rules in `public/_redirects` handle:
 
-### Build and Development
-
-- **astro.config.mjs** - Astro configuration (output mode, Cloudflare adapter, sitemap, prefetch, env schema)
-- **wrangler.json** - Cloudflare Workers deployment configuration
-- **tsconfig.json** - TypeScript configuration
-- **eslint.config.js** - ESLint configuration for code quality
-
-### Data Architecture
-
-The project uses a centralised data architecture pattern for maintainable content:
-
-- **src/data/consultation.ts** - Service offerings, pricing tiers, and consultation methodology
-- **src/data/expertise.ts** - Technical skills categorisation, platform expertise, and GitHub project showcase
-- **src/data/workExperience.ts** - Structured professional experience with achievements and technologies
-
-This separation enables:
-
-- Clean component-data separation
-- Easy content updates without touching presentation logic
-- Type-safe data structures with TypeScript
-- Consistent data formatting across components
-
-### Verification and Redirects
-
-- **public/_redirects** - Cloudflare Workers redirect rules (`/skills` to `/expertise`)
-- **public/ahrefs_bc08e3a49...** - Ahrefs SEO verification
-- **public/google52d2217b...** - Google Search Console verification
-
-## Design System
-
-- Clean, minimal design with proper typography
-- Fixed navigation box (200px width) on left side with grey hover states
-- Mobile-responsive (navigation hidden on <1024px)
-- Tech stack logos standardised to 20px in footer
-- Dynamic heading detection and smooth scroll navigation
-
-## Build Artifacts (Auto-generated)
-
-- `dist/` - Astro build output
-- `node_modules/` - npm dependencies
-- `.wrangler/` - Wrangler cache and temporary files
-- `.astro/` - Astro cache and generated types
+- **Rebranding**: `/skills` to `/expertise`
+- **Legacy Hugo/Thulite paths**: `/content/*` to current structure
+- **File extensions**: `.html` files to clean URLs
+- **Common variations**: `/skill`, `/about` to correct pages
+- **Markdown**: `/index.md` to `/index.html.md`
 
 ## Additional Resources
 
@@ -181,3 +287,6 @@ This separation enables:
 - [Cloudflare Workers Documentation](https://developers.cloudflare.com/workers/)
 - [Astro Cloudflare Adapter](https://docs.astro.build/en/guides/integrations-guide/cloudflare/)
 - [Cloudflare Turnstile](https://developers.cloudflare.com/turnstile/)
+- [Resend Documentation](https://resend.com/docs)
+- [llms.txt Specification](https://llmstxt.org/)
+- [JetBrains Mono](https://www.jetbrains.com/lp/mono/)

@@ -2,267 +2,250 @@
 
 Instructions, guardrails, and critical guidance for working with this codebase.
 
-## Project Context
+## Project Overview
 
-Henrik Soderlund's personal portfolio website. Astro 6 with server-side rendering, prerendered pages, and Cloudflare Workers deployment via `@astrojs/cloudflare` adapter.
+Henrik Soderlund's professional portfolio website. Migrated from React SPA (Vite) to Astro 6 in March 2026.
 
 - **Production**: <https://www.henriksoderlund.com/>
-- **Stack**: Check `package.json` for current versions
-- **Data Layer**: Business data centralised in `src/data/` (consultation.ts, expertise.ts, workExperience.ts)
+- **Stack**: Astro 6 + TypeScript 5.9 + Cloudflare Workers (check `package.json` for exact versions)
+- **Rendering**: Hybrid - 5 prerendered pages (CDN edge) + 1 SSR page (contact form via Astro Actions)
+- **Data Layer**: Centralised TypeScript data files in `src/data/`
 - **Routing**: Astro file-based routing (`src/pages/`)
-- **Rendering**: 5 of 6 pages prerendered at build time (CDN edge); contact page is SSR (Astro Actions for contact form)
+- **Analytics**: Server-side GTM on custom domain (`load.sgtm.henriksoderlund.com`) + Fathom Analytics (`api.fouanalytics.com`)
 
-## Critical Rules & Guardrails
+## Critical Rules
 
 ### Content Preservation
 
-**NEVER modify, change, or "improve" existing copywriting without explicit user approval.**
-
-- Homepage copy and marketing content is carefully crafted and tested
-- Technical fixes (SEO, structure, formatting) allowed - content changes require permission
-- This includes content in Astro page components and layout files
-- ASK first and explain exactly what you want to change
+**NEVER modify existing copywriting without explicit user approval.** Homepage copy and marketing content is carefully crafted. Technical fixes (SEO, structure, formatting) are allowed - content changes require permission. ASK first and explain exactly what you want to change.
 
 ### File Deletion Safety
 
-**NEVER DELETE INFRASTRUCTURE FILES DURING CLEANUP OPERATIONS**
+**NEVER delete infrastructure files during cleanup operations.**
 
-**Critical Files (NEVER delete):**
+Critical files that must NEVER be deleted:
 
 - `astro.config.mjs` - Astro configuration (output mode, adapter, integrations, env schema)
 - `wrangler.json` - Cloudflare Workers configuration
-- `package.json` - Build configuration and dependencies
-- `src/layouts/BaseLayout.astro` - Main layout with GTM, JSON-LD, view transitions, SEO metadata
-- `src/worker.ts` - Custom Worker entry: CSP nonces, security headers, HTMLRewriter
-- `src/actions/index.ts` - Astro Actions (contact form with Turnstile + Resend)
-- `.github/workflows/` - CI/CD pipelines
+- `package.json` - Dependencies and build scripts
+- `src/layouts/BaseLayout.astro` - Main layout (sGTM, Fathom, JSON-LD, view transitions, SEO, dataLayer)
+- `src/worker.ts` - Custom Worker entry (CSP nonces, security headers, HTMLRewriter)
+- `src/actions/index.ts` - Astro Actions (contact form with Turnstile + Resend + Zod)
+- `src/styles/theme.css` - Dark/light mode design tokens (40+ CSS variables)
+- `.github/workflows/deploy.yml` - CI/CD pipeline
 
-**Safe Cleanup Protocol:**
+**Before any cleanup**: run `npm run check`, never delete without explicit approval, review with `git status`.
 
-1. Run `npm run check` BEFORE any cleanup commit
-2. NEVER delete files without explicit user approval for each file
-3. Use `git status` extensively to review what will be deleted
-4. Focus cleanup on: Documentation files, debug logs, temporary files only
-5. When in doubt, ASK the user first
+> **History**: August 2025 - Accidental `index.html` deletion caused complete site outage in the previous Vite-based stack.
 
-**History**: August 2025 - Accidental `index.html` deletion caused complete website failure in the previous Vite-based stack.
+### Deployment
 
-### Deployment Process
+**Production deployment is automatic via GitHub Actions on push to `main`.** DO NOT use `npm run deploy` for production.
 
-**IMPORTANT**: Production deployment is automatic via GitHub Actions. DO NOT use `npm run deploy` directly.
+The CI pipeline: lint, build, verify artifacts (markdown endpoints, llms.txt), deploy via `wrangler-action`, smoke test all 6 pages.
 
-**Production:**
-
-1. Push to main branch - GitHub Actions workflow triggers
-2. Automated CI/CD: Build, lint, verify artifacts, deploy to Cloudflare Workers
-3. Live site updated at <https://www.henriksoderlund.com/>
-
-**Development/Testing Only:**
-
-- `npm run build` - Local build testing (`astro check && astro build`)
-- `npm run preview` - Local production build preview
-- `npm run deploy` - Manual deploy (development/testing only, NOT production)
+For local testing only: `npm run build`, `npm run preview`, `npm run deploy`.
 
 ## Content Standards
 
-### Language & Style
+### Language and Style
 
 - **British English only**: optimisation, specialising, organisation, utilising, realise, colour, behaviour, centre
 - **Voice**: Professional, direct, technical without excessive formality
-- **Punctuation**: Use regular hyphens (-) instead of em-dashes, except for date ranges (2023-2024)
-- **Consistency**: Maintain uniform terminology and spelling across all files
+- **Punctuation**: Regular hyphens (-) instead of em-dashes, except for date ranges
+- **Consistency**: Uniform terminology and spelling across all files
 
-### Character Encoding Standards
+### Character Encoding
 
-**CRITICAL**: Apply consistent character encoding across ALL generated files (llms.txt, markdown files).
+Apply consistent encoding across all generated files (llms.txt, markdown):
 
-**Key Replacements:**
+- `oe` for `ö`, straight quotes for smart quotes, hyphens for em-dashes
+- Use `removeEmojis()` from `src/utils/removeEmojis.ts` on all generated text
+- Test markdown endpoints by fetching in browser or via curl
 
-- `oe` for `ö`
-- Straight quotes for smart quotes
-- Hyphens for em-dashes
-- Remove emojis and Unicode symbols
+### Markdown Linting
 
-**Implementation:**
+All markdown files must follow: MD022 (blank lines around headings), MD024 (no duplicate headings), MD031 (blank lines around code blocks), MD032 (blank lines around lists), MD034 (wrap URLs), MD040 (language for code blocks).
 
-- Use centralised `removeEmojis()` function from `src/utils/removeEmojis.ts`
-- Apply to ALL generated text: titles, descriptions, project data
-- Test generated markdown endpoints by fetching them in the browser or via curl
-
-### Markdown Linting Rules
-
-All markdown files must pass these linting rules:
-
-- **MD022**: Blank lines around headings
-- **MD024**: No duplicate heading text (rename with descriptive prefixes)
-- **MD031**: Blank lines around code blocks
-- **MD032**: Blank lines around lists
-- **MD034**: Wrap URLs in angle brackets `<url>` or proper markdown links
-- **MD040**: Specify language for code blocks (use `text` for generic content)
-
-## Astro Architecture
+## Architecture
 
 ### Rendering Model
 
-All visitors (users and crawlers alike) receive identical full HTML. No dual rendering or bot detection needed.
+All visitors receive identical full HTML. No dual rendering or bot detection.
 
-- **Prerendered pages** (built at deploy time, served from CDN edge): index, expertise, consultancy, work-experience, education, 404
-- **SSR page** (processed by Cloudflare Worker on each request): contact (requires Astro Actions for contact form)
-- **API endpoints**: health.ts, metrics.ts, security.txt.ts, per-page markdown endpoints (`*.md.ts`)
+| Type | Pages | Delivery |
+|------|-------|----------|
+| Prerendered | index, expertise, consultancy, work-experience, education, 404 | CDN edge at build time |
+| SSR | contact | Cloudflare Worker per-request (Astro Actions) |
+| API endpoints | health.ts, metrics.ts, security.txt.ts, `*.md.ts`, llms.txt.ts, llms-full.txt.ts | Worker |
 
 ### Key Configuration Patterns
 
-**Output mode**: Must use `output: 'server'` (not `'static'`) because Astro Actions require a server runtime. Individual pages opt into prerendering with `export const prerender = true`.
+**Output mode**: Must be `output: 'server'` (Astro Actions require a server runtime). Pages opt into prerendering individually with `export const prerender = true`.
 
-**Trailing slashes**: Set `trailingSlash: 'never'` in `astro.config.mjs` to match existing URL structure and avoid redirects.
+**Trailing slashes**: `trailingSlash: 'never'` in `astro.config.mjs` to match URL structure.
 
-**Security headers and CSP**: Handled at the Worker level in `src/worker.ts`, NOT in Astro middleware. Astro middleware does NOT run for prerendered pages on Cloudflare (they are served via `env.ASSETS.fetch()`, bypassing the Astro render pipeline). The custom Worker entry wraps `@astrojs/cloudflare/handler` and applies headers to ALL responses.
+**Security headers and CSP**: Handled in `src/worker.ts`, NOT in Astro middleware. Astro middleware does not run for prerendered pages on Cloudflare (served via `env.ASSETS.fetch()`, bypassing the Astro render pipeline). The custom Worker wraps `@astrojs/cloudflare/handler` and applies headers to ALL responses.
 
-**CSP nonces**: Per-request nonces generated via `crypto.randomUUID()`. Cloudflare's `HTMLRewriter` injects `nonce=""` attributes on all executable `<script>` tags (excluding `type="application/ld+json"`). CSP uses `'strict-dynamic'` so GTM child scripts inherit trust automatically.
+**CSP nonces**: Per-request nonces via `crypto.randomUUID()`. Cloudflare HTMLRewriter injects `nonce=""` on all `<script>` tags except `type="application/ld+json"` (streaming, no buffering). `'strict-dynamic'` means GTM child scripts inherit trust automatically. `Cache-Control: no-store` on HTML responses ensures nonces always match the CSP header. Host allowlists in `script-src` are fallbacks for browsers without `'strict-dynamic'` support.
 
-**`run_worker_first` and dev mode**: The `run_worker_first: true` assets config is required in production so the Worker processes prerendered pages. However, it MUST NOT be in the source `wrangler.json` because the Cloudflare Vite plugin picks it up in dev mode and routes Vite's own assets through the Worker, causing universal 404s. It is added only to the built output via `scripts/patch-wrangler.mjs` (post-build step).
+**CSP allowlisted domains** (in `src/worker.ts`): fouanalytics.com (Fathom), sgtm.henriksoderlund.com (sGTM), tagmanager.google.com, google-analytics.com, static.cloudflareinsights.com, challenges.cloudflare.com, fonts.googleapis.com, fonts.gstatic.com, ghchart.rshah.org, and others.
 
-**View transitions**: CSS `@view-transition { navigation: auto; }` requires `<style is:global>` in the layout, not a scoped `<style>` block.
+**`run_worker_first` and dev mode**: Required in production so the Worker processes prerendered pages, but MUST NOT be in source `wrangler.json` (the Cloudflare Vite plugin picks it up in dev mode and routes Vite's assets through the Worker, causing 404s). Added only to built output via `scripts/patch-wrangler.mjs`.
 
-### SEO Metadata
+**View transitions**: CSS `@view-transition { navigation: auto; }` requires `<style is:global>` in the layout.
 
-SEO metadata is handled in `src/layouts/BaseLayout.astro` and `src/components/SEO.astro`:
+### Analytics and Tracking
 
-- Complete Open Graph tags (11+ tags including image metadata)
-- Full Twitter Card metadata (8+ tags)
-- Site verification tags (Google, Ahrefs)
-- ALL JSON-LD structured data schemas (Person, ProfessionalService, WebSite)
-- Favicon, canonical links, proper meta descriptions
-- Analytics tracking (GTM, noscript fallbacks)
+- **sGTM**: Container `GTM-FWR4` loaded from custom domain `load.sgtm.henriksoderlund.com`
+- **Fathom**: Pixel tracking via `api.fouanalytics.com` with noscript fallback
+- **dataLayer**: Global `window.dataLayer` initialised before GTM with environment detection (production vs development based on hostname)
+- **Custom events**: `contact_form_submission` event pushed on successful form submit, with session storage deduplication to prevent duplicates
+- **Cloudflare Insights**: Platform-level observability (CSP configured for `cloudflareinsights.com`)
 
-**Testing Commands:**
+### Contact Form
 
-```bash
-# All visitors get the same HTML - no need for User-Agent spoofing
-curl http://localhost:4321
+- **Astro Actions**: Server-side handler with `ActionError` codes (FORBIDDEN, BAD_REQUEST, INTERNAL_SERVER_ERROR)
+- **Zod validation**: Name (1-100 chars), email (valid format, max 200), message (10-2000 chars)
+- **Cloudflare Turnstile**: Theme-aware widget that re-renders on dark/light mode toggle
+- **Resend**: Sends to `admin@henriksoderlund.com` with reply-to from submitter
+- **IP forwarding**: `CF-Connecting-IP` header passed to Turnstile for verification
+- **Progressive enhancement**: Works with and without JavaScript
 
-# Count SEO tags
-curl http://localhost:4321 | grep -c "og:"
+### Dark Mode and Theming
 
-# Verify content
-curl http://localhost:4321 | grep "<h1>"
+- **CSS custom properties**: 40+ design tokens in `src/styles/theme.css`
+- **Toggle**: `src/components/ThemeToggle.astro` with sun/moon icons, fixed positioning
+- **Persistence**: localStorage with key `theme`, system preference fallback via `prefers-color-scheme`
+- **FOUC prevention**: Theme detection script runs before paint in BaseLayout
+- **Fonts**: JetBrains Mono (6 weights: 400, 400i, 500, 600, 600i, 700) as primary dark mode font; serif system fonts in light mode
+- **Turnstile integration**: Widget theme updates on toggle
+
+### Interactive Features
+
+- **Breathing animation** (homepage): Keywords glow with 3-second cubic-bezier animation, random selection every 4 seconds, cleanup on view transitions
+- **Project carousel** (expertise): Auto-advance every 5s, arrow key navigation, dot indicators, pause on hover/focus, `inert` on inactive cards
+- **Collapsible navigation**: Sidebar with dynamic heading scan (h2, h4, h5, h6), session-persisted state, auto-close on mobile after navigation
+- **GitHub contribution chart**: 1-year heatmap from `ghchart.rshah.org`, CSS filter inversion in dark mode
+- **All animations**: Respect `prefers-reduced-motion` media query
+
+### SEO
+
+Handled in `src/layouts/BaseLayout.astro` and `src/components/SEO.astro`:
+
+- **JSON-LD**: Person (location Perth AU, languages English/Swedish, education, awards), ProfessionalService (with offer catalog), WebSite
+- **Open Graph**: 11+ tags including profile metadata (og:type `profile` on home, `website` elsewhere), OG image 1200x630
+- **Twitter Cards**: Summary large image, 8+ tags with creator/site metadata
+- **Sitemap**: Auto-generated with priorities (home 1.0, expertise 0.9, consultancy/work-experience/contact 0.8, education 0.7)
+- **Verification**: Google Search Console, Ahrefs
+- **Canonical links**: Self-referential on all pages, Link header set at Worker level
+
+### llms.txt and AI Content
+
+- `/llms.txt` - Curated entry point with ASCII art logo and page directory
+- `/llms-full.txt` - Complete site content concatenated for LLM consumption
+- Per-page markdown at `*.md.ts` endpoints
+- `robots.txt` includes explicit AI-friendly rules
+- Character encoding normalised via `removeEmojis()` and `pageMarkdown.ts`
+
+### Security Headers (Worker Level)
+
+Applied to ALL responses by `src/worker.ts`:
+
+- `X-Frame-Options: DENY`
+- `X-Content-Type-Options: nosniff`
+- `Referrer-Policy: strict-origin-when-cross-origin`
+- `Permissions-Policy: camera=(), microphone=(), geolocation=(), payment=()`
+- `Strict-Transport-Security: max-age=31536000; includeSubDomains; preload`
+- `Content-Security-Policy` with per-request nonces (HTML responses only)
+- Canonical `Link` header for `www.henriksoderlund.com`
+
+### Environment Variables
+
+Type-safe via `astro:env/server` (schema in `astro.config.mjs`):
+
+- `RESEND_API_KEY` - Email delivery for contact form
+- `TURNSTILE_SECRET_KEY` - Server-side Turnstile verification
+- `TURNSTILE_SITE_KEY` - Client-side Turnstile widget (public)
+
+### Redirects
+
+15 permanent (301) rules in `public/_redirects`: legacy Hugo/Thulite paths, `/skills` to `/expertise`, `.html` extensions to clean URLs, `/about` to `/`, markdown file redirects.
+
+## File Locations
+
+```text
+src/
+  actions/index.ts              # Contact form (Turnstile + Resend + Zod validation)
+  components/                   # NavigationBox, Footer, ContactForm, SEO, ThemeToggle, GitHubLink, LinkedInLink
+  data/                         # Business data (consultation, expertise, links, workExperience)
+  layouts/BaseLayout.astro      # Main layout (sGTM, Fathom, dataLayer, JSON-LD, view transitions)
+  pages/                        # File-based routing (pages, API endpoints, markdown endpoints)
+  styles/                       # App.css (~44KB), index.css, theme.css (design tokens)
+  utils/                        # removeEmojis, markdownResponse, pageMarkdown
+  worker.ts                     # Custom Worker entry (CSP nonces, security headers, HTMLRewriter)
+scripts/patch-wrangler.mjs      # Post-build wrangler config patch (run_worker_first)
+public/_redirects               # 15 redirect rules
+public/fonts/                   # JetBrains Mono WOFF2 (6 weights)
+.github/workflows/deploy.yml   # CI/CD: lint, build, verify, deploy, smoke test
 ```
 
-## Generated Files Management
+### API Endpoints
 
-### Sitemap
+- `/health` - Service status
+- `/metrics` - Worker metrics (CF-Ray, CF-IPCountry, CF-IPColo headers)
+- `/.well-known/security.txt` - RFC 9116 security contact
+- `/llms.txt`, `/llms-full.txt` - AI content endpoints
+- `/*.md` - Per-page markdown versions
 
-- Generated automatically by `@astrojs/sitemap` integration during `astro build`
-- Configuration (priorities, filtering) in `astro.config.mjs`
+## Development Workflow
 
-### llms.txt and Markdown Endpoints
+### Validation Commands
 
-- Per-page markdown available at `*.md.ts` endpoint files in `src/pages/`
-- Character encoding applied via `removeEmojis()` from `src/utils/removeEmojis.ts`
-- Markdown response utility in `src/utils/markdownResponse.ts`
+- `npm run check` - Full validation: Astro type check + build + wrangler patch
+- `npm run build` - Production build: `astro check && astro build` + wrangler patch
+- `npm run lint` - ESLint code quality
+- `npm run dev` - Dev server on port 4321
+- `npm run preview` - Preview production build locally
+- `npm run cf-typegen` - Generate Cloudflare Workers types
 
-## AI Collaboration Strategy
+### Data-Driven Architecture
+
+Business data is centralised in `src/data/` and consumed by page components:
+
+- `consultation.ts` - Service offerings, engagement models, case studies with metrics
+- `expertise.ts` - Technical skills, platform expertise, AI tooling, GitHub project showcase
+- `workExperience.ts` - Professional experience with achievements and technologies
+- `links.ts` - Centralised external URLs (Calendly, LinkedIn, GitHub)
+
+This separates presentation from data for maintainability and type safety.
+
+### Cloudflare-Specific Details
+
+- **Compatibility date**: `2026-03-01` with `nodejs_compat` flag
+- **Observability**: Enabled in `wrangler.json` with source map uploads
+- **CF request headers used**: `CF-Connecting-IP` (Turnstile), `CF-Ray` (metrics), `CF-IPCountry` (metrics), `CF-IPColo` (metrics)
+- **Rate limiting**: Configured via Cloudflare WAF dashboard rules (not in code)
+- **Crawler Hints**: Enabled via Cloudflare dashboard
+
+## AI Collaboration
 
 ### Using Gemini CLI for Complex Debugging
 
-When facing complex technical issues requiring deep analysis, collaborate with Google's Gemini AI:
+For complex issues requiring deep analysis:
 
 ```bash
 gemini -p "YOUR_DETAILED_ANALYSIS_REQUEST"
 ```
 
-**Best Practices:**
-
-1. Provide comprehensive context: error symptoms, what works vs doesn't, code snippets, debugging attempts
-2. Request "ULTRATHINK" analysis for deep root cause investigation
-3. Compare approaches: different AI models may identify issues others missed
-4. Cross-validate solutions: use insights from one AI to improve solutions from another
-
-**Valuable for:**
-
-- Complex routing and middleware issues
-- Cross-platform compatibility problems
-- Performance optimisation challenges
-- Security implementation reviews
-
-## Development Workflow
-
-### Validation Before Commits
-
-- **Full Check**: `npm run check` - Astro type check + build + wrangler patch
-- **Lint**: `npm run lint` - ESLint code quality validation
-- **Build**: `npm run build` - `astro check && astro build` + post-build wrangler patch (includes sitemap generation)
-
-### Data-Driven Architecture
-
-- **Page Components**: Astro pages in `src/pages/`
-- **Reusable Components**: Astro components in `src/components/`
-- **Business Data**: Centralised in `src/data/` directory
-  - `consultation.ts` - Service offerings, pricing
-  - `expertise.ts` - Technical skills, GitHub projects
-  - `workExperience.ts` - Professional experience
-- **Pattern**: Separate presentation logic from business data for maintainability
-
-### File Locations
-
-- **Pages**: `src/pages/` (Astro file-based routing)
-- **Components**: `src/components/` (Astro components)
-- **Layouts**: `src/layouts/BaseLayout.astro` (main layout)
-- **Actions**: `src/actions/index.ts` (contact form)
-- **Worker Entry**: `src/worker.ts` (CSP nonces, security headers, HTMLRewriter)
-- **Build Scripts**: `scripts/patch-wrangler.mjs` (post-build wrangler config patch)
-- **Data**: `src/data/` (business data files)
-- **Assets**: `src/assets/` (images, logos, flags, icons)
-- **Styles**: `src/styles/` (App.css, index.css)
-- **Utilities**: `src/utils/` (removeEmojis.ts, markdownResponse.ts)
-- **Static Assets**: `public/` (SEO verification, favicons, redirects)
-- **Build Output**: `dist/` (auto-generated, git-ignored)
-
-## Key Technical Patterns
-
-### Astro Component Architecture
-
-- File-based routing with `.astro` page components
-- Astro components for reusable UI (NavigationBox, Footer, ContactForm, SEO)
-- Vanilla JavaScript for interactivity (breathing animation, navigation scroll)
-- Native `<details>/<summary>` for accordion UI (case studies)
-- CSS View Transitions for smooth page navigation (zero-JS)
-- Astro prefetch for near-instant navigation
-
-### Content Security Policy (CSP)
-
-- Per-request cryptographic nonces replace `'unsafe-inline'` in `script-src`
-- `src/worker.ts` is the custom Worker entry point (set via `"main"` in `wrangler.json`)
-- Wraps `@astrojs/cloudflare/handler`'s `handle()` function
-- `HTMLRewriter` injects `nonce=""` on all `<script>` tags except `type="application/ld+json"` (streaming, no buffering)
-- `'strict-dynamic'` in CSP means scripts loaded by nonced scripts (e.g., GTM child scripts) are auto-trusted
-- `Cache-Control: no-store` on HTML responses ensures nonces in HTML always match the CSP header
-- Host allowlists in `script-src` are kept as fallbacks for browsers not supporting `'strict-dynamic'`
-- Adapter's `config.main` uses nullish coalescing (`??`), so setting `main` in `wrangler.json` is safe
-
-### Environment Variables
-
-- Type-safe secrets via `astro:env/server` (configured in `astro.config.mjs` env schema)
-- `RESEND_API_KEY` - Email delivery for contact form
-- `TURNSTILE_SECRET_KEY` - Server-side Turnstile verification
-- `TURNSTILE_SITE_KEY` - Client-side Turnstile widget (public)
-
-### Spam Protection
-
-- Cloudflare Turnstile widget on contact form (replaces reCAPTCHA)
-- Server-side token verification in Astro Action
-- Rate limiting configured via Cloudflare WAF dashboard rules (not in code)
-
-### Testing
-
-- No test framework currently configured
-- Can add Vitest if needed
-- Use `npm run preview` for local production build testing
+Valuable for: complex routing issues, cross-platform compatibility, performance optimisation, security reviews. Provide comprehensive context and request "ULTRATHINK" for deep root cause analysis.
 
 ## Notes
 
-- Check `package.json` for dependency versions (not listed here to avoid staleness)
-- File structure discoverable via `ls` and `tree` commands
-- Dev server runs on port 4321 (Astro default)
-- Cloudflare acquired Astro in January 2026 - the `@astrojs/cloudflare` adapter is first-party
+- Dev server: port 4321 (Astro default)
+- Cloudflare acquired Astro in January 2026 - `@astrojs/cloudflare` is first-party
 - No test suite configured (suggest Vitest if needed)
+- `npm run preview` for local production build testing
+- Check `package.json` for dependency versions (not listed here to avoid staleness)
+- Image format: WebP for screenshots, SVG/PNG for logos, with lazy loading and `decoding="async"`
+- 404 page includes ASCII art and navigation links

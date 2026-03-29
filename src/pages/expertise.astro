@@ -17,6 +17,7 @@ const imageMap: Record<string, ImageMetadata> = {
   automationDiagramImage,
 };
 
+import { sectionIcons } from '../utils/sectionIcons';
 ---
 
 <BaseLayout
@@ -27,12 +28,12 @@ const imageMap: Record<string, ImageMetadata> = {
     <h1>Expertise</h1>
 
     <section class="consultancy-section">
-      <h2>{expertiseData.intro.title}</h2>
+      <h2><span class="section-icon" aria-hidden="true" set:html={sectionIcons.rocket} />{expertiseData.intro.title}</h2>
       <p>{expertiseData.intro.paragraph}</p>
     </section>
 
     <section class="showcase-section">
-      <h2>{expertiseData.showcase.title}</h2>
+      <h2><span class="section-icon" aria-hidden="true" set:html={sectionIcons.layers} />{expertiseData.showcase.title}</h2>
       <div class="carousel">
         <div class="carousel-viewport">
           <div class="carousel-track">
@@ -95,7 +96,7 @@ const imageMap: Record<string, ImageMetadata> = {
     </section>
 
     <section class="leadership-section">
-      <h2>{expertiseData.leadershipExpertise.title}</h2>
+      <h2><span class="section-icon" aria-hidden="true" set:html={sectionIcons.users} />{expertiseData.leadershipExpertise.title}</h2>
       <p>{expertiseData.leadershipExpertise.paragraph}</p>
       <div class="skills-grid">
         {expertiseData.leadershipExpertise.categories.map(category => (
@@ -110,7 +111,7 @@ const imageMap: Record<string, ImageMetadata> = {
     </section>
 
     <section class="technical-skills-section">
-      <h2>🛠️ Technical Expertise & Platform Mastery</h2>
+      <h2><span class="section-icon" aria-hidden="true" set:html={sectionIcons.wrench} />Technical Expertise & Platform Mastery</h2>
       <div class="skills-grid">
         {expertiseData.skillsGrid.map(category => (
           <div class="skill-category">
@@ -124,7 +125,7 @@ const imageMap: Record<string, ImageMetadata> = {
     </section>
 
     <section class="ai-tooling-section">
-      <h2>{expertiseData.aiTooling.title}</h2>
+      <h2><span class="section-icon" aria-hidden="true" set:html={sectionIcons.cpu} />{expertiseData.aiTooling.title}</h2>
       <p>{expertiseData.aiTooling.paragraph}</p>
       <div class="skills-grid">
         {expertiseData.aiTooling.categories.map(category => (
@@ -139,7 +140,7 @@ const imageMap: Record<string, ImageMetadata> = {
     </section>
 
     <section class="platform-experience">
-      <h2>{expertiseData.platformExperience.title}</h2>
+      <h2><span class="section-icon" aria-hidden="true" set:html={sectionIcons.trendingUp} />{expertiseData.platformExperience.title}</h2>
       <p>{expertiseData.platformExperience.paragraph}</p>
       <div class="skills-minimal-pills">
         {expertiseData.platformExperience.platforms.map(platform => <span class="skill-pill-minimal">{platform}</span>)}
@@ -147,16 +148,20 @@ const imageMap: Record<string, ImageMetadata> = {
     </section>
 
     <section class="github-contributions">
-      <h2>{expertiseData.githubContributions.title}</h2>
+      <h2><span class="section-icon" aria-hidden="true" set:html={sectionIcons.gitBranch} />{expertiseData.githubContributions.title}</h2>
 
-      <ul class="opensource-list">
+      <div class="opensource-grid">
         {expertiseData.githubContributions.contributions.map(contribution => (
-          <li>
-            <a href={contribution.url} target="_blank" rel="noopener noreferrer">{contribution.title}</a>
-            <span class="opensource-description"> - {contribution.description}</span>
-          </li>
+          <a href={contribution.url} target="_blank" rel="noopener noreferrer" class="opensource-tile">
+            <div class="opensource-tile-header">
+              <svg class="opensource-tile-icon" width="20" height="20" viewBox="0 0 16 16" fill="currentColor"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"></path></svg>
+              <h3>{contribution.title}</h3>
+            </div>
+            <p class="opensource-tile-description">{contribution.description}</p>
+            <span class="opensource-tile-link">View on GitHub &rarr;</span>
+          </a>
         ))}
-      </ul>
+      </div>
 
       <div class="github-activity">
         <h3>GitHub Contribution Activity</h3>

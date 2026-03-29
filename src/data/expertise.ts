@@ -2,11 +2,11 @@ import { GITHUB_URL, UTMHUB_URL, ROTTOSNORKEL_URL } from './links';
 
 export const expertiseData = {
   intro: {
-    title: '🚀 Strategic Technology Leadership & AI Innovation',
+    title: 'Strategic Technology Leadership & AI Innovation',
     paragraph: 'Senior technology leader bridging cutting-edge AI capabilities with practical business outcomes. I specialise in building intelligent automation systems, advanced measurement frameworks, and leading cross-functional teams to implement scalable technology solutions.',
   },
   showcase: {
-    title: '🏗️ What I Build',
+    title: 'What I Build',
     projects: [
       {
         title: 'UTMHub',
@@ -58,7 +58,7 @@ export const expertiseData = {
     ],
   },
   leadershipExpertise: {
-    title: '👥 Leadership & Strategy',
+    title: 'Leadership & Strategy',
     paragraph: 'I build, mentor, and lead high-performance teams while driving exceptional client relationships and stakeholder engagement. My approach combines systematic people development with strategic business alignment - growing teams and businesses together.',
     categories: [
       {
@@ -184,7 +184,7 @@ export const expertiseData = {
     },
   ],
   aiTooling: {
-    title: '🤖 AI Coding Assistants & Personal AI Systems',
+    title: 'AI Coding Assistants & Personal AI Systems',
     paragraph: 'Hands-on expertise setting up teams with AI coding assistants and building personal knowledge systems powered by AI. I help developers and professionals adopt these tools effectively - from configuring Claude Code with best practices and conventions, to designing Life OS architectures that turn AI assistants into genuine productivity multipliers.',
     categories: [
       {
@@ -213,14 +213,14 @@ export const expertiseData = {
     ],
   },
   platformExperience: {
-    title: '📈 Advertising & Programmatic Platform Expertise',
+    title: 'Advertising & Programmatic Platform Expertise',
     paragraph: 'Extensive hands-on experience across addressable and programmatic media buying, supply path optimisation (SPO), and bid request analysis across major advertising platforms. Specialising in cross-platform attribution, server-side tracking implementations, and martech solution architecture - combining AI-driven optimisation strategies with deep technical expertise in enterprise-scale campaign operations.',
     platforms: [
       'Meta', 'Google Ads', 'Teads', 'DV360', 'CM360', 'SA360', 'TheTradeDesk', 'Vistar Media', 'Yahoo DSP', 'TikTok Ads', 'Zemanta', 'Snapchat', 'Spotify', 'Linkedin', 'Taboola', 'Outbrain', 'Quora', 'X Ads', 'Reddit',
     ],
   },
   githubContributions: {
-    title: '👨🏻‍💻 Open Source & Community',
+    title: 'Open Source & Community',
     contributions: [
       {
         title: 'Cloudflare Workers React Boilerplate',
