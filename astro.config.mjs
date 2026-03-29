@@ -33,10 +33,7 @@ export default defineConfig({
     service: passthroughImageService(),
   },
 
-  prefetch: {
-    prefetchAll: true,
-    defaultStrategy: 'hover',
-  },
+  prefetch: false,
 
   env: {
     schema: {
