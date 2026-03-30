@@ -138,6 +138,11 @@ a:hover {
   view-transition-name: navigation;
 }
 
+::view-transition-old(navigation),
+::view-transition-new(navigation) {
+  animation: none;
+}
+
 .navigation-box.collapsed .nav-box-content {
   display: none;
 }
