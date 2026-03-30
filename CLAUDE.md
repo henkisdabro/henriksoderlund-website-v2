@@ -11,7 +11,7 @@ Henrik Soderlund's professional portfolio website. Migrated from React SPA (Vite
 - **Rendering**: Hybrid - 5 prerendered pages (CDN edge) + 1 SSR page (contact form via Astro Actions)
 - **Data Layer**: Centralised TypeScript data files in `src/data/`
 - **Routing**: Astro file-based routing (`src/pages/`)
-- **Analytics**: Server-side GTM on custom domain (`load.sgtm.henriksoderlund.com`) + Fathom Analytics (`api.fouanalytics.com`)
+- **Analytics**: Server-side GTM on custom domain (`load.sgtm.henriksoderlund.com`) + Fou Analytics (`api.fouanalytics.com`)
 
 ## Critical Rules
 
@@ -28,7 +28,7 @@ Critical files that must NEVER be deleted:
 - `astro.config.mjs` - Astro configuration (output mode, adapter, integrations, env schema)
 - `wrangler.json` - Cloudflare Workers configuration
 - `package.json` - Dependencies and build scripts
-- `src/layouts/BaseLayout.astro` - Main layout (sGTM, Fathom, JSON-LD, view transitions, SEO, dataLayer)
+- `src/layouts/BaseLayout.astro` - Main layout (sGTM, Fou Analytics, JSON-LD, view transitions, SEO, dataLayer)
 - `src/worker.ts` - Custom Worker entry (CSP nonces, security headers, HTMLRewriter)
 - `src/actions/index.ts` - Astro Actions (contact form with Turnstile + Resend + Zod)
 - `src/styles/theme.css` - Dark/light mode design tokens (40+ CSS variables)
@@ -89,7 +89,7 @@ All visitors receive identical full HTML. No dual rendering or bot detection.
 
 **CSP nonces**: Per-request nonces via `crypto.randomUUID()`. Cloudflare HTMLRewriter injects `nonce=""` on all `<script>` tags except `type="application/ld+json"` (streaming, no buffering). `'strict-dynamic'` means GTM child scripts inherit trust automatically. `Cache-Control: no-store` on HTML responses ensures nonces always match the CSP header. Host allowlists in `script-src` are fallbacks for browsers without `'strict-dynamic'` support.
 
-**CSP allowlisted domains** (in `src/worker.ts`): fouanalytics.com (Fathom), sgtm.henriksoderlund.com (sGTM), tagmanager.google.com, google-analytics.com, static.cloudflareinsights.com, challenges.cloudflare.com, fonts.googleapis.com, fonts.gstatic.com, ghchart.rshah.org, and others.
+**CSP allowlisted domains** (in `src/worker.ts`): fouanalytics.com (Fou Analytics), sgtm.henriksoderlund.com (sGTM), tagmanager.google.com, google-analytics.com, static.cloudflareinsights.com, challenges.cloudflare.com, fonts.googleapis.com, fonts.gstatic.com, ghchart.rshah.org, and others.
 
 **`run_worker_first` and dev mode**: Required in production so the Worker processes prerendered pages, but MUST NOT be in source `wrangler.json` (the Cloudflare Vite plugin picks it up in dev mode and routes Vite's assets through the Worker, causing 404s). Added only to built output via `scripts/patch-wrangler.mjs`.
 
@@ -98,7 +98,7 @@ All visitors receive identical full HTML. No dual rendering or bot detection.
 ### Analytics and Tracking
 
 - **sGTM**: Container `GTM-FWR4` loaded from custom domain `load.sgtm.henriksoderlund.com`
-- **Fathom**: Pixel tracking via `api.fouanalytics.com` with noscript fallback
+- **Fou Analytics**: Pixel tracking via `api.fouanalytics.com` with noscript fallback
 - **dataLayer**: Global `window.dataLayer` initialised before GTM with environment detection (production vs development based on hostname)
 - **Custom events**: `contact_form_submission` event pushed on successful form submit, with session storage deduplication to prevent duplicates
 - **Cloudflare Insights**: Platform-level observability (CSP configured for `cloudflareinsights.com`)
@@ -183,7 +183,7 @@ src/
   actions/index.ts              # Contact form (Turnstile + Resend + Zod validation)
   components/                   # NavigationBox, Footer, ContactForm, SEO, ThemeToggle, GitHubLink, LinkedInLink
   data/                         # Business data (consultation, expertise, links, workExperience)
-  layouts/BaseLayout.astro      # Main layout (sGTM, Fathom, dataLayer, JSON-LD, view transitions)
+  layouts/BaseLayout.astro      # Main layout (sGTM, Fou Analytics, dataLayer, JSON-LD, view transitions)
   pages/                        # File-based routing (pages, API endpoints, markdown endpoints)
   styles/                       # App.css (~44KB), index.css, theme.css (design tokens)
   utils/                        # removeEmojis, markdownResponse, pageMarkdown

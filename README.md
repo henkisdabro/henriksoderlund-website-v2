@@ -55,7 +55,7 @@ Professional portfolio website for Henrik Soderlund - technology leader and AI i
 | Spam Protection | [Cloudflare Turnstile](https://developers.cloudflare.com/turnstile/) | Privacy-preserving contact form protection |
 | Email | [Resend](https://resend.com/) | Contact form email delivery |
 | Form Validation | [Zod](https://zod.dev/) (via Astro Actions) | Schema-based input validation |
-| Analytics | Server-side GTM + [Fathom](https://usefathom.com/) | Privacy-focused analytics on custom sGTM domain |
+| Analytics | Server-side GTM + [Fou Analytics](https://usefathom.com/) | Privacy-focused analytics on custom sGTM domain |
 | SEO | [@astrojs/sitemap](https://docs.astro.build/en/guides/integrations-guide/sitemap/) + JSON-LD | Automatic sitemap, structured data |
 | Fonts | [JetBrains Mono](https://www.jetbrains.com/lp/mono/) | Coding font for dark mode (6 weights) |
 | Linting | [ESLint 9](https://eslint.org/) | Code quality with TypeScript support |
@@ -75,7 +75,7 @@ Professional portfolio website for Henrik Soderlund - technology leader and AI i
 ### Analytics and Tracking
 
 - **Server-side Google Tag Manager (sGTM)** - Custom domain (`load.sgtm.henriksoderlund.com`) for first-party data collection
-- **Fathom Analytics** - Privacy-focused analytics via `api.fouanalytics.com` with noscript fallback
+- **Fou Analytics** - Privacy-focused analytics via `api.fouanalytics.com` with noscript fallback
 - **dataLayer** - Global `window.dataLayer` with environment detection (production vs development)
 - **Custom events** - `contact_form_submission` event with session-based deduplication
 - **Cloudflare Insights** - Platform-level observability
@@ -157,7 +157,7 @@ src/
     expertise.ts                #   Technical skills, GitHub projects, AI tooling
     links.ts                    #   External URLs (Calendly, LinkedIn, GitHub)
     workExperience.ts           #   Professional experience with achievements
-  layouts/BaseLayout.astro      # Main layout: sGTM, Fathom, JSON-LD, view transitions, SEO
+  layouts/BaseLayout.astro      # Main layout: sGTM, Fou Analytics, JSON-LD, view transitions, SEO
   pages/                        # File-based routing
     index.astro                 #   Homepage with breathing animation
     expertise.astro             #   Skills and project carousel
