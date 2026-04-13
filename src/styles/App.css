@@ -875,16 +875,6 @@ a:hover {
     box-shadow: none !important;
   }
 
-  .dashboard-image,
-  .wiki-image {
-    max-width: 100% !important;
-    height: auto !important;
-    margin: 6pt 0 !important;
-    border-radius: 0 !important;
-    box-shadow: none !important;
-    border: 0.5pt solid #ccc !important;
-  }
-
   /* Links */
   a {
     color: #000 !important;

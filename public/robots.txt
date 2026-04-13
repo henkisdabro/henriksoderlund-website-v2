@@ -88,12 +88,9 @@ Allow: /llms.txt
 Allow: /llms-full.txt
 Allow: /*.md
 
-# Allow redirected paths for backward compatibility
-Allow: /skills
-
 # Request reasonable crawl behaviour
 # Note: Ignored by Google, honoured by Bing and Yandex
 Crawl-delay: 1
 
 # === SITEMAP LOCATION ===
-Sitemap: https://www.henriksoderlund.com/sitemap.xml
+Sitemap: https://www.henriksoderlund.com/sitemap-index.xml

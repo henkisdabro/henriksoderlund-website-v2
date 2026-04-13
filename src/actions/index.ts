@@ -9,7 +9,7 @@ export const server = {
     accept: 'form',
     input: z.object({
       name: z.string().min(1, 'Name is required').max(100),
-      email: z.string().email('Please enter a valid email address').max(200),
+      email: z.string().email({ error: 'Please enter a valid email address' }).max(200),
       message: z
         .string()
         .min(10, 'Message must be at least 10 characters')

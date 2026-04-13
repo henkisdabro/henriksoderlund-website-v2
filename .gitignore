@@ -74,6 +74,9 @@ Desktop.ini
 # Astro
 .astro/
 
+# Build artifacts
+.llms-cache.json
+
 # Cloudflare Workers / Wrangler
 .wrangler/
 .dev.vars*

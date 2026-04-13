@@ -20,7 +20,7 @@ function buildCSP(nonce: string): string {
   return CSP_TEMPLATE.replace('%%NONCE%%', `nonce-${nonce}`);
 }
 
-function setSecurityHeaders(headers: Headers, request: Request): void {
+function setSecurityHeaders(headers: Headers): void {
   headers.set('X-Frame-Options', 'DENY');
   headers.set('X-Content-Type-Options', 'nosniff');
   headers.set('Referrer-Policy', 'strict-origin-when-cross-origin');
@@ -29,20 +29,37 @@ function setSecurityHeaders(headers: Headers, request: Request): void {
   headers.set('Cross-Origin-Opener-Policy', 'same-origin');
   headers.set('Cross-Origin-Resource-Policy', 'cross-origin');
   headers.set('X-Permitted-Cross-Domain-Policies', 'none');
-
-  const host = request.headers.get('host');
-  if (host === 'www.henriksoderlund.com') {
-    headers.set('Link', `<${request.url}>; rel="canonical"`);
-  }
 }
 
 export default {
   async fetch(request: Request, env: Env, ctx: ExecutionContext): Promise<Response> {
+    const url = new URL(request.url);
+
+    // Wildcard redirect for legacy blog paths (Astro redirects can't use [...slug] on Cloudflare)
+    if (url.pathname.startsWith('/blog/')) {
+      url.pathname = '/';
+      const redirectResponse = Response.redirect(url.toString(), 301);
+      const redirectHeaders = new Headers(redirectResponse.headers);
+      setSecurityHeaders(redirectHeaders);
+      return new Response(null, { status: 301, headers: redirectHeaders });
+    }
+
     const response = await handle(request, env, ctx);
     const contentType = response.headers.get('content-type') || '';
     const headers = new Headers(response.headers);
-    setSecurityHeaders(headers, request);
+    setSecurityHeaders(headers);
     headers.delete('speculation-rules');
+
+    // Canonical Link header: pathname only (no query params), skip for non-2xx responses
+    const host = request.headers.get('host');
+    if (host === 'www.henriksoderlund.com' && response.status >= 200 && response.status < 300) {
+      headers.set('Link', `<https://www.henriksoderlund.com${url.pathname}>; rel="canonical"`);
+    }
+
+    // Prevent search engines from indexing text/markdown and text/plain endpoints
+    if (contentType.includes('text/markdown') || contentType.includes('text/plain')) {
+      headers.set('X-Robots-Tag', 'noindex');
+    }
 
     if (contentType.includes('text/html')) {
       const nonce = crypto.randomUUID();

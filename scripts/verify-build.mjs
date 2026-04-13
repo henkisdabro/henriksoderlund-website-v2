@@ -2,7 +2,7 @@
 // (e.g. env var validation errors that produce 0-byte HTML files).
 // Run after `npm run build` or as part of `npm run check`.
 
-import { statSync, existsSync } from 'node:fs';
+import { statSync, existsSync, readFileSync } from 'node:fs';
 
 const RED = '\x1b[31m';
 const GREEN = '\x1b[32m';
@@ -27,6 +27,11 @@ const textEndpoints = [
   { path: 'dist/client/education.md', minBytes: 100 },
   { path: 'dist/client/contact.md', minBytes: 100 },
   { path: 'dist/client/index.html.md', minBytes: 100 },
+];
+
+const sitemapFiles = [
+  { path: 'dist/client/sitemap-index.xml', minBytes: 100 },
+  { path: 'dist/client/sitemap-0.xml', minBytes: 500 },
 ];
 
 const serverFiles = [
@@ -58,10 +63,18 @@ function check(label, files) {
 
 check('Prerendered HTML pages', htmlPages);
 check('Text/markdown endpoints', textEndpoints);
+check('Sitemap files', sitemapFiles);
 check('Server bundle', serverFiles);
 
+// Guard against stale sitemap.xml returning (must not exist in build output)
+if (existsSync('dist/client/sitemap.xml')) {
+  console.error(
+    `\n${RED}FAIL${RESET}: dist/client/sitemap.xml exists - stale static file must be removed from public/`,
+  );
+  failed++;
+}
+
 // Check wrangler.json has run_worker_first patched in
-import { readFileSync } from 'node:fs';
 const wranglerPath = 'dist/server/wrangler.json';
 if (existsSync(wranglerPath)) {
   const config = JSON.parse(readFileSync(wranglerPath, 'utf-8'));

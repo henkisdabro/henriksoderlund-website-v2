@@ -177,10 +177,10 @@ const websiteSchemaJSON = JSON.stringify({
     <SEO title={title} description={description} ogType={ogType} />
 
     <!-- Structured Data - Person Schema -->
-    <script type="application/ld+json" set:html={personSchemaJSON}></script>
+    <script type="application/ld+json" set:html={personSchemaJSON} is:inline></script>
 
     <!-- Structured Data - Website Schema -->
-    <script type="application/ld+json" set:html={websiteSchemaJSON}></script>
+    <script type="application/ld+json" set:html={websiteSchemaJSON} is:inline></script>
 
     <!-- Page-specific JSON-LD slot -->
     <slot name="head" />

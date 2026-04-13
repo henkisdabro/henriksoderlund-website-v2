@@ -60,7 +60,7 @@ const error = result?.error;
     </div>
     <script is:inline>
       // Explicit render callback - captures widget ID for theme toggle re-renders
-      function onTurnstileLoad() {
+      window.onTurnstileLoad = function() {
         var tw = document.querySelector('.cf-turnstile');
         if (!tw) return;
         var theme = document.documentElement.getAttribute('data-theme') || 'light';

@@ -69,7 +69,7 @@ jobs:
           done
 
           echo "=== Checking API endpoints ==="
-          for path in /health /llms.txt; do
+          for path in /health /llms.txt /sitemap-index.xml /sitemap-0.xml; do
             url="https://www.henriksoderlund.com${path}"
             tmpfile=$(mktemp)
             status=$(curl -s --compressed -o "$tmpfile" -w "%{http_code}" --max-time 10 "$url")
@@ -84,6 +84,18 @@ jobs:
               failed=1
             else
               echo "OK: $url ($status, $size bytes)"
+            fi
+          done
+
+          echo "=== Checking redirects ==="
+          for path in /skills /blog /about; do
+            url="https://www.henriksoderlund.com${path}"
+            status=$(curl -s -o /dev/null -w "%{http_code}" --max-time 10 "$url")
+            if [ "$status" -ne 301 ]; then
+              echo "::error::FAIL: $url should return 301 (got HTTP $status)"
+              failed=1
+            else
+              echo "OK: $url (301 redirect)"
             fi
           done
           [ "$failed" -eq 0 ] || exit 1

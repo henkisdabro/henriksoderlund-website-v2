@@ -64,8 +64,8 @@ const serviceSchema = {
   description="Strategic technology consultancy - AI automation, analytics implementation, and digital transformation. Working systems that deliver measurable outcomes."
 >
   <Fragment slot="head">
-    <script type="application/ld+json" set:html={JSON.stringify(serviceSchema)} />
-    <script type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
+    <script type="application/ld+json" set:html={JSON.stringify(serviceSchema)} is:inline />
+    <script type="application/ld+json" set:html={JSON.stringify(faqSchema)} is:inline />
   </Fragment>
 
   <div class="consultation-page">
