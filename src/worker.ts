@@ -1,5 +1,9 @@
 import { handle } from '@astrojs/cloudflare/handler';
 
+const SGTM_ORIGIN = 'https://sgtm.henriksoderlund.com';
+const SGTM_HOST = 'sgtm.henriksoderlund.com';
+const SGTM_PROXY_PREFIX = '/sgtm/';
+
 const CSP_TEMPLATE = [
   "default-src 'self'",
   "script-src '%%NONCE%%' 'strict-dynamic' https://*.fouanalytics.com https://api.fouanalytics.com https://sgtm.henriksoderlund.com https://load.sgtm.henriksoderlund.com https://tagmanager.google.com https://www.googletagmanager.com https://static.cloudflareinsights.com https://challenges.cloudflare.com https: 'unsafe-inline'",
@@ -55,19 +59,27 @@ export default {
   async fetch(request: Request, env: Env, ctx: ExecutionContext): Promise<Response> {
     const url = new URL(request.url);
 
-    // Proxy sGTM service worker for same-origin registration
-    if (url.pathname.startsWith('/_/service_worker/')) {
-      const sgtmUrl = new URL(url.pathname + url.search, 'https://sgtm.henriksoderlund.com');
-      const proxyResponse = await fetch(sgtmUrl.toString(), {
-        headers: { 'Service-Worker': request.headers.get('Service-Worker') || '' },
-      });
-      const headers = new Headers(proxyResponse.headers);
-      setSecurityHeaders(headers);
-      headers.set('Service-Worker-Allowed', '/');
-      return new Response(proxyResponse.body, {
-        status: proxyResponse.status,
-        headers,
-      });
+    // Proxy sGTM requests for same-origin tracking and service worker registration.
+    // Strips /sgtm/ prefix and forwards to the sGTM server container with Stape headers.
+    if (url.pathname.startsWith(SGTM_PROXY_PREFIX)) {
+      const targetPath = '/' + url.pathname.slice(SGTM_PROXY_PREFIX.length);
+      const proxyRequest = new Request(SGTM_ORIGIN + targetPath + url.search, request);
+      proxyRequest.headers.set('Host', SGTM_HOST);
+      proxyRequest.headers.set('X-From-Cdn', 'cf-stape');
+      const clientIP = request.headers.get('CF-Connecting-IP');
+      if (clientIP) {
+        proxyRequest.headers.set('X-Forwarded-For', clientIP);
+      }
+
+      const proxyResponse = await fetch(proxyRequest);
+
+      if (targetPath.startsWith('/_/service_worker/')) {
+        const headers = new Headers(proxyResponse.headers);
+        headers.set('Service-Worker-Allowed', '/');
+        return new Response(proxyResponse.body, { status: proxyResponse.status, headers });
+      }
+
+      return proxyResponse;
     }
 
     // Handle redirects before Astro routing
