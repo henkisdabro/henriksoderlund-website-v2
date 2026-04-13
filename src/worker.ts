@@ -6,13 +6,13 @@ const SGTM_PROXY_PREFIX = '/sgtm/';
 
 const CSP_TEMPLATE = [
   "default-src 'self'",
-  "script-src '%%NONCE%%' 'strict-dynamic' https://*.fouanalytics.com https://api.fouanalytics.com https://sgtm.henriksoderlund.com https://load.sgtm.henriksoderlund.com https://tagmanager.google.com https://www.googletagmanager.com https://static.cloudflareinsights.com https://challenges.cloudflare.com https: 'unsafe-inline'",
-  "connect-src 'self' https://*.fouanalytics.com https://api.fouanalytics.com wss://api.fouanalytics.com https://*.google-analytics.com https://analytics.google.com https://*.analytics.google.com https://sgtm.henriksoderlund.com https://load.sgtm.henriksoderlund.com https://stats.g.doubleclick.net https://apix.b2c.com https://cloudflareinsights.com",
+  "script-src '%%NONCE%%' 'strict-dynamic' https://*.fouanalytics.com https://api.fouanalytics.com https://load.sgtm.henriksoderlund.com https://tagmanager.google.com https://www.googletagmanager.com https://static.cloudflareinsights.com https://challenges.cloudflare.com https: 'unsafe-inline'",
+  "connect-src 'self' https://*.fouanalytics.com https://api.fouanalytics.com wss://api.fouanalytics.com https://*.google-analytics.com https://analytics.google.com https://*.analytics.google.com https://load.sgtm.henriksoderlund.com https://stats.g.doubleclick.net https://apix.b2c.com https://cloudflareinsights.com",
   "style-src 'self' 'unsafe-inline' https://tagmanager.google.com https://fonts.googleapis.com https://www.googletagmanager.com",
   "img-src 'self' data: https://www.googletagmanager.com https://*.google-analytics.com https://ssl.gstatic.com https://www.gstatic.com *.google.com *.google.com.au https://ghchart.rshah.org https://api.fouanalytics.com",
   "font-src 'self' data: https://fonts.gstatic.com",
-  "frame-src 'self' https://sgtm.henriksoderlund.com https://load.sgtm.henriksoderlund.com https://www.googletagmanager.com https://challenges.cloudflare.com",
-  "worker-src 'self' blob: https://sgtm.henriksoderlund.com",
+  "frame-src 'self' https://load.sgtm.henriksoderlund.com https://www.googletagmanager.com https://challenges.cloudflare.com",
+  "worker-src 'self' blob:",
   "child-src 'self' blob:",
   "object-src 'none'",
   "manifest-src 'self'",
