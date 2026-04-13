@@ -55,6 +55,21 @@ export default {
   async fetch(request: Request, env: Env, ctx: ExecutionContext): Promise<Response> {
     const url = new URL(request.url);
 
+    // Proxy sGTM service worker for same-origin registration
+    if (url.pathname.startsWith('/_/service_worker/')) {
+      const sgtmUrl = new URL(url.pathname + url.search, 'https://sgtm.henriksoderlund.com');
+      const proxyResponse = await fetch(sgtmUrl.toString(), {
+        headers: { 'Service-Worker': request.headers.get('Service-Worker') || '' },
+      });
+      const headers = new Headers(proxyResponse.headers);
+      setSecurityHeaders(headers);
+      headers.set('Service-Worker-Allowed', '/');
+      return new Response(proxyResponse.body, {
+        status: proxyResponse.status,
+        headers,
+      });
+    }
+
     // Handle redirects before Astro routing
     const redirectTarget = REDIRECTS[url.pathname];
     if (redirectTarget || url.pathname.startsWith('/blog/')) {
