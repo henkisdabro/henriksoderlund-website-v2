@@ -1,5 +1,6 @@
 ---
 export const prerender = true;
+import { Image } from 'astro:assets';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import { expertiseData } from '../data/expertise';
 import { GITHUB_URL } from '../data/links';
@@ -54,13 +55,10 @@ import { sectionIcons } from '../utils/sectionIcons';
                 >
                   <div class="showcase-card-image">
                     {hasImage ? (
-                      <img
-                        src={imageMap[project.image].src}
+                      <Image
+                        src={imageMap[project.image]}
                         alt={`${project.title} screenshot`}
-                        width={imageMap[project.image].width}
-                        height={imageMap[project.image].height}
-                        loading="lazy"
-                        decoding="async"
+                        loading="eager"
                       />
                     ) : (
                       <div class="showcase-card-placeholder">
@@ -546,6 +544,7 @@ import { sectionIcons } from '../utils/sectionIcons';
   display: flex;
   align-items: center;
   justify-content: center;
+  font-family: 'JetBrains Mono', monospace;
   box-shadow: 0 2px 8px var(--color-shadow);
   opacity: 0.75;
   transition: background 0.15s ease, color 0.15s ease, opacity 0.15s ease;

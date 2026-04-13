@@ -1,5 +1,6 @@
 ---
 export const prerender = true;
+import { Image } from 'astro:assets';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import { workExperienceData } from '../data/workExperience';
 import { slugify } from '../utils/slugify';
@@ -15,7 +16,7 @@ import '../styles/content-entry.css';
 
     {workExperienceData.map(job => (
       <section class="content-entry">
-        <h2 id={slugify(job.title)}><img src={typeof job.flag === 'string' ? job.flag : job.flag.src} alt={job.location} class="country-flag" width="16" height="12" /> {job.title}</h2>
+        <h2 id={slugify(job.title)}><Image src={job.flag} alt={job.location} class="country-flag" width={16} height={12} /> {job.title}</h2>
         <p class="dates">{job.dates}</p>
         {job.description.map(p => <p>{p}</p>)}
       </section>
