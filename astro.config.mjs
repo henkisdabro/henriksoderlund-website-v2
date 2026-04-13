@@ -8,23 +8,6 @@ export default defineConfig({
   adapter: cloudflare(),
   trailingSlash: 'never',
 
-  redirects: {
-    '/sitemap.xml': '/sitemap-index.xml',
-    '/skills': '/expertise',
-    '/skill': '/expertise',
-    '/blog': '/',
-    '/content/skills': '/expertise',
-    '/content/work-experience': '/work-experience',
-    '/content/education': '/education',
-    '/content/consultation': '/consultancy',
-    '/about': '/',
-    '/skills.html': '/expertise',
-    '/work-experience.html': '/work-experience',
-    '/education.html': '/education',
-    '/consultation.html': '/consultancy',
-    '/index.md': '/index.html.md',
-  },
-
   integrations: [
     sitemap({
       serialize: (item) => {

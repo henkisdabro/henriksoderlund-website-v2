@@ -31,17 +31,37 @@ function setSecurityHeaders(headers: Headers): void {
   headers.set('X-Permitted-Cross-Domain-Policies', 'none');
 }
 
+// Redirect map: Astro redirects config and _redirects both produce 200 rewrites on
+// Cloudflare Workers (the asset binding intercepts before Astro's SSR routes), so all
+// redirects must be handled here in the Worker before calling handle().
+const REDIRECTS: Record<string, string> = {
+  '/sitemap.xml': '/sitemap-index.xml',
+  '/skills': '/expertise',
+  '/skill': '/expertise',
+  '/blog': '/',
+  '/content/skills': '/expertise',
+  '/content/work-experience': '/work-experience',
+  '/content/education': '/education',
+  '/content/consultation': '/consultancy',
+  '/about': '/',
+  '/skills.html': '/expertise',
+  '/work-experience.html': '/work-experience',
+  '/education.html': '/education',
+  '/consultation.html': '/consultancy',
+  '/index.md': '/index.html.md',
+};
+
 export default {
   async fetch(request: Request, env: Env, ctx: ExecutionContext): Promise<Response> {
     const url = new URL(request.url);
 
-    // Wildcard redirect for legacy blog paths (Astro redirects can't use [...slug] on Cloudflare)
-    if (url.pathname.startsWith('/blog/')) {
-      url.pathname = '/';
-      const redirectResponse = Response.redirect(url.toString(), 301);
-      const redirectHeaders = new Headers(redirectResponse.headers);
-      setSecurityHeaders(redirectHeaders);
-      return new Response(null, { status: 301, headers: redirectHeaders });
+    // Handle redirects before Astro routing
+    const redirectTarget = REDIRECTS[url.pathname];
+    if (redirectTarget || url.pathname.startsWith('/blog/')) {
+      url.pathname = redirectTarget || '/';
+      const headers = new Headers({ Location: url.toString() });
+      setSecurityHeaders(headers);
+      return new Response(null, { status: 301, headers });
     }
 
     const response = await handle(request, env, ctx);
