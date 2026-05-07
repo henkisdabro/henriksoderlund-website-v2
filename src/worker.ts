@@ -59,6 +59,13 @@ export default {
   async fetch(request: Request, env: Env, ctx: ExecutionContext): Promise<Response> {
     const url = new URL(request.url);
 
+    if (url.hostname === 'henriksoderlund.com') {
+      return Response.redirect(
+        `https://www.henriksoderlund.com${url.pathname}${url.search}`,
+        301
+      );
+    }
+
     // Proxy sGTM requests for same-origin tracking and service worker registration.
     // Strips /sgtm/ prefix and forwards to the sGTM server container with Stape headers.
     if (url.pathname.startsWith(SGTM_PROXY_PREFIX)) {

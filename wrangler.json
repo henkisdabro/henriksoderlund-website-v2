@@ -9,5 +9,8 @@
   "upload_source_maps": true,
   "vars": {
     "TURNSTILE_SITE_KEY": "0x4AAAAAACxasQskYMJsn7bk"
-  }
+  },
+  "routes": [
+    { "pattern": "henriksoderlund.com/*", "zone_name": "henriksoderlund.com" }
+  ]
 }

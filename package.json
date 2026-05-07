@@ -15,20 +15,20 @@
     "publish": true
   },
   "dependencies": {
-    "@astrojs/check": "^0.9.8",
-    "@astrojs/cloudflare": "^13.1.4",
-    "@astrojs/sitemap": "^3.7.1",
-    "astro": "^6.1.1",
-    "resend": "^6.9.4"
+    "@astrojs/check": "^0.9.9",
+    "@astrojs/cloudflare": "^13.4.0",
+    "@astrojs/sitemap": "^3.7.2",
+    "astro": "^6.3.0",
+    "resend": "^6.12.3"
   },
   "devDependencies": {
-    "@eslint/js": "^9.39.1",
-    "@types/node": "^24.10.1",
-    "eslint": "^9.39.1",
-    "globals": "16.5.0",
-    "typescript": "5.9.3",
-    "typescript-eslint": "^8.47.0",
-    "wrangler": "^4.49.0"
+    "@eslint/js": "^10.0.1",
+    "@types/node": "^25.6.0",
+    "eslint": "^10.3.0",
+    "globals": "17.6.0",
+    "typescript": "6.0.3",
+    "typescript-eslint": "^8.59.2",
+    "wrangler": "^4.88.0"
   },
   "scripts": {
     "dev": "astro dev",
