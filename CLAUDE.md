@@ -34,17 +34,17 @@ Critical files that must NEVER be deleted:
 - `src/styles/theme.css` - Dark/light mode design tokens (40+ CSS variables)
 - `.github/workflows/deploy.yml` - CI/CD pipeline
 
-**Before any cleanup**: run `npm run check`, never delete without explicit approval, review with `git status`.
+**Before any cleanup**: run `pnpm run check`, never delete without explicit approval, review with `git status`.
 
 > **History**: August 2025 - Accidental `index.html` deletion caused complete site outage in the previous Vite-based stack.
 
 ### Deployment
 
-**Production deployment is automatic via GitHub Actions on push to `main`.** DO NOT use `npm run deploy` for production.
+**Production deployment is automatic via GitHub Actions on push to `main`.** DO NOT use `pnpm run deploy` for production.
 
 The CI pipeline: lint, build, verify artifacts (HTML pages + markdown + text with minimum size thresholds), deploy via `wrangler-action`, smoke test all pages (HTTP status + body size).
 
-For local testing only: `npm run build`, `npm run preview`, `npm run deploy`.
+For local testing only: `pnpm run build`, `pnpm run deploy` (note: `pnpm run preview` is unsupported by the Cloudflare adapter - see "Local Dev Server and Redirect Testing").
 
 ## Content Standards
 
@@ -174,7 +174,7 @@ Type-safe via `astro:env/server` (schema in `astro.config.mjs`):
 
 ### Redirects
 
-15 permanent (301) rules in `public/_redirects`: legacy Hugo/Thulite paths, `/skills` to `/expertise`, `.html` extensions to clean URLs, `/about` to `/`, markdown file redirects.
+Permanent (301) redirects are handled in `src/worker.ts` (the `REDIRECTS` map: ~20 paths, plus a `/blog/*` prefix rule and a naked-domain to `www` canonicalisation), NOT in `public/_redirects` (no such file - Cloudflare's asset binding intercepts before Astro routing, so redirects must run in the Worker). Covers: legacy Hugo/Thulite `/content/*` paths, `/skills`+`/skill`+`*.html` to `/expertise`, `/blog`+`/blog/*`+`/about` to `/`, legacy feeds (`/feed`, `/rss.xml`, `/atom.xml`, `/index.xml`) to `/`, `/sitemap.xml` to `/sitemap-index.xml`, `/index.md` to `/index.html.md`.
 
 ## File Locations
 
@@ -187,10 +187,9 @@ src/
   pages/                        # File-based routing (pages, API endpoints, markdown endpoints)
   styles/                       # App.css (~44KB), index.css, theme.css (design tokens)
   utils/                        # removeEmojis, markdownResponse, pageMarkdown
-  worker.ts                     # Custom Worker entry (CSP nonces, security headers, HTMLRewriter)
+  worker.ts                     # Custom Worker entry (CSP nonces, security headers, HTMLRewriter, 301 redirects)
 scripts/patch-wrangler.mjs      # Post-build wrangler config patch (run_worker_first)
 scripts/verify-build.mjs        # Build artifact verification (size thresholds, completeness)
-public/_redirects               # 15 redirect rules
 public/fonts/                   # JetBrains Mono WOFF2 (6 weights)
 .github/workflows/deploy.yml   # CI/CD: lint, build, verify, deploy, smoke test
 ```
@@ -207,22 +206,22 @@ public/fonts/                   # JetBrains Mono WOFF2 (6 weights)
 
 ### Validation Commands
 
-- `npm run check` - Full validation: Astro type check + build + wrangler patch + artifact verification
-- `npm run build` - Production build: `astro check && astro build` + wrangler patch + artifact verification
-- `npm run lint` - ESLint code quality
-- `npm run dev` - Dev server on port 4321
-- `npm run preview` - Preview production build locally
-- `npm run cf-typegen` - Generate Cloudflare Workers types
+- `pnpm run check` - Full validation: Astro type check + build + wrangler patch + artifact verification
+- `pnpm run build` - Production build: `astro check && astro build` + wrangler patch + artifact verification
+- `pnpm run lint` - ESLint code quality
+- `pnpm run dev` - Dev server on port 4321
+- `pnpm run preview` - UNSUPPORTED by the Cloudflare adapter (see "Local Dev Server and Redirect Testing")
+- `pnpm run cf-typegen` - Generate Cloudflare Workers types
 - `node scripts/verify-build.mjs` - Standalone build artifact verification (checks HTML pages, markdown endpoints, text files, server bundle, and `run_worker_first` patch)
 
 ### Local Dev Server and Redirect Testing
 
 Spinning up a local server to verify Worker behaviour (redirects, headers, CSP) has three known traps. Follow this exact approach instead of improvising.
 
-**1. `npm run preview` does NOT work for this project.** The script is `astro preview`, which the `@astrojs/cloudflare` adapter does not support with `output: 'server'`. It exits without binding a port (no error in some shells). Do not use it to test Worker logic. For Worker-level testing, run the built bundle under Wrangler:
+**1. `pnpm run preview` does NOT work for this project.** The script is `astro preview`, which the `@astrojs/cloudflare` adapter does not support with `output: 'server'`. It exits without binding a port (no error in some shells). Do not use it to test Worker logic. For Worker-level testing, run the built bundle under Wrangler:
 
 ```bash
-npm run build
+pnpm run build
 npx wrangler dev -c dist/server/wrangler.json --port 8801 --local --ip 127.0.0.1
 ```
 
@@ -275,8 +274,8 @@ Valuable for: complex routing issues, cross-platform compatibility, performance 
 
 - Dev server: port 4321 (Astro default)
 - Cloudflare acquired Astro in January 2026 - `@astrojs/cloudflare` is first-party
-- Build verification via `scripts/verify-build.mjs` (runs automatically in `npm run build`)
-- Local Worker testing: see "Local Dev Server and Redirect Testing" (do NOT use `npm run preview` - unsupported by the Cloudflare adapter)
+- Build verification via `scripts/verify-build.mjs` (runs automatically in `pnpm run build`)
+- Local Worker testing: see "Local Dev Server and Redirect Testing" (do NOT use `pnpm run preview` - unsupported by the Cloudflare adapter)
 - Check `package.json` for dependency versions (not listed here to avoid staleness)
 - Image format: WebP for screenshots, SVG/PNG for logos, with lazy loading and `decoding="async"`
 - 404 page includes ASCII art and navigation links

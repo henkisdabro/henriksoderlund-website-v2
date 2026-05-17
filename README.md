@@ -2,11 +2,12 @@
 
 [![Live Site](https://img.shields.io/badge/live-henriksoderlund.com-0ea5e9?style=flat&logo=googlechrome&logoColor=white)](https://www.henriksoderlund.com/)
 [![Astro](https://img.shields.io/badge/astro-6-BC52EE?style=flat&logo=astro&logoColor=white)](https://astro.build/)
-[![TypeScript](https://img.shields.io/badge/typescript-5.9-3178C6?style=flat&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
+[![TypeScript](https://img.shields.io/badge/typescript-6.0-3178C6?style=flat&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
 [![Cloudflare Workers](https://img.shields.io/badge/cloudflare%20workers-deployed-F38020?style=flat&logo=cloudflare&logoColor=white)](https://workers.cloudflare.com/)
 [![CI/CD](https://img.shields.io/github/actions/workflow/status/henkisdabro/henriksoderlund-website-v2/deploy.yml?branch=main&label=deploy&logo=githubactions&logoColor=white)](https://github.com/henkisdabro/henriksoderlund-website-v2/actions)
 [![Node.js](https://img.shields.io/badge/node.js-24_LTS-339933?style=flat&logo=node.js&logoColor=white)](https://nodejs.org/)
-[![ESLint](https://img.shields.io/badge/eslint-9-4B32C3?style=flat&logo=eslint&logoColor=white)](https://eslint.org/)
+[![pnpm](https://img.shields.io/badge/pnpm-11-F69220?style=flat&logo=pnpm&logoColor=white)](https://pnpm.io/)
+[![ESLint](https://img.shields.io/badge/eslint-10-4B32C3?style=flat&logo=eslint&logoColor=white)](https://eslint.org/)
 [![License](https://img.shields.io/badge/licence-private-lightgrey?style=flat)](#)
 
 Professional portfolio website for Henrik Soderlund - technology leader and AI innovation specialist. Built with Astro 6, deployed globally on Cloudflare Workers with hybrid rendering, per-request CSP nonces, server-side GTM, and dark mode theming.
@@ -25,7 +26,7 @@ Professional portfolio website for Henrik Soderlund - technology leader and AI i
               |                             |
      +--------v--------+          +--------v--------+
      |  Static Pages   |          |  SSR Contact    |
-     |  (5 pages, CDN) |          |  (Astro Actions)|
+     |  (6 pages, CDN) |          |  (Astro Actions)|
      +--------+--------+          +--------+--------+
               |                             |
               +--------------+--------------+
@@ -50,15 +51,16 @@ Professional portfolio website for Henrik Soderlund - technology leader and AI i
 | Framework | [Astro 6](https://astro.build/) | Hybrid rendering (prerendered + SSR) |
 | Adapter | [@astrojs/cloudflare](https://docs.astro.build/en/guides/integrations-guide/cloudflare/) | First-party Cloudflare Workers adapter |
 | Runtime | [Cloudflare Workers](https://developers.cloudflare.com/workers/) | Edge computing with global deployment |
-| Language | [TypeScript 5.9](https://www.typescriptlang.org/) | Strict type safety across all code |
+| Language | [TypeScript 6.0](https://www.typescriptlang.org/) | Strict type safety across all code |
 | Security | Custom Worker + HTMLRewriter | Per-request CSP nonces, security headers |
 | Spam Protection | [Cloudflare Turnstile](https://developers.cloudflare.com/turnstile/) | Privacy-preserving contact form protection |
 | Email | [Resend](https://resend.com/) | Contact form email delivery |
 | Form Validation | [Zod](https://zod.dev/) (via Astro Actions) | Schema-based input validation |
-| Analytics | Server-side GTM + [Fou Analytics](https://usefathom.com/) | Privacy-focused analytics on custom sGTM domain |
+| Analytics | Server-side GTM + [Fou Analytics](https://fouanalytics.com/) | Privacy-focused analytics on custom sGTM domain |
 | SEO | [@astrojs/sitemap](https://docs.astro.build/en/guides/integrations-guide/sitemap/) + JSON-LD | Automatic sitemap, structured data |
 | Fonts | [JetBrains Mono](https://www.jetbrains.com/lp/mono/) | Coding font for dark mode (6 weights) |
-| Linting | [ESLint 9](https://eslint.org/) | Code quality with TypeScript support |
+| Linting | [ESLint 10](https://eslint.org/) | Code quality with TypeScript support |
+| Package Manager | [pnpm 11](https://pnpm.io/) | Pinned via `packageManager`, used by CI |
 | CI/CD | [GitHub Actions](https://github.com/features/actions) | Automated build, lint, deploy, smoke tests |
 | CLI | [Wrangler 4](https://developers.cloudflare.com/workers/wrangler/) | Cloudflare Workers development toolkit |
 
@@ -66,9 +68,8 @@ Professional portfolio website for Henrik Soderlund - technology leader and AI i
 
 ### Performance
 
-- **Hybrid rendering** - 5 of 6 pages prerendered at build time (sub-10ms TTFB from CDN edge); contact page SSR for form handling
+- **Hybrid rendering** - 6 of 7 content pages prerendered at build time (sub-10ms TTFB from CDN edge); contact page SSR for form handling
 - **Zero-JS page transitions** - CSS View Transitions (`@view-transition { navigation: auto; }`)
-- **Prefetch** - Near-instant navigation via Astro's built-in prefetch on hover
 - **Identical HTML for all visitors** - No dual rendering or crawler detection
 - **Optimised images** - WebP format, lazy loading, `decoding="async"`, proper dimensions
 
@@ -164,6 +165,7 @@ src/
     consultancy.astro           #   Service offerings and case studies
     work-experience.astro       #   Professional experience timeline
     education.astro             #   Educational background
+    privacy.astro               #   Privacy policy
     contact.astro               #   Contact form (SSR)
     404.astro                   #   Custom not-found page with ASCII art
     *.md.ts                     #   Per-page markdown endpoints (llms.txt)
@@ -180,14 +182,16 @@ src/
     markdownResponse.ts         #   Markdown HTTP response helper
     pageMarkdown.ts             #   Page content to markdown converter
     removeEmojis.ts             #   Character encoding normalisation
-  worker.ts                     # Custom Worker entry: CSP nonces, security headers, HTMLRewriter
+  worker.ts                     # Custom Worker entry: CSP nonces, security headers, HTMLRewriter, 301 redirects
 scripts/
   patch-wrangler.mjs            # Post-build: injects run_worker_first into built wrangler config
+  verify-build.mjs              # Build artifact verification (size thresholds, completeness)
 public/
-  _redirects                    # 15 redirect rules (legacy paths, /skills to /expertise)
   fonts/                        # JetBrains Mono WOFF2 files (6 weights)
-  *.html                        # SEO verification files (Google, Ahrefs)
+  robots.txt                    # AI-friendly crawler rules
+  og_image.png                  # Open Graph / Twitter card image
   favicon.svg                   # HS monogram favicon
+  google*.html, ahrefs*         # Search Console / Ahrefs site verification
 .github/workflows/deploy.yml   # CI/CD: lint, build, verify, deploy, smoke test
 ```
 
@@ -200,6 +204,7 @@ public/
 | Consultancy | `/consultancy` | Prerendered | Service offerings, case studies, Calendly booking |
 | Work Experience | `/work-experience` | Prerendered | Professional experience timeline |
 | Education | `/education` | Prerendered | Educational background |
+| Privacy | `/privacy` | Prerendered | Privacy policy |
 | Contact | `/contact` | SSR | Contact form with Turnstile + Resend |
 | 404 | `/404` | Prerendered | Custom not-found page with ASCII art |
 
@@ -219,38 +224,44 @@ public/
 ### Prerequisites
 
 - [Node.js 24 LTS](https://nodejs.org/)
-- npm (included with Node.js)
+- [pnpm 11](https://pnpm.io/) (pinned via `packageManager`; `corepack enable` will provision it)
 
 ### Development
 
 ```bash
-npm install           # Install dependencies
-npm run dev           # Start dev server at http://localhost:4321
+pnpm install          # Install dependencies
+pnpm run dev          # Start dev server at http://localhost:4321
 ```
 
-### Build and Preview
+### Build and Validate
 
 ```bash
-npm run build         # Production build (astro check + astro build + wrangler patch)
-npm run preview       # Preview production build locally
-npm run lint          # ESLint code quality check
-npm run check         # Full validation (type check + build + wrangler patch)
-npm run cf-typegen    # Generate Cloudflare Workers types
+pnpm run build        # Production build (astro check + astro build + wrangler patch + verify)
+pnpm run lint         # ESLint code quality check
+pnpm run check        # Full validation (type check + build + wrangler patch + verify)
+pnpm run cf-typegen   # Generate Cloudflare Workers types
 ```
+
+> `pnpm run preview` (`astro preview`) does **not** work with the Cloudflare `output: 'server'` adapter. To test Worker behaviour (redirects, headers, CSP) locally, run the built bundle under Wrangler:
+>
+> ```bash
+> pnpm run build
+> npx wrangler dev -c dist/server/wrangler.json --port 8801 --local --ip 127.0.0.1
+> ```
 
 ### Deployment
 
 Production deployment is **fully automated** via GitHub Actions on push to `main`:
 
-1. Checkout, install, lint
+1. Checkout, setup pnpm + Node 24, `pnpm install --frozen-lockfile`, lint
 2. Build with artifact verification (markdown endpoints, llms.txt)
 3. Deploy to Cloudflare Workers via `wrangler-action`
-4. Post-deploy smoke tests on all 6 pages
+4. Post-deploy smoke tests: 7 pages (HTTP status + body size), API endpoints (`/health`, `/llms.txt`, sitemaps), and 301 redirects (`/skills`, `/blog`, `/about`)
 
 Manual deploy for development/testing only:
 
 ```bash
-npm run deploy        # Build + deploy to Cloudflare Workers
+pnpm run deploy       # Build + deploy to Cloudflare Workers
 npx wrangler tail     # Live log streaming
 ```
 
@@ -273,13 +284,14 @@ CI/CD secrets (GitHub Actions):
 
 ## Redirects
 
-15 permanent (301) redirect rules in `public/_redirects` handle:
+Permanent (301) redirects are handled in `src/worker.ts` (the `REDIRECTS` map plus a `/blog/*` prefix rule and a naked-domain to `www` canonicalisation), since Cloudflare's asset binding intercepts before Astro routing:
 
-- **Rebranding**: `/skills` to `/expertise`
-- **Legacy Hugo/Thulite paths**: `/content/*` to current structure
-- **File extensions**: `.html` files to clean URLs
-- **Common variations**: `/skill`, `/about` to correct pages
-- **Markdown**: `/index.md` to `/index.html.md`
+- **Naked domain**: `henriksoderlund.com/*` to `https://www.henriksoderlund.com/*`
+- **Rebranding**: `/skills`, `/skill`, `/skills.html` to `/expertise`
+- **Legacy Hugo/Thulite paths**: `/content/*` and `*.html` to current clean URLs
+- **Removed sections**: `/blog`, `/blog/*`, `/about` to `/`
+- **Legacy feeds**: `/feed`, `/feed.xml`, `/rss.xml`, `/atom.xml`, `/index.xml` to `/`
+- **Sitemap/markdown**: `/sitemap.xml` to `/sitemap-index.xml`, `/index.md` to `/index.html.md`
 
 ## Additional Resources
 
