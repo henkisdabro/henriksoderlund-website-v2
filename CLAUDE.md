@@ -215,6 +215,31 @@ public/fonts/                   # JetBrains Mono WOFF2 (6 weights)
 - `npm run cf-typegen` - Generate Cloudflare Workers types
 - `node scripts/verify-build.mjs` - Standalone build artifact verification (checks HTML pages, markdown endpoints, text files, server bundle, and `run_worker_first` patch)
 
+### Local Dev Server and Redirect Testing
+
+Spinning up a local server to verify Worker behaviour (redirects, headers, CSP) has three known traps. Follow this exact approach instead of improvising.
+
+**1. `npm run preview` does NOT work for this project.** The script is `astro preview`, which the `@astrojs/cloudflare` adapter does not support with `output: 'server'`. It exits without binding a port (no error in some shells). Do not use it to test Worker logic. For Worker-level testing, run the built bundle under Wrangler:
+
+```bash
+npm run build
+npx wrangler dev -c dist/server/wrangler.json --port 8801 --local --ip 127.0.0.1
+```
+
+**2. Stale `.wrangler/deploy/config.json` blocks `wrangler dev`.** If a prior deploy left this cache, Wrangler errors with "Found both a user configuration file ... and a deploy configuration file ... do not share the same base path". The file is gitignored and regenerated on deploy - safe to delete:
+
+```bash
+rm -f .wrangler/deploy/config.json
+```
+
+**3. `routes`/`zone_name` makes `wrangler dev` 301 every request to `https://www.<host>`.** `wrangler.json` has `routes: [{ pattern: "henriksoderlund.com/*", zone_name: "henriksoderlund.com" }]`. In `wrangler dev` this emulates the Cloudflare zone and canonicalises **every** request (including `/` and static assets) to `https://www.<host><path>` with a bare 301 and no Worker headers. This is a dev-tooling artifact, NOT a code bug, and masks all real Worker redirect/header behaviour. To test redirects locally, strip `routes` from the **built** config only (never edit source `wrangler.json` for this):
+
+```bash
+node -e "const f='dist/server/wrangler.json',w=require('./'+f);delete w.routes;require('fs').writeFileSync(f,JSON.stringify(w))"
+```
+
+Then restart `wrangler dev`. A correct local result: `/` returns 200, `/index.xml` 301s to `/`, `/skills` 301s to `/expertise`. Note the redirect `Location` host will be the local `127.0.0.1:<port>` (the naked-domain to-www branch in `src/worker.ts` only fires for `hostname === 'henriksoderlund.com'`); in production the host resolves to `https://www.henriksoderlund.com`. Restore the built config (or rebuild) afterwards. The authoritative redirect/header check remains the CI smoke test in `.github/workflows/deploy.yml` against the deployed site.
+
 ### Data-Driven Architecture
 
 Business data is centralised in `src/data/` and consumed by page components:
@@ -251,7 +276,7 @@ Valuable for: complex routing issues, cross-platform compatibility, performance 
 - Dev server: port 4321 (Astro default)
 - Cloudflare acquired Astro in January 2026 - `@astrojs/cloudflare` is first-party
 - Build verification via `scripts/verify-build.mjs` (runs automatically in `npm run build`)
-- `npm run preview` for local production build testing
+- Local Worker testing: see "Local Dev Server and Redirect Testing" (do NOT use `npm run preview` - unsupported by the Cloudflare adapter)
 - Check `package.json` for dependency versions (not listed here to avoid staleness)
 - Image format: WebP for screenshots, SVG/PNG for logos, with lazy loading and `decoding="async"`
 - 404 page includes ASCII art and navigation links
