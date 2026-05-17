@@ -40,6 +40,11 @@ function setSecurityHeaders(headers: Headers): void {
 // redirects must be handled here in the Worker before calling handle().
 const REDIRECTS: Record<string, string> = {
   '/sitemap.xml': '/sitemap-index.xml',
+  '/index.xml': '/',
+  '/feed': '/',
+  '/feed.xml': '/',
+  '/rss.xml': '/',
+  '/atom.xml': '/',
   '/skills': '/expertise',
   '/skill': '/expertise',
   '/blog': '/',
@@ -93,6 +98,7 @@ export default {
     const redirectTarget = REDIRECTS[url.pathname];
     if (redirectTarget || url.pathname.startsWith('/blog/')) {
       url.pathname = redirectTarget || '/';
+      url.search = '';
       const headers = new Headers({ Location: url.toString() });
       setSecurityHeaders(headers);
       return new Response(null, { status: 301, headers });
