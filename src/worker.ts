@@ -94,6 +94,17 @@ export default {
       return proxyResponse;
     }
 
+    // Enforce trailingSlash: 'never' (astro.config.mjs). The Cloudflare asset
+    // binding serves the slash variant as 200, creating a duplicate URL with a
+    // conflicting self-referential canonical Link header. 301 to the non-slash
+    // form so search engines see a single canonical URL.
+    if (url.pathname !== '/' && url.pathname.endsWith('/')) {
+      url.pathname = url.pathname.replace(/\/+$/, '');
+      const headers = new Headers({ Location: url.toString() });
+      setSecurityHeaders(headers);
+      return new Response(null, { status: 301, headers });
+    }
+
     // Handle redirects before Astro routing
     const redirectTarget = REDIRECTS[url.pathname];
     if (redirectTarget || url.pathname.startsWith('/blog/')) {
