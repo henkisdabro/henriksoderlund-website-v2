@@ -89,6 +89,8 @@ All visitors receive identical full HTML. No dual rendering or bot detection.
 
 **CSP nonces**: Per-request nonces via `crypto.randomUUID()`. Cloudflare HTMLRewriter injects `nonce=""` on all `<script>` tags except `type="application/ld+json"` (streaming, no buffering). `'strict-dynamic'` means GTM child scripts inherit trust automatically. `Cache-Control: no-store` on HTML responses ensures nonces always match the CSP header. Host allowlists in `script-src` are fallbacks for browsers without `'strict-dynamic'` support.
 
+**`'unsafe-eval'` in script-src**: Required by Fou Analytics anti-adblock/fraud scripts (`https://*.fouanalytics.com`) which use `eval()`/`new Function()` for runtime integrity checks. Trade-off accepted: `'strict-dynamic'` still prevents unauthorised script *injection* (different attack surface from string evaluation). Without this, Fou Analytics fails with "blocks the use of 'eval'" CSP violations.
+
 **CSP allowlisted domains** (in `src/worker.ts`): fouanalytics.com (Fou Analytics), sgtm.henriksoderlund.com (sGTM), tagmanager.google.com, google-analytics.com, static.cloudflareinsights.com, challenges.cloudflare.com, fonts.googleapis.com, fonts.gstatic.com, ghchart.rshah.org, and others.
 
 **`run_worker_first` and dev mode**: Required in production so the Worker processes prerendered pages, but MUST NOT be in source `wrangler.json` (the Cloudflare Vite plugin picks it up in dev mode and routes Vite's assets through the Worker, causing 404s). Added only to built output via `scripts/patch-wrangler.mjs`.
@@ -174,7 +176,9 @@ Type-safe via `astro:env/server` (schema in `astro.config.mjs`):
 
 ### Redirects
 
-Permanent (301) redirects are handled in `src/worker.ts` (the `REDIRECTS` map: ~20 paths, plus a `/blog/*` prefix rule and a naked-domain to `www` canonicalisation), NOT in `public/_redirects` (no such file - Cloudflare's asset binding intercepts before Astro routing, so redirects must run in the Worker). Covers: legacy Hugo/Thulite `/content/*` paths, `/skills`+`/skill`+`*.html` to `/expertise`, `/blog`+`/blog/*`+`/about` to `/`, legacy feeds (`/feed`, `/rss.xml`, `/atom.xml`, `/index.xml`) to `/`, `/sitemap.xml` to `/sitemap-index.xml`, `/index.md` to `/index.html.md`.
+Permanent (301) redirects are handled in `src/worker.ts` (the `REDIRECTS` map, plus a `/blog/*` prefix rule and a naked-domain to `www` canonicalisation), NOT in `public/_redirects` (no such file - Cloudflare's asset binding intercepts before Astro routing, so redirects must run in the Worker). Covers: legacy Hugo/Thulite `/content/*` paths, `/skills`+`/skill`+`*.html` to `/expertise`, `/blog`+`/blog/*`+`/about` to `/`, `/sitemap.xml` to `/sitemap-index.xml`, `/index.md` to `/index.html.md`.
+
+Defunct feed endpoints (`/index.xml`, `/feed`, `/feed.xml`, `/rss.xml`, `/atom.xml`) return **410 Gone** via the `GONE` set in `src/worker.ts`, NOT 301. Rationale: no content equivalent exists (Astro site has no blog/feed), and 301-to-homepage risks Google soft-404 classification per Search Central guidance. 410 signals permanent removal explicitly. Response includes `X-Robots-Tag: noindex` to accelerate deindexing.
 
 ## File Locations
 

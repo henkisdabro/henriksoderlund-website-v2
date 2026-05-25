@@ -6,10 +6,10 @@ const SGTM_PROXY_PREFIX = '/sgtm/';
 
 const CSP_TEMPLATE = [
   "default-src 'self'",
-  "script-src '%%NONCE%%' 'strict-dynamic' https://*.fouanalytics.com https://api.fouanalytics.com https://load.sgtm.henriksoderlund.com https://tagmanager.google.com https://www.googletagmanager.com https://static.cloudflareinsights.com https://challenges.cloudflare.com https: 'unsafe-inline'",
+  "script-src '%%NONCE%%' 'strict-dynamic' https://*.fouanalytics.com https://api.fouanalytics.com https://load.sgtm.henriksoderlund.com https://tagmanager.google.com https://www.googletagmanager.com https://static.cloudflareinsights.com https://challenges.cloudflare.com https: 'unsafe-inline' 'unsafe-eval'",
   "connect-src 'self' https://*.fouanalytics.com https://api.fouanalytics.com wss://api.fouanalytics.com https://*.google-analytics.com https://analytics.google.com https://*.analytics.google.com https://load.sgtm.henriksoderlund.com https://stats.g.doubleclick.net https://apix.b2c.com https://cloudflareinsights.com",
   "style-src 'self' 'unsafe-inline' https://tagmanager.google.com https://fonts.googleapis.com https://www.googletagmanager.com",
-  "img-src 'self' data: https://www.googletagmanager.com https://*.google-analytics.com https://ssl.gstatic.com https://www.gstatic.com *.google.com *.google.com.au https://ghchart.rshah.org https://api.fouanalytics.com",
+  "img-src 'self' data: https://www.googletagmanager.com https://*.google-analytics.com https://stats.g.doubleclick.net https://ssl.gstatic.com https://www.gstatic.com *.google.com *.google.com.au https://ghchart.rshah.org https://api.fouanalytics.com",
   "font-src 'self' data: https://fonts.gstatic.com",
   "frame-src 'self' https://load.sgtm.henriksoderlund.com https://www.googletagmanager.com https://challenges.cloudflare.com",
   "worker-src 'self' blob:",
@@ -35,16 +35,22 @@ function setSecurityHeaders(headers: Headers): void {
   headers.set('X-Permitted-Cross-Domain-Policies', 'none');
 }
 
+// Defunct feed endpoints (Hugo-era RSS/Atom). No content equivalent on Astro site,
+// so return 410 Gone rather than 301-to-homepage. Avoids Google soft-404 classification
+// (redirecting to clearly-different content can be treated as soft 404).
+const GONE: Set<string> = new Set([
+  '/index.xml',
+  '/feed',
+  '/feed.xml',
+  '/rss.xml',
+  '/atom.xml',
+]);
+
 // Redirect map: Astro redirects config and _redirects both produce 200 rewrites on
 // Cloudflare Workers (the asset binding intercepts before Astro's SSR routes), so all
 // redirects must be handled here in the Worker before calling handle().
 const REDIRECTS: Record<string, string> = {
   '/sitemap.xml': '/sitemap-index.xml',
-  '/index.xml': '/',
-  '/feed': '/',
-  '/feed.xml': '/',
-  '/rss.xml': '/',
-  '/atom.xml': '/',
   '/skills': '/expertise',
   '/skill': '/expertise',
   '/blog': '/',
@@ -103,6 +109,14 @@ export default {
       const headers = new Headers({ Location: url.toString() });
       setSecurityHeaders(headers);
       return new Response(null, { status: 301, headers });
+    }
+
+    // 410 Gone for defunct feed endpoints (no content equivalent)
+    if (GONE.has(url.pathname)) {
+      const headers = new Headers({ 'Content-Type': 'text/plain; charset=utf-8' });
+      setSecurityHeaders(headers);
+      headers.set('X-Robots-Tag', 'noindex');
+      return new Response('410 Gone\n', { status: 410, headers });
     }
 
     // Handle redirects before Astro routing
