@@ -102,3 +102,5 @@ linkedin/
 
 # Claude MCP file
 .mcp.json
+# pnpm project - npm lockfile must not exist
+package-lock.json

@@ -2,3 +2,8 @@ allowBuilds:
   esbuild: true
   sharp: true
   workerd: true
+
+# pnpm v11+ reads dependency overrides here, not from package.json's "pnpm" field.
+# devalue pinned to patch a DoS advisory (GHSA) pulled in transitively via astro.
+overrides:
+  devalue: ^5.8.1
