@@ -104,3 +104,6 @@ linkedin/
 .mcp.json
 # pnpm project - npm lockfile must not exist
 package-lock.json
+
+# agent instruction refactor working notes
+.agent-refactor/

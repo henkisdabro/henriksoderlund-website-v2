@@ -4,6 +4,11 @@ const SGTM_ORIGIN = 'https://sgtm.henriksoderlund.com';
 const SGTM_HOST = 'sgtm.henriksoderlund.com';
 const SGTM_PROXY_PREFIX = '/sgtm/';
 
+// 'unsafe-eval' in script-src is deliberate, not an oversight: Fou Analytics'
+// anti-adblock and fraud-detection scripts (https://*.fouanalytics.com) run
+// eval()/new Function() for runtime integrity checks, and fail with a "blocks
+// the use of 'eval'" violation without it. 'strict-dynamic' still prevents
+// unauthorised script injection, which is the separate attack surface.
 const CSP_TEMPLATE = [
   "default-src 'self'",
   "script-src '%%NONCE%%' 'strict-dynamic' https://*.fouanalytics.com https://api.fouanalytics.com https://load.sgtm.henriksoderlund.com https://tagmanager.google.com https://www.googletagmanager.com https://static.cloudflareinsights.com https://challenges.cloudflare.com https: 'unsafe-inline' 'unsafe-eval'",

@@ -49,7 +49,7 @@ Add these secrets to your GitHub repository settings (`Settings` > `Secrets and 
 
 #### Build Verification
 
-- Dependency installation with npm cache
+- Dependency installation with pnpm, frozen lockfile
 - ESLint code quality checks
 - Astro check (type checking)
 - Astro build process
@@ -90,13 +90,13 @@ If needed, you can deploy manually:
 
 ```bash
 # Install dependencies
-npm ci
+pnpm install --frozen-lockfile
 
 # Build (includes Astro check + build)
-npm run build
+pnpm run build
 
 # Deploy to Cloudflare Workers
-npm run deploy
+pnpm run deploy
 ```
 
 ## Troubleshooting
@@ -104,7 +104,7 @@ npm run deploy
 ### Build Failures
 
 1. **Astro check fails**
-   - Run `npm run check` locally
+   - Run `pnpm run check` locally
    - Fix type errors before pushing
 
 2. **Markdown endpoint generation fails**
@@ -132,7 +132,7 @@ If you see duplicate deployments or build conflicts:
 
    ```bash
    # Test deployment locally
-   npm run build
+   pnpm run build
    npx wrangler deploy --dry-run
    ```
 
