@@ -3,6 +3,12 @@ allowBuilds:
   sharp: true
   workerd: true
 
+# Supply-chain cooldown guardrail: refuse deps published < 3 days ago (4320 min).
+# Moved here from .npmrc so npm/npx stop warning about unknown config keys.
+minimumReleaseAge: 4320
+minimumReleaseAgeExclude: []
+autoInstallPeers: true
+
 # pnpm v11+ reads dependency overrides here, not from package.json's "pnpm" field.
 # devalue pinned to patch a DoS advisory (GHSA) pulled in transitively via astro.
 overrides:
