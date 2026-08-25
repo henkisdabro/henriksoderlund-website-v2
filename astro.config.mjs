@@ -44,6 +44,11 @@ export default defineConfig({
     build: {
       sourcemap: true,
     },
+    ssr: {
+      optimizeDeps: {
+        exclude: ['astro/actions/runtime/entrypoints/route.js'],
+      },
+    },
   },
 
   env: {
