@@ -63,6 +63,7 @@ const REDIRECTS: Record<string, string> = {
   '/content/work-experience': '/work-experience',
   '/content/education': '/education',
   '/content/consultation': '/consultancy',
+  '/consultation': '/consultancy',
   '/about': '/',
   '/skills.html': '/expertise',
   '/work-experience.html': '/work-experience',
@@ -111,6 +112,13 @@ export default {
     // form so search engines see a single canonical URL.
     if (url.pathname !== '/' && url.pathname.endsWith('/')) {
       url.pathname = url.pathname.replace(/\/+$/, '');
+      // Resolve a legacy path in the same hop so /skills/ goes straight to
+      // /expertise rather than chaining a second 301 through /skills.
+      const slashTarget = REDIRECTS[url.pathname];
+      if (slashTarget) {
+        url.pathname = slashTarget;
+        url.search = '';
+      }
       const headers = new Headers({ Location: url.toString() });
       setSecurityHeaders(headers);
       return new Response(null, { status: 301, headers });

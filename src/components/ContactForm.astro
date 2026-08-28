@@ -36,6 +36,14 @@ const error = result?.error;
       <p><strong>Something went wrong.</strong> Please try again or email me directly at <a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a>.</p>
     )}
   </div>
+  <script is:inline define:vars={{ errorCode: error.code ?? 'UNKNOWN' }}>
+    window.dataLayer = window.dataLayer || [];
+    window.dataLayer.push({
+      'event': 'contact_form_error',
+      'form_name': 'contact',
+      'error_code': errorCode
+    });
+  </script>
 )}
 
 {!success && (
