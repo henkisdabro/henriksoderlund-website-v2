@@ -2,6 +2,23 @@
 
 `astro dev` never runs `src/worker.ts`, so redirects, security headers, the CSP and the `/sgtm/` proxy cannot be checked there. Testing them locally means running the built bundle under Wrangler, and three separate traps make the obvious approaches fail. Follow this rather than improvising.
 
+## 0. `astro dev` is a background daemon since Astro 7
+
+It detaches immediately and prints only its pid, so a script that starts it and then curls straight away will hit a closed port. It also binds `localhost`, **not** `127.0.0.1` - requests to the IP address get connection-refused even while the server is up.
+
+```bash
+astro dev              # starts detached, returns at once
+astro dev status       # is it running, on which port
+astro dev logs         # the output that used to go to the terminal
+astro dev stop         # `pkill -f "astro dev"` does not reliably stop it
+```
+
+Wait for readiness before probing, and use the hostname:
+
+```bash
+until curl -sf -o /dev/null http://localhost:4321/; do sleep 1; done
+```
+
 ## 1. `pnpm run preview` does not work
 
 The script is plain `astro preview`, which `@astrojs/cloudflare` does not support with `output: 'server'`. It exits without binding a port, in some shells without printing an error. Build and run the bundle instead:
