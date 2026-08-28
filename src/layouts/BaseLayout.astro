@@ -5,7 +5,8 @@ import GitHubLink from '../components/GitHubLink.astro';
 import LinkedInLink from '../components/LinkedInLink.astro';
 import ThemeToggle from '../components/ThemeToggle.astro';
 import Footer from '../components/Footer.astro';
-import { GITHUB_URL, LINKEDIN_URL } from '../data/links';
+import { GITHUB_URL, LINKEDIN_URL, CALENDLY_URL } from '../data/links';
+import { consultationData } from '../data/consultation';
 import '../styles/theme.css';
 import '../styles/index.css';
 import '../styles/App.css';
@@ -106,6 +107,54 @@ const personSchemaJSON = JSON.stringify({
   ]
 });
 
+const practiceSchemaJSON = JSON.stringify({
+  "@context": "https://schema.org",
+  "@type": "ProfessionalService",
+  "@id": "https://www.henriksoderlund.com/#practice",
+  "name": "Henrik Söderlund - Strategic Technology Consultancy",
+  "url": "https://www.henriksoderlund.com/consultancy",
+  "description": consultationData.hero.subtitle,
+  "founder": {
+    "@id": "https://www.henriksoderlund.com/#person"
+  },
+  "address": {
+    "@type": "PostalAddress",
+    "addressLocality": "Perth",
+    "addressRegion": "WA",
+    "addressCountry": "AU"
+  },
+  "areaServed": [
+    { "@type": "City", "name": "Perth" },
+    { "@type": "State", "name": "Western Australia" },
+    { "@type": "Country", "name": "Australia" }
+  ],
+  "serviceType": "AI Automation & Technology Consulting",
+  "hasOfferCatalog": {
+    "@type": "OfferCatalog",
+    "name": "Consulting Services",
+    "itemListElement": consultationData.services.pillars.map(pillar => ({
+      "@type": "Offer",
+      "itemOffered": {
+        "@type": "Service",
+        "name": pillar.name,
+        "description": pillar.description
+      }
+    }))
+  },
+  "availableChannel": {
+    "@type": "ServiceChannel",
+    "serviceUrl": CALENDLY_URL,
+    "availableLanguage": [
+      { "@type": "Language", "name": "English", "alternateName": "en" },
+      { "@type": "Language", "name": "Swedish", "alternateName": "sv" }
+    ]
+  },
+  "sameAs": [
+    GITHUB_URL,
+    LINKEDIN_URL
+  ]
+});
+
 const websiteSchemaJSON = JSON.stringify({
   "@context": "https://schema.org",
   "@type": "WebSite",
@@ -115,6 +164,9 @@ const websiteSchemaJSON = JSON.stringify({
   "description": "The personal website of Henrik Söderlund, a Technology Leader and Automation Architect based in Perth, Australia.",
   "author": {
     "@id": "https://www.henriksoderlund.com/#person"
+  },
+  "publisher": {
+    "@id": "https://www.henriksoderlund.com/#practice"
   }
 });
 ---
@@ -178,6 +230,9 @@ const websiteSchemaJSON = JSON.stringify({
 
     <!-- Structured Data - Person Schema -->
     <script type="application/ld+json" set:html={personSchemaJSON} is:inline></script>
+
+    <!-- Structured Data - ProfessionalService Schema -->
+    <script type="application/ld+json" set:html={practiceSchemaJSON} is:inline></script>
 
     <!-- Structured Data - Website Schema -->
     <script type="application/ld+json" set:html={websiteSchemaJSON} is:inline></script>
