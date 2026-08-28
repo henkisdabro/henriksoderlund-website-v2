@@ -102,6 +102,94 @@ jobs:
               echo "OK: $url (301 redirect)"
             fi
           done
+
+          echo "=== Checking defunct feed paths return 410 Gone ==="
+          for path in /index.xml /feed /rss.xml; do
+            url="https://www.henriksoderlund.com${path}"
+            status=$(curl -s -o /dev/null -w "%{http_code}" --max-time 10 "$url")
+            if [ "$status" -ne 410 ]; then
+              echo "::error::FAIL: $url should return 410 (got HTTP $status)"
+              failed=1
+            else
+              echo "OK: $url (410 Gone)"
+            fi
+          done
+
+          # Everything below runs inside src/worker.ts. The page checks above
+          # pass even if the Worker stops adding headers entirely, because the
+          # asset binding would still serve full-size HTML. These assert the
+          # Worker actually executed.
+          echo "=== Checking Worker-applied security headers ==="
+          hdrs=$(mktemp)
+          body=$(mktemp)
+          curl -s --compressed -D "$hdrs" -o "$body" --max-time 15 "https://www.henriksoderlund.com/"
+
+          nonce=$(grep -i '^content-security-policy:' "$hdrs" | grep -o "nonce-[a-f0-9-]*" | head -1 | sed 's/nonce-//')
+          if [ -z "$nonce" ]; then
+            echo "::error::FAIL: no CSP nonce in Content-Security-Policy header"
+            failed=1
+          elif ! grep -q "nonce=\"$nonce\"" "$body"; then
+            echo "::error::FAIL: CSP nonce present but not injected into any script tag"
+            failed=1
+          else
+            echo "OK: CSP nonce issued and injected into script tags"
+          fi
+
+          # Fou Analytics' anti-adblock scripts need eval(); see src/worker.ts.
+          if grep -i '^content-security-policy:' "$hdrs" | grep -q "unsafe-eval"; then
+            echo "OK: CSP retains 'unsafe-eval'"
+          else
+            echo "::error::FAIL: CSP lost 'unsafe-eval' - Fou Analytics will break"
+            failed=1
+          fi
+
+          for header in strict-transport-security x-content-type-options referrer-policy x-frame-options; do
+            if grep -qi "^${header}:" "$hdrs"; then
+              echo "OK: ${header} present"
+            else
+              echo "::error::FAIL: ${header} missing"
+              failed=1
+            fi
+          done
+          rm -f "$hdrs" "$body"
+
+          echo "=== Checking trailing-slash canonicalisation ==="
+          status=$(curl -s -o /dev/null -w "%{http_code}" --max-time 10 "https://www.henriksoderlund.com/expertise/")
+          if [ "$status" -ne 301 ]; then
+            echo "::error::FAIL: /expertise/ should 301 to the non-slash form (got HTTP $status)"
+            failed=1
+          else
+            echo "OK: /expertise/ (301 to non-slash)"
+          fi
+
+          echo "=== Checking the sGTM first-party proxy ==="
+          status=$(curl -s -o /dev/null -w "%{http_code}" --max-time 20 "https://www.henriksoderlund.com/sgtm/healthy")
+          if [ "$status" -ne 200 ]; then
+            echo "::error::FAIL: /sgtm/healthy should return 200 (got HTTP $status) - tracking proxy is down"
+            failed=1
+          else
+            echo "OK: /sgtm/healthy (200 via proxy)"
+          fi
+
+          echo "=== Checking the contact Action responds ==="
+          # Deliberately invalid input: expect a structured validation error,
+          # which proves the Action route is bundled and reachable. A 404 or
+          # 5xx means the Actions runtime did not survive the build.
+          tmpfile=$(mktemp)
+          status=$(curl -s -o "$tmpfile" -w "%{http_code}" --max-time 15 \
+            -X POST "https://www.henriksoderlund.com/_actions/contact" \
+            -H 'Origin: https://www.henriksoderlund.com' \
+            -H 'Content-Type: application/x-www-form-urlencoded' \
+            --data 'name=&email=not-an-email&message=x')
+          if [ "$status" -ne 400 ] || ! grep -q "AstroActionInputError" "$tmpfile"; then
+            echo "::error::FAIL: /_actions/contact returned HTTP $status without a validation error"
+            cat "$tmpfile"
+            failed=1
+          else
+            echo "OK: /_actions/contact (400 AstroActionInputError)"
+          fi
+          rm -f "$tmpfile"
+
           [ "$failed" -eq 0 ] || exit 1
 
       - name: Deployment Summary
