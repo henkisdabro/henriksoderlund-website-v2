@@ -11,7 +11,7 @@ export const workExperienceData = [
     description: [
       'Running an independent consultancy delivering AI-powered solutions, automation systems, and digital products. Architecting and shipping agentic workflows, intelligent automation systems, and AI-powered tools that solve real operational problems for clients across diverse sectors.',
       'Currently partnering with organisations spanning digital agencies, wildlife conservation, and other industries to deliver end-to-end solutions including AI automation, advanced analytics and measurement frameworks, and custom web applications. Projects range from intelligent workflow systems and data pipeline architecture to consumer-facing digital products.',
-      'Independently launched products including UTMHub.co, a SaaS platform helping marketing teams build trackable URLs with GA4 channel attribution, and Rottosnorkel.com, a live snorkelling guide for Rottnest Island providing real-time safety ratings across 39 locations. Leading with rapid prototyping, building working solutions quickly, validating with data, and iterating based on evidence.',
+      'Independently launched products including ascribe.to, a SaaS platform that validates marketing tracking links against GA4 channel definitions before launch, and Rottosnorkel.com, a live snorkelling guide for Rottnest Island providing real-time safety ratings across 39 locations. Leading with rapid prototyping, building working solutions quickly, validating with data, and iterating based on evidence.',
     ],
   },
   {

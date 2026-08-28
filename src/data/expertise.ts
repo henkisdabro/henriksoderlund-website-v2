@@ -1,4 +1,4 @@
-import { GITHUB_URL, UTMHUB_URL, ROTTOSNORKEL_URL } from './links';
+import { GITHUB_URL, ASCRIBE_URL, ROTTOSNORKEL_URL } from './links';
 
 export const expertiseData = {
   intro: {
@@ -9,14 +9,17 @@ export const expertiseData = {
     title: 'What I Build',
     projects: [
       {
-        title: 'UTMHub',
-        url: UTMHUB_URL,
+        title: 'ascribe',
+        url: ASCRIBE_URL,
         type: 'SaaS Platform',
-        tagline: 'Streamlined UTM management with GA4 channel attribution',
-        description: 'SaaS platform for marketing teams to build trackable URLs with GA4 channel attribution. Streamlines UTM parameter management, ensuring consistent campaign tracking and accurate analytics across marketing channels.',
+        tagline: 'Validates every tracking link against your own GA4 channel definitions',
+        description: 'SaaS platform for marketing teams building trackable URLs. Checks each link against your own GA4 channel groups and shows exactly which channel the traffic will land in before launch - because a GA4 session cannot be retagged afterwards.',
         tags: ['React', 'Cloudflare Workers', 'SaaS', 'GA4 Integration'],
-        image: 'utmhubImage',
-        accentColour: '#818cf8',
+        image: 'ascribeImage',
+        // ascribe's own brand tokens, each on the ground it was designed for:
+        // signal ink on white, signal amber on the dark theme.
+        accentColour: '#9e7b00',
+        accentColourDark: '#f2c230',
       },
       {
         title: 'Rotto Snorkel',

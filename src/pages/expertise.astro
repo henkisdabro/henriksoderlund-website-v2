@@ -6,14 +6,14 @@ import { expertiseData } from '../data/expertise';
 import { GITHUB_URL } from '../data/links';
 import dashboardImage from '../assets/images/screenshots/dashboard.webp';
 import wikiImage from '../assets/images/screenshots/wiki.webp';
-import utmhubImage from '../assets/images/screenshots/utmhub.webp';
+import ascribeImage from '../assets/images/screenshots/ascribe.webp';
 import rottoSnorkelImage from '../assets/images/screenshots/rotto-snorkel.webp';
 import automationDiagramImage from '../assets/images/screenshots/automation-diagram.webp';
 
 const imageMap: Record<string, ImageMetadata> = {
   dashboardImage,
   wikiImage,
-  utmhubImage,
+  ascribeImage,
   rottoSnorkelImage,
   automationDiagramImage,
 };
@@ -47,7 +47,7 @@ import { sectionIcons } from '../utils/sectionIcons';
                 <Tag
                   {...linkProps}
                   class={`showcase-card${i === 0 ? ' showcase-card--active' : ''}${isLink ? '' : ' showcase-card--static'}`}
-                  style={`--card-accent: ${project.accentColour}`}
+                  style={`--card-accent-light: ${project.accentColour}${project.accentColourDark ? `; --card-accent-dark: ${project.accentColourDark}` : ''}`}
                   data-index={i}
                   aria-hidden={i !== 0 ? "true" : undefined}
                   tabindex={i !== 0 ? -1 : undefined}
@@ -385,7 +385,10 @@ import { sectionIcons } from '../utils/sectionIcons';
   transition: transform 0.35s ease-out;
 }
 
+/* --card-accent renders as text on both theme grounds, so a card may carry a
+   second value for dark. Cards without --card-accent-dark keep the single one. */
 .showcase-card {
+  --card-accent: var(--card-accent-light);
   display: block;
   text-decoration: none;
   color: inherit;
@@ -402,6 +405,10 @@ import { sectionIcons } from '../utils/sectionIcons';
   transition: opacity 0.35s ease, transform 0.35s ease, filter 0.35s ease,
               box-shadow 0.2s ease-out;
   cursor: pointer;
+}
+
+:root[data-theme="dark"] .showcase-card {
+  --card-accent: var(--card-accent-dark, var(--card-accent-light));
 }
 
 .showcase-card--active {

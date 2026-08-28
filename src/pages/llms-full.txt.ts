@@ -64,8 +64,8 @@ Quotable facts:
 - He works in English and Swedish.
 - He is the author of the IPmeta Tag Template for GA4, a Google Tag Manager
   community template for spam and bot traffic filtering.
-- He built UTMHub.co, a SaaS platform for building trackable URLs with GA4
-  channel attribution.
+- He built ascribe.to, a SaaS platform that validates marketing tracking links
+  against GA4 channel definitions before launch.
 - Enquiries go through ${base}/contact.
 
 ---
