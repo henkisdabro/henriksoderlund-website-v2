@@ -8,12 +8,17 @@ export const server = {
   contact: defineAction({
     accept: 'form',
     input: z.object({
-      name: z.string().min(1, 'Name is required').max(100),
-      email: z.email({ error: 'Please enter a valid email address' }).max(200),
+      name: z
+        .string()
+        .min(1, 'Name is required')
+        .max(100, 'Name must be 100 characters or fewer'),
+      email: z
+        .email({ error: 'Please enter a valid email address' })
+        .max(200, 'Email must be 200 characters or fewer'),
       message: z
         .string()
         .min(10, 'Message must be at least 10 characters')
-        .max(2000),
+        .max(2000, 'Message must be 2000 characters or fewer'),
       'cf-turnstile-response': z
         .string()
         .min(1, 'Please complete the verification'),

@@ -1,11 +1,17 @@
 ---
-import { actions } from 'astro:actions';
+import { actions, isInputError } from 'astro:actions';
 import { TURNSTILE_SITE_KEY } from 'astro:env/client';
 import { CONTACT_EMAIL } from '../data/links';
 
 const result = Astro.getActionResult(actions.contact);
 const success = result?.data?.success;
 const error = result?.error;
+
+// Surface the per-field validation messages rather than the raw Zod payload
+const fieldIssues =
+  error && isInputError(error)
+    ? Object.values(error.fields).flat().filter(Boolean)
+    : [];
 ---
 
 {success && (
@@ -31,7 +37,16 @@ const error = result?.error;
     {error.code === 'FORBIDDEN' ? (
       <p><strong>Verification failed.</strong> Please refresh the page and try again.</p>
     ) : error.code === 'BAD_REQUEST' ? (
-      <p><strong>Please check your input.</strong> {error.message}</p>
+      fieldIssues.length > 0 ? (
+        <Fragment>
+          <p><strong>Please check your input.</strong></p>
+          <ul>
+            {fieldIssues.map((issue) => <li>{issue}</li>)}
+          </ul>
+        </Fragment>
+      ) : (
+        <p><strong>Please check your input.</strong> Please review the form and try again.</p>
+      )
     ) : (
       <p><strong>Something went wrong.</strong> Please try again or email me directly at <a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a>.</p>
     )}
