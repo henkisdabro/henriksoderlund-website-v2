@@ -30,6 +30,12 @@ export default defineConfig({
     }),
   ],
 
+  // Astro 7 changed the compressHTML default from `true` to `'jsx'`, which
+  // applies JSX whitespace rules and drops the spaces between inline
+  // elements. On these prose pages that silently joined adjacent text
+  // ("at Lund University" + "Malmoe, Sweden"), so keep the v6 behaviour.
+  compressHTML: true,
+
   build: {
     inlineStylesheets: 'always',
   },
