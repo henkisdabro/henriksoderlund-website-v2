@@ -46,6 +46,12 @@ export default defineConfig({
 
   prefetch: false,
 
+  // No page or action uses Astro sessions. Opting out stops the Cloudflare
+  // adapter auto-wiring the KV session driver and drops the session runtime
+  // from the Worker bundle. It also removes the auto-provisioned SESSION KV
+  // binding from the generated wrangler config.
+  session: false,
+
   vite: {
     build: {
       sourcemap: true,
