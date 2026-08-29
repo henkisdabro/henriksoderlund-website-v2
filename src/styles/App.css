@@ -389,16 +389,33 @@ a:hover {
   font-size: 0.76rem;
 }
 
-.headings-list .heading-level-6 .heading-link {
-  padding-left: 76px;
-  font-size: 0.74rem;
-}
-
 /* Main content area - adjust for navigation box */
 .main-content {
   width: 100%;
   margin-left: 0;
   transition: margin-left 0.3s ease;
+}
+
+/* Jump targets for "On This Page" (and any #hash link) must clear the fixed
+   chrome overlaying the top of the column, or the heading lands flush at y=0
+   with the nav button sitting on the line beneath it. */
+.main-content h2,
+.main-content h3,
+.main-content h4,
+.main-content h5,
+.main-content h6 {
+  scroll-margin-top: 1.5rem;
+}
+
+@media (max-width: 1024px) {
+  /* The collapsed nav button occupies the top 64px here. */
+  .main-content h2,
+  .main-content h3,
+  .main-content h4,
+  .main-content h5,
+  .main-content h6 {
+    scroll-margin-top: 5rem;
+  }
 }
 
 /* Responsive adjustments */

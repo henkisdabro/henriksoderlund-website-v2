@@ -118,6 +118,14 @@ const pages = [
       narrowMQ = null;
     }
 
+    function prefersReducedMotion() {
+      try {
+        return window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      } catch {
+        return false;
+      }
+    }
+
     function isNarrow() {
       // innerWidth is the fallback rather than "assume wide": guessing wide on
       // a phone leaves the overlay pinned open across the whole page.
@@ -225,12 +233,18 @@ const pages = [
       var items = [];
 
       headingElements.forEach(function (heading, index) {
-        var text = heading.textContent || '';
-        var level = parseInt(heading.tagName.charAt(1), 10);
+        var text = (heading.textContent || '').trim();
+        if (!text) return;
+        // Depth is relative to h2, the shallowest tag scanned: the CSS ladder
+        // starts .heading-level-1 at the same 16px inset as the page links.
+        var level = parseInt(heading.tagName.charAt(1), 10) - 1;
 
         var id = heading.id;
         if (!id) {
-          id = 'heading-' + index;
+          id = 'nav-heading-' + index;
+          while (document.getElementById(id)) {
+            id = 'nav-' + id;
+          }
           heading.id = id;
         }
 
@@ -253,7 +267,13 @@ const pages = [
           btn.addEventListener('click', function () {
             var el = document.getElementById(item.id);
             if (el) {
-              el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+              // Focus first, with preventScroll so it does not fight the
+              // smooth scroll: collapsing the overlay puts display:none under
+              // this button, which would otherwise drop focus back to <body>
+              // and restart tabbing from the top of the page.
+              el.setAttribute('tabindex', '-1');
+              el.focus({ preventScroll: true });
+              el.scrollIntoView({ behavior: prefersReducedMotion() ? 'auto' : 'smooth', block: 'start' });
             }
             if (isNarrow()) dismissOverlay();
           });
@@ -270,6 +290,14 @@ const pages = [
       }
     }
 
-    scanHeadings();
+    // The layout renders this component above <main>, so at first run the
+    // inline script is ahead of .main-content in the parse and the scan finds
+    // no container at all. Waiting for the parse is what makes the section
+    // appear; running it eagerly left "On This Page" empty on every page.
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', scanHeadings, { once: true });
+    } else {
+      scanHeadings();
+    }
   })();
 </script>
