@@ -27,6 +27,8 @@ interface Props {
   pageSchemaType?: 'WebPage' | 'ProfilePage' | 'AboutPage' | 'ContactPage' | 'CollectionPage';
   /** Analytics content dimension. Defaults to a slug derived from the pathname. */
   pageType?: string;
+  /** Passed straight to SEO.astro, which owns the default. */
+  robots?: string;
 }
 
 const {
@@ -37,6 +39,7 @@ const {
   mentions = [],
   pageSchemaType,
   pageType,
+  robots,
 } = Astro.props;
 
 const siteOrigin = 'https://www.henriksoderlund.com';
@@ -149,7 +152,7 @@ const practiceSchemaJSON = JSON.stringify({
   "@id": "https://www.henriksoderlund.com/#practice",
   // Deliberately distinct from the `Service` node on /consultancy: that node is
   // the offering, this one is the registered practice that provides it.
-  "name": "Henrik Söderlund - Independent Consulting Practice",
+  "name": "Henrik Söderlund - Strategic Technology Consultancy",
   "taxID": "96 522 684 594",
   "identifier": {
     "@type": "PropertyValue",
@@ -291,105 +294,7 @@ const websiteSchemaJSON = JSON.stringify({
   }
 });
 
-// Inline scripts that need build-time values are emitted via `set:html`,
-// because `is:inline` and `define:vars` cannot be combined.
-const dataLayerInitJS = `
-window.dataLayer = window.dataLayer || [];
-window.dataLayer.push({
-  event: 'dl_init',
-  environment: (location.hostname === 'localhost' || location.hostname === '127.0.0.1' || location.hostname.endsWith('.workers.dev')) ? 'development' : 'production',
-  page_type: ${JSON.stringify(resolvedPageType)}
-});
-`.trim();
-
 const calendlyHost = new URL(CALENDLY_URL).hostname;
-
-const interactionTrackingJS = `
-(function () {
-  var CALENDLY_HOST = ${JSON.stringify(calendlyHost)};
-
-  function push(payload) {
-    try {
-      window.dataLayer = window.dataLayer || [];
-      window.dataLayer.push(payload);
-    } catch (e) { /* analytics must never break a click */ }
-  }
-
-  function slug(value) {
-    return String(value || '').trim().replace(/[^A-Za-z0-9]+/g, '_').replace(/^_+|_+$/g, '').toLowerCase();
-  }
-
-  function labelOf(el) {
-    var text = (el.textContent || '').replace(/\\s+/g, ' ').trim();
-    if (!text) text = el.getAttribute('aria-label') || el.getAttribute('title') || '';
-    return text.slice(0, 100);
-  }
-
-  // Derived from where the element sits, not from a hardcoded list of pages.
-  function locationOf(el) {
-    var tagged = el.closest('[data-cta-location]');
-    if (tagged) return slug(tagged.getAttribute('data-cta-location')) || 'unknown';
-    var region = el.closest('section, article, header, footer, nav, aside, main');
-    while (region) {
-      if (region.id) return slug(region.id);
-      var aria = region.getAttribute('aria-label');
-      if (aria) return slug(aria);
-      var cls = region.classList && region.classList[0];
-      if (cls) return slug(cls);
-      var tag = region.tagName.toLowerCase();
-      if (tag !== 'main') return tag;
-      region = region.parentElement && region.parentElement.closest('section, article, header, footer, nav, aside');
-    }
-    return 'page';
-  }
-
-  // Capture phase: the toggle's own click handler flips data-theme on the way
-  // down to the target, so a bubble-phase read would report the wrong theme.
-  document.addEventListener('click', function (event) {
-    try {
-      var target = event.target;
-      if (!target || typeof target.closest !== 'function') return;
-
-      if (target.closest('#theme-toggle')) {
-        var current = document.documentElement.getAttribute('data-theme');
-        push({ event: 'theme_toggle', theme_selected: current === 'dark' ? 'light' : 'dark' });
-        return;
-      }
-
-      var anchor = target.closest('a[href]');
-      if (!anchor) return;
-
-      var url;
-      try { url = new URL(anchor.href, location.href); } catch (e) { return; }
-
-      if (url.protocol === 'mailto:') {
-        push({ event: 'email_click', link_location: locationOf(anchor) });
-        return;
-      }
-      if (url.protocol !== 'http:' && url.protocol !== 'https:') return;
-
-      if (url.hostname === CALENDLY_HOST) {
-        push({
-          event: 'booking_start',
-          link_url: url.href,
-          link_text: labelOf(anchor),
-          cta_location: locationOf(anchor)
-        });
-        return;
-      }
-
-      if (url.hostname !== location.hostname) {
-        push({
-          event: 'outbound_click',
-          link_domain: url.hostname,
-          link_url: url.href,
-          link_text: labelOf(anchor)
-        });
-      }
-    } catch (e) { /* never throw out of a click handler */ }
-  }, true);
-})();
-`.trim();
 ---
 
 <!doctype html>
@@ -447,7 +352,9 @@ const interactionTrackingJS = `
             if (window.turnstile && window.__turnstileWidgetId) {
               try {
                 window.turnstile.remove(window.__turnstileWidgetId);
-                window.__turnstileWidgetId = window.turnstile.render(tw, { sitekey: tw.getAttribute('data-sitekey'), theme: t });
+                // ContactForm owns the widget's outcome callbacks, so it exposes
+                // the factory. Pages without a contact form never define it.
+                if (window.__turnstileRender) { window.__turnstileWidgetId = window.__turnstileRender(t); }
               } catch(e) { console.warn('Turnstile re-render failed:', e); }
             }
           }
@@ -477,7 +384,7 @@ const interactionTrackingJS = `
     <title>{title}</title>
     <meta name="description" content={description} />
 
-    <SEO title={title} description={description} ogType={ogType} />
+    <SEO title={title} description={description} ogType={ogType} robots={robots} />
 
     <!-- Structured Data - Person Schema -->
     <script type="application/ld+json" set:html={personSchemaJSON} is:inline></script>
@@ -500,7 +407,14 @@ const interactionTrackingJS = `
     <link rel="dns-prefetch" href="https://api.fouanalytics.com" />
 
     <!-- Initialize dataLayer before GTM -->
-    <script is:inline set:html={dataLayerInitJS}></script>
+    <script is:inline define:vars={{ pageType: resolvedPageType }}>
+      window.dataLayer = window.dataLayer || [];
+      window.dataLayer.push({
+        event: 'dl_init',
+        environment: (location.hostname === 'localhost' || location.hostname === '127.0.0.1' || location.hostname.endsWith('.workers.dev')) ? 'development' : 'production',
+        page_type: pageType
+      });
+    </script>
 
     <!-- Google Tag Manager (async, loaded immediately) -->
     <script is:inline>
@@ -582,6 +496,91 @@ const interactionTrackingJS = `
     </div>
 
     <!-- Delegated interaction tracking -->
-    <script is:inline set:html={interactionTrackingJS}></script>
+    <script is:inline define:vars={{ calendlyHost }}>
+      (function () {
+        var CALENDLY_HOST = calendlyHost;
+
+        function push(payload) {
+          try {
+            window.dataLayer = window.dataLayer || [];
+            window.dataLayer.push(payload);
+          } catch (e) { /* analytics must never break a click */ }
+        }
+
+        function slug(value) {
+          return String(value || '').trim().replace(/[^A-Za-z0-9]+/g, '_').replace(/^_+|_+$/g, '').toLowerCase();
+        }
+
+        function labelOf(el) {
+          var text = (el.textContent || '').replace(/\s+/g, ' ').trim();
+          if (!text) text = el.getAttribute('aria-label') || el.getAttribute('title') || '';
+          return text.slice(0, 100);
+        }
+
+        // Derived from where the element sits, not from a hardcoded list of pages.
+        // Every branch falls back to 'unknown': slug() returns '' for a value with
+        // no alphanumerics, and an empty GA4 dimension is not debuggable.
+        function locationOf(el) {
+          var region = el.closest('section, article, header, footer, nav, aside, main');
+          while (region) {
+            if (region.id) return slug(region.id) || 'unknown';
+            var aria = region.getAttribute('aria-label');
+            if (aria) return slug(aria) || 'unknown';
+            var cls = region.classList && region.classList[0];
+            if (cls) return slug(cls) || 'unknown';
+            region = region.parentElement && region.parentElement.closest('section, article, header, footer, nav, aside');
+          }
+          return 'page';
+        }
+
+        // Capture phase on `document`: a capturing listener here runs before the
+        // toggle button's own at-target handler, which is what flips data-theme,
+        // so this still reads the pre-click theme. Moving this listener off
+        // capture would silently invert `theme_selected`.
+        document.addEventListener('click', function (event) {
+          try {
+            var target = event.target;
+            if (!target || typeof target.closest !== 'function') return;
+
+            if (target.closest('#theme-toggle')) {
+              var current = document.documentElement.getAttribute('data-theme');
+              push({ event: 'theme_toggle', theme_selected: current === 'dark' ? 'light' : 'dark' });
+              return;
+            }
+
+            var anchor = target.closest('a[href]');
+            if (!anchor) return;
+
+            var url;
+            try { url = new URL(anchor.href, location.href); } catch (e) { return; }
+
+            if (url.protocol === 'mailto:') {
+              push({ event: 'email_click', cta_location: locationOf(anchor) });
+              return;
+            }
+            if (url.protocol !== 'http:' && url.protocol !== 'https:') return;
+
+            if (url.hostname === CALENDLY_HOST) {
+              push({
+                event: 'booking_start',
+                link_url: url.href,
+                link_text: labelOf(anchor),
+                cta_location: locationOf(anchor)
+              });
+              return;
+            }
+
+            if (url.hostname !== location.hostname) {
+              push({
+                event: 'outbound_click',
+                link_domain: url.hostname,
+                link_url: url.href,
+                link_text: labelOf(anchor)
+              });
+            }
+          } catch (e) { /* never throw out of a click handler */ }
+        }, true);
+      })();
+    </script>
   </body>
 </html>
