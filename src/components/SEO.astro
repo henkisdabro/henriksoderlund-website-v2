@@ -3,7 +3,7 @@ interface Props {
   title: string;
   description: string;
   ogType?: 'profile' | 'website';
-  /** Overrides the computed robots directive. Pass 'noindex, follow' to keep a page out of the index. */
+  /** Overrides the default robots directive. Pass 'noindex, follow' to keep a page out of the index. */
   robots?: string;
 }
 
@@ -16,15 +16,8 @@ const ogImageURL = `${siteBase}/og_image.png`;
 // Normalised path: no trailing slash, so '/' becomes ''.
 const pagePath = Astro.url.pathname.replace(/\/+$/, '');
 
-// Utility pages that must never enter the index. BaseLayout does not forward a
-// `robots` prop, so the exclusion is resolved here rather than at the call site.
-const NOINDEX_PATHS = new Set(['/404']);
-
 const robotsContent =
-  robots ??
-  (NOINDEX_PATHS.has(pagePath)
-    ? 'noindex, follow'
-    : 'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1');
+  robots ?? 'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1';
 
 // Every `*.md.ts` route under src/pages is a plain-text twin of an HTML page.
 // Globbing them keeps the alternate links in step with the filesystem, so a page
