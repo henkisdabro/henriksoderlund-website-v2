@@ -79,7 +79,8 @@ const pages = [
 
     var isHomePage = window.location.pathname === '/';
     var STORAGE_KEY = 'nav-collapsed';
-    var NARROW_QUERY = '(max-width: 1024px)';
+    var NARROW_MAX_WIDTH = 1024;
+    var NARROW_QUERY = '(max-width: ' + NARROW_MAX_WIDTH + 'px)';
 
     // Storage is a progressive enhancement: Safari's "Block All Cookies",
     // Firefox with storage disabled and kiosk profiles all throw a
@@ -100,6 +101,14 @@ const pages = [
       }
     }
 
+    function clearStored() {
+      try {
+        sessionStorage.removeItem(STORAGE_KEY);
+      } catch {
+        // Nothing persisted, nothing to clear.
+      }
+    }
+
     // matchMedia is the primitive for breakpoint crossings, but it is guarded
     // the same way storage is: without it the nav simply stops re-seeding.
     var narrowMQ = null;
@@ -110,10 +119,19 @@ const pages = [
     }
 
     function isNarrow() {
-      return narrowMQ ? narrowMQ.matches : false;
+      // innerWidth is the fallback rather than "assume wide": guessing wide on
+      // a phone leaves the overlay pinned open across the whole page.
+      return narrowMQ ? narrowMQ.matches : window.innerWidth <= NARROW_MAX_WIDTH;
     }
 
     var stored = readStored();
+    // A stored open state is never honoured on a narrow viewport, whatever put
+    // it there - an earlier session, a rotation from landscape - because the
+    // panel covers the page here and would reopen itself on top of it.
+    if (stored === 'false' && isNarrow()) {
+      clearStored();
+      stored = null;
+    }
     // An explicit user preference wins; the viewport only seeds the default.
     // Only the two values this component writes count - a corrupted or foreign
     // value must fall back to the viewport default, not freeze the nav open.
@@ -134,10 +152,26 @@ const pages = [
 
     applyCollapseState();
 
+    // Below the breakpoint the box is a transient overlay sitting on top of the
+    // page, so its open state must not outlive the current page: a persisted
+    // 'false' reopens it over whatever the user navigated to. Above the
+    // breakpoint it is a sidebar in the gutter and the preference is kept.
+    function dismissOverlay() {
+      isCollapsed = true;
+      hasUserPreference = false;
+      clearStored();
+      applyCollapseState();
+    }
+
     collapseBtn.addEventListener('click', function () {
       isCollapsed = !isCollapsed;
-      hasUserPreference = true;
-      writeStored(String(isCollapsed));
+      if (isNarrow()) {
+        hasUserPreference = false;
+        clearStored();
+      } else {
+        hasUserPreference = true;
+        writeStored(String(isCollapsed));
+      }
       applyCollapseState();
     });
 
@@ -150,15 +184,29 @@ const pages = [
       });
     }
 
-    // Auto-close on mobile when a page link is clicked
+    // Auto-close on mobile when a page link is clicked. The clear matters as
+    // much as the collapse: navigation is a full document load, so the next
+    // page seeds itself from storage.
     var pageLinks = navBox.querySelectorAll('.nav-page-link');
     pageLinks.forEach(function (link) {
       link.addEventListener('click', function () {
-        if (isNarrow()) {
-          isCollapsed = true;
-          applyCollapseState();
-        }
+        if (isNarrow()) dismissOverlay();
       });
+    });
+
+    // Tapping the page underneath dismisses the overlay. pointerdown covers
+    // mouse, touch and pen, and fires before the underlying element's own
+    // click so that click still lands where the user aimed it.
+    document.addEventListener('pointerdown', function (event) {
+      if (isCollapsed || !isNarrow()) return;
+      if (event.target instanceof Node && navBox.contains(event.target)) return;
+      dismissOverlay();
+    });
+
+    document.addEventListener('keydown', function (event) {
+      if (event.key !== 'Escape' || isCollapsed || !isNarrow()) return;
+      dismissOverlay();
+      collapseBtn.focus();
     });
 
     // Heading scan - skip on homepage
@@ -207,10 +255,7 @@ const pages = [
             if (el) {
               el.scrollIntoView({ behavior: 'smooth', block: 'start' });
             }
-            if (isNarrow()) {
-              isCollapsed = true;
-              applyCollapseState();
-            }
+            if (isNarrow()) dismissOverlay();
           });
 
           li.appendChild(btn);
