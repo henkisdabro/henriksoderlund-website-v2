@@ -6,9 +6,9 @@ Copy on this site is Henrik's own and is not yours to improve. SEO, structure an
 
 ## Build and deploy
 
-`pnpm run build` and `pnpm run check` are the same script: astro check, build, patch the built wrangler config, then verify artifacts. `pnpm run lint` is ESLint. `pnpm run preview` is a dead end - it is plain `astro preview`, which the Cloudflare adapter does not support under `output: 'server'`, and it exits without binding a port.
+`pnpm run build` and `pnpm run check` are the same script - run either, not both. `pnpm run preview` is a dead end: it is plain `astro preview`, which the Cloudflare adapter does not support under `output: 'server'`, and it exits without binding a port.
 
-Production deploys from GitHub Actions on push to `main`. Do not deploy by hand: CI's artifact verification is the guard against the failure below, and Cloudflare's own auto-build must stay disabled to avoid racing it.
+Production deploys from GitHub Actions on push to `main`. Do not deploy by hand: CI's artifact verification is the guard against the 0-byte-HTML failure below, and Cloudflare's own auto-build must stay disabled to avoid racing it.
 
 **Server secrets must stay `optional: true` in the `astro.config.mjs` env schema.** The Cloudflare adapter's prerender subprocess reads secrets from `.dev.vars`, not from the process environment. CI has no `.dev.vars`, so a required secret throws `EnvInvalidVariables` inside prerendering, writes 0-byte HTML for every page, and still exits 0. Runtime validation for `RESEND_API_KEY` and `TURNSTILE_SECRET_KEY` belongs in `src/actions/index.ts` instead. This shipped an undetected full-site outage once already.
 
@@ -31,6 +31,7 @@ Rate limiting is Cloudflare WAF dashboard configuration, not code - do not look 
 
 ## Deeper docs
 
-- `docs/LOCAL-WORKER-TESTING.md` - running the Worker locally to check redirects, headers or CSP, plus the dev-server dep-optimizer trap that 500s every route. Four traps make the obvious approaches fail; read it before improvising.
+- `docs/LOCAL-WORKER-TESTING.md` - running the Worker locally to check redirects, headers or CSP. Four traps make the obvious approaches fail, including a dev-server dep-optimizer one that 500s every route; read it before improvising.
 - `docs/CONTENT-AND-SEO.md` - editing structured data, Open Graph, sitemap priorities, the llms.txt endpoints, or writing site copy.
 - `docs/DEPLOYMENT.md` - changing the CI workflow or the Cloudflare-side deployment setup.
+- `docs/UTM-TAXONOMY.md` - tagging any inbound link Henrik controls; `utm_medium` values outside GA4's recognised set land the session in Unassigned.
