@@ -51,7 +51,8 @@ p {
 .education-page,
 .consultation-page,
 .contact-page,
-.privacy-page {
+.privacy-page,
+.perth-page {
   max-width: 800px;
   margin: 0 auto;
   width: 100%;
@@ -69,7 +70,8 @@ p {
   .education-page,
   .consultation-page,
   .contact-page,
-  .privacy-page {
+  .privacy-page,
+  .perth-page {
     margin-top: 2rem;
   }
 }
@@ -1205,6 +1207,19 @@ a:hover {
   background-color: var(--color-accent);
   color: var(--color-accent-text);
   text-decoration: none;
+}
+
+/* Cross-page callout linking related pages */
+.page-crosslink {
+  background: var(--color-bg-secondary);
+  border: 1px solid var(--color-border-primary);
+  border-left: 3px solid var(--color-marker);
+  border-radius: 4px;
+  padding: 0.9rem 1.1rem;
+  margin: 0 0 3rem 0;
+  color: var(--color-text-secondary);
+  font-size: 0.95rem;
+  line-height: 1.5;
 }
 
 /* ==========================================================================

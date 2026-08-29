@@ -1,0 +1,804 @@
+---
+export const prerender = true;
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { perthAnalyticsData } from '../data/perthAnalytics';
+import { CALENDLY_URL } from '../data/links';
+import { sectionIcons } from '../utils/sectionIcons';
+import { ENTITIES, PERTH_GEO } from '../data/entities';
+
+const pageUrl = 'https://www.henriksoderlund.com/perth-analytics-consultant';
+
+const serviceSchema = {
+  "@context": "https://schema.org",
+  "@type": "Service",
+  "@id": `${pageUrl}#service`,
+  "name": "GA4 and Server-Side Tagging Consultancy - Perth, Western Australia",
+  "description": "Google Analytics 4 implementation, remediation and server-side Google Tag Manager deployment for businesses in Perth and Western Australia. First-party tracking, conversion APIs, BigQuery and Looker Studio reporting.",
+  "url": pageUrl,
+  "provider": {
+    "@id": "https://www.henriksoderlund.com/#practice"
+  },
+  "serviceType": "Analytics Implementation & Server-Side Tagging",
+  "areaServed": [
+    { ...ENTITIES.perth },
+    { ...ENTITIES.westernAustralia },
+    { "@type": "Country", "name": "Australia", "sameAs": "https://www.wikidata.org/wiki/Q408" },
+    {
+      "@type": "GeoCircle",
+      "geoMidpoint": {
+        "@type": "GeoCoordinates",
+        "latitude": PERTH_GEO.latitude,
+        "longitude": PERTH_GEO.longitude
+      },
+      "geoRadius": "60000"
+    }
+  ],
+  "about": [
+    { ...ENTITIES.googleAnalytics },
+    { ...ENTITIES.serverSideTagging },
+    { ...ENTITIES.googleTagManager }
+  ],
+  "availableChannel": {
+    "@type": "ServiceChannel",
+    "serviceUrl": CALENDLY_URL,
+    "availableLanguage": [
+      { "@type": "Language", "name": "English", "alternateName": "en" },
+      { "@type": "Language", "name": "Swedish", "alternateName": "sv" }
+    ]
+  }
+};
+
+const faqSchema = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "@id": `${pageUrl}#faq`,
+  "mainEntity": perthAnalyticsData.faq.items.map(item => ({
+    "@type": "Question",
+    "name": item.question,
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": item.answer,
+    },
+  })),
+};
+
+---
+
+<BaseLayout
+  primaryEntity="practice"
+  mentions={[
+    'googleAnalytics',
+    'googleTagManager',
+    'serverSideTagging',
+    'metaConversionsApi',
+    'bigQuery',
+    'lookerStudio',
+    'cloudflareWorkers',
+    'perth',
+    'westernAustralia',
+  ]}
+  title="Perth Analytics Consultant - GA4 & Server-Side Tagging | Henrik Söderlund"
+  description="Independent GA4 and server-side tagging consultant in Perth, Western Australia. First-party tracking, conversion APIs, BigQuery and CRM-reconciled reporting."
+>
+  <Fragment slot="head">
+    <script type="application/ld+json" set:html={JSON.stringify(serviceSchema)} is:inline />
+    <script type="application/ld+json" set:html={JSON.stringify(faqSchema)} is:inline />
+  </Fragment>
+
+  <div class="perth-page">
+    <section class="perth-hero">
+      <h1>{perthAnalyticsData.hero.title}</h1>
+      <p class="hero-subtitle">{perthAnalyticsData.hero.subtitle}</p>
+      <p>{perthAnalyticsData.hero.statement}</p>
+    </section>
+
+    <!-- Spine: the four-stage ladder, covering the whole practice -->
+    <section class="perth-section">
+      <h2 id="how-the-work-stacks-up"><span class="section-icon" aria-hidden="true" set:html={sectionIcons.layers} />{perthAnalyticsData.ladder.title}</h2>
+      <p>{perthAnalyticsData.ladder.intro}</p>
+      <ol class="perth-ladder">
+        {perthAnalyticsData.ladder.stages.map((stage, i) => (
+          <li class="perth-ladder-stage">
+            <div class="ladder-marker" aria-hidden="true"><span>{i + 1}</span></div>
+            <h3>{stage.name}</h3>
+            <p class="ladder-blurb">{stage.blurb}</p>
+            <ul>
+              {stage.items.map(item => <li>{item}</li>)}
+            </ul>
+          </li>
+        ))}
+      </ol>
+      <p class="perth-note">{perthAnalyticsData.ladder.note}</p>
+    </section>
+
+    <!-- Trust: checkable artefacts, not adjectives -->
+    <section class="perth-section">
+      <h2 id="proof"><span class="section-icon" aria-hidden="true" set:html={sectionIcons.gitBranch} />{perthAnalyticsData.proof.title}</h2>
+      <p>{perthAnalyticsData.proof.intro}</p>
+      <div class="perth-proof-grid">
+        {perthAnalyticsData.proof.items.map(item => (
+          <div class="perth-proof-card">
+            <span class="proof-kind">{item.kind}</span>
+            <h3>{item.name}</h3>
+            <p>{item.description}</p>
+          </div>
+        ))}
+      </div>
+      <p class="perth-callout">{perthAnalyticsData.proof.selfHosted}</p>
+    </section>
+
+    <section class="perth-section">
+      <h2 id="who-this-is-for"><span class="section-icon" aria-hidden="true" set:html={sectionIcons.users} />{perthAnalyticsData.audience.title}</h2>
+      <p>{perthAnalyticsData.audience.intro}</p>
+      <div class="perth-cards">
+        {perthAnalyticsData.audience.profiles.map(profile => (
+          <div class="perth-card">
+            <strong>{profile.label}</strong> {profile.description}
+          </div>
+        ))}
+      </div>
+    </section>
+
+    <section class="perth-section">
+      <h2 id="what-the-work-covers"><span class="section-icon" aria-hidden="true" set:html={sectionIcons.wrench} />{perthAnalyticsData.services.title}</h2>
+      <p>{perthAnalyticsData.services.intro}</p>
+      <div class="perth-service-groups">
+        {perthAnalyticsData.services.groups.map(group => (
+          <div class="perth-service-group">
+            <h3>{group.name}</h3>
+            <p class="group-description">{group.description}</p>
+            <ul>
+              {group.items.map(item => <li>{item}</li>)}
+            </ul>
+          </div>
+        ))}
+      </div>
+    </section>
+
+    <section class="perth-section">
+      <h2 id="symptoms"><span class="section-icon" aria-hidden="true" set:html={sectionIcons.trendingUp} />{perthAnalyticsData.diagnostics.title}</h2>
+      <p>{perthAnalyticsData.diagnostics.intro}</p>
+      <div class="perth-symptoms">
+        {perthAnalyticsData.diagnostics.items.map(item => (
+          <div class="perth-symptom">
+            <h3>{item.symptom}</h3>
+            <p><span class="symptom-label">Usual cause</span> {item.cause}</p>
+            <p><span class="symptom-label">Fix</span> {item.fix}</p>
+          </div>
+        ))}
+      </div>
+    </section>
+
+    <!-- The page's only diagram: server-side tagging is the one thing hard to explain in a sentence -->
+    <section class="perth-section">
+      <h2 id="how-server-side-tagging-works"><span class="section-icon" aria-hidden="true" set:html={sectionIcons.cpu} />How server-side tagging changes the path</h2>
+      <p>Four requests leave the browser and most get blocked. One request leaves instead, to a subdomain of your own domain, and the forwarding happens server-side.</p>
+      <div class="perth-diagram">
+        <svg viewBox="0 0 720 178" role="img" aria-label="Diagram comparing browser-side tagging, where three of four vendor requests are blocked, with server-side tagging, where a single request to a first-party subdomain is forwarded on to all four vendors.">
+          <text x="0" y="12" class="dg-eyebrow">BEFORE</text>
+          <rect x="0" y="22" width="104" height="48" rx="6" class="dg-box-soft" />
+          <text x="52" y="42" text-anchor="middle" class="dg-strong">Visitor</text>
+          <text x="52" y="58" text-anchor="middle" class="dg-small">browser</text>
+          <g class="dg-line-dead" fill="none">
+            <path d="M104 36 C 150 36, 165 22, 210 22" />
+            <path d="M104 42 C 150 42, 165 40, 210 40" />
+            <path d="M104 50 C 150 50, 165 58, 210 58" />
+            <path d="M104 56 C 150 56, 165 76, 210 76" />
+          </g>
+          <g class="dg-cross">
+            <path d="M152 16 l10 10 M162 16 l-10 10" />
+            <path d="M152 35 l10 10 M162 35 l-10 10" />
+            <path d="M152 64 l10 10 M162 64 l-10 10" />
+          </g>
+          <rect x="210" y="12" width="150" height="20" rx="4" class="dg-box-blocked" />
+          <text x="221" y="26" class="dg-blocked">GA4 - blocked</text>
+          <rect x="210" y="34" width="150" height="20" rx="4" class="dg-box-blocked" />
+          <text x="221" y="48" class="dg-blocked">Meta - blocked</text>
+          <rect x="210" y="56" width="150" height="20" rx="4" class="dg-box-blocked" />
+          <text x="221" y="70" class="dg-blocked">Ads - blocked</text>
+          <rect x="210" y="78" width="150" height="20" rx="4" class="dg-box-soft" />
+          <text x="221" y="92" class="dg-small">TikTok - arrives</text>
+
+          <line x1="0" y1="116" x2="720" y2="116" class="dg-rule" />
+
+          <text x="0" y="136" class="dg-eyebrow dg-eyebrow-on">AFTER</text>
+          <rect x="0" y="146" width="104" height="30" rx="6" class="dg-box-soft" />
+          <text x="52" y="165" text-anchor="middle" class="dg-strong">Visitor</text>
+          <path d="M104 161 L 152 161" class="dg-line-live" fill="none" />
+          <path d="M146 156 l7 5 l-7 5" class="dg-arrow" />
+          <rect x="153" y="144" width="188" height="34" rx="6" class="dg-box-key" />
+          <text x="247" y="158" text-anchor="middle" class="dg-strong">data.yourdomain.com.au</text>
+          <text x="247" y="172" text-anchor="middle" class="dg-small">your domain, your rules</text>
+          <path d="M341 161 L 392 161" class="dg-line-live" fill="none" />
+          <path d="M386 156 l7 5 l-7 5" class="dg-arrow" />
+          <rect x="393" y="146" width="326" height="30" rx="5" class="dg-box-soft" />
+          <text x="407" y="165" class="dg-small">GA4, Meta CAPI, Google Ads, TikTok - all four arrive</text>
+        </svg>
+      </div>
+    </section>
+
+    <section class="perth-section">
+      <h2 id="deliverables"><span class="section-icon" aria-hidden="true" set:html={sectionIcons.sparkles} />{perthAnalyticsData.deliverables.title}</h2>
+      <p>{perthAnalyticsData.deliverables.intro}</p>
+      <ul class="perth-deliverables">
+        {perthAnalyticsData.deliverables.items.map(item => (
+          <li>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"></polyline></svg>
+            <span><strong>{item.name}</strong> - {item.description}</span>
+          </li>
+        ))}
+      </ul>
+    </section>
+
+    <section class="perth-section">
+      <h2 id="local-context"><span class="section-icon" aria-hidden="true" set:html={sectionIcons.rocket} />{perthAnalyticsData.localContext.title}</h2>
+      <p>{perthAnalyticsData.localContext.paragraph}</p>
+      <div class="perth-cards">
+        {perthAnalyticsData.localContext.points.map(point => (
+          <div class="perth-card">
+            <strong>{point.label}</strong> {point.description}
+          </div>
+        ))}
+      </div>
+    </section>
+
+    <section class="perth-section">
+      <h2 id="objections"><span class="section-icon" aria-hidden="true" set:html={sectionIcons.users} />{perthAnalyticsData.objections.title}</h2>
+      <p>{perthAnalyticsData.objections.intro}</p>
+      <div class="perth-objections">
+        {perthAnalyticsData.objections.items.map(item => (
+          <div class="perth-objection">
+            <h3>{item.question}</h3>
+            <p>{item.answer}</p>
+          </div>
+        ))}
+      </div>
+    </section>
+
+    <section class="perth-section">
+      <h2 id="business-practice"><span class="section-icon" aria-hidden="true" set:html={sectionIcons.wrench} />{perthAnalyticsData.credentials.title}</h2>
+      <p>{perthAnalyticsData.credentials.intro}</p>
+      <div class="perth-credentials">
+        {perthAnalyticsData.credentials.items.map(item => (
+          <div class="perth-credential">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+            <span><strong>{item.name}</strong> {item.detail}</span>
+          </div>
+        ))}
+      </div>
+      <p class="perth-note">{perthAnalyticsData.credentials.footnote}</p>
+    </section>
+
+    <section class="perth-section">
+      <h2 id="engagement"><span class="section-icon" aria-hidden="true" set:html={sectionIcons.gitBranch} />{perthAnalyticsData.engagement.title}</h2>
+      <p>{perthAnalyticsData.engagement.intro}</p>
+      <div class="perth-cards">
+        {perthAnalyticsData.engagement.models.map(model => (
+          <div class="perth-card perth-card--stacked">
+            <h3>{model.name}</h3>
+            <p>{model.description}</p>
+            <p class="model-details">{model.details}</p>
+          </div>
+        ))}
+      </div>
+    </section>
+
+    <section class="perth-section">
+      <h2 id="faq"><span class="section-icon" aria-hidden="true" set:html={sectionIcons.sparkles} />{perthAnalyticsData.faq.title}</h2>
+      {perthAnalyticsData.faq.items.map(item => (
+        <details class="faq-item">
+          <summary>{item.question}</summary>
+          <p>{item.answer}</p>
+        </details>
+      ))}
+    </section>
+
+    <section class="perth-section">
+      <h2 id="related"><span class="section-icon" aria-hidden="true" set:html={sectionIcons.layers} />Related</h2>
+      <ul class="perth-related">
+        <li><a href="/consultancy">Consultancy</a> - the full range of engagements, including AI automation and team upskilling, with a case study.</li>
+        <li><a href="/expertise">Expertise</a> - the platforms, projects and open source work behind this practice.</li>
+        <li><a href="/work-experience">Work Experience</a> - agency and enterprise background across Perth media and marketing.</li>
+      </ul>
+    </section>
+
+    <section class="perth-section">
+      <h2 id="contact"><span class="section-icon" aria-hidden="true" set:html={sectionIcons.users} />{perthAnalyticsData.cta.title}</h2>
+      <p>{perthAnalyticsData.cta.paragraph}</p>
+      <div class="cta-buttons">
+        <a href={CALENDLY_URL} target="_blank" rel="noopener noreferrer" class="cta-primary">Book a Discovery Call</a>
+        <a href="/contact" class="cta-secondary">Send a Message</a>
+      </div>
+    </section>
+  </div>
+</BaseLayout>
+
+<style is:global>
+.perth-section {
+  margin-bottom: 3rem;
+}
+
+.perth-hero {
+  margin-bottom: 3rem;
+}
+
+.perth-hero h1 {
+  margin-bottom: 1rem;
+  color: var(--color-text-heading);
+}
+
+.perth-section h2 {
+  font-size: 1.8rem;
+  margin-bottom: 1rem;
+  color: var(--color-text-heading);
+}
+
+.perth-cards {
+  display: grid;
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+
+.perth-card {
+  background: var(--color-bg-primary);
+  border: 1px solid var(--color-border-primary);
+  border-radius: 8px;
+  padding: 1.25rem;
+  line-height: 1.6;
+  color: var(--color-text-primary);
+}
+
+.perth-card strong {
+  color: var(--color-text-heading);
+}
+
+.perth-card--stacked h3 {
+  font-size: 1.3rem;
+  color: var(--color-text-heading);
+  margin: 0 0 0.75rem 0;
+}
+
+.model-details {
+  font-size: 0.9rem;
+  color: var(--color-text-secondary);
+  margin-top: 0.5rem;
+}
+
+.perth-service-groups {
+  display: grid;
+  gap: 2rem;
+  margin-top: 1.5rem;
+}
+
+.perth-service-group {
+  background: var(--color-bg-primary);
+  border: 1px solid var(--color-border-primary);
+  border-radius: 8px;
+  padding: 1.5rem;
+}
+
+.perth-service-group h3 {
+  font-size: 1.4rem;
+  color: var(--color-text-heading);
+  margin: 0 0 0.75rem 0;
+}
+
+.group-description {
+  font-size: 1rem;
+  color: var(--color-text-primary);
+  font-weight: 500;
+  margin-bottom: 1rem;
+  line-height: 1.5;
+}
+
+.perth-service-group ul {
+  list-style: none;
+  padding-left: 0;
+  margin: 0;
+}
+
+.perth-service-group li {
+  margin-bottom: 0.6rem;
+  padding-left: 1.5rem;
+  position: relative;
+  color: var(--color-text-secondary);
+  line-height: 1.5;
+}
+
+.perth-service-group li:before {
+  content: "\25B6";
+  position: absolute;
+  left: 0;
+  color: var(--color-marker);
+  font-size: 0.8rem;
+}
+
+.perth-symptoms {
+  display: grid;
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+
+.perth-symptom {
+  background: var(--color-bg-primary);
+  border: 1px solid var(--color-border-primary);
+  border-radius: 8px;
+  padding: 1.25rem;
+}
+
+.perth-symptom h3 {
+  font-size: 1.1rem;
+  color: var(--color-text-heading);
+  margin: 0 0 0.75rem 0;
+}
+
+.perth-symptom p {
+  color: var(--color-text-secondary);
+  line-height: 1.5;
+  margin: 0 0 0.5rem 0;
+  font-size: 0.95rem;
+}
+
+.perth-symptom p:last-child {
+  margin-bottom: 0;
+}
+
+.symptom-label {
+  display: inline-block;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--color-text-tertiary);
+  margin-right: 0.4rem;
+}
+
+.perth-steps {
+  list-style: none;
+  padding-left: 0;
+  margin: 1.5rem 0 1.5rem 0;
+  display: grid;
+  gap: 1rem;
+}
+
+.perth-steps li {
+  background: var(--color-bg-secondary);
+  border: 1px solid var(--color-border-primary);
+  border-radius: 4px;
+  padding: 1rem;
+}
+
+.perth-steps strong {
+  color: var(--color-text-heading);
+}
+
+.perth-steps p {
+  margin: 0.35rem 0 0 0;
+  color: var(--color-text-secondary);
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
+.perth-note {
+  font-size: 0.9rem;
+  color: var(--color-text-tertiary);
+}
+
+.perth-related {
+  list-style: disc;
+  margin: 1rem 0 1rem 2rem;
+}
+
+.perth-related li {
+  margin-bottom: 0.5rem;
+  color: var(--color-text-secondary);
+  line-height: 1.5;
+}
+
+/* FAQ accordion - the native marker sits hard against the left edge and does
+   not line up with the indented lists below it, so draw our own. */
+.perth-page .faq-item {
+  border-bottom: 1px solid var(--color-border-subtle);
+}
+
+.perth-page .faq-item:first-of-type {
+  border-top: 1px solid var(--color-border-subtle);
+}
+
+.perth-page .faq-item > summary {
+  list-style: none;
+  cursor: pointer;
+  display: flex;
+  gap: 0.75rem;
+  align-items: flex-start;
+  padding: 0.9rem 0 0.9rem 0.25rem;
+  color: var(--color-text-heading);
+  font-weight: 600;
+  font-size: 0.98rem;
+  line-height: 1.55;
+}
+
+.perth-page .faq-item > summary::-webkit-details-marker {
+  display: none;
+}
+
+.perth-page .faq-item > summary::marker {
+  content: '';
+}
+
+.perth-page .faq-item > summary::before {
+  content: '';
+  width: 7px;
+  height: 7px;
+  border-right: 2px solid var(--color-marker);
+  border-bottom: 2px solid var(--color-marker);
+  transform: rotate(-45deg);
+  flex-shrink: 0;
+  margin-top: 0.4rem;
+}
+
+.perth-page .faq-item[open] > summary::before {
+  transform: rotate(45deg);
+  margin-top: 0.5rem;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .perth-page .faq-item > summary::before {
+    transition: transform 0.2s ease;
+  }
+}
+
+.perth-page .faq-item > summary:hover {
+  color: var(--color-marker);
+}
+
+/* Answer text lines up with the question text: 0.25rem padding + 7px marker
+   + 0.75rem gap. */
+.perth-page .faq-item > p {
+  margin: 0 0 1.1rem 0;
+  padding-left: 1.5rem;
+  color: var(--color-text-secondary);
+  line-height: 1.6;
+}
+
+/* Ladder - the page spine */
+.perth-ladder {
+  list-style: none;
+  padding: 0;
+  margin: 1.5rem 0 1rem 0;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 1.25rem;
+}
+
+.perth-ladder-stage {
+  border-top: 2px solid var(--color-marker);
+  padding-top: 1rem;
+  min-width: 0;
+}
+
+.ladder-marker {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: var(--color-marker);
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.78rem;
+  font-weight: 600;
+  margin-bottom: 0.65rem;
+}
+
+.perth-ladder-stage h3 {
+  font-size: 1.05rem;
+  color: var(--color-text-heading);
+  margin: 0 0 0.15rem 0;
+}
+
+.ladder-blurb {
+  font-size: 0.82rem;
+  color: var(--color-text-tertiary);
+  line-height: 1.45;
+  margin: 0 0 0.75rem 0;
+}
+
+.perth-ladder-stage ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.perth-ladder-stage ul li {
+  font-size: 0.82rem;
+  color: var(--color-text-secondary);
+  line-height: 1.4;
+}
+
+/* Proof */
+.perth-proof-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+
+.perth-proof-card {
+  border: 1px solid var(--color-border-primary);
+  border-radius: 8px;
+  padding: 1.25rem;
+  background: var(--color-bg-primary);
+}
+
+.proof-kind {
+  display: block;
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: var(--color-marker);
+  margin-bottom: 0.5rem;
+}
+
+.perth-proof-card h3 {
+  font-size: 1rem;
+  color: var(--color-text-heading);
+  margin: 0 0 0.4rem 0;
+}
+
+.perth-proof-card p {
+  font-size: 0.85rem;
+  color: var(--color-text-secondary);
+  line-height: 1.5;
+  margin: 0;
+}
+
+.perth-callout {
+  background: var(--color-bg-secondary);
+  border: 1px solid var(--color-border-primary);
+  border-left: 3px solid var(--color-marker);
+  border-radius: 8px;
+  padding: 1.15rem 1.4rem;
+  margin-top: 1.25rem;
+  color: var(--color-text-primary);
+  line-height: 1.6;
+}
+
+/* Diagram */
+.perth-diagram {
+  border: 1px solid var(--color-border-primary);
+  border-radius: 8px;
+  padding: 1.5rem;
+  margin-top: 1.5rem;
+  overflow-x: auto;
+}
+
+.perth-diagram svg {
+  width: 100%;
+  min-width: 620px;
+  height: auto;
+  font-family: inherit;
+}
+
+.dg-eyebrow {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  fill: var(--color-text-tertiary);
+}
+
+.dg-eyebrow-on { fill: var(--color-text-heading); }
+.dg-strong { font-size: 11.5px; font-weight: 600; fill: var(--color-text-heading); }
+.dg-small { font-size: 11px; fill: var(--color-text-secondary); }
+.dg-blocked { font-size: 11px; fill: var(--color-error-text); }
+.dg-box-soft { fill: var(--color-bg-secondary); stroke: var(--color-border-primary); stroke-width: 1; }
+.dg-box-key { fill: var(--color-bg-primary); stroke: var(--color-marker); stroke-width: 1.6; }
+.dg-box-blocked { fill: var(--color-error-bg); stroke: var(--color-error-border); stroke-width: 1; }
+.dg-line-dead { stroke: var(--color-border-secondary); stroke-width: 1.4; }
+.dg-line-live { stroke: var(--color-marker); stroke-width: 1.8; }
+.dg-arrow { fill: var(--color-marker); }
+.dg-cross { stroke: var(--color-error-text); stroke-width: 1.5; stroke-linecap: round; }
+.dg-rule { stroke: var(--color-border-subtle); stroke-width: 1; }
+
+/* Deliverables */
+.perth-deliverables {
+  list-style: none;
+  padding: 0;
+  margin: 1.5rem 0 0 0;
+  border: 1px solid var(--color-border-primary);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.perth-deliverables li {
+  display: flex;
+  gap: 0.85rem;
+  align-items: flex-start;
+  padding: 1rem 1.15rem;
+  border-bottom: 1px solid var(--color-border-subtle);
+  color: var(--color-text-secondary);
+  line-height: 1.55;
+  font-size: 0.92rem;
+}
+
+.perth-deliverables li:last-child { border-bottom: none; }
+.perth-deliverables li svg { color: var(--color-marker); flex-shrink: 0; margin-top: 0.25rem; }
+.perth-deliverables strong { color: var(--color-text-heading); }
+
+/* Objections */
+.perth-objections {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+
+.perth-objection {
+  border: 1px solid var(--color-border-primary);
+  border-radius: 8px;
+  padding: 1.25rem;
+  background: var(--color-bg-primary);
+}
+
+.perth-objection h3 {
+  font-size: 0.98rem;
+  color: var(--color-text-heading);
+  margin: 0 0 0.5rem 0;
+  line-height: 1.4;
+}
+
+.perth-objection p {
+  font-size: 0.87rem;
+  color: var(--color-text-secondary);
+  line-height: 1.55;
+  margin: 0;
+}
+
+/* Credentials */
+.perth-credentials {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0;
+  border: 1px solid var(--color-border-primary);
+  border-radius: 8px;
+  overflow: hidden;
+  margin-top: 1.5rem;
+  margin-bottom: 0.9rem;
+}
+
+.perth-credential {
+  display: flex;
+  gap: 0.75rem;
+  align-items: flex-start;
+  padding: 1rem 1.15rem;
+  border-bottom: 1px solid var(--color-border-subtle);
+  font-size: 0.87rem;
+  color: var(--color-text-secondary);
+  line-height: 1.5;
+}
+
+.perth-credential svg { color: var(--color-marker); flex-shrink: 0; margin-top: 0.28rem; }
+.perth-credential strong { color: var(--color-text-heading); display: block; }
+
+@media (max-width: 768px) {
+  .perth-ladder,
+  .perth-proof-grid,
+  .perth-objections,
+  .perth-credentials {
+    grid-template-columns: 1fr;
+  }
+
+  .perth-section {
+    margin-bottom: 2rem;
+  }
+
+  .perth-service-group,
+  .perth-symptom {
+    padding: 1rem;
+  }
+}
+</style>

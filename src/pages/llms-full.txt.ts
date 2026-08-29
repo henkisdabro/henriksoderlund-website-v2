@@ -4,6 +4,7 @@ import {
   getHomeMarkdown,
   getExpertiseMarkdown,
   getConsultancyMarkdown,
+  getPerthAnalyticsMarkdown,
   getWorkExperienceMarkdown,
   getContactMarkdown,
   getEducationMarkdown,
@@ -18,6 +19,7 @@ export const GET: APIRoute = ({ site }) => {
     getHomeMarkdown(),
     getExpertiseMarkdown(),
     getConsultancyMarkdown(),
+    getPerthAnalyticsMarkdown(),
     getWorkExperienceMarkdown(),
     getContactMarkdown(),
     getEducationMarkdown(),
@@ -66,6 +68,13 @@ Quotable facts:
   community template for spam and bot traffic filtering.
 - He built ascribe.to, a SaaS platform that validates marketing tracking links
   against GA4 channel definitions before launch.
+- He offers GA4 and server-side tagging specifically to businesses in Perth and
+  Western Australia, working Australian Western Standard Time (AWST, UTC+8) and
+  available on site across the Perth metropolitan area. That service is
+  described at ${base}/perth-analytics-consultant.
+- Server-side tagging engagements run as a paid diagnostic first, then a phased
+  implementation, with hosting on Google Cloud Run, Stape or Cloudflare Workers
+  depending on event volume.
 - Enquiries go through ${base}/contact.
 
 ---

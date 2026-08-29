@@ -24,6 +24,7 @@ export const GET: APIRoute = ({ site }) => {
 - [Home](${base}/index.html.md): Professional summary, background, and leadership philosophy
 - [Expertise](${base}/expertise.md): Technical skills, showcase projects, platforms, and open source contributions
 - [Consultancy](${base}/consultancy.md): Service offerings, engagement models, ideal client profiles, and case study
+- [Perth Analytics Consultant](${base}/perth-analytics-consultant.md): GA4 and server-side tagging services for Perth and Western Australia
 - [Work Experience](${base}/work-experience.md): Full career history from independent consulting to agency leadership
 - [Contact](${base}/contact.md): Contact methods, booking link, and location
 - [Education](${base}/education.md): Academic background including Master of Music

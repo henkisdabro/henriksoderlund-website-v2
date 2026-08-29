@@ -1,4 +1,5 @@
 import { consultationData } from '../data/consultation';
+import { perthAnalyticsData } from '../data/perthAnalytics';
 import { expertiseData } from '../data/expertise';
 import { workExperienceData } from '../data/workExperience';
 import { CALENDLY_URL, LINKEDIN_URL, GITHUB_URL, CONTACT_EMAIL } from '../data/links';
@@ -156,6 +157,134 @@ ${caseStudy.results.description}
 ${results}
 
 > "${caseStudy.testimonial.quote}" - ${caseStudy.testimonial.author}
+`;
+}
+
+export function getPerthAnalyticsMarkdown(): string {
+  const {
+    hero, ladder, proof, deliverables, objections, credentials,
+    localContext, audience, services, diagnostics, engagement, faq,
+  } = perthAnalyticsData;
+
+  const stages = ladder.stages
+    .map((s, i) => `${i + 1}. **${s.name}** - ${s.blurb}\n${s.items.map((it) => `   - ${it}`).join('\n')}`)
+    .join('\n\n');
+
+  const proofItems = proof.items
+    .map((p) => `- **${p.name}** (${p.kind}): ${p.description}`)
+    .join('\n');
+
+  const deliverableItems = deliverables.items
+    .map((d) => `- **${d.name}** - ${d.description}`)
+    .join('\n');
+
+  const objectionItems = objections.items
+    .map((o) => `### ${o.question}\n\n${o.answer}`)
+    .join('\n\n');
+
+  const credentialItems = credentials.items
+    .map((c) => `- **${c.name}**: ${c.detail}`)
+    .join('\n');
+
+  const localPoints = localContext.points
+    .map((p) => `- **${p.label}**: ${p.description}`)
+    .join('\n');
+
+  const profiles = audience.profiles
+    .map((p) => `- **${p.label}**: ${p.description}`)
+    .join('\n');
+
+  const serviceGroups = services.groups
+    .map((g) => `### ${g.name}\n\n${g.description}\n\n${g.items.map((i) => `- ${i}`).join('\n')}`)
+    .join('\n\n');
+
+  const symptoms = diagnostics.items
+    .map((i) => `### ${i.symptom}\n\nUsual cause: ${i.cause}\n\nFix: ${i.fix}`)
+    .join('\n\n');
+
+  const models = engagement.models
+    .map((m) => `### ${m.name}\n\n${m.description}\n\n${m.details}`)
+    .join('\n\n');
+
+  const faqItems = faq.items
+    .map((i) => `### ${i.question}\n\n${i.answer}`)
+    .join('\n\n');
+
+  return `# ${hero.title} - Henrik Soederlund
+
+${hero.subtitle}
+
+${hero.statement}
+
+## ${ladder.title}
+
+${ladder.intro}
+
+${stages}
+
+${ladder.note}
+
+## ${proof.title}
+
+${proof.intro}
+
+${proofItems}
+
+${proof.selfHosted}
+
+## ${audience.title}
+
+${audience.intro}
+
+${profiles}
+
+## ${services.title}
+
+${services.intro}
+
+${serviceGroups}
+
+## ${diagnostics.title}
+
+${diagnostics.intro}
+
+${symptoms}
+
+## ${deliverables.title}
+
+${deliverables.intro}
+
+${deliverableItems}
+
+## ${localContext.title}
+
+${localContext.paragraph}
+
+${localPoints}
+
+## ${objections.title}
+
+${objections.intro}
+
+${objectionItems}
+
+## ${credentials.title}
+
+${credentials.intro}
+
+${credentialItems}
+
+${credentials.footnote}
+
+## ${engagement.title}
+
+${engagement.intro}
+
+${models}
+
+## ${faq.title}
+
+${faqItems}
 `;
 }
 

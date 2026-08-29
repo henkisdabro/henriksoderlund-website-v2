@@ -50,6 +50,8 @@ const serviceSchema = {
 ---
 
 <BaseLayout
+  primaryEntity="practice"
+  mentions={['googleAnalytics', 'googleTagManager', 'serverSideTagging', 'bigQuery', 'perth']}
   title="Consultancy - Measurement & AI Automation | Henrik Söderlund"
   description="AI automation and analytics infrastructure delivered as working systems with measurable outcomes. GA4, server-side GTM and BigQuery. Perth, Australia."
 >
@@ -92,6 +94,13 @@ const serviceSchema = {
         ))}
       </div>
     </section>
+
+    <p class="page-crosslink">
+      Based in Perth or Western Australia and here for the measurement and data side? There is a
+      dedicated page on <a href="/perth-analytics-consultant">GA4, server-side tagging and data
+      modelling for Perth and WA businesses</a>, covering the engagement models, deliverables and
+      business credentials in detail.
+    </p>
 
     <section class="engagement-section">
       <h2 id="engagement-models">{consultationData.engagementModels.title}</h2>
@@ -200,11 +209,18 @@ const serviceSchema = {
         <a href={CALENDLY_URL} target="_blank" rel="noopener noreferrer" class="cta-primary">Book a Discovery Call</a>
         <a href="/contact" class="cta-secondary">Send a Message</a>
       </div>
+      <p class="cta-footnote">In Perth or Western Australia? See <a href="/perth-analytics-consultant">analytics and data consulting for WA businesses</a>.</p>
     </section>
   </div>
 </BaseLayout>
 
 <style is:global>
+.cta-footnote {
+  margin-top: 1.25rem;
+  font-size: 0.9rem;
+  color: var(--color-text-tertiary);
+}
+
 /* Consultation Page Styles */
 .consultancy-hero {
   margin-bottom: 3rem;

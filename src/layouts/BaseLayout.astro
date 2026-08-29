@@ -5,8 +5,9 @@ import GitHubLink from '../components/GitHubLink.astro';
 import LinkedInLink from '../components/LinkedInLink.astro';
 import ThemeToggle from '../components/ThemeToggle.astro';
 import Footer from '../components/Footer.astro';
-import { GITHUB_URL, LINKEDIN_URL, CALENDLY_URL } from '../data/links';
+import { GITHUB_URL, LINKEDIN_URL, CALENDLY_URL, CONTACT_EMAIL } from '../data/links';
 import { consultationData } from '../data/consultation';
+import { ENTITIES, PERTH_GEO } from '../data/entities';
 import '../styles/theme.css';
 import '../styles/index.css';
 import '../styles/App.css';
@@ -15,9 +16,26 @@ interface Props {
   title: string;
   description: string;
   ogType?: 'profile' | 'website';
+  /** Which sitewide entity this page is primarily about. */
+  primaryEntity?: 'person' | 'practice';
+  /** Keys from `ENTITIES` to emit as `mentions` on the page's WebPage node. */
+  mentions?: string[];
 }
 
-const { title, description, ogType = 'website' } = Astro.props;
+const {
+  title,
+  description,
+  ogType = 'website',
+  primaryEntity = 'person',
+  mentions = [],
+} = Astro.props;
+
+const siteOrigin = 'https://www.henriksoderlund.com';
+// Must match the canonical emitted by SEO.astro exactly, which keeps the root
+// slash on the homepage and has none elsewhere (trailingSlash: 'never').
+const pageURL = Astro.url.pathname === '/'
+  ? `${siteOrigin}/`
+  : new URL(Astro.url.pathname, siteOrigin).href;
 
 const personSchemaJSON = JSON.stringify({
   "@context": "https://schema.org",
@@ -112,6 +130,12 @@ const practiceSchemaJSON = JSON.stringify({
   "@type": "ProfessionalService",
   "@id": "https://www.henriksoderlund.com/#practice",
   "name": "Henrik Söderlund - Strategic Technology Consultancy",
+  "taxID": "96 522 684 594",
+  "identifier": {
+    "@type": "PropertyValue",
+    "propertyID": "ABN",
+    "value": "96522684594"
+  },
   "url": "https://www.henriksoderlund.com/consultancy",
   "description": consultationData.hero.subtitle,
   "founder": {
@@ -123,10 +147,46 @@ const practiceSchemaJSON = JSON.stringify({
     "addressRegion": "WA",
     "addressCountry": "AU"
   },
+  "image": "https://www.henriksoderlund.com/og_image.png",
+  "logo": "https://www.henriksoderlund.com/og_image.png",
+  "email": CONTACT_EMAIL,
+  // A solo practice with no shopfront: the service area is modelled as a
+  // GeoCircle over the Perth metropolitan area rather than as a street address,
+  // which is what schema.org expects of a service-area business.
   "areaServed": [
-    { "@type": "City", "name": "Perth" },
-    { "@type": "State", "name": "Western Australia" },
-    { "@type": "Country", "name": "Australia" }
+    { ...ENTITIES.perth },
+    { ...ENTITIES.westernAustralia },
+    { "@type": "Country", "name": "Australia", "sameAs": "https://www.wikidata.org/wiki/Q408" },
+    {
+      "@type": "GeoCircle",
+      "geoMidpoint": {
+        "@type": "GeoCoordinates",
+        "latitude": PERTH_GEO.latitude,
+        "longitude": PERTH_GEO.longitude
+      },
+      "geoRadius": "60000"
+    }
+  ],
+  "openingHoursSpecification": [
+    {
+      "@type": "OpeningHoursSpecification",
+      "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
+      "opens": "09:00",
+      "closes": "17:00"
+    }
+  ],
+  "currenciesAccepted": "AUD",
+  "knowsLanguage": [
+    { "@type": "Language", "name": "English", "alternateName": "en" },
+    { "@type": "Language", "name": "Swedish", "alternateName": "sv" }
+  ],
+  "knowsAbout": [
+    { ...ENTITIES.googleAnalytics },
+    { ...ENTITIES.googleTagManager },
+    { ...ENTITIES.serverSideTagging },
+    { ...ENTITIES.bigQuery },
+    { ...ENTITIES.lookerStudio },
+    { ...ENTITIES.cloudflareWorkers }
   ],
   "serviceType": "AI Automation & Technology Consulting",
   "hasOfferCatalog": {
@@ -153,6 +213,36 @@ const practiceSchemaJSON = JSON.stringify({
     GITHUB_URL,
     LINKEDIN_URL
   ]
+});
+
+// Per-page WebPage node. This is what ties a given URL to the sitewide
+// entities: without it, `#person`, `#practice` and `#website` float free of the
+// page a crawler is actually looking at. `mentions` carries the Wikidata-linked
+// technology entities so an answer engine can resolve "GA4" or "server-side
+// tagging" to a known thing rather than to a string.
+const webPageSchemaJSON = JSON.stringify({
+  "@context": "https://schema.org",
+  "@type": "WebPage",
+  "@id": `${pageURL}#webpage`,
+  "url": pageURL,
+  "name": title,
+  "description": description,
+  "inLanguage": "en-AU",
+  "isPartOf": { "@id": "https://www.henriksoderlund.com/#website" },
+  "about": {
+    "@id": primaryEntity === 'practice'
+      ? "https://www.henriksoderlund.com/#practice"
+      : "https://www.henriksoderlund.com/#person"
+  },
+  "primaryImageOfPage": {
+    "@type": "ImageObject",
+    "url": "https://www.henriksoderlund.com/og_image.png",
+    "width": 1200,
+    "height": 630
+  },
+  ...(mentions.length > 0 && {
+    mentions: mentions.map(key => ENTITIES[key]).filter(Boolean),
+  }),
 });
 
 const websiteSchemaJSON = JSON.stringify({
@@ -236,6 +326,9 @@ const websiteSchemaJSON = JSON.stringify({
 
     <!-- Structured Data - Website Schema -->
     <script type="application/ld+json" set:html={websiteSchemaJSON} is:inline></script>
+
+    <!-- Structured Data - WebPage Schema (per page) -->
+    <script type="application/ld+json" set:html={webPageSchemaJSON} is:inline></script>
 
     <!-- Page-specific JSON-LD slot -->
     <slot name="head" />
