@@ -54,8 +54,18 @@
 
 /* ==========================================================================
    Light Theme (default)
+
+   Defined on bare :root as well as the explicit attribute so the palette
+   resolves with no JavaScript at all. The inline theme script in
+   BaseLayout.astro is the only thing that ever stamps data-theme, and it
+   cannot run for a crawler, for a reader-mode tool, or where localStorage
+   throws (Safari "Block All Cookies", Firefox with storage disabled,
+   locked-down enterprise profiles). Without a bare :root every colour token
+   would be unset and every declaration using one invalid at computed-value
+   time - i.e. a completely unstyled page.
    ========================================================================== */
 
+:root,
 :root[data-theme="light"] {
   color-scheme: light;
 
@@ -73,7 +83,7 @@
   --color-text-secondary: #555555;
   --color-text-tertiary: #666666;
   --color-text-muted: #6b6b6b;
-  --color-text-faint: #767676;
+  --color-text-faint: #6e6e6e;
   --color-text-heading: #2c3e50;
   --color-text-label: #374151;
   --color-text-strong: #1f2937;
@@ -136,7 +146,102 @@
 }
 
 /* ==========================================================================
-   Dark Theme
+   Dark Theme - system preference, no explicit choice stored
+
+   Guarded with :not([data-theme="light"]) so an explicit light choice still
+   wins. Specificity is 0,2,0 either way, and the excluded attribute keeps the
+   two from ever both matching.
+
+   NOTE: this block duplicates the :root[data-theme="dark"] palette below.
+   Any token changed in one must be changed in the other.
+   ========================================================================== */
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+
+    /* Backgrounds */
+    --color-bg-primary: #0f1117;
+    --color-bg-secondary: #1a1d27;
+    --color-bg-tertiary: #232733;
+    --color-bg-elevated: #1e2230;
+    --color-bg-overlay: rgba(15, 17, 23, 0.92);
+    --color-bg-nav-header: rgba(26, 29, 39, 0.75);
+    --color-bg-code: rgba(255, 255, 255, 0.06);
+
+    /* Text */
+    --color-text-primary: #e4e4e7;
+    --color-text-secondary: #a1a1aa;
+    --color-text-tertiary: #9494a0;
+    --color-text-muted: #8f8f99;
+    --color-text-faint: #8f8f99;
+    --color-text-heading: #f4f4f5;
+    --color-text-label: #d4d4d8;
+    --color-text-strong: #f4f4f5;
+
+    /* Accent */
+    --color-accent: #38bdf8;
+    --color-accent-hover: #7dd3fc;
+    --color-accent-subtle: rgba(56, 189, 248, 0.15);
+    --color-accent-text: #0f1117;
+
+    /* Borders */
+    --color-border-primary: #2d3348;
+    --color-border-secondary: #3a3f54;
+    --color-border-subtle: #1e2230;
+    --color-border-input: #3a3f54;
+
+    /* Status */
+    --color-success-bg: rgba(22, 163, 74, 0.1);
+    --color-success-text: #4ade80;
+    --color-success-border: rgba(74, 222, 128, 0.2);
+    --color-success-icon: #4ade80;
+    --color-success-hover: #86efac;
+
+    --color-error-bg: rgba(153, 27, 27, 0.15);
+    --color-error-text: #fca5a5;
+    --color-error-border: rgba(252, 165, 165, 0.2);
+
+    /* Tags & Pills */
+    --color-tag-bg: #232733;
+    --color-tag-text: #a1a1aa;
+    --color-pill-bg: #1e2230;
+    --color-pill-text: #a1a1aa;
+    --color-pill-border: #2d3348;
+
+    /* Misc */
+    --color-price: #34d399;
+    --color-icon: #d4d4d8;
+    --color-icon-hover: #ffffff;
+    --color-nav-active-bg: #232733;
+    --color-nav-active-border: #38bdf8;
+    --color-nav-hover-bg: #1a1d27;
+    --color-btn-bg: #232733;
+    --color-btn-hover-bg: #2d3348;
+    --color-shadow: rgba(0, 0, 0, 0.4);
+    --color-shadow-heavy: rgba(0, 0, 0, 0.5);
+    --color-gradient-divider: #2d3348;
+    --color-marker: #818cf8;
+    --color-link-default: #818cf8;
+    --color-link-hover: #a5b4fc;
+
+    /* Breathing animation */
+    --color-breathe-glow: rgba(56, 189, 248, 0.2);
+
+    /* Fonts - coding font in dark mode */
+    --font-body: 'JetBrains Mono', 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+    --font-body-alt: 'JetBrains Mono', monospace;
+    --font-mono: 'JetBrains Mono', 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+    --font-code: 'JetBrains Mono', source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
+  }
+}
+
+/* ==========================================================================
+   Dark Theme - explicit choice
+
+   Last in source order so it beats the prefers-color-scheme block above at
+   equal specificity, letting an explicit dark choice override a light OS
+   preference and vice versa.
    ========================================================================== */
 
 :root[data-theme="dark"] {
@@ -154,9 +259,9 @@
   /* Text */
   --color-text-primary: #e4e4e7;
   --color-text-secondary: #a1a1aa;
-  --color-text-tertiary: #8b8b94;
-  --color-text-muted: #7b7b84;
-  --color-text-faint: #7b7b84;
+  --color-text-tertiary: #9494a0;
+  --color-text-muted: #8f8f99;
+  --color-text-faint: #8f8f99;
   --color-text-heading: #f4f4f5;
   --color-text-label: #d4d4d8;
   --color-text-strong: #f4f4f5;
