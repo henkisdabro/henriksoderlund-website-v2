@@ -135,7 +135,7 @@ const errorType =
           if (window.__contactFormStarted) return true;
           try {
             return sessionStorage.getItem(KEY) === '1';
-          } catch (e) {
+          } catch {
             return false;
           }
         };
@@ -147,7 +147,7 @@ const errorType =
           window.__contactFormStarted = true;
           try {
             sessionStorage.setItem(KEY, '1');
-          } catch (e) {
+          } catch {
             /* storage unavailable - the in-document flag still guards this render */
           }
           window.dataLayer = window.dataLayer || [];

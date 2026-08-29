@@ -315,15 +315,15 @@ const calendlyHost = new URL(CALENDLY_URL).hostname;
           try {
             var stored = localStorage.getItem('theme');
             return stored === 'dark' || stored === 'light' ? stored : null;
-          } catch (e) { return null; }
+          } catch { return null; }
         }
 
         function writeStoredTheme(t) {
-          try { localStorage.setItem('theme', t); } catch (e) { /* storage unavailable */ }
+          try { localStorage.setItem('theme', t); } catch { /* storage unavailable */ }
         }
 
         function prefersDark() {
-          try { return window.matchMedia('(prefers-color-scheme: dark)').matches; } catch (e) { return false; }
+          try { return window.matchMedia('(prefers-color-scheme: dark)').matches; } catch { return false; }
         }
 
         var theme = readStoredTheme() || (prefersDark() ? 'dark' : 'light');
@@ -372,7 +372,7 @@ const calendlyHost = new URL(CALENDLY_URL).hostname;
               window.__setTheme(e.matches ? 'dark' : 'light');
             }
           });
-        } catch (e) { /* matchMedia unavailable */ }
+        } catch { /* matchMedia unavailable */ }
       })();
     </script>
 
@@ -504,7 +504,7 @@ const calendlyHost = new URL(CALENDLY_URL).hostname;
           try {
             window.dataLayer = window.dataLayer || [];
             window.dataLayer.push(payload);
-          } catch (e) { /* analytics must never break a click */ }
+          } catch { /* analytics must never break a click */ }
         }
 
         function slug(value) {
@@ -552,7 +552,7 @@ const calendlyHost = new URL(CALENDLY_URL).hostname;
             if (!anchor) return;
 
             var url;
-            try { url = new URL(anchor.href, location.href); } catch (e) { return; }
+            try { url = new URL(anchor.href, location.href); } catch { return; }
 
             if (url.protocol === 'mailto:') {
               push({ event: 'email_click', cta_location: locationOf(anchor) });
@@ -578,7 +578,7 @@ const calendlyHost = new URL(CALENDLY_URL).hostname;
                 link_text: labelOf(anchor)
               });
             }
-          } catch (e) { /* never throw out of a click handler */ }
+          } catch { /* never throw out of a click handler */ }
         }, true);
       })();
     </script>

@@ -87,7 +87,7 @@ const pages = [
     function readStored() {
       try {
         return sessionStorage.getItem(STORAGE_KEY);
-      } catch (e) {
+      } catch {
         return null;
       }
     }
@@ -95,7 +95,7 @@ const pages = [
     function writeStored(value) {
       try {
         sessionStorage.setItem(STORAGE_KEY, value);
-      } catch (e) {
+      } catch {
         // Storage unavailable - the preference lives in memory for this page only.
       }
     }

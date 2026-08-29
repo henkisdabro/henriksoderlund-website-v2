@@ -81,7 +81,7 @@ export const server = {
       }
 
       const resend = new Resend(RESEND_API_KEY);
-      let sendFailed = false;
+      let sendFailed: boolean;
       try {
         const { error } = await resend.emails.send({
           from: 'Henrik Soderlund <noreply@utmhub.co>',
