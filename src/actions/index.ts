@@ -9,19 +9,6 @@ import { CONTACT_EMAIL } from '../data/links';
 // eslint-disable-next-line no-control-regex
 const CONTROL_CHARS = /[\x00-\x1f\x7f]/;
 
-/**
- * Stable id for one submission: an F5 re-POST of the same enquiry produces the
- * same id, a genuine second enquiry produces a different one. Used client-side
- * to deduplicate the generate_lead event.
- */
-async function submissionIdFor(email: string, message: string): Promise<string> {
-  const data = new TextEncoder().encode(`${email}|${message}`);
-  const digest = await crypto.subtle.digest('SHA-256', data);
-  return Array.from(new Uint8Array(digest).slice(0, 12))
-    .map((byte) => byte.toString(16).padStart(2, '0'))
-    .join('');
-}
-
 export const server = {
   contact: defineAction({
     accept: 'form',
@@ -79,7 +66,10 @@ export const server = {
             body !== null &&
             (body as { success?: unknown }).success === true;
         }
-      } catch {
+      } catch (cause) {
+        // Logged so a Cloudflare-side outage is distinguishable from a bot:
+        // both fail closed, but only one of them is ours to fix.
+        console.error('[contact] Turnstile siteverify request failed', cause);
         verified = false;
       }
 
@@ -100,9 +90,13 @@ export const server = {
           subject: `Website contact from ${input.name}`,
           text: `From: ${input.name} (${input.email})\n\n${input.message}`,
         });
+        if (error) {
+          console.error('[contact] Resend returned an error', error);
+        }
         sendFailed = Boolean(error);
-      } catch {
+      } catch (cause) {
         // Network failure or a non-JSON response from the Resend API
+        console.error('[contact] Resend send threw', cause);
         sendFailed = true;
       }
 
@@ -113,10 +107,7 @@ export const server = {
         });
       }
 
-      return {
-        success: true,
-        submissionId: await submissionIdFor(input.email, input.message),
-      };
+      return { success: true };
     },
   }),
 };

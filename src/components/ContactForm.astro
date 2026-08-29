@@ -5,7 +5,6 @@ import { CONTACT_EMAIL } from '../data/links';
 
 const result = Astro.getActionResult(actions.contact);
 const success = result?.data?.success;
-const submissionId = result?.data?.submissionId ?? '';
 const error = result?.error;
 
 // Surface the per-field validation messages rather than the raw Zod payload,
@@ -45,50 +44,30 @@ const errorType =
 ---
 
 {success && (
-  <div id="form-result" class="form-success" role="alert" tabindex="-1">
+  <div id="form-result" class="form-success" tabindex="-1">
     <div class="form-success-icon">&#10003;</div>
     <h3>Message sent successfully</h3>
     <p>Thank you for reaching out. I'll get back to you within one business day.</p>
   </div>
-  <script is:inline define:vars={{ submissionId }}>
+  <script is:inline>
     (function () {
       var resultEl = document.getElementById('form-result');
       if (resultEl) resultEl.focus();
 
-      // Deduplicate per submission, not per session: an F5 re-POST of the same
-      // enquiry carries the same id, a genuine second enquiry does not.
-      var id = submissionId || '';
-      var seen = [];
-      try {
-        seen = JSON.parse(sessionStorage.getItem('contact_submissions') || '[]');
-        if (!Array.isArray(seen)) seen = [];
-      } catch (e) {
-        seen = [];
-      }
-      if (id && seen.indexOf(id) !== -1) return;
-      if (id) {
-        seen.push(id);
-        try {
-          sessionStorage.setItem('contact_submissions', JSON.stringify(seen.slice(-10)));
-        } catch (e) {
-          /* storage unavailable - still report the lead */
-        }
-      }
-
+      // No client-side deduplication: Turnstile tokens are single-use, so a
+      // re-POST is rejected before this block can ever render a second time.
       window.dataLayer = window.dataLayer || [];
       window.dataLayer.push({
         'event': 'generate_lead',
         'form_name': 'contact',
-        'form_location': window.location.pathname,
-        'method': 'contact_form',
-        'submission_id': id
+        'form_location': window.location.pathname
       });
     })();
   </script>
 )}
 
 {error && (
-  <div id="form-result" class="form-error" role="alert" tabindex="-1">
+  <div id="form-result" class="form-error" tabindex="-1">
     {error.code === 'FORBIDDEN' ? (
       <p><strong>Verification failed.</strong> Please refresh the page and try again.</p>
     ) : error.code === 'BAD_REQUEST' ? (
@@ -117,7 +96,7 @@ const errorType =
         'form_name': 'contact',
         'error_type': errorType,
         'error_code': errorCode,
-        'error_fields': errorFields
+        'error_fields': errorFields.join(',')
       });
     })();
   </script>
@@ -140,23 +119,40 @@ const errorType =
       <textarea id="message" name="message" required maxlength="2000" rows="6" placeholder="Tell me about your project or question..." aria-invalid={invalidFlag('message')} aria-describedby={describedBy('message')}></textarea>
     </div>
     <div class="form-footer">
-      <div class="cf-turnstile" data-sitekey={TURNSTILE_SITE_KEY} aria-invalid={invalidFlag('cf-turnstile-response')} aria-describedby={describedBy('cf-turnstile-response')}></div>
+      <div class="cf-turnstile" data-sitekey={TURNSTILE_SITE_KEY} aria-describedby={describedBy('cf-turnstile-response')}></div>
       <button type="submit" class="submit-btn">Send Message</button>
     </div>
     <script is:inline>
-      // form_start - fires at most once per document, on first focus or input
+      // contact_form_start - fires at most once per session. A validation error
+      // is a full render cycle, so a per-document flag alone would refire and
+      // inflate the denominator of the conversion rate by the error rate.
       (function () {
         var script = document.currentScript;
         var form = script && script.closest('form');
-        if (!form || window.__contactFormStarted) return;
+        if (!form) return;
+        var KEY = 'contact_form_started';
+        var started = function () {
+          if (window.__contactFormStarted) return true;
+          try {
+            return sessionStorage.getItem(KEY) === '1';
+          } catch (e) {
+            return false;
+          }
+        };
+        if (started()) return;
         var fire = function () {
-          if (window.__contactFormStarted) return;
-          window.__contactFormStarted = true;
           form.removeEventListener('focusin', fire);
           form.removeEventListener('input', fire);
+          if (started()) return;
+          window.__contactFormStarted = true;
+          try {
+            sessionStorage.setItem(KEY, '1');
+          } catch (e) {
+            /* storage unavailable - the in-document flag still guards this render */
+          }
           window.dataLayer = window.dataLayer || [];
           window.dataLayer.push({
-            'event': 'form_start',
+            'event': 'contact_form_start',
             'form_name': 'contact'
           });
         };
@@ -176,20 +172,24 @@ const errorType =
         if (code) payload['error_code'] = String(code);
         window.dataLayer.push(payload);
       };
-      // Explicit render callback - captures widget ID for theme toggle re-renders
-      window.onTurnstileLoad = function() {
+      // Render factory - callback ownership stays in this file, so the theme
+      // toggle in BaseLayout.astro can re-render the widget without dropping
+      // the outcome callbacks.
+      window.__turnstileRender = function (theme) {
         var tw = document.querySelector('.cf-turnstile');
-        if (!tw) return;
-        var theme = document.documentElement.getAttribute('data-theme') || 'light';
-        window.__turnstileWidgetId = window.turnstile.render(tw, {
+        if (!tw || !window.turnstile) return;
+        return window.turnstile.render(tw, {
           sitekey: tw.getAttribute('data-sitekey'),
-          theme: theme,
-          'callback': function() { window.__turnstileOutcome('success'); },
-          'error-callback': function(code) { window.__turnstileOutcome('error', code); },
-          'expired-callback': function() { window.__turnstileOutcome('expired'); },
-          'timeout-callback': function() { window.__turnstileOutcome('timeout'); }
+          theme: theme || document.documentElement.getAttribute('data-theme') || 'light',
+          'callback': function () { window.__turnstileOutcome('success'); },
+          'error-callback': function (code) { window.__turnstileOutcome('error', code); },
+          'expired-callback': function () { window.__turnstileOutcome('expired'); },
+          'timeout-callback': function () { window.__turnstileOutcome('timeout'); }
         });
-      }
+      };
+      window.onTurnstileLoad = function () {
+        window.__turnstileWidgetId = window.__turnstileRender();
+      };
     </script>
     <script is:inline src="https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit&onload=onTurnstileLoad" async defer></script>
   </form>
