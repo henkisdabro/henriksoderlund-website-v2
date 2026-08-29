@@ -52,6 +52,8 @@ const faqSchema = {
   "@context": "https://schema.org",
   "@type": "FAQPage",
   "@id": `${pageUrl}#faq`,
+  // Anchors the FAQ to the page's own WebPage node emitted by BaseLayout.
+  "isPartOf": { "@id": `${pageUrl}#webpage` },
   "mainEntity": perthAnalyticsData.faq.items.map(item => ({
     "@type": "Question",
     "name": item.question,

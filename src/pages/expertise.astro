@@ -301,11 +301,6 @@ import { sectionIcons } from '../utils/sectionIcons';
       resumeAuto();
     }, { passive: true });
 
-    // Clean up on view transition navigation
-    document.addEventListener('astro:before-preparation', () => {
-      clearInterval(timer);
-    }, { once: true });
-
     goTo(0);
   }
 
