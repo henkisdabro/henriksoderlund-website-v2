@@ -79,7 +79,7 @@ const pages = [
 
     var isHomePage = window.location.pathname === '/';
     var STORAGE_KEY = 'nav-collapsed';
-    var NARROW_QUERY = 1024;
+    var NARROW_QUERY = '(max-width: 1024px)';
 
     // Storage is a progressive enhancement: Safari's "Block All Cookies",
     // Firefox with storage disabled and kiosk profiles all throw a
@@ -100,8 +100,17 @@ const pages = [
       }
     }
 
+    // matchMedia is the primitive for breakpoint crossings, but it is guarded
+    // the same way storage is: without it the nav simply stops re-seeding.
+    var narrowMQ = null;
+    try {
+      narrowMQ = window.matchMedia(NARROW_QUERY);
+    } catch {
+      narrowMQ = null;
+    }
+
     function isNarrow() {
-      return window.innerWidth <= NARROW_QUERY;
+      return narrowMQ ? narrowMQ.matches : false;
     }
 
     var stored = readStored();
@@ -110,13 +119,8 @@ const pages = [
     // value must fall back to the viewport default, not freeze the nav open.
     var hasUserPreference = stored === 'true' || stored === 'false';
     var isCollapsed = hasUserPreference ? stored === 'true' : isNarrow();
-    var wasNarrow = isNarrow();
 
-    // recordPreference marks the new state as a deliberate user choice: it is
-    // written to storage and it disables the breakpoint re-seeding below. System
-    // behaviour (initial paint, breakpoint re-seed, auto-close on tap) passes
-    // false so the nav keeps responding to the viewport for the rest of the session.
-    function applyCollapseState(recordPreference) {
+    function applyCollapseState() {
       if (isCollapsed) {
         navBox.classList.add('collapsed');
         collapseBtn.setAttribute('aria-label', 'Expand navigation');
@@ -126,38 +130,33 @@ const pages = [
         collapseBtn.setAttribute('aria-label', 'Collapse navigation');
         collapseBtn.setAttribute('aria-expanded', 'true');
       }
-      if (recordPreference) {
-        hasUserPreference = true;
-        writeStored(String(isCollapsed));
-      }
     }
 
-    applyCollapseState(false);
+    applyCollapseState();
 
     collapseBtn.addEventListener('click', function () {
       isCollapsed = !isCollapsed;
-      applyCollapseState(true);
+      hasUserPreference = true;
+      writeStored(String(isCollapsed));
+      applyCollapseState();
     });
 
-    window.addEventListener('resize', function () {
-      var narrow = isNarrow();
-      // Only a genuine crossing of the breakpoint counts - a devtools pane,
-      // a zoom step or an OS scaling change fires resize without crossing it.
-      if (narrow === wasNarrow) return;
-      wasNarrow = narrow;
-      // Never discard an explicit choice; re-seed the default only.
-      if (hasUserPreference) return;
-      isCollapsed = narrow;
-      applyCollapseState(false);
-    });
+    if (narrowMQ && narrowMQ.addEventListener) {
+      narrowMQ.addEventListener('change', function (e) {
+        // Never discard an explicit choice; re-seed the default only.
+        if (hasUserPreference) return;
+        isCollapsed = e.matches;
+        applyCollapseState();
+      });
+    }
 
     // Auto-close on mobile when a page link is clicked
     var pageLinks = navBox.querySelectorAll('.nav-page-link');
     pageLinks.forEach(function (link) {
       link.addEventListener('click', function () {
-        if (window.innerWidth <= 1024) {
+        if (isNarrow()) {
           isCollapsed = true;
-          applyCollapseState(false);
+          applyCollapseState();
         }
       });
     });
@@ -208,9 +207,9 @@ const pages = [
             if (el) {
               el.scrollIntoView({ behavior: 'smooth', block: 'start' });
             }
-            if (window.innerWidth <= 1024) {
+            if (isNarrow()) {
               isCollapsed = true;
-              applyCollapseState(false);
+              applyCollapseState();
             }
           });
 

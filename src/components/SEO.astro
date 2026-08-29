@@ -1,4 +1,6 @@
 ---
+import { markdownTwinUrl, pageUrl, SITE_ORIGIN } from '../utils/pageUrl';
+
 interface Props {
   title: string;
   description: string;
@@ -9,33 +11,17 @@ interface Props {
 
 const { title, description, ogType = 'website', robots } = Astro.props;
 
-const canonicalURL = new URL(Astro.url.pathname, Astro.site);
-const siteBase = Astro.site?.toString().replace(/\/$/, '') ?? 'https://www.henriksoderlund.com';
-const ogImageURL = `${siteBase}/og_image.png`;
-
-// Normalised path: no trailing slash, so '/' becomes ''.
-const pagePath = Astro.url.pathname.replace(/\/+$/, '');
+const canonicalHref = pageUrl(Astro.url.pathname);
+const ogImageURL = `${SITE_ORIGIN}/og_image.png`;
 
 const robotsContent =
   robots ?? 'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1';
 
-// Every `*.md.ts` route under src/pages is a plain-text twin of an HTML page.
-// Globbing them keeps the alternate links in step with the filesystem, so a page
-// without a twin can never emit a dead link.
-const MARKDOWN_ROUTES = new Set(
-  Object.keys(import.meta.glob('/src/pages/**/*.md.ts')).map((file) =>
-    file.replace('/src/pages', '').replace(/\.ts$/, '')
-  )
-);
-
-const markdownCandidate = pagePath === '' ? '/index.html.md' : `${pagePath}.md`;
-const markdownURL = MARKDOWN_ROUTES.has(markdownCandidate)
-  ? new URL(markdownCandidate, Astro.site).href
-  : null;
+const markdownURL = markdownTwinUrl(Astro.url.pathname);
 ---
 
 <!-- Canonical -->
-<link rel="canonical" href={canonicalURL.href} />
+<link rel="canonical" href={canonicalHref} />
 
 <!-- Indexing -->
 <meta name="robots" content={robotsContent} />
@@ -47,7 +33,7 @@ const markdownURL = MARKDOWN_ROUTES.has(markdownCandidate)
 
 <!-- Open Graph -->
 <meta property="og:type" content={ogType} />
-<meta property="og:url" content={canonicalURL.href} />
+<meta property="og:url" content={canonicalHref} />
 <meta property="og:title" content={title} />
 <meta property="og:description" content={description} />
 <meta property="og:image" content={ogImageURL} />

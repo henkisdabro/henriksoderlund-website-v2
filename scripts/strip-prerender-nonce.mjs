@@ -17,9 +17,15 @@
 import { readdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 
-const root = 'dist/client';
+export const CLIENT_ROOT = 'dist/client';
 
-function htmlFiles(dir) {
+// Shared with scripts/verify-build.mjs: the stripper and the assertion that it
+// ran are one contract, so they must walk the same files with the same pattern.
+// \s+ (not \s) so the attribute takes its leading whitespace with it and a
+// multi-line <script> tag is not left with a dangling indent.
+export const NONCE_ATTR = /\s+nonce="[^"]*"/g;
+
+export function htmlFiles(dir) {
   const out = [];
   for (const entry of readdirSync(dir, { withFileTypes: true })) {
     const path = join(dir, entry.name);
@@ -29,17 +35,19 @@ function htmlFiles(dir) {
   return out;
 }
 
-const NONCE = /\s+nonce="[^"]*"/g;
+// Guarded so verify-build.mjs can import the pattern and the walk without
+// re-running the strip as an import side effect.
+if (import.meta.main) {
+  let files = 0;
+  let removed = 0;
+  for (const path of htmlFiles(CLIENT_ROOT)) {
+    const html = readFileSync(path, 'utf-8');
+    const matches = html.match(NONCE_ATTR);
+    if (!matches) continue;
+    writeFileSync(path, html.replace(NONCE_ATTR, ''));
+    files++;
+    removed += matches.length;
+  }
 
-let files = 0;
-let removed = 0;
-for (const path of htmlFiles(root)) {
-  const html = readFileSync(path, 'utf-8');
-  const matches = html.match(NONCE);
-  if (!matches) continue;
-  writeFileSync(path, html.replace(NONCE, ''));
-  files++;
-  removed += matches.length;
+  console.log(`Stripped ${removed} build-time nonce attribute(s) from ${files} file(s)`);
 }
-
-console.log(`Stripped ${removed} build-time nonce attribute(s) from ${files} file(s)`);

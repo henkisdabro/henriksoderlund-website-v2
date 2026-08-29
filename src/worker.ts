@@ -105,10 +105,12 @@ const CAMPAIGN_PARAMS = new Set([
 // in Expires cannot mis-split; the leading ';' anchor keeps a cookie VALUE
 // containing "Domain=" from matching; the global flag clears a malformed
 // duplicate Domain. Cookies with no Domain (including __Host- prefixed ones) pass
-// through byte-identical.
+// through byte-identical. The source headers are passed in alongside the copy
+// because getSetCookie() must be read off the ORIGINAL response headers: the
+// copy is what we are about to rewrite, and reading Set-Cookie back off it
+// risks the comma-folded single-string view rather than one entry per header.
 function stripCookieDomain(source: Headers, headers: Headers): void {
   const cookies = source.getSetCookie();
-  if (cookies.length === 0) return;
   headers.delete('Set-Cookie');
   for (const cookie of cookies) {
     headers.append('Set-Cookie', cookie.replace(/;\s*Domain\s*=[^;]*/gi, ''));
@@ -209,50 +211,9 @@ export default {
       return new Response(null, { status: 301, headers });
     }
 
+    let response: Response;
     try {
-      const response = await handle(request, env, ctx);
-      const contentType = response.headers.get('content-type') || '';
-      const headers = new Headers(response.headers);
-      setSecurityHeaders(headers);
-      headers.delete('speculation-rules');
-
-      // Prevent search engines from indexing text/markdown and text/plain endpoints
-      if (contentType.includes('text/markdown') || contentType.includes('text/plain')) {
-        headers.set('X-Robots-Tag', 'noindex');
-      }
-
-      if (contentType.includes('text/html')) {
-        // Canonical Link header on HTML only: pairing it with the X-Robots-Tag
-        // noindex on the .md and .txt endpoints is a contradictory signal, and on
-        // static assets it is merely noise. Pathname only, no query params.
-        const host = request.headers.get('host');
-        if (host === 'www.henriksoderlund.com' && response.status >= 200 && response.status < 300) {
-          headers.set('Link', `<https://www.henriksoderlund.com${url.pathname}>; rel="canonical"`);
-        }
-
-        const nonce = crypto.randomUUID();
-        headers.set('Content-Security-Policy', buildCSP(nonce));
-        headers.set('Cache-Control', 'no-store, no-cache, must-revalidate, max-age=0');
-        headers.set('CDN-Cache-Control', 'no-store');
-
-        const prepared = new Response(response.body, {
-          status: response.status,
-          headers,
-        });
-
-        return new HTMLRewriter()
-          .on('script:not([type="application/ld+json"])', {
-            element(el) {
-              el.setAttribute('nonce', nonce);
-            },
-          })
-          .transform(prepared);
-      }
-
-      return new Response(response.body, {
-        status: response.status,
-        headers,
-      });
+      response = await handle(request, env, ctx);
     } catch (error) {
       // Synchronous and pre-stream failures only - routing errors and anything
       // that throws before handle() resolves. Under output: 'server' Astro
@@ -270,5 +231,48 @@ export default {
       setSecurityHeaders(headers);
       return new Response('500 Internal Server Error\n', { status: 500, headers });
     }
+
+    const contentType = response.headers.get('content-type') || '';
+    const headers = new Headers(response.headers);
+    setSecurityHeaders(headers);
+    headers.delete('speculation-rules');
+
+    // Prevent search engines from indexing text/markdown and text/plain endpoints
+    if (contentType.includes('text/markdown') || contentType.includes('text/plain')) {
+      headers.set('X-Robots-Tag', 'noindex');
+    }
+
+    if (contentType.includes('text/html')) {
+      // Canonical Link header on HTML only: pairing it with the X-Robots-Tag
+      // noindex on the .md and .txt endpoints is a contradictory signal, and on
+      // static assets it is merely noise. Pathname only, no query params.
+      const host = request.headers.get('host');
+      if (host === 'www.henriksoderlund.com' && response.status >= 200 && response.status < 300) {
+        headers.set('Link', `<https://www.henriksoderlund.com${url.pathname}>; rel="canonical"`);
+      }
+
+      const nonce = crypto.randomUUID();
+      headers.set('Content-Security-Policy', buildCSP(nonce));
+      headers.set('Cache-Control', 'no-store, no-cache, must-revalidate, max-age=0');
+      headers.set('CDN-Cache-Control', 'no-store');
+
+      const prepared = new Response(response.body, {
+        status: response.status,
+        headers,
+      });
+
+      return new HTMLRewriter()
+        .on('script:not([type="application/ld+json"])', {
+          element(el) {
+            el.setAttribute('nonce', nonce);
+          },
+        })
+        .transform(prepared);
+    }
+
+    return new Response(response.body, {
+      status: response.status,
+      headers,
+    });
   },
 };

@@ -20,7 +20,7 @@ const fieldIssues: FieldIssue[] =
           .map((message, index) => ({
             field,
             message,
-            id: `form-error-${field.replace(/[^a-zA-Z0-9_-]/g, '-')}-${index}`,
+            id: `form-error-${field}-${index}`,
           }))
       )
     : [];
@@ -31,8 +31,7 @@ const describedBy = (field: string) => {
   const ids = fieldIssues.filter((issue) => issue.field === field).map((issue) => issue.id);
   return ids.length > 0 ? ids.join(' ') : undefined;
 };
-const invalidFlag = (field: string) =>
-  invalidFields.includes(field) ? 'true' : undefined;
+const invalidFlag = (field: string) => (describedBy(field) ? 'true' : undefined);
 
 const errorCode = error?.code ?? 'UNKNOWN';
 const errorType =
@@ -132,7 +131,6 @@ const errorType =
         if (!form) return;
         var KEY = 'contact_form_started';
         var started = function () {
-          if (window.__contactFormStarted) return true;
           try {
             return sessionStorage.getItem(KEY) === '1';
           } catch {
@@ -143,12 +141,10 @@ const errorType =
         var fire = function () {
           form.removeEventListener('focusin', fire);
           form.removeEventListener('input', fire);
-          if (started()) return;
-          window.__contactFormStarted = true;
           try {
             sessionStorage.setItem(KEY, '1');
           } catch {
-            /* storage unavailable - the in-document flag still guards this render */
+            /* storage unavailable - the event listeners are already removed */
           }
           window.dataLayer = window.dataLayer || [];
           window.dataLayer.push({

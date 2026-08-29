@@ -59,20 +59,18 @@ export const server = {
             }),
           }
         );
-        if (verifyRes.ok) {
-          const body: unknown = await verifyRes.json();
-          verified =
-            typeof body === 'object' &&
-            body !== null &&
-            (body as { success?: unknown }).success === true;
-        }
+        const body: { success?: unknown } | null = verifyRes.ok
+          ? await verifyRes.json()
+          : null;
+        verified = body?.success === true;
       } catch (cause) {
         // Logged so a Cloudflare-side outage is distinguishable from a bot:
         // both fail closed, but only one of them is ours to fix.
         console.error('[contact] Turnstile siteverify request failed', cause);
-        verified = false;
       }
 
+      // Thrown outside the try on purpose: inside it, the catch above would
+      // swallow this ActionError and let an unverified request through.
       if (!verified) {
         throw new ActionError({
           code: 'FORBIDDEN',
@@ -81,7 +79,7 @@ export const server = {
       }
 
       const resend = new Resend(RESEND_API_KEY);
-      let sendFailed: boolean;
+      let sendFailed = true;
       try {
         const { error } = await resend.emails.send({
           from: 'Henrik Soderlund <noreply@utmhub.co>',
@@ -97,7 +95,6 @@ export const server = {
       } catch (cause) {
         // Network failure or a non-JSON response from the Resend API
         console.error('[contact] Resend send threw', cause);
-        sendFailed = true;
       }
 
       if (sendFailed) {

@@ -8,6 +8,7 @@ import Footer from '../components/Footer.astro';
 import { GITHUB_URL, LINKEDIN_URL, CALENDLY_URL, CONTACT_EMAIL } from '../data/links';
 import { consultationData } from '../data/consultation';
 import { ENTITIES, PERTH_GEO } from '../data/entities';
+import { pageUrl } from '../utils/pageUrl';
 import '../styles/theme.css';
 import '../styles/index.css';
 import '../styles/App.css';
@@ -42,7 +43,6 @@ const {
   robots,
 } = Astro.props;
 
-const siteOrigin = 'https://www.henriksoderlund.com';
 const isHomepage = Astro.url.pathname === '/';
 
 const resolvedPageSchemaType = pageSchemaType ?? (isHomepage ? 'ProfilePage' : 'WebPage');
@@ -52,11 +52,7 @@ const resolvedPageSchemaType = pageSchemaType ?? (isHomepage ? 'ProfilePage' : '
 const resolvedPageType = pageType ?? (isHomepage
   ? 'home'
   : Astro.url.pathname.replace(/^\/+|\/+$/g, '').replace(/[^A-Za-z0-9]+/g, '_').toLowerCase() || 'home');
-// Must match the canonical emitted by SEO.astro exactly, which keeps the root
-// slash on the homepage and has none elsewhere (trailingSlash: 'never').
-const pageURL = Astro.url.pathname === '/'
-  ? `${siteOrigin}/`
-  : new URL(Astro.url.pathname, siteOrigin).href;
+const pageURL = pageUrl(Astro.url.pathname);
 
 const personSchemaJSON = JSON.stringify({
   "@context": "https://schema.org",
@@ -309,9 +305,10 @@ const calendlyHost = new URL(CALENDLY_URL).hostname;
         // Every storage and matchMedia access is guarded: Safari's "Block All
         // Cookies", Firefox with storage disabled and locked-down kiosk
         // profiles all throw SecurityError on localStorage. An unguarded throw
-        // here would abort this IIFE, leaving data-theme unset (theme.css
-        // defines its colour tokens only under [data-theme], so the page would
-        // render unstyled) and __setTheme/__toggleTheme undefined.
+        // here would abort this IIFE before it defines __setTheme and
+        // __toggleTheme, leaving the theme toggle inert for the whole session.
+        // (The page itself still renders: theme.css defines the full palette on
+        // bare :root, so a missing data-theme falls back to the light theme.)
         function readStoredTheme() {
           try {
             var stored = localStorage.getItem('theme');
@@ -501,11 +498,11 @@ const calendlyHost = new URL(CALENDLY_URL).hostname;
       (function () {
         var CALENDLY_HOST = calendlyHost;
 
+        // Every call site sits inside the delegated click handler's own
+        // try/catch, which is the authoritative boundary.
         function push(payload) {
-          try {
-            window.dataLayer = window.dataLayer || [];
-            window.dataLayer.push(payload);
-          } catch { /* analytics must never break a click */ }
+          window.dataLayer = window.dataLayer || [];
+          window.dataLayer.push(payload);
         }
 
         function slug(value) {
@@ -523,15 +520,9 @@ const calendlyHost = new URL(CALENDLY_URL).hostname;
         // no alphanumerics, and an empty GA4 dimension is not debuggable.
         function locationOf(el) {
           var region = el.closest('section, article, header, footer, nav, aside, main');
-          while (region) {
-            if (region.id) return slug(region.id) || 'unknown';
-            var aria = region.getAttribute('aria-label');
-            if (aria) return slug(aria) || 'unknown';
-            var cls = region.classList && region.classList[0];
-            if (cls) return slug(cls) || 'unknown';
-            region = region.parentElement && region.parentElement.closest('section, article, header, footer, nav, aside');
-          }
-          return 'page';
+          if (!region) return 'page';
+          var key = region.id || region.getAttribute('aria-label') || (region.classList && region.classList[0]);
+          return key ? (slug(key) || 'unknown') : 'page';
         }
 
         // Capture phase on `document`: a capturing listener here runs before the
@@ -543,39 +534,41 @@ const calendlyHost = new URL(CALENDLY_URL).hostname;
             var target = event.target;
             if (!target || typeof target.closest !== 'function') return;
 
-            if (target.closest('#theme-toggle')) {
+            // One ancestor walk covers both cases; the toggle is never an anchor.
+            var hit = target.closest('a[href], #theme-toggle');
+            if (!hit) return;
+
+            if (hit.id === 'theme-toggle') {
               var current = document.documentElement.getAttribute('data-theme');
               push({ event: 'theme_toggle', theme_selected: current === 'dark' ? 'light' : 'dark' });
               return;
             }
 
-            var anchor = target.closest('a[href]');
-            if (!anchor) return;
+            // HTMLAnchorElement implements the URL decomposition attributes, so
+            // `protocol`, `hostname` and `href` are already absolute and parsed.
+            var anchor = hit;
 
-            var url;
-            try { url = new URL(anchor.href, location.href); } catch { return; }
-
-            if (url.protocol === 'mailto:') {
+            if (anchor.protocol === 'mailto:') {
               push({ event: 'email_click', cta_location: locationOf(anchor) });
               return;
             }
-            if (url.protocol !== 'http:' && url.protocol !== 'https:') return;
+            if (anchor.protocol !== 'http:' && anchor.protocol !== 'https:') return;
 
-            if (url.hostname === CALENDLY_HOST) {
+            if (anchor.hostname === CALENDLY_HOST) {
               push({
                 event: 'booking_start',
-                link_url: url.href,
+                link_url: anchor.href,
                 link_text: labelOf(anchor),
                 cta_location: locationOf(anchor)
               });
               return;
             }
 
-            if (url.hostname !== location.hostname) {
+            if (anchor.hostname !== location.hostname) {
               push({
                 event: 'outbound_click',
-                link_domain: url.hostname,
-                link_url: url.href,
+                link_domain: anchor.hostname,
+                link_url: anchor.href,
                 link_text: labelOf(anchor)
               });
             }

@@ -5,16 +5,17 @@ import { perthAnalyticsData } from '../data/perthAnalytics';
 import { CALENDLY_URL } from '../data/links';
 import { sectionIcons } from '../utils/sectionIcons';
 import { ENTITIES, PERTH_GEO } from '../data/entities';
+import { nodeId, pageUrl } from '../utils/pageUrl';
 
-const pageUrl = 'https://www.henriksoderlund.com/perth-analytics-consultant';
+const canonicalUrl = pageUrl(Astro.url.pathname);
 
 const serviceSchema = {
   "@context": "https://schema.org",
   "@type": "Service",
-  "@id": `${pageUrl}#service`,
+  "@id": nodeId(Astro.url.pathname, 'service'),
   "name": "GA4 and Server-Side Tagging Consultancy - Perth, Western Australia",
   "description": "Google Analytics 4 implementation, remediation and server-side Google Tag Manager deployment for businesses in Perth and Western Australia. First-party tracking, conversion APIs, BigQuery and Looker Studio reporting.",
-  "url": pageUrl,
+  "url": canonicalUrl,
   "provider": {
     "@id": "https://www.henriksoderlund.com/#practice"
   },
@@ -51,9 +52,9 @@ const serviceSchema = {
 const faqSchema = {
   "@context": "https://schema.org",
   "@type": "FAQPage",
-  "@id": `${pageUrl}#faq`,
+  "@id": nodeId(Astro.url.pathname, 'faq'),
   // Anchors the FAQ to the page's own WebPage node emitted by BaseLayout.
-  "isPartOf": { "@id": `${pageUrl}#webpage` },
+  "isPartOf": { "@id": nodeId(Astro.url.pathname, 'webpage') },
   "mainEntity": perthAnalyticsData.faq.items.map(item => ({
     "@type": "Question",
     "name": item.question,
