@@ -68,7 +68,7 @@ const pages = [
       </>
     )}
   </div>
-</div>
+</nav>
 
 <script is:inline>
   (function () {
@@ -106,11 +106,17 @@ const pages = [
 
     var stored = readStored();
     // An explicit user preference wins; the viewport only seeds the default.
-    var hasUserPreference = stored !== null;
+    // Only the two values this component writes count - a corrupted or foreign
+    // value must fall back to the viewport default, not freeze the nav open.
+    var hasUserPreference = stored === 'true' || stored === 'false';
     var isCollapsed = hasUserPreference ? stored === 'true' : isNarrow();
     var wasNarrow = isNarrow();
 
-    function applyCollapseState(persist) {
+    // recordPreference marks the new state as a deliberate user choice: it is
+    // written to storage and it disables the breakpoint re-seeding below. System
+    // behaviour (initial paint, breakpoint re-seed, auto-close on tap) passes
+    // false so the nav keeps responding to the viewport for the rest of the session.
+    function applyCollapseState(recordPreference) {
       if (isCollapsed) {
         navBox.classList.add('collapsed');
         collapseBtn.setAttribute('aria-label', 'Expand navigation');
@@ -120,7 +126,7 @@ const pages = [
         collapseBtn.setAttribute('aria-label', 'Collapse navigation');
         collapseBtn.setAttribute('aria-expanded', 'true');
       }
-      if (persist) {
+      if (recordPreference) {
         hasUserPreference = true;
         writeStored(String(isCollapsed));
       }
@@ -151,7 +157,7 @@ const pages = [
       link.addEventListener('click', function () {
         if (window.innerWidth <= 1024) {
           isCollapsed = true;
-          applyCollapseState(true);
+          applyCollapseState(false);
         }
       });
     });
@@ -204,7 +210,7 @@ const pages = [
             }
             if (window.innerWidth <= 1024) {
               isCollapsed = true;
-              applyCollapseState(true);
+              applyCollapseState(false);
             }
           });
 
