@@ -1,8 +1,21 @@
 ---
 export const prerender = true;
 import BaseLayout from '../layouts/BaseLayout.astro';
-import { CONTACT_EMAIL } from '../data/links';
+import { PRIVACY_EMAIL } from '../data/links';
 import '../styles/content-entry.css';
+
+// Harvester-resistant rendering. The address never appears in source order and
+// never with an "@" in it: each half is reversed into its own data attribute,
+// so neither attribute alone yields the address and a regex over the HTML finds
+// nothing to match. The inline script below reassembles it into a real mailto:
+// link. With JS off the visible spelled-out form is what remains, which is the
+// deliberate floor: a privacy policy has to give a data-subject request route
+// that does not depend on scripting.
+const [emailLocal, emailDomain] = PRIVACY_EMAIL.split('@');
+const reverse = (value: string) => [...value].reverse().join('');
+const emailLocalReversed = reverse(emailLocal);
+const emailDomainReversed = reverse(emailDomain);
+const emailSpelledOut = `${emailLocal} [at] ${emailDomain.replace(/\./g, ' [dot] ')}`;
 ---
 
 <BaseLayout
@@ -138,7 +151,8 @@ import '../styles/content-entry.css';
       <p>
         You may request access to, correction of, or deletion of any personal information held about you.
         To make a request, please contact me at
-        <a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a>. You can also clear the analytics cookies
+        <span class="protected-email" data-l={emailLocalReversed} data-d={emailDomainReversed}
+        >{emailSpelledOut}</span>. You can also clear the analytics cookies
         listed above at any time through your browser's settings, which resets the identifiers they hold.
       </p>
       <p>
@@ -162,8 +176,28 @@ import '../styles/content-entry.css';
       <h2 id="contact">Contact</h2>
       <p>
         If you have questions about this privacy policy or how your personal information is handled,
-        please contact me at <a href="mailto:admin@henriksoderlund.com">admin@henriksoderlund.com</a>.
+        please contact me at <span class="protected-email" data-l={emailLocalReversed}
+        data-d={emailDomainReversed}>{emailSpelledOut}</span>.
       </p>
     </section>
   </div>
+
+  <script is:inline>
+    // Upgrades every .protected-email span into a real mailto: link. Delegated
+    // click tracking in BaseLayout listens on document, so the `email_click`
+    // event still fires for a link created here.
+    (function () {
+      const nodes = document.querySelectorAll('.protected-email');
+      for (const node of nodes) {
+        const local = node.getAttribute('data-l');
+        const domain = node.getAttribute('data-d');
+        if (!local || !domain) continue;
+        const address = [...local].reverse().join('') + String.fromCharCode(64) + [...domain].reverse().join('');
+        const link = document.createElement('a');
+        link.href = 'mailto:' + address;
+        link.textContent = address;
+        node.replaceWith(link);
+      }
+    })();
+  </script>
 </BaseLayout>
