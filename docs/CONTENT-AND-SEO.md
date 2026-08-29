@@ -34,7 +34,12 @@ Set in the `serialize` callback in `astro.config.mjs`: home 1.0, expertise 0.9, 
 - **sGTM** container `GTM-FWR4`, loaded from the custom domain `load.sgtm.henriksoderlund.com`. A separate first-party proxy at `/sgtm/*` is implemented in `src/worker.ts`.
 - **Fou Analytics** via `api.fouanalytics.com`, with a noscript pixel fallback. Its scripts require `'unsafe-eval'` in the CSP.
 - **dataLayer** is initialised in `BaseLayout.astro` before GTM loads, with production/development detection based on hostname.
-- **`contact_form_submission`** is pushed on successful submit, deduplicated through session storage so a re-render cannot double-count a conversion.
+- **Contact form events** are pushed from `src/components/ContactForm.astro`, all of them carrying `form_name: 'contact'`:
+  - **`generate_lead`** on a successful submit, with `form_location` (the pathname).
+  - **`contact_form_start`** on the first focus or input, at most once per session. The guard is a `sessionStorage` flag behind a `window` flag, because a validation error is a full render cycle and a per-document flag alone would refire on every correction. It is deliberately not called `form_start`: that is GA4's automatically collected Enhanced Measurement event, and reusing the name commingles the two.
+  - **`form_error`** on any rejected submit, with `error_type` (`validation`, `bot_check` or `server`), `error_code` and `error_fields` - a comma-joined list of field NAMES only. No submitted value ever reaches the dataLayer.
+  - **`turnstile_outcome`** with `outcome` (`success`, `error`, `expired` or `timeout`) and, where the widget supplies one, `error_code`. The callbacks are owned by the form through `window.__turnstileRender(theme)`, so the theme toggle's re-render keeps them.
+  - Duplicate conversions are prevented by Turnstile itself: its tokens are single-use, so a re-POST of the same form body fails verification before a second `generate_lead` can fire.
 - Cloudflare Insights provides platform-level observability; the CSP allows `cloudflareinsights.com`.
 - **Inbound links Henrik controls are UTM-tagged** to the convention in `docs/UTM-TAXONOMY.md`. `utm_medium` must be a value GA4's default channel grouping recognises, or the session lands in Unassigned.
 
