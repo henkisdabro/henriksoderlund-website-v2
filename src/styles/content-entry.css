@@ -30,3 +30,10 @@
   margin-bottom: 0.8rem;
   text-align: justify;
 }
+
+/* Cookie names in the privacy policy. No `code` rule existed anywhere, so
+   these fell back to the browser's default monospace rather than the site's. */
+.content-entry code {
+  font-family: var(--font-mono);
+  font-size: 0.9em;
+}
