@@ -301,11 +301,6 @@ import { sectionIcons } from '../utils/sectionIcons';
       resumeAuto();
     }, { passive: true });
 
-    // Clean up on view transition navigation
-    document.addEventListener('astro:before-preparation', () => {
-      clearInterval(timer);
-    }, { once: true });
-
     goTo(0);
   }
 
@@ -415,6 +410,13 @@ import { sectionIcons } from '../utils/sectionIcons';
 
 :root[data-theme="dark"] .showcase-card {
   --card-accent: var(--card-accent-dark, var(--card-accent-light));
+}
+
+/* Unstamped dark, where theme.css flips the palette with no data-theme set. */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .showcase-card {
+    --card-accent: var(--card-accent-dark, var(--card-accent-light));
+  }
 }
 
 .showcase-card--active {
@@ -636,7 +638,7 @@ import { sectionIcons } from '../utils/sectionIcons';
 }
 
 .opensource-tile:hover {
-  border-color: var(--color-text-link);
+  border-color: var(--color-accent);
   box-shadow: 0 2px 8px var(--color-shadow);
   text-decoration: none;
 }
@@ -671,7 +673,7 @@ import { sectionIcons } from '../utils/sectionIcons';
 .opensource-tile-link {
   font-size: 0.8rem;
   font-weight: 500;
-  color: var(--color-text-link);
+  color: var(--color-link-default);
 }
 
 .github-activity {
@@ -703,6 +705,14 @@ import { sectionIcons } from '../utils/sectionIcons';
 
 :root[data-theme="dark"] .github-chart {
   filter: invert(1) hue-rotate(180deg);
+}
+
+/* Unstamped dark, where theme.css flips the palette with no data-theme set -
+   without this the chart keeps its white background on a #0f1117 page. */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .github-chart {
+    filter: invert(1) hue-rotate(180deg);
+  }
 }
 
 .github-chart-link:hover .github-chart {

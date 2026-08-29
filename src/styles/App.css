@@ -248,7 +248,15 @@ a:hover {
 
 .collapse-btn:focus {
   outline: none;
-  background-color: var(--color-btn-hover-bg);
+}
+
+.collapse-btn:focus-visible {
+  outline: 2px solid var(--color-accent);
+  /* Inset, like .nav-list a and .heading-link: at <=1024px the collapsed
+     .navigation-box is 42x42 with overflow: hidden and the button fills it
+     exactly, so a positive offset paints the ring outside the clip and the
+     only control that opens the menu has no visible focus state at all. */
+  outline-offset: -2px;
 }
 
 .nav-box-content {
@@ -261,7 +269,7 @@ a:hover {
   margin-bottom: 12px;
 }
 
-.nav-section h5 {
+.nav-section .nav-section-label {
   margin: 0 0 6px 0;
   padding: 0 16px;
   font-size: 0.7rem;
@@ -307,32 +315,37 @@ a:hover {
   color: var(--color-text-primary);
   text-decoration: none;
   transition: background-color 0.2s;
-  border: none !important;
-  border-radius: 0 !important;
+  border: none;
+  border-radius: 0;
   background: none;
   width: 100%;
   text-align: left;
   cursor: pointer;
   font-family: inherit;
   font-size: inherit;
-  outline: none !important;
-  box-shadow: none !important;
+  box-shadow: none;
 }
 
 .nav-list a:hover, .heading-link:hover {
   background-color: var(--color-nav-hover-bg);
   text-decoration: none;
-  border: none !important;
-  border-radius: 0 !important;
-  outline: none !important;
-  box-shadow: none !important;
+  border: none;
+  border-radius: 0;
+  box-shadow: none;
 }
 
-.heading-link:focus, .heading-link:active {
-  outline: none !important;
-  border: none !important;
-  border-radius: 0 !important;
-  box-shadow: none !important;
+/* Suppress the UA / global button ring on pointer activation only - keyboard
+   focus keeps a visible indicator via :focus-visible below. */
+.nav-list a:focus, .heading-link:focus, .heading-link:active {
+  outline: none;
+  border: none;
+  border-radius: 0;
+  box-shadow: none;
+}
+
+.nav-list a:focus-visible, .heading-link:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: -2px;
 }
 
 .nav-list li.active a {
@@ -1232,4 +1245,13 @@ a:hover {
 :root[data-theme="dark"] body {
   line-height: 1.55;
   letter-spacing: -0.01em;
+}
+
+/* Same compensation for the unstamped dark state, where theme.css swaps
+   --font-body to JetBrains Mono without any data-theme attribute present. */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) body {
+    line-height: 1.55;
+    letter-spacing: -0.01em;
+  }
 }

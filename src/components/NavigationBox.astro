@@ -25,7 +25,7 @@ const pages = [
 ];
 ---
 
-<div class="navigation-box collapsed" id="navigation-box">
+<nav class="navigation-box collapsed" id="navigation-box" aria-label="Site">
   <div class="nav-box-header">
     <button
       class="collapse-btn"
@@ -44,8 +44,8 @@ const pages = [
   <div class="nav-box-content" id="nav-box-content">
     <!-- Page Navigation -->
     <div class="nav-section">
-      <h5>Pages</h5>
-      <ul class="nav-list">
+      <p class="nav-section-label" id="nav-pages-label">Pages</p>
+      <ul class="nav-list" aria-labelledby="nav-pages-label">
         {pages.map((page) => (
           <li class={pathname === page.path ? 'active' : ''}>
             <a href={page.path} class="nav-page-link">
@@ -62,13 +62,13 @@ const pages = [
       <>
         <div class="nav-divider" id="nav-divider" hidden></div>
         <div class="nav-section" id="headings-section" hidden>
-          <h5>On This Page</h5>
-          <ul class="nav-list headings-list" id="headings-list"></ul>
+          <p class="nav-section-label" id="nav-headings-label">On This Page</p>
+          <ul class="nav-list headings-list" id="headings-list" aria-labelledby="nav-headings-label"></ul>
         </div>
       </>
     )}
   </div>
-</div>
+</nav>
 
 <script is:inline>
   (function () {
@@ -78,12 +78,49 @@ const pages = [
     if (!navBox || !collapseBtn) return;
 
     var isHomePage = window.location.pathname === '/';
+    var STORAGE_KEY = 'nav-collapsed';
+    var NARROW_QUERY = '(max-width: 1024px)';
 
-    // Read persisted state, fall back to viewport check
-    var stored = sessionStorage.getItem('nav-collapsed');
-    var isCollapsed = stored !== null ? stored === 'true' : window.innerWidth <= 1024;
+    // Storage is a progressive enhancement: Safari's "Block All Cookies",
+    // Firefox with storage disabled and kiosk profiles all throw a
+    // SecurityError here, and a throw must not take the navigation with it.
+    function readStored() {
+      try {
+        return sessionStorage.getItem(STORAGE_KEY);
+      } catch {
+        return null;
+      }
+    }
 
-    function applyCollapseState(persist) {
+    function writeStored(value) {
+      try {
+        sessionStorage.setItem(STORAGE_KEY, value);
+      } catch {
+        // Storage unavailable - the preference lives in memory for this page only.
+      }
+    }
+
+    // matchMedia is the primitive for breakpoint crossings, but it is guarded
+    // the same way storage is: without it the nav simply stops re-seeding.
+    var narrowMQ = null;
+    try {
+      narrowMQ = window.matchMedia(NARROW_QUERY);
+    } catch {
+      narrowMQ = null;
+    }
+
+    function isNarrow() {
+      return narrowMQ ? narrowMQ.matches : false;
+    }
+
+    var stored = readStored();
+    // An explicit user preference wins; the viewport only seeds the default.
+    // Only the two values this component writes count - a corrupted or foreign
+    // value must fall back to the viewport default, not freeze the nav open.
+    var hasUserPreference = stored === 'true' || stored === 'false';
+    var isCollapsed = hasUserPreference ? stored === 'true' : isNarrow();
+
+    function applyCollapseState() {
       if (isCollapsed) {
         navBox.classList.add('collapsed');
         collapseBtn.setAttribute('aria-label', 'Expand navigation');
@@ -93,31 +130,33 @@ const pages = [
         collapseBtn.setAttribute('aria-label', 'Collapse navigation');
         collapseBtn.setAttribute('aria-expanded', 'true');
       }
-      if (persist) sessionStorage.setItem('nav-collapsed', String(isCollapsed));
     }
 
-    applyCollapseState(false);
+    applyCollapseState();
 
     collapseBtn.addEventListener('click', function () {
       isCollapsed = !isCollapsed;
-      applyCollapseState(true);
+      hasUserPreference = true;
+      writeStored(String(isCollapsed));
+      applyCollapseState();
     });
 
-    window.addEventListener('resize', function () {
-      var shouldCollapse = window.innerWidth <= 1024;
-      if (shouldCollapse !== isCollapsed) {
-        isCollapsed = shouldCollapse;
-        applyCollapseState(true);
-      }
-    });
+    if (narrowMQ && narrowMQ.addEventListener) {
+      narrowMQ.addEventListener('change', function (e) {
+        // Never discard an explicit choice; re-seed the default only.
+        if (hasUserPreference) return;
+        isCollapsed = e.matches;
+        applyCollapseState();
+      });
+    }
 
     // Auto-close on mobile when a page link is clicked
     var pageLinks = navBox.querySelectorAll('.nav-page-link');
     pageLinks.forEach(function (link) {
       link.addEventListener('click', function () {
-        if (window.innerWidth <= 1024) {
+        if (isNarrow()) {
           isCollapsed = true;
-          applyCollapseState(true);
+          applyCollapseState();
         }
       });
     });
@@ -134,7 +173,7 @@ const pages = [
     function scanHeadings() {
       var mainContent = document.querySelector('.main-content');
       if (!mainContent) return;
-      var headingElements = mainContent.querySelectorAll('h2, h4, h5, h6');
+      var headingElements = mainContent.querySelectorAll('h2, h3, h4, h5, h6');
       var items = [];
 
       headingElements.forEach(function (heading, index) {
@@ -168,9 +207,9 @@ const pages = [
             if (el) {
               el.scrollIntoView({ behavior: 'smooth', block: 'start' });
             }
-            if (window.innerWidth <= 1024) {
+            if (isNarrow()) {
               isCollapsed = true;
-              applyCollapseState(true);
+              applyCollapseState();
             }
           });
 

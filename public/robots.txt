@@ -1,5 +1,5 @@
 # Henrik Soederlund's Personal Website - robots.txt
-# Updated: March 2026
+# Updated: August 2026
 #
 #        .---.
 #       /     \       "Hello, crawler!
@@ -15,110 +15,62 @@
 #      '-------'
 #
 # Rules below. Play nice.
-
-# === SEARCH ENGINE BOTS (Welcome!) ===
-User-agent: Googlebot
-Allow: /
-
-User-agent: Bingbot
-Allow: /
-
-User-agent: Baiduspider
-Allow: /
-
-User-agent: YandexBot
-Allow: /
-
-User-agent: DuckDuckBot
-Allow: /
-
-# === AI BOTS (Welcome!) ===
-# This is a public portfolio - AI systems are welcome to crawl,
-# index, train on, and cite this content. Structured versions
-# available at /llms.txt and /llms-full.txt for convenience.
 #
-# Named explicitly rather than relying on the User-agent: * rule below,
-# so the intent is unambiguous to crawlers that look for their own token.
+# NOTE ON STRUCTURE (RFC 9309, section 2.2.1): a crawler obeys exactly ONE
+# group - the one whose most specific User-agent line matches it - and
+# ignores every other group, including `User-agent: *`. Rules do NOT cascade.
+# So the named agents below share a SINGLE group that repeats the full rule
+# set. Giving an agent its own `Allow: /` group would silently exempt it from
+# every Disallow. Keep the two rule blocks in this file identical.
 
+# === NAMED BOTS: SEARCH, AI AND SOCIAL (all welcome) ===
+#
+# This is a public portfolio - search engines, AI systems and link-preview
+# bots are welcome to crawl, index, train on and cite this content.
+# Structured versions are at /llms.txt and /llms-full.txt.
+#
+# Named explicitly rather than left to the `User-agent: *` group below, so
+# the intent is unambiguous to crawlers that look for their own token.
+
+# Search engines
+User-agent: Googlebot
+User-agent: Bingbot
+User-agent: Baiduspider
+User-agent: YandexBot
+User-agent: DuckDuckBot
+# AI crawlers
 User-agent: GPTBot
-Allow: /
-
 User-agent: OAI-SearchBot
-Allow: /
-
 User-agent: ChatGPT-User
-Allow: /
-
 User-agent: ClaudeBot
-Allow: /
-
 User-agent: Claude-User
-Allow: /
-
 User-agent: Claude-SearchBot
-Allow: /
-
 User-agent: PerplexityBot
-Allow: /
-
 User-agent: Perplexity-User
-Allow: /
-
 User-agent: Google-Extended
-Allow: /
-
 User-agent: CCBot
-Allow: /
-
 User-agent: Bytespider
-Allow: /
-
 User-agent: Applebot-Extended
-Allow: /
-
 User-agent: meta-externalagent
-Allow: /
-
 User-agent: cohere-ai
-Allow: /
-
-# === SOCIAL MEDIA & NEWS BOTS (Welcome for previews!) ===
+# Social media and link previews
 User-agent: facebookexternalhit
-Allow: /
-
 User-agent: Twitterbot
-Allow: /
-
 User-agent: LinkedInBot
-Allow: /
-
 User-agent: WhatsApp
-Allow: /
-
 User-agent: SkypeUriPreview
-Allow: /
-
 User-agent: TelegramBot
-Allow: /
-
 User-agent: SlackBot
-Allow: /
-
 User-agent: DiscordBot
 Allow: /
 
-# === ALL BOTS (General Rules) ===
-User-agent: *
-Allow: /
+# AI-friendly structured content
+Allow: /llms.txt
+Allow: /llms-full.txt
+Allow: /*.md
 
 # Block Cloudflare internal endpoints (saves crawl budget)
 Disallow: /cdn-cgi/
-Disallow: /cdn-cgi/bm/cv/
-Disallow: /cdn-cgi/challenge-platform/
-Disallow: /cdn-cgi/images/trace/
-Disallow: /cdn-cgi/rum
-Disallow: /cdn-cgi/scripts/
-Disallow: /cdn-cgi/styles/
 Disallow: /cdn-fpw/sxg/
 
 # Block development/build artifacts
@@ -128,10 +80,29 @@ Disallow: /.git/
 Disallow: /.vscode/
 Disallow: /src/
 
+# Request reasonable crawl behaviour
+# Note: Ignored by Google, honoured by Bing and Yandex
+Crawl-delay: 1
+
+# === ALL OTHER BOTS (General Rules) ===
+User-agent: *
+Allow: /
+
 # AI-friendly structured content
 Allow: /llms.txt
 Allow: /llms-full.txt
 Allow: /*.md
+
+# Block Cloudflare internal endpoints (saves crawl budget)
+Disallow: /cdn-cgi/
+Disallow: /cdn-fpw/sxg/
+
+# Block development/build artifacts
+Disallow: /node_modules/
+Disallow: /dist/
+Disallow: /.git/
+Disallow: /.vscode/
+Disallow: /src/
 
 # Request reasonable crawl behaviour
 # Note: Ignored by Google, honoured by Bing and Yandex

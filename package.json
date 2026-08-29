@@ -17,7 +17,7 @@
   },
   "dependencies": {
     "@astrojs/check": "0.9.10",
-    "@astrojs/cloudflare": "14.2.4",
+    "@astrojs/cloudflare": "14.2.5",
     "@astrojs/sitemap": "3.7.3",
     "astro": "7.2.6",
     "resend": "6.22.1"
@@ -25,18 +25,20 @@
   "devDependencies": {
     "@eslint/js": "10.0.1",
     "@types/node": "24.13.3",
+    "astro-eslint-parser": "3.1.0",
     "eslint": "10.9.1",
+    "eslint-plugin-astro": "3.1.0",
     "globals": "17.11.0",
     "typescript": "6.0.3",
     "typescript-eslint": "8.68.0",
-    "wrangler": "4.125.0"
+    "wrangler": "4.126.0"
   },
   "scripts": {
     "dev": "astro dev",
-    "build": "astro check && astro build && node scripts/patch-wrangler.mjs && node scripts/verify-build.mjs",
+    "build": "astro check && astro build && node scripts/patch-wrangler.mjs && node scripts/strip-prerender-nonce.mjs && node scripts/verify-build.mjs",
     "preview": "astro preview",
-    "check": "astro check && astro build && node scripts/patch-wrangler.mjs && node scripts/verify-build.mjs",
-    "deploy": "astro build && node scripts/patch-wrangler.mjs && node scripts/verify-build.mjs && wrangler deploy",
+    "check": "pnpm run build",
+    "deploy": "astro build && node scripts/patch-wrangler.mjs && node scripts/strip-prerender-nonce.mjs && node scripts/verify-build.mjs && wrangler deploy",
     "lint": "eslint .",
     "cf-typegen": "wrangler types"
   },

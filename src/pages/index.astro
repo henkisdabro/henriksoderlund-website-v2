@@ -110,7 +110,6 @@ import { sectionIcons } from '../utils/sectionIcons';
       'full surface',
     ];
 
-    var animationInterval;
     var keywordElements = [];
     var currentlyAnimating = false;
     var lastAnimatedElement = null;
@@ -240,25 +239,15 @@ import { sectionIcons } from '../utils/sectionIcons';
     };
 
     // Initialise with 1-second delay, then start interval
-    var initTimeout;
-    var startTimeout;
-
-    initTimeout = setTimeout(function () {
+    setTimeout(function () {
       createBreathingEffect();
 
-      startTimeout = setTimeout(function () {
-        animationInterval = setInterval(function () {
+      setTimeout(function () {
+        setInterval(function () {
           animateRandomKeyword();
         }, 4000);
       }, 500);
     }, 1000);
-
-    // Clean up on view transition navigation
-    document.addEventListener('astro:before-preparation', function () {
-      clearTimeout(initTimeout);
-      clearTimeout(startTimeout);
-      clearInterval(animationInterval);
-    }, { once: true });
   })();
 </script>
 

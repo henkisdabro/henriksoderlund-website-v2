@@ -61,17 +61,9 @@ It reads like a broken contact form, because Astro Actions are what pull that en
 
 Vite's SSR dependency optimizer re-bundles `astro/actions/runtime/entrypoints/server.js` under a hashed filename and bumps that hash whenever it rediscovers dependencies. The Cloudflare plugin's `workerd` runner keeps the module graph from before the re-run, so the next request resolves a `?v=<old hash>` file that no longer exists. Adding routes or a new shared import (anything that gives the optimizer more to find) makes it fire.
 
-`rm -rf node_modules/.vite` clears it for one run and it comes back with a different hash. The fix is in `astro.config.mjs`, and is already applied:
+`rm -rf node_modules/.vite` clears it for one run and it comes back with a different hash. This is now fixed upstream and needs nothing in this repo: `@astrojs/cloudflare` >= 14.2.x pre-includes `astro/actions/runtime/entrypoints/server.js` in `optimizeDeps.include` for the `astro`, `ssr` and `prerender` environments, so the entrypoint is bundled once at server start under a stable hash rather than discovered mid-run.
 
-```js
-ssr: {
-  optimizeDeps: {
-    exclude: ['astro/actions/runtime/entrypoints/server.js'],
-  },
-},
-```
-
-The entrypoint then stays as plain source with no hash to go stale. Dev-only - the optimizer does not run during `astro build`, so production was never affected.
+An older workaround here set `vite.ssr.optimizeDeps.exclude` in `astro.config.mjs`. It has been removed, and it had in any case stopped being read: the adapter merges only top-level `config.vite.optimizeDeps`, never `config.vite.ssr.optimizeDeps`. Verified with a cold `node_modules/.vite` and two full passes over every route. Dev-only - the optimizer does not run during `astro build`, so production was never affected.
 
 ## Expected results
 

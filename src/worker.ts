@@ -91,6 +91,32 @@ const CAMPAIGN_PARAMS = new Set([
   'li_fat_id',
 ]);
 
+// Defensive, not observed: probing the proxied endpoints (/sgtm/healthy,
+// /sgtm/gtm.js, /sgtm/gtag/js) in production returned no Set-Cookie at all, and
+// this is a no-op if none is ever set. Should the container start emitting one
+// scoped to sgtm.henriksoderlund.com, a browser would silently reject it when
+// served back from www.henriksoderlund.com/sgtm/* - nothing errors, measurement
+// just degrades. Strip the Domain attribute rather than widening it to
+// .henriksoderlund.com: widening sends the cookie to every subdomain, including
+// load.sgtm.henriksoderlund.com, which this file's own CSP allows as a direct
+// unproxied script/connect source, and lets any subdomain shadow it. With no
+// Domain the cookie defaults to host-only on www.henriksoderlund.com, which is
+// what a first-party proxy wants. getSetCookie() splits per header, so the comma
+// in Expires cannot mis-split; the leading ';' anchor keeps a cookie VALUE
+// containing "Domain=" from matching; the global flag clears a malformed
+// duplicate Domain. Cookies with no Domain (including __Host- prefixed ones) pass
+// through byte-identical. The source headers are passed in alongside the copy
+// because getSetCookie() must be read off the ORIGINAL response headers: the
+// copy is what we are about to rewrite, and reading Set-Cookie back off it
+// risks the comma-folded single-string view rather than one entry per header.
+function stripCookieDomain(source: Headers, headers: Headers): void {
+  const cookies = source.getSetCookie();
+  headers.delete('Set-Cookie');
+  for (const cookie of cookies) {
+    headers.append('Set-Cookie', cookie.replace(/;\s*Domain\s*=[^;]*/gi, ''));
+  }
+}
+
 function keepCampaignParams(url: URL): void {
   const kept = new URLSearchParams();
   for (const [key, value] of url.searchParams) {
@@ -103,11 +129,18 @@ export default {
   async fetch(request: Request, env: Env, ctx: ExecutionContext): Promise<Response> {
     const url = new URL(request.url);
 
+    // Built by hand rather than with Response.redirect(): that helper returns a
+    // bare response with no Strict-Transport-Security, and the HSTS preload
+    // submission checker requires the base domain to emit the header on its own
+    // https apex-to-www redirect. (On an http:// response the header would be
+    // ignored anyway - RFC 6797 section 8.1 - so this is about preload
+    // eligibility, not the first insecure visit.)
     if (url.hostname === 'henriksoderlund.com') {
-      return Response.redirect(
-        `https://www.henriksoderlund.com${url.pathname}${url.search}`,
-        301
-      );
+      const headers = new Headers({
+        Location: `https://www.henriksoderlund.com${url.pathname}${url.search}`,
+      });
+      setSecurityHeaders(headers);
+      return new Response(null, { status: 301, headers });
     }
 
     // Proxy sGTM requests for same-origin tracking and service worker registration.
@@ -124,13 +157,22 @@ export default {
 
       const proxyResponse = await fetch(proxyRequest);
 
+      // nosniff only. The full setSecurityHeaders() set (CORP/COOP and the rest)
+      // would break the tracking endpoints; without nosniff, a mistyped response
+      // from the container executes as same-origin script against site cookies.
+      const headers = new Headers(proxyResponse.headers);
+      headers.set('X-Content-Type-Options', 'nosniff');
+      stripCookieDomain(proxyResponse.headers, headers);
+
       if (targetPath.startsWith('/_/service_worker/')) {
-        const headers = new Headers(proxyResponse.headers);
         headers.set('Service-Worker-Allowed', '/');
-        return new Response(proxyResponse.body, { status: proxyResponse.status, headers });
       }
 
-      return proxyResponse;
+      return new Response(proxyResponse.body, {
+        status: proxyResponse.status,
+        statusText: proxyResponse.statusText,
+        headers,
+      });
     }
 
     // Enforce trailingSlash: 'never' (astro.config.mjs). The Cloudflare asset
@@ -169,17 +211,31 @@ export default {
       return new Response(null, { status: 301, headers });
     }
 
-    const response = await handle(request, env, ctx);
+    let response: Response;
+    try {
+      response = await handle(request, env, ctx);
+    } catch (error) {
+      // Synchronous and pre-stream failures only - routing errors and anything
+      // that throws before handle() resolves. Under output: 'server' Astro
+      // streams, so a component throwing during render throws inside the body
+      // stream, after these headers have gone out; HTMLRewriter parse/handler
+      // errors surface the same way while workerd pumps the body. Neither lands
+      // here, and a throw after the body starts streaming still terminates the
+      // response mid-flight. What this does buy is that the failures it does
+      // catch return a proper 500 with security headers instead of Cloudflare's
+      // Error 1101 page. Note it also turns a Worker exception into a normal
+      // response, so alerts keyed on the Workers exception metric go quiet -
+      // console.error plus observability.enabled keeps the signal in the logs.
+      console.error('Worker fetch handler error', url.pathname, error);
+      const headers = new Headers({ 'Content-Type': 'text/plain; charset=utf-8' });
+      setSecurityHeaders(headers);
+      return new Response('500 Internal Server Error\n', { status: 500, headers });
+    }
+
     const contentType = response.headers.get('content-type') || '';
     const headers = new Headers(response.headers);
     setSecurityHeaders(headers);
     headers.delete('speculation-rules');
-
-    // Canonical Link header: pathname only (no query params), skip for non-2xx responses
-    const host = request.headers.get('host');
-    if (host === 'www.henriksoderlund.com' && response.status >= 200 && response.status < 300) {
-      headers.set('Link', `<https://www.henriksoderlund.com${url.pathname}>; rel="canonical"`);
-    }
 
     // Prevent search engines from indexing text/markdown and text/plain endpoints
     if (contentType.includes('text/markdown') || contentType.includes('text/plain')) {
@@ -187,6 +243,14 @@ export default {
     }
 
     if (contentType.includes('text/html')) {
+      // Canonical Link header on HTML only: pairing it with the X-Robots-Tag
+      // noindex on the .md and .txt endpoints is a contradictory signal, and on
+      // static assets it is merely noise. Pathname only, no query params.
+      const host = request.headers.get('host');
+      if (host === 'www.henriksoderlund.com' && response.status >= 200 && response.status < 300) {
+        headers.set('Link', `<https://www.henriksoderlund.com${url.pathname}>; rel="canonical"`);
+      }
+
       const nonce = crypto.randomUUID();
       headers.set('Content-Security-Policy', buildCSP(nonce));
       headers.set('Cache-Control', 'no-store, no-cache, must-revalidate, max-age=0');

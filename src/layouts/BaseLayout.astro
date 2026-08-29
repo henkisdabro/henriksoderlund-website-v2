@@ -8,6 +8,7 @@ import Footer from '../components/Footer.astro';
 import { GITHUB_URL, LINKEDIN_URL, CALENDLY_URL, CONTACT_EMAIL } from '../data/links';
 import { consultationData } from '../data/consultation';
 import { ENTITIES, PERTH_GEO } from '../data/entities';
+import { pageUrl } from '../utils/pageUrl';
 import '../styles/theme.css';
 import '../styles/index.css';
 import '../styles/App.css';
@@ -20,6 +21,15 @@ interface Props {
   primaryEntity?: 'person' | 'practice';
   /** Keys from `ENTITIES` to emit as `mentions` on the page's WebPage node. */
   mentions?: string[];
+  /**
+   * schema.org type for the per-page node. Defaults to `WebPage`, or
+   * `ProfilePage` on the homepage, which is about the Person.
+   */
+  pageSchemaType?: 'WebPage' | 'ProfilePage' | 'AboutPage' | 'ContactPage' | 'CollectionPage';
+  /** Analytics content dimension. Defaults to a slug derived from the pathname. */
+  pageType?: string;
+  /** Passed straight to SEO.astro, which owns the default. */
+  robots?: string;
 }
 
 const {
@@ -28,14 +38,21 @@ const {
   ogType = 'website',
   primaryEntity = 'person',
   mentions = [],
+  pageSchemaType,
+  pageType,
+  robots,
 } = Astro.props;
 
-const siteOrigin = 'https://www.henriksoderlund.com';
-// Must match the canonical emitted by SEO.astro exactly, which keeps the root
-// slash on the homepage and has none elsewhere (trailingSlash: 'never').
-const pageURL = Astro.url.pathname === '/'
-  ? `${siteOrigin}/`
-  : new URL(Astro.url.pathname, siteOrigin).href;
+const isHomepage = Astro.url.pathname === '/';
+
+const resolvedPageSchemaType = pageSchemaType ?? (isHomepage ? 'ProfilePage' : 'WebPage');
+
+// Derived so pages need not pass it: '/' is 'home', everything else is its
+// path slugified to snake_case ('/perth-analytics-consultant' -> 'perth_analytics_consultant').
+const resolvedPageType = pageType ?? (isHomepage
+  ? 'home'
+  : Astro.url.pathname.replace(/^\/+|\/+$/g, '').replace(/[^A-Za-z0-9]+/g, '_').toLowerCase() || 'home');
+const pageURL = pageUrl(Astro.url.pathname);
 
 const personSchemaJSON = JSON.stringify({
   "@context": "https://schema.org",
@@ -129,6 +146,8 @@ const practiceSchemaJSON = JSON.stringify({
   "@context": "https://schema.org",
   "@type": "ProfessionalService",
   "@id": "https://www.henriksoderlund.com/#practice",
+  // Deliberately distinct from the `Service` node on /consultancy: that node is
+  // the offering, this one is the registered practice that provides it.
   "name": "Henrik Söderlund - Strategic Technology Consultancy",
   "taxID": "96 522 684 594",
   "identifier": {
@@ -147,9 +166,17 @@ const practiceSchemaJSON = JSON.stringify({
     "addressRegion": "WA",
     "addressCountry": "AU"
   },
+  // No street address or postcode: this is a service-area practice with no
+  // shopfront, so only the locality is factual.
+  "geo": {
+    "@type": "GeoCoordinates",
+    "latitude": PERTH_GEO.latitude,
+    "longitude": PERTH_GEO.longitude
+  },
   "image": "https://www.henriksoderlund.com/og_image.png",
   "logo": "https://www.henriksoderlund.com/og_image.png",
   "email": CONTACT_EMAIL,
+  "telephone": "+61490961257",
   // A solo practice with no shopfront: the service area is modelled as a
   // GeoCircle over the Perth metropolitan area rather than as a street address,
   // which is what schema.org expects of a service-area business.
@@ -222,7 +249,7 @@ const practiceSchemaJSON = JSON.stringify({
 // tagging" to a known thing rather than to a string.
 const webPageSchemaJSON = JSON.stringify({
   "@context": "https://schema.org",
-  "@type": "WebPage",
+  "@type": resolvedPageSchemaType,
   "@id": `${pageURL}#webpage`,
   "url": pageURL,
   "name": title,
@@ -234,6 +261,10 @@ const webPageSchemaJSON = JSON.stringify({
       ? "https://www.henriksoderlund.com/#practice"
       : "https://www.henriksoderlund.com/#person"
   },
+  // ProfilePage requires the profiled entity on `mainEntity`.
+  ...(resolvedPageSchemaType === 'ProfilePage' && {
+    mainEntity: { "@id": "https://www.henriksoderlund.com/#person" },
+  }),
   "primaryImageOfPage": {
     "@type": "ImageObject",
     "url": "https://www.henriksoderlund.com/og_image.png",
@@ -259,27 +290,59 @@ const websiteSchemaJSON = JSON.stringify({
     "@id": "https://www.henriksoderlund.com/#practice"
   }
 });
+
+const calendlyHost = new URL(CALENDLY_URL).hostname;
 ---
 
 <!doctype html>
-<html lang="en">
+<html lang="en-AU">
   <head>
     <meta charset="UTF-8" />
 
     <!-- Theme detection - must run before any paint to prevent FOUC -->
     <script is:inline>
       (function() {
-        var theme = localStorage.getItem('theme');
-        if (!theme) {
-          theme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+        // Every storage and matchMedia access is guarded: Safari's "Block All
+        // Cookies", Firefox with storage disabled and locked-down kiosk
+        // profiles all throw SecurityError on localStorage. An unguarded throw
+        // here would abort this IIFE before it defines __setTheme and
+        // __toggleTheme, leaving the theme toggle inert for the whole session.
+        // (The page itself still renders: theme.css defines the full palette on
+        // bare :root, so a missing data-theme falls back to the light theme.)
+        function readStoredTheme() {
+          try {
+            var stored = localStorage.getItem('theme');
+            return stored === 'dark' || stored === 'light' ? stored : null;
+          } catch { return null; }
         }
+
+        function writeStoredTheme(t) {
+          try { localStorage.setItem('theme', t); } catch { /* storage unavailable */ }
+        }
+
+        function prefersDark() {
+          try { return window.matchMedia('(prefers-color-scheme: dark)').matches; } catch { return false; }
+        }
+
+        var theme = readStoredTheme() || (prefersDark() ? 'dark' : 'light');
         document.documentElement.setAttribute('data-theme', theme);
+
+        // The toggle button does not exist yet when this runs in <head>, so the
+        // accessible name is synced from the button's own inline script once it
+        // has been parsed. Server-rendered markup carries a theme-neutral name.
+        window.__syncThemeLabel = function(t) {
+          var btn = document.getElementById('theme-toggle');
+          if (!btn) return;
+          var next = (t || document.documentElement.getAttribute('data-theme')) === 'dark' ? 'light' : 'dark';
+          btn.setAttribute('aria-label', 'Switch to ' + next + ' mode');
+          btn.setAttribute('title', 'Switch to ' + next + ' mode');
+        };
 
         window.__setTheme = function(t) {
           // Enable transitions only during theme switch
           document.documentElement.classList.add('theme-transitioning');
           document.documentElement.setAttribute('data-theme', t);
-          localStorage.setItem('theme', t);
+          writeStoredTheme(t);
           setTimeout(function() { document.documentElement.classList.remove('theme-transitioning'); }, 350);
           // Re-render Turnstile widget with new theme
           var tw = document.querySelector('.cf-turnstile');
@@ -287,12 +350,13 @@ const websiteSchemaJSON = JSON.stringify({
             if (window.turnstile && window.__turnstileWidgetId) {
               try {
                 window.turnstile.remove(window.__turnstileWidgetId);
-                window.__turnstileWidgetId = window.turnstile.render(tw, { sitekey: tw.getAttribute('data-sitekey'), theme: t });
+                // ContactForm owns the widget's outcome callbacks, so it exposes
+                // the factory. Pages without a contact form never define it.
+                if (window.__turnstileRender) { window.__turnstileWidgetId = window.__turnstileRender(t); }
               } catch(e) { console.warn('Turnstile re-render failed:', e); }
             }
           }
-          var btn = document.getElementById('theme-toggle');
-          if (btn) btn.setAttribute('aria-label', 'Switch to ' + (t === 'dark' ? 'light' : 'dark') + ' mode');
+          window.__syncThemeLabel(t);
         };
 
         window.__toggleTheme = function() {
@@ -300,11 +364,13 @@ const websiteSchemaJSON = JSON.stringify({
           window.__setTheme(current === 'dark' ? 'light' : 'dark');
         };
 
-        window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', function(e) {
-          if (!localStorage.getItem('theme')) {
-            window.__setTheme(e.matches ? 'dark' : 'light');
-          }
-        });
+        try {
+          window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', function(e) {
+            if (!readStoredTheme()) {
+              window.__setTheme(e.matches ? 'dark' : 'light');
+            }
+          });
+        } catch { /* matchMedia unavailable */ }
       })();
     </script>
 
@@ -316,7 +382,7 @@ const websiteSchemaJSON = JSON.stringify({
     <title>{title}</title>
     <meta name="description" content={description} />
 
-    <SEO title={title} description={description} ogType={ogType} />
+    <SEO title={title} description={description} ogType={ogType} robots={robots} />
 
     <!-- Structured Data - Person Schema -->
     <script type="application/ld+json" set:html={personSchemaJSON} is:inline></script>
@@ -339,14 +405,16 @@ const websiteSchemaJSON = JSON.stringify({
     <link rel="dns-prefetch" href="https://api.fouanalytics.com" />
 
     <!-- Initialize dataLayer before GTM -->
-    <script is:inline>
+    <script is:inline define:vars={{ pageType: resolvedPageType }}>
       window.dataLayer = window.dataLayer || [];
       window.dataLayer.push({
-        'environment': location.hostname === 'localhost' || location.hostname === '127.0.0.1' || location.hostname.endsWith('.workers.dev') ? 'development' : 'production'
+        event: 'dl_init',
+        environment: (location.hostname === 'localhost' || location.hostname === '127.0.0.1' || location.hostname.endsWith('.workers.dev')) ? 'development' : 'production',
+        page_type: pageType
       });
     </script>
 
-    <!-- Google Tag Manager (deferred to avoid blocking initial render) -->
+    <!-- Google Tag Manager (async, loaded immediately) -->
     <script is:inline>
       if (location.hostname !== 'localhost' && location.hostname !== '127.0.0.1' && !location.hostname.endsWith('.workers.dev')) {
         var loadGTM = function() {
@@ -359,11 +427,10 @@ const websiteSchemaJSON = JSON.stringify({
             f.parentNode.insertBefore(j, f);
           })(window, document, 'script', 'dataLayer', '6at4snq=aWQ9R1RNLUZXUjQ%3D&omNe=daQSaS');
         }
-        if ('requestIdleCallback' in window) {
-          requestIdleCallback(loadGTM);
-        } else {
-          setTimeout(loadGTM, 1500);
-        }
+        // Loaded straight away: the injected tag is already async and the
+        // loader host is preconnected, so deferring only lost sessions that
+        // ended before the main thread went idle.
+        loadGTM();
       }
     </script>
 
@@ -372,10 +439,39 @@ const websiteSchemaJSON = JSON.stringify({
       @view-transition { navigation: auto; }
       ::view-transition-old(root) { animation: none; }
       ::view-transition-new(root) { animation: none; }
+
+      /* Skip link - visually hidden until it takes keyboard focus (WCAG 2.4.1). */
+      .skip-link {
+        position: absolute;
+        top: 0;
+        left: 0;
+        z-index: 2000;
+        padding: 0.75rem 1.25rem;
+        background: var(--color-bg-elevated);
+        color: var(--color-text-primary);
+        border: 1px solid var(--color-border-primary);
+        border-radius: 0 0 6px 0;
+        font: inherit;
+        text-decoration: none;
+        transform: translateY(-150%);
+      }
+
+      .skip-link:focus {
+        transform: translateY(0);
+        outline: 2px solid var(--color-accent);
+        outline-offset: 2px;
+      }
+
+      /* The skip target is programmatically focusable, so suppress its ring. */
+      .main-content:focus {
+        outline: none;
+      }
     </style>
   </head>
 
   <body>
+    <a class="skip-link" href="#main">Skip to main content</a>
+
     <!-- Google Tag Manager (noscript) -->
     <noscript>
       <iframe src="https://load.sgtm.henriksoderlund.com/ns.html?id=GTM-FWR4" height="0" width="0" style="display:none;visibility:hidden"></iframe>
@@ -390,11 +486,95 @@ const websiteSchemaJSON = JSON.stringify({
       <GitHubLink />
       <LinkedInLink />
 
-      <main class="main-content">
+      <main class="main-content" id="main" tabindex="-1">
         <slot />
       </main>
 
       <Footer />
     </div>
+
+    <!-- Delegated interaction tracking -->
+    <script is:inline define:vars={{ calendlyHost }}>
+      (function () {
+        var CALENDLY_HOST = calendlyHost;
+
+        // Every call site sits inside the delegated click handler's own
+        // try/catch, which is the authoritative boundary.
+        function push(payload) {
+          window.dataLayer = window.dataLayer || [];
+          window.dataLayer.push(payload);
+        }
+
+        function slug(value) {
+          return String(value || '').trim().replace(/[^A-Za-z0-9]+/g, '_').replace(/^_+|_+$/g, '').toLowerCase();
+        }
+
+        function labelOf(el) {
+          var text = (el.textContent || '').replace(/\s+/g, ' ').trim();
+          if (!text) text = el.getAttribute('aria-label') || el.getAttribute('title') || '';
+          return text.slice(0, 100);
+        }
+
+        // Derived from where the element sits, not from a hardcoded list of pages.
+        // Every branch falls back to 'unknown': slug() returns '' for a value with
+        // no alphanumerics, and an empty GA4 dimension is not debuggable.
+        function locationOf(el) {
+          var region = el.closest('section, article, header, footer, nav, aside, main');
+          if (!region) return 'page';
+          var key = region.id || region.getAttribute('aria-label') || (region.classList && region.classList[0]);
+          return key ? (slug(key) || 'unknown') : 'page';
+        }
+
+        // Capture phase on `document`: a capturing listener here runs before the
+        // toggle button's own at-target handler, which is what flips data-theme,
+        // so this still reads the pre-click theme. Moving this listener off
+        // capture would silently invert `theme_selected`.
+        document.addEventListener('click', function (event) {
+          try {
+            var target = event.target;
+            if (!target || typeof target.closest !== 'function') return;
+
+            // One ancestor walk covers both cases; the toggle is never an anchor.
+            var hit = target.closest('a[href], #theme-toggle');
+            if (!hit) return;
+
+            if (hit.id === 'theme-toggle') {
+              var current = document.documentElement.getAttribute('data-theme');
+              push({ event: 'theme_toggle', theme_selected: current === 'dark' ? 'light' : 'dark' });
+              return;
+            }
+
+            // HTMLAnchorElement implements the URL decomposition attributes, so
+            // `protocol`, `hostname` and `href` are already absolute and parsed.
+            var anchor = hit;
+
+            if (anchor.protocol === 'mailto:') {
+              push({ event: 'email_click', cta_location: locationOf(anchor) });
+              return;
+            }
+            if (anchor.protocol !== 'http:' && anchor.protocol !== 'https:') return;
+
+            if (anchor.hostname === CALENDLY_HOST) {
+              push({
+                event: 'booking_start',
+                link_url: anchor.href,
+                link_text: labelOf(anchor),
+                cta_location: locationOf(anchor)
+              });
+              return;
+            }
+
+            if (anchor.hostname !== location.hostname) {
+              push({
+                event: 'outbound_click',
+                link_domain: anchor.hostname,
+                link_url: anchor.href,
+                link_text: labelOf(anchor)
+              });
+            }
+          } catch { /* never throw out of a click handler */ }
+        }, true);
+      })();
+    </script>
   </body>
 </html>

@@ -5,7 +5,7 @@
   class="icon-button theme-toggle"
   id="theme-toggle"
   type="button"
-  aria-label="Switch to dark mode"
+  aria-label="Toggle dark mode"
   title="Toggle dark mode"
 >
   <!-- Sun icon (shown in dark mode - click to go light) -->
@@ -34,11 +34,16 @@
     z-index: 1000;
   }
 
-  :global([data-theme="light"]) .theme-icon--sun {
+  /* The moon is the default and the sun is revealed only by the dark palette.
+     data-theme is stamped by JS, so it can be absent entirely (crawler, no JS,
+     localStorage throwing) - gating both icons on the attribute showed both at
+     once in that state. Defaulting to one icon and layering the dark states on
+     top keeps exactly one visible in all three states. */
+  .theme-icon--sun {
     display: none;
   }
 
-  :global([data-theme="light"]) .theme-icon--moon {
+  .theme-icon--moon {
     display: block;
   }
 
@@ -48,6 +53,18 @@
 
   :global([data-theme="dark"]) .theme-icon--moon {
     display: none;
+  }
+
+  /* Unstamped dark: matches theme.css's :root:not([data-theme="light"]) guard,
+     so an explicit light choice still keeps the moon. */
+  @media (prefers-color-scheme: dark) {
+    :global(:root:not([data-theme="light"])) .theme-icon--sun {
+      display: block;
+    }
+
+    :global(:root:not([data-theme="light"])) .theme-icon--moon {
+      display: none;
+    }
   }
 
   /* Ultrawide gutter positioning - stay next to GitHub/LinkedIn */
@@ -66,7 +83,15 @@
 </style>
 
 <script is:inline>
-  document.getElementById('theme-toggle')?.addEventListener('click', function() {
-    if (window.__toggleTheme) window.__toggleTheme();
-  });
+  (function () {
+    var btn = document.getElementById('theme-toggle');
+    if (!btn) return;
+    // The head script resolves the theme before the button exists, so the
+    // theme-neutral server-rendered name is specialised here, once, without a
+    // repaint. Falls back to the neutral name if the head script never ran.
+    if (window.__syncThemeLabel) window.__syncThemeLabel();
+    btn.addEventListener('click', function () {
+      if (window.__toggleTheme) window.__toggleTheme();
+    });
+  })();
 </script>

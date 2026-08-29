@@ -7,33 +7,66 @@ const result = Astro.getActionResult(actions.contact);
 const success = result?.data?.success;
 const error = result?.error;
 
-// Surface the per-field validation messages rather than the raw Zod payload
-const fieldIssues =
+// Surface the per-field validation messages rather than the raw Zod payload,
+// keeping the field name alongside each message so it can be wired to the input
+// via aria-describedby and reported (names only, never values) to analytics.
+type FieldIssue = { field: string; message: string; id: string };
+
+const fieldIssues: FieldIssue[] =
   error && isInputError(error)
-    ? Object.values(error.fields).flat().filter(Boolean)
+    ? Object.entries(error.fields).flatMap(([field, messages]) =>
+        (messages ?? [])
+          .filter((message): message is string => Boolean(message))
+          .map((message, index) => ({
+            field,
+            message,
+            id: `form-error-${field}-${index}`,
+          }))
+      )
     : [];
+
+const invalidFields = [...new Set(fieldIssues.map((issue) => issue.field))];
+
+const describedBy = (field: string) => {
+  const ids = fieldIssues.filter((issue) => issue.field === field).map((issue) => issue.id);
+  return ids.length > 0 ? ids.join(' ') : undefined;
+};
+const invalidFlag = (field: string) => (describedBy(field) ? 'true' : undefined);
+
+const errorCode = error?.code ?? 'UNKNOWN';
+const errorType =
+  errorCode === 'BAD_REQUEST'
+    ? 'validation'
+    : errorCode === 'FORBIDDEN'
+      ? 'bot_check'
+      : 'server';
 ---
 
 {success && (
-  <div class="form-success" role="alert">
+  <div id="form-result" class="form-success" tabindex="-1">
     <div class="form-success-icon">&#10003;</div>
     <h3>Message sent successfully</h3>
     <p>Thank you for reaching out. I'll get back to you within one business day.</p>
   </div>
   <script is:inline>
-    if (!sessionStorage.getItem('form_submitted')) {
-      sessionStorage.setItem('form_submitted', '1');
+    (function () {
+      var resultEl = document.getElementById('form-result');
+      if (resultEl) resultEl.focus();
+
+      // No client-side deduplication: Turnstile tokens are single-use, so a
+      // re-POST is rejected before this block can ever render a second time.
       window.dataLayer = window.dataLayer || [];
       window.dataLayer.push({
-        'event': 'contact_form_submission',
-        'form_name': 'contact'
+        'event': 'generate_lead',
+        'form_name': 'contact',
+        'form_location': window.location.pathname
       });
-    }
+    })();
   </script>
 )}
 
 {error && (
-  <div class="form-error" role="alert">
+  <div id="form-result" class="form-error" tabindex="-1">
     {error.code === 'FORBIDDEN' ? (
       <p><strong>Verification failed.</strong> Please refresh the page and try again.</p>
     ) : error.code === 'BAD_REQUEST' ? (
@@ -41,7 +74,7 @@ const fieldIssues =
         <Fragment>
           <p><strong>Please check your input.</strong></p>
           <ul>
-            {fieldIssues.map((issue) => <li>{issue}</li>)}
+            {fieldIssues.map((issue) => <li id={issue.id}>{issue.message}</li>)}
           </ul>
         </Fragment>
       ) : (
@@ -51,13 +84,20 @@ const fieldIssues =
       <p><strong>Something went wrong.</strong> Please try again or email me directly at <a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a>.</p>
     )}
   </div>
-  <script is:inline define:vars={{ errorCode: error.code ?? 'UNKNOWN' }}>
-    window.dataLayer = window.dataLayer || [];
-    window.dataLayer.push({
-      'event': 'contact_form_error',
-      'form_name': 'contact',
-      'error_code': errorCode
-    });
+  <script is:inline define:vars={{ errorCode, errorType, errorFields: invalidFields }}>
+    (function () {
+      var resultEl = document.getElementById('form-result');
+      if (resultEl) resultEl.focus();
+
+      window.dataLayer = window.dataLayer || [];
+      window.dataLayer.push({
+        'event': 'form_error',
+        'form_name': 'contact',
+        'error_type': errorType,
+        'error_code': errorCode,
+        'error_fields': errorFields.join(',')
+      });
+    })();
   </script>
 )}
 
@@ -66,32 +106,86 @@ const fieldIssues =
     <div class="form-row">
       <div class="form-group">
         <label for="name">Name</label>
-        <input type="text" id="name" name="name" required maxlength="100" placeholder="Your name" />
+        <input type="text" id="name" name="name" required maxlength="100" placeholder="Your name" aria-invalid={invalidFlag('name')} aria-describedby={describedBy('name')} />
       </div>
       <div class="form-group">
         <label for="email">Email</label>
-        <input type="email" id="email" name="email" required maxlength="200" placeholder="you@example.com" />
+        <input type="email" id="email" name="email" required maxlength="200" placeholder="you@example.com" aria-invalid={invalidFlag('email')} aria-describedby={describedBy('email')} />
       </div>
     </div>
     <div class="form-group">
       <label for="message">Message</label>
-      <textarea id="message" name="message" required maxlength="2000" rows="6" placeholder="Tell me about your project or question..."></textarea>
+      <textarea id="message" name="message" required maxlength="2000" rows="6" placeholder="Tell me about your project or question..." aria-invalid={invalidFlag('message')} aria-describedby={describedBy('message')}></textarea>
     </div>
     <div class="form-footer">
-      <div class="cf-turnstile" data-sitekey={TURNSTILE_SITE_KEY}></div>
+      <div class="cf-turnstile" data-sitekey={TURNSTILE_SITE_KEY} aria-describedby={describedBy('cf-turnstile-response')}></div>
       <button type="submit" class="submit-btn">Send Message</button>
     </div>
     <script is:inline>
-      // Explicit render callback - captures widget ID for theme toggle re-renders
-      window.onTurnstileLoad = function() {
+      // contact_form_start - fires at most once per session. A validation error
+      // is a full render cycle, so a per-document flag alone would refire and
+      // inflate the denominator of the conversion rate by the error rate.
+      (function () {
+        var script = document.currentScript;
+        var form = script && script.closest('form');
+        if (!form) return;
+        var KEY = 'contact_form_started';
+        var started = function () {
+          try {
+            return sessionStorage.getItem(KEY) === '1';
+          } catch {
+            return false;
+          }
+        };
+        if (started()) return;
+        var fire = function () {
+          form.removeEventListener('focusin', fire);
+          form.removeEventListener('input', fire);
+          try {
+            sessionStorage.setItem(KEY, '1');
+          } catch {
+            /* storage unavailable - the event listeners are already removed */
+          }
+          window.dataLayer = window.dataLayer || [];
+          window.dataLayer.push({
+            'event': 'contact_form_start',
+            'form_name': 'contact'
+          });
+        };
+        form.addEventListener('focusin', fire);
+        form.addEventListener('input', fire);
+      })();
+    </script>
+    <script is:inline>
+      // Turnstile outcome reporting - survives remove()/re-render on theme change
+      window.__turnstileOutcome = function(outcome, code) {
+        window.dataLayer = window.dataLayer || [];
+        var payload = {
+          'event': 'turnstile_outcome',
+          'form_name': 'contact',
+          'outcome': outcome
+        };
+        if (code) payload['error_code'] = String(code);
+        window.dataLayer.push(payload);
+      };
+      // Render factory - callback ownership stays in this file, so the theme
+      // toggle in BaseLayout.astro can re-render the widget without dropping
+      // the outcome callbacks.
+      window.__turnstileRender = function (theme) {
         var tw = document.querySelector('.cf-turnstile');
-        if (!tw) return;
-        var theme = document.documentElement.getAttribute('data-theme') || 'light';
-        window.__turnstileWidgetId = window.turnstile.render(tw, {
+        if (!tw || !window.turnstile) return;
+        return window.turnstile.render(tw, {
           sitekey: tw.getAttribute('data-sitekey'),
-          theme: theme
+          theme: theme || document.documentElement.getAttribute('data-theme') || 'light',
+          'callback': function () { window.__turnstileOutcome('success'); },
+          'error-callback': function (code) { window.__turnstileOutcome('error', code); },
+          'expired-callback': function () { window.__turnstileOutcome('expired'); },
+          'timeout-callback': function () { window.__turnstileOutcome('timeout'); }
         });
-      }
+      };
+      window.onTurnstileLoad = function () {
+        window.__turnstileWidgetId = window.__turnstileRender();
+      };
     </script>
     <script is:inline src="https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit&onload=onTurnstileLoad" async defer></script>
   </form>
