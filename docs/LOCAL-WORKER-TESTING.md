@@ -1,6 +1,6 @@
 # Local Worker testing
 
-`astro dev` never runs `src/worker.ts`, so redirects, security headers, the CSP and the `/sgtm/` proxy cannot be checked there. Testing them locally means running the built bundle under Wrangler, and three separate traps make the obvious approaches fail. Follow this rather than improvising.
+`astro dev` never runs `src/worker.ts`, so redirects, security headers, the CSP and the `/sgtm/` proxy cannot be checked there. Testing them locally means running the built bundle under Wrangler, and three separate traps make the obvious approaches fail. A fourth trap takes down `astro dev` itself. Follow this rather than improvising.
 
 ## 0. `astro dev` is a background daemon since Astro 7
 
@@ -47,6 +47,31 @@ node -e "const f='dist/server/wrangler.json',w=require('./'+f);delete w.routes;r
 ```
 
 Restart `wrangler dev` afterwards, and rebuild (or restore the config) when finished.
+
+## 4. A stale SSR dep hash makes `astro dev` 500 every route
+
+Symptom: every route on `astro dev` returns 500 with
+
+```
+The file does not exist at ".../node_modules/.vite/deps_ssr/astro_actions_runtime_entrypoints_server__js.js?v=<hash>"
+which is in the optimize deps directory.
+```
+
+It reads like a broken contact form, because Astro Actions are what pull that entrypoint in. It is not: the stack trace is in `matchRoute`, so **routing** is what fails and every page goes down with it.
+
+Vite's SSR dependency optimizer re-bundles `astro/actions/runtime/entrypoints/server.js` under a hashed filename and bumps that hash whenever it rediscovers dependencies. The Cloudflare plugin's `workerd` runner keeps the module graph from before the re-run, so the next request resolves a `?v=<old hash>` file that no longer exists. Adding routes or a new shared import (anything that gives the optimizer more to find) makes it fire.
+
+`rm -rf node_modules/.vite` clears it for one run and it comes back with a different hash. The fix is in `astro.config.mjs`, and is already applied:
+
+```js
+ssr: {
+  optimizeDeps: {
+    exclude: ['astro/actions/runtime/entrypoints/server.js'],
+  },
+},
+```
+
+The entrypoint then stays as plain source with no hash to go stale. Dev-only - the optimizer does not run during `astro build`, so production was never affected.
 
 ## Expected results
 

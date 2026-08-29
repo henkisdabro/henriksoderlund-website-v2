@@ -31,6 +31,6 @@ Rate limiting is Cloudflare WAF dashboard configuration, not code - do not look 
 
 ## Deeper docs
 
-- `docs/LOCAL-WORKER-TESTING.md` - running the Worker locally to check redirects, headers or CSP. Three separate traps make the obvious approaches fail; read it before improvising.
+- `docs/LOCAL-WORKER-TESTING.md` - running the Worker locally to check redirects, headers or CSP, plus the dev-server dep-optimizer trap that 500s every route. Four traps make the obvious approaches fail; read it before improvising.
 - `docs/CONTENT-AND-SEO.md` - editing structured data, Open Graph, sitemap priorities, the llms.txt endpoints, or writing site copy.
 - `docs/DEPLOYMENT.md` - changing the CI workflow or the Cloudflare-side deployment setup.
