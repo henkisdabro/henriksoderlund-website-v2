@@ -72,6 +72,33 @@ const REDIRECTS: Record<string, string> = {
   '/index.md': '/index.html.md',
 };
 
+// Campaign parameters survive a redirect; everything else is dropped. A tagged
+// link that lands on a legacy path (an old /skills/ URL in a CV, say) would
+// otherwise arrive at the target with no utm_* at all and be counted as Direct.
+const CAMPAIGN_PARAMS = new Set([
+  'utm_source',
+  'utm_medium',
+  'utm_campaign',
+  'utm_content',
+  'utm_term',
+  'utm_id',
+  'gclid',
+  'gbraid',
+  'wbraid',
+  'msclkid',
+  'fbclid',
+  'ttclid',
+  'li_fat_id',
+]);
+
+function keepCampaignParams(url: URL): void {
+  const kept = new URLSearchParams();
+  for (const [key, value] of url.searchParams) {
+    if (CAMPAIGN_PARAMS.has(key)) kept.append(key, value);
+  }
+  url.search = kept.toString();
+}
+
 export default {
   async fetch(request: Request, env: Env, ctx: ExecutionContext): Promise<Response> {
     const url = new URL(request.url);
@@ -117,7 +144,7 @@ export default {
       const slashTarget = REDIRECTS[url.pathname];
       if (slashTarget) {
         url.pathname = slashTarget;
-        url.search = '';
+        keepCampaignParams(url);
       }
       const headers = new Headers({ Location: url.toString() });
       setSecurityHeaders(headers);
@@ -136,7 +163,7 @@ export default {
     const redirectTarget = REDIRECTS[url.pathname];
     if (redirectTarget || url.pathname.startsWith('/blog/')) {
       url.pathname = redirectTarget || '/';
-      url.search = '';
+      keepCampaignParams(url);
       const headers = new Headers({ Location: url.toString() });
       setSecurityHeaders(headers);
       return new Response(null, { status: 301, headers });

@@ -103,6 +103,24 @@ jobs:
             fi
           done
 
+          echo "=== Checking redirects preserve UTM parameters ==="
+          # A tagged link printed against a legacy path (an old /skills URL in a
+          # CV) must keep its campaign tags across the 301, or the session is
+          # counted as Direct. See docs/UTM-TAXONOMY.md.
+          for path in /skills /consultation /blog/old-post; do
+            url="https://www.henriksoderlund.com${path}?utm_source=resume&utm_medium=referral&utm_campaign=202608-cv&junk=1"
+            loc=$(curl -s -o /dev/null -D - --max-time 10 "$url" | tr -d '\r' | awk 'tolower($1)=="location:"{print $2}')
+            if ! echo "$loc" | grep -q "utm_source=resume.*utm_medium=referral.*utm_campaign=202608-cv"; then
+              echo "::error::FAIL: $url dropped its UTM parameters (Location: $loc)"
+              failed=1
+            elif echo "$loc" | grep -q "junk=1"; then
+              echo "::error::FAIL: $url carried a non-campaign parameter through (Location: $loc)"
+              failed=1
+            else
+              echo "OK: $url (UTM preserved)"
+            fi
+          done
+
           echo "=== Checking defunct feed paths return 410 Gone ==="
           for path in /index.xml /feed /rss.xml; do
             url="https://www.henriksoderlund.com${path}"

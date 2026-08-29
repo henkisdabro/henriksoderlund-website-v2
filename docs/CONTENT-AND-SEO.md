@@ -31,6 +31,7 @@ Set in the `serialize` callback in `astro.config.mjs`: home 1.0, expertise 0.9, 
 - **dataLayer** is initialised in `BaseLayout.astro` before GTM loads, with production/development detection based on hostname.
 - **`contact_form_submission`** is pushed on successful submit, deduplicated through session storage so a re-render cannot double-count a conversion.
 - Cloudflare Insights provides platform-level observability; the CSP allows `cloudflareinsights.com`.
+- **Inbound links Henrik controls are UTM-tagged** to the convention in `docs/UTM-TAXONOMY.md`. `utm_medium` must be a value GA4's default channel grouping recognises, or the session lands in Unassigned.
 
 ## AI-readable endpoints
 
