@@ -91,6 +91,24 @@ const CAMPAIGN_PARAMS = new Set([
   'li_fat_id',
 ]);
 
+// The sGTM container issues cookies scoped to sgtm.henriksoderlund.com. Served
+// back from www.henriksoderlund.com/sgtm/*, a browser silently rejects any
+// Set-Cookie whose Domain does not cover the serving host: nothing errors,
+// measurement just degrades. Rewrite the Domain to the registrable domain so the
+// cookie is accepted on both hosts. Cookies with no Domain attribute are left
+// untouched and stay host-only.
+function rewriteCookieDomain(source: Headers, headers: Headers): void {
+  const cookies = source.getSetCookie();
+  if (cookies.length === 0) return;
+  headers.delete('Set-Cookie');
+  for (const cookie of cookies) {
+    headers.append(
+      'Set-Cookie',
+      cookie.replace(/;\s*Domain\s*=[^;]*/i, '; Domain=.henriksoderlund.com')
+    );
+  }
+}
+
 function keepCampaignParams(url: URL): void {
   const kept = new URLSearchParams();
   for (const [key, value] of url.searchParams) {
@@ -103,11 +121,16 @@ export default {
   async fetch(request: Request, env: Env, ctx: ExecutionContext): Promise<Response> {
     const url = new URL(request.url);
 
+    // Built by hand rather than with Response.redirect(): that helper returns a
+    // bare response, so the apex would answer a first-ever http:// visit with no
+    // HSTS at all - and the preload list requires the base domain to serve HSTS
+    // on its own responses.
     if (url.hostname === 'henriksoderlund.com') {
-      return Response.redirect(
-        `https://www.henriksoderlund.com${url.pathname}${url.search}`,
-        301
-      );
+      const headers = new Headers({
+        Location: `https://www.henriksoderlund.com${url.pathname}${url.search}`,
+      });
+      setSecurityHeaders(headers);
+      return new Response(null, { status: 301, headers });
     }
 
     // Proxy sGTM requests for same-origin tracking and service worker registration.
@@ -124,13 +147,22 @@ export default {
 
       const proxyResponse = await fetch(proxyRequest);
 
+      // nosniff only. The full setSecurityHeaders() set (CORP/COOP and the rest)
+      // would break the tracking endpoints; without nosniff, a mistyped response
+      // from the container executes as same-origin script against site cookies.
+      const headers = new Headers(proxyResponse.headers);
+      headers.set('X-Content-Type-Options', 'nosniff');
+      rewriteCookieDomain(proxyResponse.headers, headers);
+
       if (targetPath.startsWith('/_/service_worker/')) {
-        const headers = new Headers(proxyResponse.headers);
         headers.set('Service-Worker-Allowed', '/');
-        return new Response(proxyResponse.body, { status: proxyResponse.status, headers });
       }
 
-      return proxyResponse;
+      return new Response(proxyResponse.body, {
+        status: proxyResponse.status,
+        statusText: proxyResponse.statusText,
+        headers,
+      });
     }
 
     // Enforce trailingSlash: 'never' (astro.config.mjs). The Cloudflare asset
@@ -169,46 +201,57 @@ export default {
       return new Response(null, { status: 301, headers });
     }
 
-    const response = await handle(request, env, ctx);
-    const contentType = response.headers.get('content-type') || '';
-    const headers = new Headers(response.headers);
-    setSecurityHeaders(headers);
-    headers.delete('speculation-rules');
+    try {
+      const response = await handle(request, env, ctx);
+      const contentType = response.headers.get('content-type') || '';
+      const headers = new Headers(response.headers);
+      setSecurityHeaders(headers);
+      headers.delete('speculation-rules');
 
-    // Canonical Link header: pathname only (no query params), skip for non-2xx responses
-    const host = request.headers.get('host');
-    if (host === 'www.henriksoderlund.com' && response.status >= 200 && response.status < 300) {
-      headers.set('Link', `<https://www.henriksoderlund.com${url.pathname}>; rel="canonical"`);
-    }
+      // Prevent search engines from indexing text/markdown and text/plain endpoints
+      if (contentType.includes('text/markdown') || contentType.includes('text/plain')) {
+        headers.set('X-Robots-Tag', 'noindex');
+      }
 
-    // Prevent search engines from indexing text/markdown and text/plain endpoints
-    if (contentType.includes('text/markdown') || contentType.includes('text/plain')) {
-      headers.set('X-Robots-Tag', 'noindex');
-    }
+      if (contentType.includes('text/html')) {
+        // Canonical Link header on HTML only: pairing it with the X-Robots-Tag
+        // noindex on the .md and .txt endpoints is a contradictory signal, and on
+        // static assets it is merely noise. Pathname only, no query params.
+        const host = request.headers.get('host');
+        if (host === 'www.henriksoderlund.com' && response.status >= 200 && response.status < 300) {
+          headers.set('Link', `<https://www.henriksoderlund.com${url.pathname}>; rel="canonical"`);
+        }
 
-    if (contentType.includes('text/html')) {
-      const nonce = crypto.randomUUID();
-      headers.set('Content-Security-Policy', buildCSP(nonce));
-      headers.set('Cache-Control', 'no-store, no-cache, must-revalidate, max-age=0');
-      headers.set('CDN-Cache-Control', 'no-store');
+        const nonce = crypto.randomUUID();
+        headers.set('Content-Security-Policy', buildCSP(nonce));
+        headers.set('Cache-Control', 'no-store, no-cache, must-revalidate, max-age=0');
+        headers.set('CDN-Cache-Control', 'no-store');
 
-      const prepared = new Response(response.body, {
+        const prepared = new Response(response.body, {
+          status: response.status,
+          headers,
+        });
+
+        return new HTMLRewriter()
+          .on('script:not([type="application/ld+json"])', {
+            element(el) {
+              el.setAttribute('nonce', nonce);
+            },
+          })
+          .transform(prepared);
+      }
+
+      return new Response(response.body, {
         status: response.status,
         headers,
       });
-
-      return new HTMLRewriter()
-        .on('script:not([type="application/ld+json"])', {
-          element(el) {
-            el.setAttribute('nonce', nonce);
-          },
-        })
-        .transform(prepared);
+    } catch (error) {
+      // An SSR throw would otherwise escape the fetch handler and get Cloudflare's
+      // Error 1101 page: no CSP, no security headers, no site chrome.
+      console.error('Worker fetch handler error', url.pathname, error);
+      const headers = new Headers({ 'Content-Type': 'text/plain; charset=utf-8' });
+      setSecurityHeaders(headers);
+      return new Response('500 Internal Server Error\n', { status: 500, headers });
     }
-
-    return new Response(response.body, {
-      status: response.status,
-      headers,
-    });
   },
 };
