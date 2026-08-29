@@ -6,7 +6,12 @@ Rules specific to this site. The house style rules that apply to all of Henrik's
 
 Professional, direct, technical without excessive formality. This is a consulting shopfront, so claims are specific and evidenced rather than promotional. Terminology stays uniform across pages, structured data and the markdown endpoints - the same service should not be "consultancy" in one place and "consulting services" in another.
 
-Henrik's job title is Digital Consultant.
+Henrik's positioning line varies by surface and each surface keeps the one it already uses:
+**Technology Leader & Automation Architect** in the `Person` and `WebSite` structured data
+(`BaseLayout.astro`), **Technology Leader & AI Innovator** in the markdown endpoints
+(`pageMarkdown.ts`, `llms.txt.ts`), and the plain job title **Digital Consultant** in the prose of
+`llms-full.txt.ts`. Do not swap one for another without asking - they are deliberate register
+differences, not drift.
 
 ## Structured data and social metadata
 
