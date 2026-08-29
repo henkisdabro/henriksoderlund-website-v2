@@ -4,18 +4,16 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import { PRIVACY_EMAIL } from '../data/links';
 import '../styles/content-entry.css';
 
-// Harvester-resistant rendering. The address never appears in source order and
-// never with an "@" in it: each half is reversed into its own data attribute,
-// so neither attribute alone yields the address and a regex over the HTML finds
-// nothing to match. The inline script below reassembles it into a real mailto:
-// link. With JS off the visible spelled-out form is what remains, which is the
-// deliberate floor: a privacy policy has to give a data-subject request route
-// that does not depend on scripting.
+// Harvester-resistant rendering. The address appears nowhere in the HTML, in
+// any spelling: each half is reversed into its own data attribute, so neither
+// attribute alone yields it and an email regex over the page finds no match.
+// The inline script below reassembles it into a real mailto: link. Without
+// scripting the address is never revealed at all - the contact form carries
+// the request instead, so a data-subject request still has a route.
 const [emailLocal, emailDomain] = PRIVACY_EMAIL.split('@');
 const reverse = (value: string) => [...value].reverse().join('');
 const emailLocalReversed = reverse(emailLocal);
 const emailDomainReversed = reverse(emailDomain);
-const emailSpelledOut = `${emailLocal} [at] ${emailDomain.replace(/\./g, ' [dot] ')}`;
 ---
 
 <BaseLayout
@@ -150,10 +148,10 @@ const emailSpelledOut = `${emailLocal} [at] ${emailDomain.replace(/\./g, ' [dot]
       <h2 id="your-rights">Your Rights</h2>
       <p>
         You may request access to, correction of, or deletion of any personal information held about you.
-        To make a request, please contact me at
-        <span class="protected-email" data-l={emailLocalReversed} data-d={emailDomainReversed}
-        >{emailSpelledOut}</span>. You can also clear the analytics cookies
-        listed above at any time through your browser's settings, which resets the identifiers they hold.
+        To make a request, please <span class="protected-email" data-l={emailLocalReversed}
+        data-d={emailDomainReversed}>use the <a href="/contact">contact form</a></span>. You can also clear
+        the analytics cookies listed above at any time through your browser's settings, which resets the
+        identifiers they hold.
       </p>
       <p>
         This site is operated from Australia. If you are visiting from the European Union or United Kingdom,
@@ -176,16 +174,16 @@ const emailSpelledOut = `${emailLocal} [at] ${emailDomain.replace(/\./g, ' [dot]
       <h2 id="contact">Contact</h2>
       <p>
         If you have questions about this privacy policy or how your personal information is handled,
-        please contact me at <span class="protected-email" data-l={emailLocalReversed}
-        data-d={emailDomainReversed}>{emailSpelledOut}</span>.
+        please <span class="protected-email" data-l={emailLocalReversed}
+        data-d={emailDomainReversed}>use the <a href="/contact">contact form</a></span>.
       </p>
     </section>
   </div>
 
   <script is:inline>
-    // Upgrades every .protected-email span into a real mailto: link. Delegated
-    // click tracking in BaseLayout listens on document, so the `email_click`
-    // event still fires for a link created here.
+    // Swaps each .protected-email span's contact-form fallback for a real
+    // mailto: link. Delegated click tracking in BaseLayout listens on document,
+    // so the `email_click` event still fires for a link created here.
     (function () {
       const nodes = document.querySelectorAll('.protected-email');
       for (const node of nodes) {
@@ -196,7 +194,9 @@ const emailSpelledOut = `${emailLocal} [at] ${emailDomain.replace(/\./g, ' [dot]
         const link = document.createElement('a');
         link.href = 'mailto:' + address;
         link.textContent = address;
-        node.replaceWith(link);
+        // Clears the fallback anchor before appending the real one.
+        node.textContent = 'email ';
+        node.appendChild(link);
       }
     })();
   </script>
