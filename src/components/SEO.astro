@@ -3,17 +3,54 @@ interface Props {
   title: string;
   description: string;
   ogType?: 'profile' | 'website';
+  /** Overrides the computed robots directive. Pass 'noindex, follow' to keep a page out of the index. */
+  robots?: string;
 }
 
-const { title, description, ogType = 'website' } = Astro.props;
+const { title, description, ogType = 'website', robots } = Astro.props;
 
 const canonicalURL = new URL(Astro.url.pathname, Astro.site);
 const siteBase = Astro.site?.toString().replace(/\/$/, '') ?? 'https://www.henriksoderlund.com';
 const ogImageURL = `${siteBase}/og_image.png`;
+
+// Normalised path: no trailing slash, so '/' becomes ''.
+const pagePath = Astro.url.pathname.replace(/\/+$/, '');
+
+// Utility pages that must never enter the index. BaseLayout does not forward a
+// `robots` prop, so the exclusion is resolved here rather than at the call site.
+const NOINDEX_PATHS = new Set(['/404']);
+
+const robotsContent =
+  robots ??
+  (NOINDEX_PATHS.has(pagePath)
+    ? 'noindex, follow'
+    : 'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1');
+
+// Every `*.md.ts` route under src/pages is a plain-text twin of an HTML page.
+// Globbing them keeps the alternate links in step with the filesystem, so a page
+// without a twin can never emit a dead link.
+const MARKDOWN_ROUTES = new Set(
+  Object.keys(import.meta.glob('/src/pages/**/*.md.ts')).map((file) =>
+    file.replace('/src/pages', '').replace(/\.ts$/, '')
+  )
+);
+
+const markdownCandidate = pagePath === '' ? '/index.html.md' : `${pagePath}.md`;
+const markdownURL = MARKDOWN_ROUTES.has(markdownCandidate)
+  ? new URL(markdownCandidate, Astro.site).href
+  : null;
 ---
 
 <!-- Canonical -->
 <link rel="canonical" href={canonicalURL.href} />
+
+<!-- Indexing -->
+<meta name="robots" content={robotsContent} />
+
+<!-- Plain-text twin of this page, for agents and answer engines -->
+{markdownURL && (
+  <link rel="alternate" type="text/markdown" href={markdownURL} title="Markdown version" />
+)}
 
 <!-- Open Graph -->
 <meta property="og:type" content={ogType} />

@@ -31,7 +31,10 @@ const PUNCTUATION: Array<[RegExp, string]> = [
  * pages keep Henrik's original punctuation; only generated text is folded.
  */
 export function removeEmojis(text: string): string {
-  let out = text.replace(EMOJI_REGEX, '');
+  // Compose first. The digraph table below matches precomposed characters only,
+  // so decomposed input ("o" + U+0308) would slip past it and lose its diaeresis
+  // to the combining-mark strip further down - "Malmo" instead of "Malmoe".
+  let out = text.normalize('NFC').replace(EMOJI_REGEX, '');
 
   for (const [pattern, replacement] of DIGRAPHS) {
     out = out.replace(pattern, replacement);

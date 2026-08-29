@@ -2,6 +2,17 @@ import type { APIRoute } from 'astro';
 
 export const prerender = false;
 
+// RFC 9116 section 2.5.5 requires a future `Expires` and recommends less than a
+// year out. Six months from the request keeps the file permanently conformant
+// without anyone having to remember to bump a literal.
+const EXPIRY_MONTHS = 6;
+
+function expiresAt(from: Date): string {
+  const expiry = new Date(from);
+  expiry.setUTCMonth(expiry.getUTCMonth() + EXPIRY_MONTHS);
+  return expiry.toISOString();
+}
+
 export const GET: APIRoute = () => {
   const securityTxt = `#
 #   +-------------------------------------+
@@ -17,10 +28,9 @@ export const GET: APIRoute = () => {
 #
 
 Contact: https://www.henriksoderlund.com/contact
-Expires: 2027-03-28T00:00:00.000Z
+Expires: ${expiresAt(new Date())}
 Preferred-Languages: en, sv
 Canonical: https://www.henriksoderlund.com/.well-known/security.txt
-Policy: https://www.henriksoderlund.com/
 `;
 
   return new Response(securityTxt, {

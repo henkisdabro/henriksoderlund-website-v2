@@ -4,9 +4,15 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import { consultationData } from '../data/consultation';
 import { CALENDLY_URL } from '../data/links';
 
+const pageUrl = 'https://www.henriksoderlund.com/consultancy';
+
 const faqSchema = {
   "@context": "https://schema.org",
   "@type": "FAQPage",
+  "@id": `${pageUrl}#faq`,
+  // Anchors the FAQ to the page's own WebPage node emitted by BaseLayout, so the
+  // questions belong to this URL rather than floating free in the graph.
+  "isPartOf": { "@id": `${pageUrl}#webpage` },
   "mainEntity": consultationData.faq.items.map(item => ({
     "@type": "Question",
     "name": item.question,
@@ -20,14 +26,14 @@ const faqSchema = {
 const serviceSchema = {
   "@context": "https://schema.org",
   "@type": "Service",
-  "@id": "https://www.henriksoderlund.com/consultancy#service",
-  "name": "Henrik Söderlund - Strategic Technology Consultancy",
+  "@id": `${pageUrl}#service`,
+  "name": "AI Automation and Analytics Infrastructure Consulting",
   "description": "AI automation, analytics infrastructure, team upskilling, and digital product consulting. Working systems that deliver measurable outcomes for businesses seeking to leverage cutting-edge technology solutions.",
-  "url": "https://www.henriksoderlund.com/consultancy",
+  "url": pageUrl,
   "provider": {
     "@id": "https://www.henriksoderlund.com/#practice"
   },
-  "serviceType": "AI Automation & Technology Consulting",
+  "serviceType": "AI automation, analytics infrastructure and digital product consulting",
   "areaServed": [
     {
       "@type": "City",
