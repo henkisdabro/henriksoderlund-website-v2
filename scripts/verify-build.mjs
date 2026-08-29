@@ -76,6 +76,26 @@ if (existsSync('dist/client/sitemap.xml')) {
   failed++;
 }
 
+// No prerendered page may ship a baked-in CSP nonce. src/worker.ts runs
+// inside workerd during prerendering and stamps one in; scripts/strip-
+// prerender-nonce.mjs removes it again. If that step is skipped and
+// assets.run_worker_first is ever lost, the asset binding would serve a
+// stale nonce against a freshly issued CSP header and block every inline
+// script on every prerendered page.
+console.log('\n=== Prerendered HTML has no baked-in CSP nonce ===');
+for (const { path } of htmlPages) {
+  if (!existsSync(path)) continue;
+  const matches = readFileSync(path, 'utf-8').match(/\snonce="[^"]*"/g);
+  if (matches) {
+    console.error(
+      `${RED}FAIL${RESET}: ${path} - ${matches.length} build-time nonce attribute(s); run scripts/strip-prerender-nonce.mjs`,
+    );
+    failed++;
+  } else {
+    console.log(`${GREEN}OK${RESET}:   ${path}`);
+  }
+}
+
 // Check wrangler.json has run_worker_first patched in
 const wranglerPath = 'dist/server/wrangler.json';
 if (existsSync(wranglerPath)) {

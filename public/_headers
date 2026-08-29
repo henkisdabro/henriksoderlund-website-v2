@@ -1,0 +1,24 @@
+# Cache headers for static assets served by the Cloudflare asset binding.
+#
+# The @astrojs/cloudflare adapter PREPENDS its own immutable rule for
+# /_astro/* to this file at build time (buildAssetsHeadersContent in
+# node_modules/@astrojs/cloudflare/dist/utils/headers.js). It skips writing
+# entirely if this file already sets Cache-Control for /_astro/probe, so do
+# NOT add an /_astro/* rule here - it would suppress the adapter's block.
+#
+# Unlike public/_redirects (which the asset binding turns into 200 rewrites,
+# see AGENTS.md), _headers is honoured as written.
+
+# Font filenames are stable and their bytes are pinned to a build. If a font
+# file's contents ever change, rename it - immutable means a returning
+# visitor will not re-fetch it for a year.
+/fonts/*
+  Cache-Control: public, max-age=31536000, immutable
+
+# Open Graph image and favicon: long-lived but revalidatable, because these
+# filenames are stable and the artwork can be updated in place.
+/og_image.png
+  Cache-Control: public, max-age=604800
+
+/favicon.svg
+  Cache-Control: public, max-age=604800

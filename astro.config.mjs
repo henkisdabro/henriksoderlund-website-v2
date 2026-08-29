@@ -1,4 +1,4 @@
-import { defineConfig, envField, passthroughImageService } from 'astro/config';
+import { defineConfig, envField } from 'astro/config';
 import cloudflare from '@astrojs/cloudflare';
 import sitemap from '@astrojs/sitemap';
 
@@ -41,8 +41,15 @@ export default defineConfig({
     inlineStylesheets: 'always',
   },
 
+  // `image.service` is not settable here: `cloudflare()` defaults its
+  // `imageService` option to `"cloudflare-binding"`, and that branch returns
+  // the workerd image service unconditionally, ignoring any user service. The
+  // built wrangler.json already carries the `IMAGES` binding.
+  // `layout` + `responsiveStyles` make `<Image>` emit a srcset and the
+  // matching sizing CSS.
   image: {
-    service: passthroughImageService(),
+    layout: 'constrained',
+    responsiveStyles: true,
   },
 
   prefetch: false,
@@ -54,22 +61,22 @@ export default defineConfig({
   session: false,
 
   vite: {
+    // Server sourcemaps are required: the Cloudflare Vite plugin does not
+    // generate them itself and wrangler.json sets `upload_source_maps: true`,
+    // so without these Workers Observability stack traces stay minified.
     build: {
       sourcemap: true,
     },
 
-    // Astro Actions' server entrypoint must not go through Vite's SSR
-    // dependency optimizer. The optimizer re-bundles it under a hashed
-    // filename and bumps that hash whenever it rediscovers dependencies; the
-    // Cloudflare plugin's workerd runner keeps the module graph from before
-    // the re-run, so the next request resolves a `deps_ssr/...js?v=<old hash>`
-    // file that no longer exists and every route 500s with "The file does not
-    // exist ... which is in the optimize deps directory". Excluding it leaves
-    // the entrypoint as plain source, so there is no hash to go stale.
-    // Dev-only: the optimizer does not run during `astro build`.
-    ssr: {
-      optimizeDeps: {
-        exclude: ['astro/actions/runtime/entrypoints/server.js'],
+    // ...but the browser bundle must not ship maps. The one client script
+    // (expertise.astro's inline module) otherwise emits a .map carrying the
+    // full annotated TypeScript in `sourcesContent`, referenced by a
+    // sourceMappingURL comment in the built HTML.
+    environments: {
+      client: {
+        build: {
+          sourcemap: false,
+        },
       },
     },
   },
