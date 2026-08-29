@@ -1,5 +1,5 @@
 # Dependencies
-node_modules/
+node_modules
 *.pnp
 .pnp.js
 
@@ -107,3 +107,6 @@ package-lock.json
 
 # agent instruction refactor working notes
 .agent-refactor/
+
+# Agent worktrees
+.claude/worktrees/
