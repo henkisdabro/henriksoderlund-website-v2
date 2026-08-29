@@ -305,13 +305,13 @@ const calendlyHost = new URL(CALENDLY_URL).hostname;
         // Every storage and matchMedia access is guarded: Safari's "Block All
         // Cookies", Firefox with storage disabled and locked-down kiosk
         // profiles all throw SecurityError on localStorage. An unguarded throw
-        // here would abort this IIFE before it defines __setTheme and
-        // __toggleTheme, leaving the theme toggle inert for the whole session.
+        // here would abort this IIFE before it binds the toggle-request
+        // listener, leaving the theme toggle inert for the whole session.
         // (The page itself still renders: theme.css defines the full palette on
         // bare :root, so a missing data-theme falls back to the light theme.)
         function readStoredTheme() {
           try {
-            var stored = localStorage.getItem('theme');
+            const stored = localStorage.getItem('theme');
             return stored === 'dark' || stored === 'light' ? stored : null;
           } catch { return null; }
         }
@@ -324,50 +324,35 @@ const calendlyHost = new URL(CALENDLY_URL).hostname;
           try { return window.matchMedia('(prefers-color-scheme: dark)').matches; } catch { return false; }
         }
 
-        var theme = readStoredTheme() || (prefersDark() ? 'dark' : 'light');
+        const theme = readStoredTheme() || (prefersDark() ? 'dark' : 'light');
         document.documentElement.setAttribute('data-theme', theme);
 
-        // The toggle button does not exist yet when this runs in <head>, so the
-        // accessible name is synced from the button's own inline script once it
-        // has been parsed. Server-rendered markup carries a theme-neutral name.
-        window.__syncThemeLabel = function(t) {
-          var btn = document.getElementById('theme-toggle');
-          if (!btn) return;
-          var next = (t || document.documentElement.getAttribute('data-theme')) === 'dark' ? 'light' : 'dark';
-          btn.setAttribute('aria-label', 'Switch to ' + next + ' mode');
-          btn.setAttribute('title', 'Switch to ' + next + ' mode');
-        };
-
-        window.__setTheme = function(t) {
+        // This layout owns the theme and nothing else. Anything that has to
+        // react to a change - the toggle's accessible name, the contact form's
+        // Turnstile widget - listens for `site:theme` and owns its own
+        // reaction, so this script never has to know which of them is on the
+        // page. CustomEvent needs no eval and no inline handler attribute, so
+        // it costs the CSP nothing.
+        function setTheme(t) {
           // Enable transitions only during theme switch
           document.documentElement.classList.add('theme-transitioning');
           document.documentElement.setAttribute('data-theme', t);
           writeStoredTheme(t);
           setTimeout(function() { document.documentElement.classList.remove('theme-transitioning'); }, 350);
-          // Re-render Turnstile widget with new theme
-          var tw = document.querySelector('.cf-turnstile');
-          if (tw) {
-            if (window.turnstile && window.__turnstileWidgetId) {
-              try {
-                window.turnstile.remove(window.__turnstileWidgetId);
-                // ContactForm owns the widget's outcome callbacks, so it exposes
-                // the factory. Pages without a contact form never define it.
-                if (window.__turnstileRender) { window.__turnstileWidgetId = window.__turnstileRender(t); }
-              } catch(e) { console.warn('Turnstile re-render failed:', e); }
-            }
-          }
-          window.__syncThemeLabel(t);
-        };
+          document.dispatchEvent(new CustomEvent('site:theme', { detail: { theme: t } }));
+        }
 
-        window.__toggleTheme = function() {
-          var current = document.documentElement.getAttribute('data-theme');
-          window.__setTheme(current === 'dark' ? 'light' : 'dark');
-        };
+        // The toggle button does not exist yet when this runs in <head>, so it
+        // asks for a change by event rather than being wired up from here.
+        document.addEventListener('site:theme:toggle', function() {
+          const current = document.documentElement.getAttribute('data-theme');
+          setTheme(current === 'dark' ? 'light' : 'dark');
+        });
 
         try {
           window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', function(e) {
             if (!readStoredTheme()) {
-              window.__setTheme(e.matches ? 'dark' : 'light');
+              setTheme(e.matches ? 'dark' : 'light');
             }
           });
         } catch { /* matchMedia unavailable */ }
@@ -417,11 +402,11 @@ const calendlyHost = new URL(CALENDLY_URL).hostname;
     <!-- Google Tag Manager (async, loaded immediately) -->
     <script is:inline>
       if (location.hostname !== 'localhost' && location.hostname !== '127.0.0.1' && !location.hostname.endsWith('.workers.dev')) {
-        var loadGTM = function() {
+        const loadGTM = function() {
           (function (w, d, s, l, i) {
             w[l] = w[l] || [];
             w[l].push({ 'gtm.start': new Date().getTime(), event: 'gtm.js' });
-            var f = d.getElementsByTagName(s)[0], j = d.createElement(s);
+            const f = d.getElementsByTagName(s)[0], j = d.createElement(s);
             j.async = true;
             j.src = "https://load.sgtm.henriksoderlund.com/dz4d7tyirczbv.js?" + i;
             f.parentNode.insertBefore(j, f);
@@ -496,7 +481,7 @@ const calendlyHost = new URL(CALENDLY_URL).hostname;
     <!-- Delegated interaction tracking -->
     <script is:inline define:vars={{ calendlyHost }}>
       (function () {
-        var CALENDLY_HOST = calendlyHost;
+        const CALENDLY_HOST = calendlyHost;
 
         // Every call site sits inside the delegated click handler's own
         // try/catch, which is the authoritative boundary.
@@ -510,7 +495,7 @@ const calendlyHost = new URL(CALENDLY_URL).hostname;
         }
 
         function labelOf(el) {
-          var text = (el.textContent || '').replace(/\s+/g, ' ').trim();
+          let text = (el.textContent || '').replace(/\s+/g, ' ').trim();
           if (!text) text = el.getAttribute('aria-label') || el.getAttribute('title') || '';
           return text.slice(0, 100);
         }
@@ -519,9 +504,9 @@ const calendlyHost = new URL(CALENDLY_URL).hostname;
         // Every branch falls back to 'unknown': slug() returns '' for a value with
         // no alphanumerics, and an empty GA4 dimension is not debuggable.
         function locationOf(el) {
-          var region = el.closest('section, article, header, footer, nav, aside, main');
+          const region = el.closest('section, article, header, footer, nav, aside, main');
           if (!region) return 'page';
-          var key = region.id || region.getAttribute('aria-label') || (region.classList && region.classList[0]);
+          const key = region.id || region.getAttribute('aria-label') || (region.classList && region.classList[0]);
           return key ? (slug(key) || 'unknown') : 'page';
         }
 
@@ -531,22 +516,22 @@ const calendlyHost = new URL(CALENDLY_URL).hostname;
         // capture would silently invert `theme_selected`.
         document.addEventListener('click', function (event) {
           try {
-            var target = event.target;
+            const target = event.target;
             if (!target || typeof target.closest !== 'function') return;
 
             // One ancestor walk covers both cases; the toggle is never an anchor.
-            var hit = target.closest('a[href], #theme-toggle');
+            const hit = target.closest('a[href], #theme-toggle');
             if (!hit) return;
 
             if (hit.id === 'theme-toggle') {
-              var current = document.documentElement.getAttribute('data-theme');
+              const current = document.documentElement.getAttribute('data-theme');
               push({ event: 'theme_toggle', theme_selected: current === 'dark' ? 'light' : 'dark' });
               return;
             }
 
             // HTMLAnchorElement implements the URL decomposition attributes, so
             // `protocol`, `hostname` and `href` are already absolute and parsed.
-            var anchor = hit;
+            const anchor = hit;
 
             if (anchor.protocol === 'mailto:') {
               push({ event: 'email_click', cta_location: locationOf(anchor) });

@@ -84,14 +84,31 @@
 
 <script is:inline>
   (function () {
-    var btn = document.getElementById('theme-toggle');
+    const btn = document.getElementById('theme-toggle');
     if (!btn) return;
-    // The head script resolves the theme before the button exists, so the
+
+    // The head script resolves the theme before this button exists, so the
     // theme-neutral server-rendered name is specialised here, once, without a
-    // repaint. Falls back to the neutral name if the head script never ran.
-    if (window.__syncThemeLabel) window.__syncThemeLabel();
+    // repaint - and again on every `site:theme`. The label is this component's
+    // to own; the layout only announces which theme is now in force.
+    function syncLabel(t) {
+      const current = t || document.documentElement.getAttribute('data-theme');
+      // No resolved theme means the head script never ran, and the neutral
+      // server-rendered name is then the only accurate one.
+      if (current !== 'dark' && current !== 'light') return;
+      const next = current === 'dark' ? 'light' : 'dark';
+      btn.setAttribute('aria-label', 'Switch to ' + next + ' mode');
+      btn.setAttribute('title', 'Switch to ' + next + ' mode');
+    }
+
+    syncLabel();
+    document.addEventListener('site:theme', function (event) {
+      syncLabel(event.detail && event.detail.theme);
+    });
+
+    // A request, not a state change: the layout decides what the next theme is.
     btn.addEventListener('click', function () {
-      if (window.__toggleTheme) window.__toggleTheme();
+      document.dispatchEvent(new CustomEvent('site:theme:toggle'));
     });
   })();
 </script>

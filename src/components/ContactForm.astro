@@ -50,7 +50,7 @@ const errorType =
   </div>
   <script is:inline>
     (function () {
-      var resultEl = document.getElementById('form-result');
+      const resultEl = document.getElementById('form-result');
       if (resultEl) resultEl.focus();
 
       // No client-side deduplication: Turnstile tokens are single-use, so a
@@ -86,7 +86,7 @@ const errorType =
   </div>
   <script is:inline define:vars={{ errorCode, errorType, errorFields: invalidFields }}>
     (function () {
-      var resultEl = document.getElementById('form-result');
+      const resultEl = document.getElementById('form-result');
       if (resultEl) resultEl.focus();
 
       window.dataLayer = window.dataLayer || [];
@@ -126,11 +126,11 @@ const errorType =
       // is a full render cycle, so a per-document flag alone would refire and
       // inflate the denominator of the conversion rate by the error rate.
       (function () {
-        var script = document.currentScript;
-        var form = script && script.closest('form');
+        const script = document.currentScript;
+        const form = script && script.closest('form');
         if (!form) return;
-        var KEY = 'contact_form_started';
-        var started = function () {
+        const KEY = 'contact_form_started';
+        const started = function () {
           try {
             return sessionStorage.getItem(KEY) === '1';
           } catch {
@@ -138,7 +138,7 @@ const errorType =
           }
         };
         if (started()) return;
-        var fire = function () {
+        const fire = function () {
           form.removeEventListener('focusin', fire);
           form.removeEventListener('input', fire);
           try {
@@ -157,35 +157,55 @@ const errorType =
       })();
     </script>
     <script is:inline>
-      // Turnstile outcome reporting - survives remove()/re-render on theme change
-      window.__turnstileOutcome = function(outcome, code) {
-        window.dataLayer = window.dataLayer || [];
-        var payload = {
-          'event': 'turnstile_outcome',
-          'form_name': 'contact',
-          'outcome': outcome
+      (function () {
+        // The widget, its id and its outcome callbacks are all private to this
+        // component. BaseLayout announces a theme change and nothing more; the
+        // remove()/render() pair that a change implies belongs here, with the
+        // callbacks, so a re-render can never drop them.
+        let widgetId = null;
+
+        function reportOutcome(outcome, code) {
+          window.dataLayer = window.dataLayer || [];
+          const payload = {
+            'event': 'turnstile_outcome',
+            'form_name': 'contact',
+            'outcome': outcome
+          };
+          if (code) payload['error_code'] = String(code);
+          window.dataLayer.push(payload);
+        }
+
+        // Render factory - every call rebuilds the callbacks from this closure.
+        function render(theme) {
+          const tw = document.querySelector('.cf-turnstile');
+          if (!tw || !window.turnstile) return null;
+          return window.turnstile.render(tw, {
+            sitekey: tw.getAttribute('data-sitekey'),
+            theme: theme || document.documentElement.getAttribute('data-theme') || 'light',
+            'callback': function () { reportOutcome('success'); },
+            'error-callback': function (code) { reportOutcome('error', code); },
+            'expired-callback': function () { reportOutcome('expired'); },
+            'timeout-callback': function () { reportOutcome('timeout'); }
+          });
+        }
+
+        // Turnstile's api.js resolves its `onload` callback by name off
+        // `window`, so this one stays global: it is the loader's contract, not
+        // cross-component coupling.
+        window.onTurnstileLoad = function () {
+          widgetId = render();
         };
-        if (code) payload['error_code'] = String(code);
-        window.dataLayer.push(payload);
-      };
-      // Render factory - callback ownership stays in this file, so the theme
-      // toggle in BaseLayout.astro can re-render the widget without dropping
-      // the outcome callbacks.
-      window.__turnstileRender = function (theme) {
-        var tw = document.querySelector('.cf-turnstile');
-        if (!tw || !window.turnstile) return;
-        return window.turnstile.render(tw, {
-          sitekey: tw.getAttribute('data-sitekey'),
-          theme: theme || document.documentElement.getAttribute('data-theme') || 'light',
-          'callback': function () { window.__turnstileOutcome('success'); },
-          'error-callback': function (code) { window.__turnstileOutcome('error', code); },
-          'expired-callback': function () { window.__turnstileOutcome('expired'); },
-          'timeout-callback': function () { window.__turnstileOutcome('timeout'); }
+
+        document.addEventListener('site:theme', function (event) {
+          // `=== null || === undefined` rather than a truthiness test: a widget
+          // id is an opaque string and "0" is a legitimate one.
+          if (!window.turnstile || widgetId === null || widgetId === undefined) return;
+          try {
+            window.turnstile.remove(widgetId);
+            widgetId = render(event.detail && event.detail.theme);
+          } catch (e) { console.warn('Turnstile re-render failed:', e); }
         });
-      };
-      window.onTurnstileLoad = function () {
-        window.__turnstileWidgetId = window.__turnstileRender();
-      };
+      })();
     </script>
     <script is:inline src="https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit&onload=onTurnstileLoad" async defer></script>
   </form>

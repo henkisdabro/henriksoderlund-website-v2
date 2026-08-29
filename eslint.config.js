@@ -45,9 +45,11 @@ export default tseslint.config(
       // `astro check` is what actually type-checks these.
       "no-undef": "off",
       // `var` in the inline <script> blocks predates this config being able
-      // to see .astro files at all. Left as a warning rather than an error so
-      // enabling .astro linting does not turn CI red - the fixes belong with
-      // whoever owns those components. See the report for the file list.
+      // to see .astro files at all. BaseLayout, ThemeToggle and ContactForm
+      // were converted with the CustomEvent refactor; src/pages/index.astro
+      // (25) and src/components/NavigationBox.astro (22) still need a pass.
+      // Left as a warning until they get one, so CI does not turn red - flip
+      // this to "error" once those two files are clear.
       "no-var": "warn",
     },
   },
