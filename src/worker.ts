@@ -91,21 +91,27 @@ const CAMPAIGN_PARAMS = new Set([
   'li_fat_id',
 ]);
 
-// The sGTM container issues cookies scoped to sgtm.henriksoderlund.com. Served
-// back from www.henriksoderlund.com/sgtm/*, a browser silently rejects any
-// Set-Cookie whose Domain does not cover the serving host: nothing errors,
-// measurement just degrades. Rewrite the Domain to the registrable domain so the
-// cookie is accepted on both hosts. Cookies with no Domain attribute are left
-// untouched and stay host-only.
-function rewriteCookieDomain(source: Headers, headers: Headers): void {
+// Defensive, not observed: probing the proxied endpoints (/sgtm/healthy,
+// /sgtm/gtm.js, /sgtm/gtag/js) in production returned no Set-Cookie at all, and
+// this is a no-op if none is ever set. Should the container start emitting one
+// scoped to sgtm.henriksoderlund.com, a browser would silently reject it when
+// served back from www.henriksoderlund.com/sgtm/* - nothing errors, measurement
+// just degrades. Strip the Domain attribute rather than widening it to
+// .henriksoderlund.com: widening sends the cookie to every subdomain, including
+// load.sgtm.henriksoderlund.com, which this file's own CSP allows as a direct
+// unproxied script/connect source, and lets any subdomain shadow it. With no
+// Domain the cookie defaults to host-only on www.henriksoderlund.com, which is
+// what a first-party proxy wants. getSetCookie() splits per header, so the comma
+// in Expires cannot mis-split; the leading ';' anchor keeps a cookie VALUE
+// containing "Domain=" from matching; the global flag clears a malformed
+// duplicate Domain. Cookies with no Domain (including __Host- prefixed ones) pass
+// through byte-identical.
+function stripCookieDomain(source: Headers, headers: Headers): void {
   const cookies = source.getSetCookie();
   if (cookies.length === 0) return;
   headers.delete('Set-Cookie');
   for (const cookie of cookies) {
-    headers.append(
-      'Set-Cookie',
-      cookie.replace(/;\s*Domain\s*=[^;]*/i, '; Domain=.henriksoderlund.com')
-    );
+    headers.append('Set-Cookie', cookie.replace(/;\s*Domain\s*=[^;]*/gi, ''));
   }
 }
 
@@ -122,9 +128,11 @@ export default {
     const url = new URL(request.url);
 
     // Built by hand rather than with Response.redirect(): that helper returns a
-    // bare response, so the apex would answer a first-ever http:// visit with no
-    // HSTS at all - and the preload list requires the base domain to serve HSTS
-    // on its own responses.
+    // bare response with no Strict-Transport-Security, and the HSTS preload
+    // submission checker requires the base domain to emit the header on its own
+    // https apex-to-www redirect. (On an http:// response the header would be
+    // ignored anyway - RFC 6797 section 8.1 - so this is about preload
+    // eligibility, not the first insecure visit.)
     if (url.hostname === 'henriksoderlund.com') {
       const headers = new Headers({
         Location: `https://www.henriksoderlund.com${url.pathname}${url.search}`,
@@ -152,7 +160,7 @@ export default {
       // from the container executes as same-origin script against site cookies.
       const headers = new Headers(proxyResponse.headers);
       headers.set('X-Content-Type-Options', 'nosniff');
-      rewriteCookieDomain(proxyResponse.headers, headers);
+      stripCookieDomain(proxyResponse.headers, headers);
 
       if (targetPath.startsWith('/_/service_worker/')) {
         headers.set('Service-Worker-Allowed', '/');
@@ -246,8 +254,17 @@ export default {
         headers,
       });
     } catch (error) {
-      // An SSR throw would otherwise escape the fetch handler and get Cloudflare's
-      // Error 1101 page: no CSP, no security headers, no site chrome.
+      // Synchronous and pre-stream failures only - routing errors and anything
+      // that throws before handle() resolves. Under output: 'server' Astro
+      // streams, so a component throwing during render throws inside the body
+      // stream, after these headers have gone out; HTMLRewriter parse/handler
+      // errors surface the same way while workerd pumps the body. Neither lands
+      // here, and a throw after the body starts streaming still terminates the
+      // response mid-flight. What this does buy is that the failures it does
+      // catch return a proper 500 with security headers instead of Cloudflare's
+      // Error 1101 page. Note it also turns a Worker exception into a normal
+      // response, so alerts keyed on the Workers exception metric go quiet -
+      // console.error plus observability.enabled keeps the signal in the logs.
       console.error('Worker fetch handler error', url.pathname, error);
       const headers = new Headers({ 'Content-Type': 'text/plain; charset=utf-8' });
       setSecurityHeaders(headers);
