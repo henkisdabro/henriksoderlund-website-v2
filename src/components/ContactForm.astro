@@ -5,35 +5,90 @@ import { CONTACT_EMAIL } from '../data/links';
 
 const result = Astro.getActionResult(actions.contact);
 const success = result?.data?.success;
+const submissionId = result?.data?.submissionId ?? '';
 const error = result?.error;
 
-// Surface the per-field validation messages rather than the raw Zod payload
-const fieldIssues =
+// Surface the per-field validation messages rather than the raw Zod payload,
+// keeping the field name alongside each message so it can be wired to the input
+// via aria-describedby and reported (names only, never values) to analytics.
+type FieldIssue = { field: string; message: string; id: string };
+
+const fieldIssues: FieldIssue[] =
   error && isInputError(error)
-    ? Object.values(error.fields).flat().filter(Boolean)
+    ? Object.entries(error.fields).flatMap(([field, messages]) =>
+        (messages ?? [])
+          .filter((message): message is string => Boolean(message))
+          .map((message, index) => ({
+            field,
+            message,
+            id: `form-error-${field.replace(/[^a-zA-Z0-9_-]/g, '-')}-${index}`,
+          }))
+      )
     : [];
+
+const invalidFields = [...new Set(fieldIssues.map((issue) => issue.field))];
+
+const describedBy = (field: string) => {
+  const ids = fieldIssues.filter((issue) => issue.field === field).map((issue) => issue.id);
+  return ids.length > 0 ? ids.join(' ') : undefined;
+};
+const invalidFlag = (field: string) =>
+  invalidFields.includes(field) ? 'true' : undefined;
+
+const errorCode = error?.code ?? 'UNKNOWN';
+const errorType =
+  errorCode === 'BAD_REQUEST'
+    ? 'validation'
+    : errorCode === 'FORBIDDEN'
+      ? 'bot_check'
+      : 'server';
 ---
 
 {success && (
-  <div class="form-success" role="alert">
+  <div id="form-result" class="form-success" role="alert" tabindex="-1">
     <div class="form-success-icon">&#10003;</div>
     <h3>Message sent successfully</h3>
     <p>Thank you for reaching out. I'll get back to you within one business day.</p>
   </div>
-  <script is:inline>
-    if (!sessionStorage.getItem('form_submitted')) {
-      sessionStorage.setItem('form_submitted', '1');
+  <script is:inline define:vars={{ submissionId }}>
+    (function () {
+      var resultEl = document.getElementById('form-result');
+      if (resultEl) resultEl.focus();
+
+      // Deduplicate per submission, not per session: an F5 re-POST of the same
+      // enquiry carries the same id, a genuine second enquiry does not.
+      var id = submissionId || '';
+      var seen = [];
+      try {
+        seen = JSON.parse(sessionStorage.getItem('contact_submissions') || '[]');
+        if (!Array.isArray(seen)) seen = [];
+      } catch (e) {
+        seen = [];
+      }
+      if (id && seen.indexOf(id) !== -1) return;
+      if (id) {
+        seen.push(id);
+        try {
+          sessionStorage.setItem('contact_submissions', JSON.stringify(seen.slice(-10)));
+        } catch (e) {
+          /* storage unavailable - still report the lead */
+        }
+      }
+
       window.dataLayer = window.dataLayer || [];
       window.dataLayer.push({
-        'event': 'contact_form_submission',
-        'form_name': 'contact'
+        'event': 'generate_lead',
+        'form_name': 'contact',
+        'form_location': window.location.pathname,
+        'method': 'contact_form',
+        'submission_id': id
       });
-    }
+    })();
   </script>
 )}
 
 {error && (
-  <div class="form-error" role="alert">
+  <div id="form-result" class="form-error" role="alert" tabindex="-1">
     {error.code === 'FORBIDDEN' ? (
       <p><strong>Verification failed.</strong> Please refresh the page and try again.</p>
     ) : error.code === 'BAD_REQUEST' ? (
@@ -41,7 +96,7 @@ const fieldIssues =
         <Fragment>
           <p><strong>Please check your input.</strong></p>
           <ul>
-            {fieldIssues.map((issue) => <li>{issue}</li>)}
+            {fieldIssues.map((issue) => <li id={issue.id}>{issue.message}</li>)}
           </ul>
         </Fragment>
       ) : (
@@ -51,13 +106,20 @@ const fieldIssues =
       <p><strong>Something went wrong.</strong> Please try again or email me directly at <a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a>.</p>
     )}
   </div>
-  <script is:inline define:vars={{ errorCode: error.code ?? 'UNKNOWN' }}>
-    window.dataLayer = window.dataLayer || [];
-    window.dataLayer.push({
-      'event': 'contact_form_error',
-      'form_name': 'contact',
-      'error_code': errorCode
-    });
+  <script is:inline define:vars={{ errorCode, errorType, errorFields: invalidFields }}>
+    (function () {
+      var resultEl = document.getElementById('form-result');
+      if (resultEl) resultEl.focus();
+
+      window.dataLayer = window.dataLayer || [];
+      window.dataLayer.push({
+        'event': 'form_error',
+        'form_name': 'contact',
+        'error_type': errorType,
+        'error_code': errorCode,
+        'error_fields': errorFields
+      });
+    })();
   </script>
 )}
 
@@ -66,22 +128,54 @@ const fieldIssues =
     <div class="form-row">
       <div class="form-group">
         <label for="name">Name</label>
-        <input type="text" id="name" name="name" required maxlength="100" placeholder="Your name" />
+        <input type="text" id="name" name="name" required maxlength="100" placeholder="Your name" aria-invalid={invalidFlag('name')} aria-describedby={describedBy('name')} />
       </div>
       <div class="form-group">
         <label for="email">Email</label>
-        <input type="email" id="email" name="email" required maxlength="200" placeholder="you@example.com" />
+        <input type="email" id="email" name="email" required maxlength="200" placeholder="you@example.com" aria-invalid={invalidFlag('email')} aria-describedby={describedBy('email')} />
       </div>
     </div>
     <div class="form-group">
       <label for="message">Message</label>
-      <textarea id="message" name="message" required maxlength="2000" rows="6" placeholder="Tell me about your project or question..."></textarea>
+      <textarea id="message" name="message" required maxlength="2000" rows="6" placeholder="Tell me about your project or question..." aria-invalid={invalidFlag('message')} aria-describedby={describedBy('message')}></textarea>
     </div>
     <div class="form-footer">
-      <div class="cf-turnstile" data-sitekey={TURNSTILE_SITE_KEY}></div>
+      <div class="cf-turnstile" data-sitekey={TURNSTILE_SITE_KEY} aria-invalid={invalidFlag('cf-turnstile-response')} aria-describedby={describedBy('cf-turnstile-response')}></div>
       <button type="submit" class="submit-btn">Send Message</button>
     </div>
     <script is:inline>
+      // form_start - fires at most once per document, on first focus or input
+      (function () {
+        var script = document.currentScript;
+        var form = script && script.closest('form');
+        if (!form || window.__contactFormStarted) return;
+        var fire = function () {
+          if (window.__contactFormStarted) return;
+          window.__contactFormStarted = true;
+          form.removeEventListener('focusin', fire);
+          form.removeEventListener('input', fire);
+          window.dataLayer = window.dataLayer || [];
+          window.dataLayer.push({
+            'event': 'form_start',
+            'form_name': 'contact'
+          });
+        };
+        form.addEventListener('focusin', fire);
+        form.addEventListener('input', fire);
+      })();
+    </script>
+    <script is:inline>
+      // Turnstile outcome reporting - survives remove()/re-render on theme change
+      window.__turnstileOutcome = function(outcome, code) {
+        window.dataLayer = window.dataLayer || [];
+        var payload = {
+          'event': 'turnstile_outcome',
+          'form_name': 'contact',
+          'outcome': outcome
+        };
+        if (code) payload['error_code'] = String(code);
+        window.dataLayer.push(payload);
+      };
       // Explicit render callback - captures widget ID for theme toggle re-renders
       window.onTurnstileLoad = function() {
         var tw = document.querySelector('.cf-turnstile');
@@ -89,7 +183,11 @@ const fieldIssues =
         var theme = document.documentElement.getAttribute('data-theme') || 'light';
         window.__turnstileWidgetId = window.turnstile.render(tw, {
           sitekey: tw.getAttribute('data-sitekey'),
-          theme: theme
+          theme: theme,
+          'callback': function() { window.__turnstileOutcome('success'); },
+          'error-callback': function(code) { window.__turnstileOutcome('error', code); },
+          'expired-callback': function() { window.__turnstileOutcome('expired'); },
+          'timeout-callback': function() { window.__turnstileOutcome('timeout'); }
         });
       }
     </script>
