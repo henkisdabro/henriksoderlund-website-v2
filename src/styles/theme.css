@@ -149,8 +149,11 @@
    Dark Theme - system preference, no explicit choice stored
 
    Guarded with :not([data-theme="light"]) so an explicit light choice still
-   wins. Specificity is 0,2,0 either way, and the excluded attribute keeps the
-   two from ever both matching.
+   wins: that selector and :root[data-theme="light"] are mutually exclusive, so
+   they never compete. What this block actually overrides is the bare :root in
+   the list above, which carries its own 0,1,0 specificity - a comma-separated
+   list is weighed per selector, so :root does not borrow the weight of the
+   attribute selector beside it - against this block's 0,2,0.
 
    NOTE: this block duplicates the :root[data-theme="dark"] palette below.
    Any token changed in one must be changed in the other.

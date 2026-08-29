@@ -252,7 +252,11 @@ a:hover {
 
 .collapse-btn:focus-visible {
   outline: 2px solid var(--color-accent);
-  outline-offset: 2px;
+  /* Inset, like .nav-list a and .heading-link: at <=1024px the collapsed
+     .navigation-box is 42x42 with overflow: hidden and the button fills it
+     exactly, so a positive offset paints the ring outside the clip and the
+     only control that opens the menu has no visible focus state at all. */
+  outline-offset: -2px;
 }
 
 .nav-box-content {
@@ -1241,4 +1245,13 @@ a:hover {
 :root[data-theme="dark"] body {
   line-height: 1.55;
   letter-spacing: -0.01em;
+}
+
+/* Same compensation for the unstamped dark state, where theme.css swaps
+   --font-body to JetBrains Mono without any data-theme attribute present. */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) body {
+    line-height: 1.55;
+    letter-spacing: -0.01em;
+  }
 }
