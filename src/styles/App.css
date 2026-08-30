@@ -436,13 +436,34 @@ a:hover {
     transition: width 0.3s ease, height 0.3s ease, border-radius 0.3s ease;
   }
 
+  /* Stops short of the viewport rather than filling it: tapping the page
+     below the panel is one of the ways to dismiss the menu, and a long
+     "On This Page" list would otherwise leave no page left to tap. The list
+     scrolls inside .nav-box-content, so the cap costs no entries. */
   .navigation-box:not(.collapsed) {
+    display: flex;
+    flex-direction: column;
     width: 320px;
     height: auto;
     border-radius: 12px;
     top: 22px;
     left: 10px;
-    max-height: calc(100vh - 32px);
+    max-height: calc(100vh - 180px);
+  }
+
+  .navigation-box:not(.collapsed) .nav-box-header {
+    flex-shrink: 0;
+  }
+
+  /* Takes whatever the capped box leaves once the header has its height,
+     rather than a second viewport calc that has to track it: the box clips
+     with overflow: hidden, so an inner scroller even slightly too tall hides
+     rows it still lets you scroll to. min-height: 0 is what lets a flex item
+     shrink below its content and actually scroll. */
+  .navigation-box:not(.collapsed) .nav-box-content {
+    flex: 1 1 auto;
+    min-height: 0;
+    max-height: none;
   }
 
   .navigation-box.collapsed .nav-box-content {
