@@ -5,17 +5,18 @@ import { workExperienceData } from '../data/workExperience';
 import { CALENDLY_URL, LINKEDIN_URL, GITHUB_URL, CONTACT_EMAIL } from '../data/links';
 
 export function getHomeMarkdown(): string {
-  return `# Henrik Soederlund - Technology Leader & AI Innovator
+  return `# Henrik Soederlund - Technology Leader & Automation Architect
 
-Technology Leader & AI Solutions Expert. Accomplished agency founder and enterprise leader specialising in automation, advanced analytics, and high-performance team development.
+Technology Leader & Automation Architect. I build automation, analytics infrastructure, and digital products that free teams to focus on higher-value work - and give them the systems thinking to keep improving long after the engagement ends.
 
-## Hello
+## Hello!
 
-Technology leader with proven expertise in both entrepreneurial and enterprise environments. After founding and scaling the award-winning Creme Digital, led media activations at Initiative Perth (KINESSO, Interpublic Group).
+Businesses come to me when manual work is consuming hours that should go toward growth, when reporting can't keep pace with decision-making, and when teams need someone who can see the full picture and fix it properly. I work across the full surface - workflow automation with AI, server-side tracking, measurement frameworks, custom reporting, security hardening - and what I leave behind goes beyond the deliverables: working systems, full documentation, streamlined operations, and teams that have started thinking in systems themselves. Staff who were buried in repetitive processes start identifying their own efficiencies. That compounding effect is where the real value sits.
 
-Architected measurement solutions and guided high-performance teams across programmatic and performance marketing channels. Built career on developing sophisticated systems and automation workflows.
+The range comes from building on both sides. I founded and grew the award-winning [Creme Digital](https://www.cremedigital.com), then moved into enterprise media at [Initiative](https://initiative.com/) Perth ([KINESSO](https://kinesso.com), [Interpublic Group](https://www.interpublic.com/)), where I built measurement systems for large-scale programmatic campaigns and led teams through difficult transitions. Agency founder and enterprise operator - that combination means I know what is technically possible and what is actually worth doing. I don't stop at implementation. I keep going until the operation runs the way it should, and the team has learned to spot the next automation themselves.
 
-Leadership approach centres on developing high-performing teams and cultivating lasting client relationships. Successfully rebuilt teams during challenging transitions, mentored 20+ professionals, and delivered compelling presentations that have secured major partnerships.
+- [See the full picture](https://www.henriksoderlund.com/expertise)
+- [GA4 & analytics in Perth](https://www.henriksoderlund.com/perth-analytics-consultant)
 `;
 }
 
