@@ -237,8 +237,13 @@ export default {
     setSecurityHeaders(headers);
     headers.delete('speculation-rules');
 
-    // Prevent search engines from indexing text/markdown and text/plain endpoints
-    if (contentType.includes('text/markdown') || contentType.includes('text/plain')) {
+    // Machine-readable endpoints (markdown twins, llms.txt, /health, /metrics)
+    // are never search results.
+    if (
+      contentType.includes('text/markdown') ||
+      contentType.includes('text/plain') ||
+      contentType.includes('application/json')
+    ) {
       headers.set('X-Robots-Tag', 'noindex');
     }
 

@@ -29,7 +29,6 @@ export const GET: APIRoute = ({ request, locals }) => {
       'Cache-Control': 'no-cache, no-store, must-revalidate',
       Pragma: 'no-cache',
       Expires: '0',
-      'X-Robots-Tag': 'noindex',
     },
   });
 };

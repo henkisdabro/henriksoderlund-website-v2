@@ -16,7 +16,6 @@ export const GET: APIRoute = () => {
         'Cache-Control': 'no-cache, no-store, must-revalidate',
         Pragma: 'no-cache',
         Expires: '0',
-        'X-Robots-Tag': 'noindex',
       },
     }
   );
