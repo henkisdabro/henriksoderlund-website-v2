@@ -44,14 +44,6 @@
   font-display: swap;
 }
 
-@font-face {
-  font-family: 'JetBrains Mono';
-  src: url('/fonts/JetBrainsMono-SemiBoldItalic.woff2') format('woff2');
-  font-weight: 600;
-  font-style: italic;
-  font-display: swap;
-}
-
 /* ==========================================================================
    Light Theme (default)
 
