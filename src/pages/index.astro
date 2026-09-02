@@ -84,10 +84,10 @@ import { sectionIcons } from '../utils/sectionIcons';
 
 <script is:inline>
   (function () {
-    var contentElement = document.getElementById('home-content');
+    const contentElement = document.getElementById('home-content');
     if (!contentElement) return;
 
-    var keywords = [
+    const keywords = [
       'automation',
       'analytics infrastructure',
       'digital products',
@@ -110,17 +110,17 @@ import { sectionIcons } from '../utils/sectionIcons';
       'full surface',
     ];
 
-    var keywordElements = [];
-    var currentlyAnimating = false;
-    var lastAnimatedElement = null;
+    let keywordElements = [];
+    let currentlyAnimating = false;
+    let lastAnimatedElement = null;
 
-    var createBreathingEffect = function () {
+    const createBreathingEffect = function () {
       if (!contentElement) return;
 
       // Clear any existing wrapped keywords first
-      var existingWraps = contentElement.querySelectorAll('.breathe-keyword');
+      const existingWraps = contentElement.querySelectorAll('.breathe-keyword');
       existingWraps.forEach(function (wrap) {
-        var parent = wrap.parentNode;
+        const parent = wrap.parentNode;
         if (parent) {
           parent.replaceChild(document.createTextNode(wrap.textContent || ''), wrap);
           if (parent.normalize) {
@@ -130,9 +130,9 @@ import { sectionIcons } from '../utils/sectionIcons';
       });
 
       // Safari-compatible text node finding
-      var findTextNodes = function (element) {
-        var textNodes = [];
-        var walker = document.createTreeWalker(
+      const findTextNodes = function (element) {
+        const textNodes = [];
+        const walker = document.createTreeWalker(
           element,
           NodeFilter.SHOW_TEXT,
           {
@@ -145,32 +145,32 @@ import { sectionIcons } from '../utils/sectionIcons';
           }
         );
 
-        var node;
+        let node;
         while ((node = walker.nextNode())) {
           textNodes.push(node);
         }
         return textNodes;
       };
 
-      var textNodes = findTextNodes(contentElement);
+      const textNodes = findTextNodes(contentElement);
 
       // Process text nodes to wrap keywords (longest first to avoid conflicts)
-      var sortedKeywords = keywords.slice().sort(function (a, b) {
+      const sortedKeywords = keywords.slice().sort(function (a, b) {
         return b.length - a.length;
       });
 
       textNodes.forEach(function (textNode) {
-        var content = textNode.nodeValue || '';
-        var fragment = document.createDocumentFragment();
-        var lastIndex = 0;
+        const content = textNode.nodeValue || '';
+        const fragment = document.createDocumentFragment();
+        let lastIndex = 0;
 
-        var matches = [];
+        const matches = [];
         sortedKeywords.forEach(function (keyword) {
-          var escaped = keyword.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-          var regex = new RegExp('\\b' + escaped + '\\b', 'gi');
-          var match;
+          const escaped = keyword.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+          const regex = new RegExp('\\b' + escaped + '\\b', 'gi');
+          let match;
           while ((match = regex.exec(content)) !== null) {
-            var overlaps = matches.some(function (m) {
+            const overlaps = matches.some(function (m) {
               return (
                 (match.index >= m.start && match.index < m.end) ||
                 (match.index + match[0].length > m.start && match.index + match[0].length <= m.end)
@@ -190,7 +190,7 @@ import { sectionIcons } from '../utils/sectionIcons';
           if (match.start > lastIndex) {
             fragment.appendChild(document.createTextNode(content.slice(lastIndex, match.start)));
           }
-          var span = document.createElement('span');
+          const span = document.createElement('span');
           span.className = 'breathe-keyword';
           span.textContent = match.text;
           fragment.appendChild(span);
@@ -214,7 +214,7 @@ import { sectionIcons } from '../utils/sectionIcons';
       }, 100);
     };
 
-    var animateRandomKeyword = function () {
+    const animateRandomKeyword = function () {
       if (currentlyAnimating || keywordElements.length === 0) return;
 
       currentlyAnimating = true;
@@ -223,7 +223,7 @@ import { sectionIcons } from '../utils/sectionIcons';
         lastAnimatedElement.classList.remove('breathing');
       }
 
-      var randomElement = keywordElements[Math.floor(Math.random() * keywordElements.length)];
+      const randomElement = keywordElements[Math.floor(Math.random() * keywordElements.length)];
       lastAnimatedElement = randomElement;
 
       requestAnimationFrame(function () {

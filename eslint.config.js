@@ -44,13 +44,7 @@ export default tseslint.config(
       // is the rule typescript-eslint tells you to switch off in TS files;
       // `astro check` is what actually type-checks these.
       "no-undef": "off",
-      // `var` in the inline <script> blocks predates this config being able
-      // to see .astro files at all. BaseLayout, ThemeToggle and ContactForm
-      // were converted with the CustomEvent refactor; src/pages/index.astro
-      // (25) and src/components/NavigationBox.astro (22) still need a pass.
-      // Left as a warning until they get one, so CI does not turn red - flip
-      // this to "error" once those two files are clear.
-      "no-var": "warn",
+      "no-var": "error",
     },
   },
 );

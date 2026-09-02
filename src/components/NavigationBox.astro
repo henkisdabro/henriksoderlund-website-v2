@@ -72,15 +72,15 @@ const pages = [
 
 <script is:inline>
   (function () {
-    var navBox = document.getElementById('navigation-box');
-    var collapseBtn = document.getElementById('collapse-btn');
+    const navBox = document.getElementById('navigation-box');
+    const collapseBtn = document.getElementById('collapse-btn');
 
     if (!navBox || !collapseBtn) return;
 
-    var isHomePage = window.location.pathname === '/';
-    var STORAGE_KEY = 'nav-collapsed';
-    var NARROW_MAX_WIDTH = 1024;
-    var NARROW_QUERY = '(max-width: ' + NARROW_MAX_WIDTH + 'px)';
+    const isHomePage = window.location.pathname === '/';
+    const STORAGE_KEY = 'nav-collapsed';
+    const NARROW_MAX_WIDTH = 1024;
+    const NARROW_QUERY = '(max-width: ' + NARROW_MAX_WIDTH + 'px)';
 
     // Storage is a progressive enhancement: Safari's "Block All Cookies",
     // Firefox with storage disabled and kiosk profiles all throw a
@@ -111,7 +111,7 @@ const pages = [
 
     // matchMedia is the primitive for breakpoint crossings, but it is guarded
     // the same way storage is: without it the nav simply stops re-seeding.
-    var narrowMQ = null;
+    let narrowMQ = null;
     try {
       narrowMQ = window.matchMedia(NARROW_QUERY);
     } catch {
@@ -132,7 +132,7 @@ const pages = [
       return narrowMQ ? narrowMQ.matches : window.innerWidth <= NARROW_MAX_WIDTH;
     }
 
-    var stored = readStored();
+    let stored = readStored();
     // A stored open state is never honoured on a narrow viewport, whatever put
     // it there - an earlier session, a rotation from landscape - because the
     // panel covers the page here and would reopen itself on top of it.
@@ -143,8 +143,8 @@ const pages = [
     // An explicit user preference wins; the viewport only seeds the default.
     // Only the two values this component writes count - a corrupted or foreign
     // value must fall back to the viewport default, not freeze the nav open.
-    var hasUserPreference = stored === 'true' || stored === 'false';
-    var isCollapsed = hasUserPreference ? stored === 'true' : isNarrow();
+    let hasUserPreference = stored === 'true' || stored === 'false';
+    let isCollapsed = hasUserPreference ? stored === 'true' : isNarrow();
 
     function applyCollapseState() {
       if (isCollapsed) {
@@ -195,7 +195,7 @@ const pages = [
     // Auto-close on mobile when a page link is clicked. The clear matters as
     // much as the collapse: navigation is a full document load, so the next
     // page seeds itself from storage.
-    var pageLinks = navBox.querySelectorAll('.nav-page-link');
+    const pageLinks = navBox.querySelectorAll('.nav-page-link');
     pageLinks.forEach(function (link) {
       link.addEventListener('click', function () {
         if (isNarrow()) dismissOverlay();
@@ -220,26 +220,26 @@ const pages = [
     // Heading scan - skip on homepage
     if (isHomePage) return;
 
-    var navDivider = document.getElementById('nav-divider');
-    var headingsSection = document.getElementById('headings-section');
-    var headingsList = document.getElementById('headings-list');
+    const navDivider = document.getElementById('nav-divider');
+    const headingsSection = document.getElementById('headings-section');
+    const headingsList = document.getElementById('headings-list');
 
     if (!headingsList) return;
 
     function scanHeadings() {
-      var mainContent = document.querySelector('.main-content');
+      const mainContent = document.querySelector('.main-content');
       if (!mainContent) return;
-      var headingElements = mainContent.querySelectorAll('h2, h3, h4, h5, h6');
-      var items = [];
+      const headingElements = mainContent.querySelectorAll('h2, h3, h4, h5, h6');
+      const items = [];
 
       headingElements.forEach(function (heading, index) {
-        var text = (heading.textContent || '').trim();
+        const text = (heading.textContent || '').trim();
         if (!text) return;
         // Depth is relative to h2, the shallowest tag scanned: the CSS ladder
         // starts .heading-level-1 at the same 16px inset as the page links.
-        var level = parseInt(heading.tagName.charAt(1), 10) - 1;
+        const level = parseInt(heading.tagName.charAt(1), 10) - 1;
 
-        var id = heading.id;
+        let id = heading.id;
         if (!id) {
           id = 'nav-heading-' + index;
           while (document.getElementById(id)) {
@@ -257,15 +257,15 @@ const pages = [
 
       if (items.length > 0) {
         items.forEach(function (item) {
-          var li = document.createElement('li');
+          const li = document.createElement('li');
           li.className = 'heading-level-' + item.level;
 
-          var btn = document.createElement('button');
+          const btn = document.createElement('button');
           btn.type = 'button';
           btn.className = 'heading-link';
           btn.textContent = item.text;
           btn.addEventListener('click', function () {
-            var el = document.getElementById(item.id);
+            const el = document.getElementById(item.id);
             if (el) {
               // Focus first, with preventScroll so it does not fight the
               // smooth scroll: collapsing the overlay puts display:none under
