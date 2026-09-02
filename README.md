@@ -92,7 +92,7 @@ Professional portfolio website for Henrik Soderlund - technology leader and AI i
 
 ### Security
 
-- **CSP nonces** - Per-request cryptographic nonces via custom Worker entry using Cloudflare HTMLRewriter (streaming, no buffering)
+- **CSP nonces** - Per-request cryptographic nonces via custom Worker entry using Cloudflare HTMLRewriter (streaming, no buffering). Only scripts carrying the `data-csp` marker are nonced; the build fails on any authored script without it
 - **`'strict-dynamic'`** - GTM child scripts inherit trust automatically
 - **Security headers** - X-Frame-Options (DENY), HSTS (1 year + preload), Referrer-Policy, Permissions-Policy (camera/mic/geo/payment disabled), X-Content-Type-Options
 - **security.txt** - RFC 9116 compliant at `/.well-known/security.txt` with contact, policy, and expiration

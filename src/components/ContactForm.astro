@@ -48,7 +48,7 @@ const errorType =
     <h3>Message sent successfully</h3>
     <p>Thank you for reaching out. I'll get back to you within one business day.</p>
   </div>
-  <script is:inline>
+  <script is:inline data-csp>
     (function () {
       const resultEl = document.getElementById('form-result');
       if (resultEl) resultEl.focus();
@@ -84,7 +84,7 @@ const errorType =
       <p><strong>Something went wrong.</strong> Please try again or email me directly at <a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a>.</p>
     )}
   </div>
-  <script is:inline define:vars={{ errorCode, errorType, errorFields: invalidFields }}>
+  <script is:inline data-csp define:vars={{ errorCode, errorType, errorFields: invalidFields }}>
     (function () {
       const resultEl = document.getElementById('form-result');
       if (resultEl) resultEl.focus();
@@ -121,7 +121,7 @@ const errorType =
       <div class="cf-turnstile" data-sitekey={TURNSTILE_SITE_KEY} aria-describedby={describedBy('cf-turnstile-response')}></div>
       <button type="submit" class="submit-btn">Send Message</button>
     </div>
-    <script is:inline>
+    <script is:inline data-csp>
       // contact_form_start - fires at most once per session. A validation error
       // is a full render cycle, so a per-document flag alone would refire and
       // inflate the denominator of the conversion rate by the error rate.
@@ -156,7 +156,7 @@ const errorType =
         form.addEventListener('input', fire);
       })();
     </script>
-    <script is:inline>
+    <script is:inline data-csp>
       (function () {
         // The widget, its id and its outcome callbacks are all private to this
         // component. BaseLayout announces a theme change and nothing more; the
@@ -207,6 +207,6 @@ const errorType =
         });
       })();
     </script>
-    <script is:inline src="https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit&onload=onTurnstileLoad" async defer></script>
+    <script is:inline data-csp src="https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit&onload=onTurnstileLoad" async defer></script>
   </form>
 )}

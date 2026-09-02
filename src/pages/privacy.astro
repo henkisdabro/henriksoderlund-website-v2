@@ -180,7 +180,7 @@ const emailDomainReversed = reverse(emailDomain);
     </section>
   </div>
 
-  <script is:inline>
+  <script is:inline data-csp>
     // Swaps each .protected-email span's contact-form fallback for a real
     // mailto: link. Delegated click tracking in BaseLayout listens on document,
     // so the `email_click` event still fires for a link created here.

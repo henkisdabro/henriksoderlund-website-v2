@@ -186,24 +186,24 @@ import { sectionIcons } from '../utils/sectionIcons';
   </div>
 </BaseLayout>
 
-<script>
-  function initCarousel(): void {
-    const carousel = document.querySelector<HTMLElement>('.carousel');
+<script is:inline type="module" data-csp>
+  function initCarousel() {
+    const carousel = document.querySelector('.carousel');
     if (!carousel) return;
 
-    const trackEl = carousel.querySelector<HTMLElement>('.carousel-track');
-    const cards = carousel.querySelectorAll<HTMLElement>('.showcase-card');
-    const dots = carousel.querySelectorAll<HTMLElement>('.carousel-dot');
-    const prevBtn = carousel.querySelector<HTMLElement>('.carousel-btn--prev');
-    const nextBtn = carousel.querySelector<HTMLElement>('.carousel-btn--next');
+    const trackEl = carousel.querySelector('.carousel-track');
+    const cards = carousel.querySelectorAll('.showcase-card');
+    const dots = carousel.querySelectorAll('.carousel-dot');
+    const prevBtn = carousel.querySelector('.carousel-btn--prev');
+    const nextBtn = carousel.querySelector('.carousel-btn--next');
     if (!trackEl || cards.length === 0) return;
 
     // Re-bind after the null guard so TypeScript narrows the type in closures
-    const track: HTMLElement = trackEl;
+    const track = trackEl;
     const total = cards.length;
     let current = 0;
 
-    function goTo(index: number): void {
+    function goTo(index) {
       current = ((index % total) + total) % total;
       track.style.transform = `translateX(-${current * 100}%)`;
 
@@ -245,8 +245,8 @@ import { sectionIcons } from '../utils/sectionIcons';
     const AUTO_DELAY = 5000;
     let timer = setInterval(() => goTo(current + 1), AUTO_DELAY);
 
-    function pauseAuto(): void { clearInterval(timer); }
-    function resumeAuto(): void {
+    function pauseAuto() { clearInterval(timer); }
+    function resumeAuto() {
       clearInterval(timer);
       timer = setInterval(() => goTo(current + 1), AUTO_DELAY);
     }
@@ -260,7 +260,7 @@ import { sectionIcons } from '../utils/sectionIcons';
     let touchStartX = 0;
     let touchStartY = 0;
     let touchDeltaX = 0;
-    let swiping: boolean | null = null; // null = undecided, true = horizontal, false = vertical
+    let swiping = null; // null = undecided, true = horizontal, false = vertical
 
     carousel.addEventListener('touchstart', (e) => {
       touchStartX = e.touches[0].clientX;
@@ -279,7 +279,7 @@ import { sectionIcons } from '../utils/sectionIcons';
         swiping = Math.abs(dx) > Math.abs(dy);
       }
 
-      if (!swiping) return; // vertical scroll — don't interfere
+      if (!swiping) return; // vertical scroll - don't interfere
 
       e.preventDefault();
       touchDeltaX = dx;

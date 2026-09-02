@@ -108,6 +108,27 @@ if (!existsSync(CLIENT_ROOT)) {
   console.log(`${GREEN}OK${RESET}:   ${nonceChecked} HTML file(s) carry no nonce attribute`);
 }
 
+// src/worker.ts nonces only `script[data-csp]`. Under 'strict-dynamic' a
+// script without the marker gets no nonce and is blocked in every browser, so
+// an authored script that forgot it is a broken page, not a warning.
+console.log('\n=== Every script carries the data-csp marker ===');
+if (existsSync(CLIENT_ROOT)) {
+  let marked = 0;
+  for (const path of htmlFiles(CLIENT_ROOT)) {
+    const tags = readFileSync(path, 'utf-8').match(/<script\b[^>]*>/g) ?? [];
+    for (const tag of tags) {
+      if (tag.includes('application/ld+json')) continue;
+      if (/\bdata-csp\b/.test(tag)) {
+        marked++;
+      } else {
+        console.error(`${RED}FAIL${RESET}: ${path} - unmarked script ${tag}`);
+        failed++;
+      }
+    }
+  }
+  console.log(`${GREEN}OK${RESET}:   ${marked} script(s) marked across the prerendered HTML`);
+}
+
 // Check wrangler.json has run_worker_first patched in
 const wranglerPath = 'dist/server/wrangler.json';
 if (existsSync(wranglerPath)) {

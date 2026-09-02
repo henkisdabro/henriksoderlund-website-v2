@@ -266,8 +266,14 @@ export default {
         headers,
       });
 
+      // Only scripts the site authored carry `data-csp`. Noncing every script
+      // element would also nonce an injected one, leaving 'strict-dynamic'
+      // with nothing to enforce. The marker is left in place: this Worker
+      // also runs inside workerd during prerendering, and stripping it there
+      // would leave the built HTML with no scripts to nonce at runtime.
+      // scripts/verify-build.mjs fails the build on any unmarked script.
       return new HTMLRewriter()
-        .on('script:not([type="application/ld+json"])', {
+        .on('script[data-csp]', {
           element(el) {
             el.setAttribute('nonce', nonce);
           },
