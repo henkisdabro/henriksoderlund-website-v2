@@ -178,13 +178,24 @@ jobs:
             echo "OK: /expertise/ (301 to non-slash)"
           fi
 
-          echo "=== Checking the sGTM first-party proxy ==="
-          status=$(curl -s -o /dev/null -w "%{http_code}" --max-time 20 "https://www.henriksoderlund.com/sgtm/healthy")
+          # The measurement path is served by Cloudflare at the edge, ahead of the
+          # Worker. If a Worker route ever shadows it, gtm.js 404s and measurement
+          # stops silently, so assert the container actually loads - not just health.
+          echo "=== Checking the Google tag gateway measurement path ==="
+          status=$(curl -s -o /dev/null -w "%{http_code}" --max-time 20 "https://www.henriksoderlund.com/wf0q/healthy")
           if [ "$status" -ne 200 ]; then
-            echo "::error::FAIL: /sgtm/healthy should return 200 (got HTTP $status) - tracking proxy is down"
+            echo "::error::FAIL: /wf0q/healthy should return 200 (got HTTP $status) - tag gateway is down"
             failed=1
           else
-            echo "OK: /sgtm/healthy (200 via proxy)"
+            echo "OK: /wf0q/healthy (200)"
+          fi
+
+          status=$(curl -s -o /dev/null -w "%{http_code}" --max-time 20 "https://www.henriksoderlund.com/wf0q/gtm.js?id=GTM-FWR4")
+          if [ "$status" -ne 200 ]; then
+            echo "::error::FAIL: /wf0q/gtm.js should return 200 (got HTTP $status) - GTM is not loading first-party"
+            failed=1
+          else
+            echo "OK: /wf0q/gtm.js (200)"
           fi
 
           echo "=== Checking the contact Action responds ==="
