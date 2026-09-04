@@ -19,15 +19,23 @@ jobs:
           fetch-depth: 1
 
       - name: Setup pnpm
+        # action-setup bootstraps pnpm with `npm ci` against a lockfile it ships,
+        # then self-updates to the packageManager pin in package.json. That
+        # bootstrap is where the time goes: 6m45s on run 33833060848 and 2m56s on
+        # 33834246504, against a ~3s baseline, with the self-update itself taking
+        # single-digit seconds in both. npm runs its audit report as a blocking
+        # step at the end of `npm ci`, which is exactly where the "endpoint is
+        # being retired" notice lands, so suppress it. Env must be step-level:
+        # the action passes its own env down to the npm child process.
+        #
+        # `standalone: true` was tried first and made it worse - it bootstraps
+        # @pnpm/exe (5 packages) instead of pnpm (1), still via npm ci.
+        # No `version:` input on purpose: the action already reads
+        # packageManager, and setting both is a hard error if they drift.
         uses: pnpm/action-setup@v6
-        with:
-          # Fetch pnpm's self-contained binary from GitHub releases rather than
-          # shelling out to `npm install`. The npm path stalled for 6m45s on
-          # run 33833060848, hung on npm's retired audit endpoint; standalone
-          # takes the npm registry off the critical path entirely. It also drops
-          # the redundant install-then-downgrade, since the npm installer pulled
-          # latest and pnpm then self-switched to the packageManager pin.
-          standalone: true
+        env:
+          NPM_CONFIG_AUDIT: 'false'
+          NPM_CONFIG_FUND: 'false'
 
       - name: Setup Node.js
         uses: actions/setup-node@v7
