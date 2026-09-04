@@ -384,39 +384,44 @@ const calendlyHost = new URL(CALENDLY_URL).hostname;
     <!-- Page-specific JSON-LD slot -->
     <slot name="head" />
 
-    <link rel="preconnect" href="https://load.sgtm.henriksoderlund.com/" />
     <link rel="preconnect" href="https://api.fouanalytics.com" crossorigin />
-    <link rel="dns-prefetch" href="https://load.sgtm.henriksoderlund.com/" />
     <link rel="dns-prefetch" href="https://api.fouanalytics.com" />
 
     <!-- Initialize dataLayer before GTM -->
     <script is:inline data-csp define:vars={{ pageType: resolvedPageType }}>
+      // Allowlist, not a denylist: anything that is not the production zone -
+      // localhost, a *.workers.dev deploy, a future PR preview host - counts as
+      // non-production. A new preview hostname therefore cannot silently inherit
+      // the live container by virtue of not being on a list of known dev hosts.
+      window.__isProduction = location.hostname === 'www.henriksoderlund.com';
       window.dataLayer = window.dataLayer || [];
       window.dataLayer.push({
         event: 'dl_init',
-        environment: (location.hostname === 'localhost' || location.hostname === '127.0.0.1' || location.hostname.endsWith('.workers.dev')) ? 'development' : 'production',
+        environment: window.__isProduction ? 'production' : 'development',
         page_type: pageType
       });
     </script>
 
     <!-- Google Tag Manager (async, loaded immediately) -->
     <script is:inline data-csp>
-      if (location.hostname !== 'localhost' && location.hostname !== '127.0.0.1' && !location.hostname.endsWith('.workers.dev')) {
-        const loadGTM = function() {
-          (function (w, d, s, l, i) {
-            w[l] = w[l] || [];
-            w[l].push({ 'gtm.start': new Date().getTime(), event: 'gtm.js' });
-            const f = d.getElementsByTagName(s)[0], j = d.createElement(s);
-            j.async = true;
-            j.src = "https://load.sgtm.henriksoderlund.com/dz4d7tyirczbv.js?" + i;
-            f.parentNode.insertBefore(j, f);
-          })(window, document, 'script', 'dataLayer', '6at4snq=aWQ9R1RNLUZXUjQ%3D&omNe=daQSaS');
-        }
-        // Loaded straight away: the injected tag is already async and the
-        // loader host is preconnected, so deferring only lost sessions that
-        // ended before the main thread went idle.
-        loadGTM();
-      }
+      (function (w, d, s, l, i) {
+        w[l] = w[l] || [];
+        w[l].push({ 'gtm.start': new Date().getTime(), event: 'gtm.js' });
+        const f = d.getElementsByTagName(s)[0], j = d.createElement(s);
+        j.async = true;
+        // Production loads through the Google tag gateway measurement path.
+        // That path is same-origin and exists only on the henriksoderlund.com
+        // zone, so every other host must go to Google directly - and does so
+        // against the Staging environment (env-8) rather than Live.
+        j.src = w.__isProduction
+          ? '/wf0q/gtm.js?id=' + i
+          : 'https://www.googletagmanager.com/gtm.js?id=' + i +
+            '&gtm_auth=dhxfPfIIp62NuQfRTdCd1w&gtm_preview=env-8&gtm_cookies_win=x';
+        // Loaded straight away rather than on idle: the tag is async and, in
+        // production, same-origin, so deferring only lost sessions that ended
+        // before the main thread went idle.
+        f.parentNode.insertBefore(j, f);
+      })(window, document, 'script', 'dataLayer', 'GTM-FWR4');
     </script>
 
     <!-- View Transitions -->
@@ -459,7 +464,7 @@ const calendlyHost = new URL(CALENDLY_URL).hostname;
 
     <!-- Google Tag Manager (noscript) -->
     <noscript>
-      <iframe src="https://load.sgtm.henriksoderlund.com/ns.html?id=GTM-FWR4" height="0" width="0" style="display:none;visibility:hidden"></iframe>
+      <iframe src="https://www.googletagmanager.com/ns.html?id=GTM-FWR4" height="0" width="0" style="display:none;visibility:hidden"></iframe>
     </noscript>
     <!-- End Google Tag Manager (noscript) -->
 

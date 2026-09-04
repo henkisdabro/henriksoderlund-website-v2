@@ -1,6 +1,6 @@
 # Local Worker testing
 
-`astro dev` never runs `src/worker.ts`, so redirects, security headers, the CSP and the `/sgtm/` proxy cannot be checked there. Testing them locally means running the built bundle under Wrangler, and three separate traps make the obvious approaches fail. A fourth trap takes down `astro dev` itself. Follow this rather than improvising.
+`astro dev` never runs `src/worker.ts`, so redirects, security headers, and the CSP cannot be checked there. Testing them locally means running the built bundle under Wrangler, and three separate traps make the obvious approaches fail. A fourth trap takes down `astro dev` itself. Follow this rather than improvising.
 
 ## 0. `astro dev` is a background daemon since Astro 7
 

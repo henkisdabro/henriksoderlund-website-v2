@@ -75,7 +75,7 @@ Professional portfolio website for Henrik Soderlund - technology leader and AI i
 
 ### Analytics and Tracking
 
-- **Server-side Google Tag Manager (sGTM)** - Custom domain (`load.sgtm.henriksoderlund.com`) for first-party data collection
+- **Google tag gateway** - Google Tag Manager served first-party from `/wf0q/*` on the site's own domain
 - **Fou Analytics** - Privacy-focused analytics via `api.fouanalytics.com` with noscript fallback
 - **dataLayer** - Global `window.dataLayer` with environment detection (production vs development)
 - **Custom events** - `contact_form_submission` event with session-based deduplication

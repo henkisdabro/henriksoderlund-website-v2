@@ -1,9 +1,5 @@
 import { handle } from '@astrojs/cloudflare/handler';
 
-const SGTM_ORIGIN = 'https://sgtm.henriksoderlund.com';
-const SGTM_HOST = 'sgtm.henriksoderlund.com';
-const SGTM_PROXY_PREFIX = '/sgtm/';
-
 // 'unsafe-eval' in script-src is deliberate, not an oversight: Fou Analytics'
 // anti-adblock and fraud-detection scripts (https://*.fouanalytics.com) run
 // eval()/new Function() for runtime integrity checks, and fail with a "blocks
@@ -11,12 +7,12 @@ const SGTM_PROXY_PREFIX = '/sgtm/';
 // unauthorised script injection, which is the separate attack surface.
 const CSP_TEMPLATE = [
   "default-src 'self'",
-  "script-src '%%NONCE%%' 'strict-dynamic' https://*.fouanalytics.com https://api.fouanalytics.com https://load.sgtm.henriksoderlund.com https://tagmanager.google.com https://www.googletagmanager.com https://static.cloudflareinsights.com https://challenges.cloudflare.com https: 'unsafe-inline' 'unsafe-eval'",
-  "connect-src 'self' https://*.fouanalytics.com https://api.fouanalytics.com wss://api.fouanalytics.com https://*.google-analytics.com https://analytics.google.com https://*.analytics.google.com https://load.sgtm.henriksoderlund.com https://www.googletagmanager.com https://stats.g.doubleclick.net https://apix.b2c.com https://cloudflareinsights.com",
+  "script-src '%%NONCE%%' 'strict-dynamic' https://*.fouanalytics.com https://api.fouanalytics.com https://tagmanager.google.com https://www.googletagmanager.com https://static.cloudflareinsights.com https://challenges.cloudflare.com https: 'unsafe-inline' 'unsafe-eval'",
+  "connect-src 'self' https://*.fouanalytics.com https://api.fouanalytics.com wss://api.fouanalytics.com https://*.google-analytics.com https://analytics.google.com https://*.analytics.google.com https://www.googletagmanager.com https://stats.g.doubleclick.net https://apix.b2c.com https://cloudflareinsights.com",
   "style-src 'self' 'unsafe-inline' https://tagmanager.google.com https://fonts.googleapis.com https://www.googletagmanager.com",
-  "img-src 'self' data: https://www.googletagmanager.com https://*.google-analytics.com https://load.sgtm.henriksoderlund.com https://stats.g.doubleclick.net https://ssl.gstatic.com https://www.gstatic.com https://fonts.gstatic.com *.google.com *.google.com.au https://ghchart.rshah.org https://api.fouanalytics.com",
+  "img-src 'self' data: https://www.googletagmanager.com https://*.google-analytics.com https://stats.g.doubleclick.net https://ssl.gstatic.com https://www.gstatic.com https://fonts.gstatic.com *.google.com *.google.com.au https://ghchart.rshah.org https://api.fouanalytics.com",
   "font-src 'self' data: https://fonts.gstatic.com",
-  "frame-src 'self' https://load.sgtm.henriksoderlund.com https://www.googletagmanager.com https://challenges.cloudflare.com",
+  "frame-src 'self' https://www.googletagmanager.com https://challenges.cloudflare.com",
   "worker-src 'self' blob:",
   "child-src 'self' blob:",
   "object-src 'none'",
@@ -91,32 +87,6 @@ const CAMPAIGN_PARAMS = new Set([
   'li_fat_id',
 ]);
 
-// Defensive, not observed: probing the proxied endpoints (/sgtm/healthy,
-// /sgtm/gtm.js, /sgtm/gtag/js) in production returned no Set-Cookie at all, and
-// this is a no-op if none is ever set. Should the container start emitting one
-// scoped to sgtm.henriksoderlund.com, a browser would silently reject it when
-// served back from www.henriksoderlund.com/sgtm/* - nothing errors, measurement
-// just degrades. Strip the Domain attribute rather than widening it to
-// .henriksoderlund.com: widening sends the cookie to every subdomain, including
-// load.sgtm.henriksoderlund.com, which this file's own CSP allows as a direct
-// unproxied script/connect source, and lets any subdomain shadow it. With no
-// Domain the cookie defaults to host-only on www.henriksoderlund.com, which is
-// what a first-party proxy wants. getSetCookie() splits per header, so the comma
-// in Expires cannot mis-split; the leading ';' anchor keeps a cookie VALUE
-// containing "Domain=" from matching; the global flag clears a malformed
-// duplicate Domain. Cookies with no Domain (including __Host- prefixed ones) pass
-// through byte-identical. The source headers are passed in alongside the copy
-// because getSetCookie() must be read off the ORIGINAL response headers: the
-// copy is what we are about to rewrite, and reading Set-Cookie back off it
-// risks the comma-folded single-string view rather than one entry per header.
-function stripCookieDomain(source: Headers, headers: Headers): void {
-  const cookies = source.getSetCookie();
-  headers.delete('Set-Cookie');
-  for (const cookie of cookies) {
-    headers.append('Set-Cookie', cookie.replace(/;\s*Domain\s*=[^;]*/gi, ''));
-  }
-}
-
 function keepCampaignParams(url: URL): void {
   const kept = new URLSearchParams();
   for (const [key, value] of url.searchParams) {
@@ -141,38 +111,6 @@ export default {
       });
       setSecurityHeaders(headers);
       return new Response(null, { status: 301, headers });
-    }
-
-    // Proxy sGTM requests for same-origin tracking and service worker registration.
-    // Strips /sgtm/ prefix and forwards to the sGTM server container with Stape headers.
-    if (url.pathname.startsWith(SGTM_PROXY_PREFIX)) {
-      const targetPath = '/' + url.pathname.slice(SGTM_PROXY_PREFIX.length);
-      const proxyRequest = new Request(SGTM_ORIGIN + targetPath + url.search, request);
-      proxyRequest.headers.set('Host', SGTM_HOST);
-      proxyRequest.headers.set('X-From-Cdn', 'cf-stape');
-      const clientIP = request.headers.get('CF-Connecting-IP');
-      if (clientIP) {
-        proxyRequest.headers.set('X-Forwarded-For', clientIP);
-      }
-
-      const proxyResponse = await fetch(proxyRequest);
-
-      // nosniff only. The full setSecurityHeaders() set (CORP/COOP and the rest)
-      // would break the tracking endpoints; without nosniff, a mistyped response
-      // from the container executes as same-origin script against site cookies.
-      const headers = new Headers(proxyResponse.headers);
-      headers.set('X-Content-Type-Options', 'nosniff');
-      stripCookieDomain(proxyResponse.headers, headers);
-
-      if (targetPath.startsWith('/_/service_worker/')) {
-        headers.set('Service-Worker-Allowed', '/');
-      }
-
-      return new Response(proxyResponse.body, {
-        status: proxyResponse.status,
-        statusText: proxyResponse.statusText,
-        headers,
-      });
     }
 
     // Enforce trailingSlash: 'never' (astro.config.mjs). The Cloudflare asset
