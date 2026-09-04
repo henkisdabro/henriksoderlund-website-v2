@@ -20,6 +20,14 @@ jobs:
 
       - name: Setup pnpm
         uses: pnpm/action-setup@v6
+        with:
+          # Fetch pnpm's self-contained binary from GitHub releases rather than
+          # shelling out to `npm install`. The npm path stalled for 6m45s on
+          # run 33833060848, hung on npm's retired audit endpoint; standalone
+          # takes the npm registry off the critical path entirely. It also drops
+          # the redundant install-then-downgrade, since the npm installer pulled
+          # latest and pnpm then self-switched to the packageManager pin.
+          standalone: true
 
       - name: Setup Node.js
         uses: actions/setup-node@v7
