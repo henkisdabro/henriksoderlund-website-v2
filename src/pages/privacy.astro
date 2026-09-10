@@ -23,7 +23,7 @@ const emailDomainReversed = reverse(emailDomain);
   <div class="privacy-page">
     <h1>Privacy Policy</h1>
 
-    <p class="dates">Last updated: 29 August 2026</p>
+    <p class="dates">Last updated: 10 September 2026</p>
 
     <p>
       This privacy policy explains how personal information is collected, used, and protected when you visit
@@ -72,25 +72,16 @@ const emailDomainReversed = reverse(emailDomain);
           and message content are transmitted through Resend's email delivery infrastructure.
         </li>
         <li>
-          <strong>Google Analytics 4</strong>, operated by Google, measures how this site is used. It is
-          loaded through a server-side Google Tag Manager container on a first-party subdomain, and
-          measurement requests are sent to a first-party path on this domain rather than straight to
-          Google's own collection endpoints. Server-side tagging changes where the request goes and where
-          the identifier is written; it does not remove the identifier. Google acts as a processor for this
-          measurement data. The following cookies are set on henriksoderlund.com:
+          <strong>Google Analytics 4</strong>, operated by Google, measures how this site is used. The tag
+          is served from a first-party path on this domain rather than from Google's own domain, and
+          measurement requests go to that same path, which Cloudflare forwards on to Google at the edge.
+          That changes where the request goes; it does not remove the identifier. Google acts as a
+          processor for this measurement data. The following cookies are set on henriksoderlund.com:
           <ul>
             <li>
               <code>_ga</code> and <code>_ga_&lt;measurement-id&gt;</code> - the Google Analytics visitor
               and session identifiers, written by JavaScript in your browser. Both last 400 days from your
               most recent visit.
-            </li>
-            <li>
-              <code>FPID</code> - a first-party identifier written by the server-side container. It is
-              marked HttpOnly, so JavaScript on the page cannot read it. It lasts 400 days.
-            </li>
-            <li>
-              <code>FPLC</code> - a short-lived value that carries the identifier across a link to another
-              domain. It lasts 20 hours.
             </li>
           </ul>
           These identifiers are randomly generated. They are not derived from your name, email address or

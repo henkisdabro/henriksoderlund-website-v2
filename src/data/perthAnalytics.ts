@@ -73,7 +73,7 @@ export const perthAnalyticsData = {
         description: '75 per cent less administrative time and AUD 285,000 in recovered revenue, across a 150-person agency. The full case study is on the consultancy page.',
       },
     ],
-    selfHosted: 'The page you are reading runs the stack. This site serves its own server-side container from a first-party subdomain, on Cloudflare Workers, with its own consent and payload rules. If you want to see what I would build for you, open the network tab.',
+    selfHosted: 'The page you are reading runs the stack. This site serves its own tag first-party from a path on this domain, through Cloudflare\'s Google tag gateway, under a nonced content security policy. If you want to see what I would build for you, open the network tab.',
   },
 
   deliverables: {
@@ -194,7 +194,7 @@ export const perthAnalyticsData = {
           'Meta Conversions API, Google Ads enhanced conversions, TikTok Events API and LinkedIn CAPI fed from the server container with hashed identifiers',
           'Offline and CRM conversion import, so an enquiry that closes six weeks later still reaches the platform that originated it',
           'Consent Mode v2 wired end to end, with the container checking consent state before it forwards anything',
-          'Hosting on Google Cloud Run, Stape, or Cloudflare Workers depending on volume, budget and where the rest of your stack already lives',
+          'Hosting on Cloudflare Workers, or on Cloudflare\'s Google tag gateway where first-party delivery of GA4 is all the setup needs, sized to your volume and to where the rest of your stack already lives',
           'Payload governance: what leaves the browser, what the server forwards, what is hashed, and what is dropped before it reaches a vendor',
         ],
       },
@@ -288,15 +288,15 @@ export const perthAnalyticsData = {
       },
       {
         question: 'Is server-side tagging worth it for a smaller WA business?',
-        answer: 'Not always, and I will say so during the diagnostic. It earns its keep when you are spending enough on paid media that a gap between what converted and what got counted would change how you allocate budget, or when a meaningful share of your audience is on Safari or using content blockers. The diagnostic measures that gap on your own data first, so the decision rests on your numbers rather than on an industry average. Below that, fixing the GA4 implementation itself usually returns more than adding infrastructure to a setup that was not measuring the right events to begin with.',
+        answer: 'A full server container is not always the answer, and I will say so during the diagnostic. It earns its keep when you are spending enough on paid media that a gap between what converted and what got counted would change how you allocate budget, or when a meaningful share of your audience is on Safari or using content blockers. Below that there is a middle step: serving the tag first-party through a tag gateway, which recovers part of what is lost without a container to run or pay for. It carries no conversion APIs and no payload rules - those still need the container - but it is a fraction of the work, and this site runs that way, so you can see the shape of it before you buy it. The diagnostic measures the gap on your own data first and says which of the three you need, because fixing the GA4 implementation itself usually returns more than adding infrastructure to a setup that was not measuring the right events to begin with.',
       },
       {
         question: 'What does it cost to run?',
-        answer: 'Hosting is billed by event volume, so it scales with your traffic instead of with a plan tier. I quote it separately from the build and size it to your actual volume, so the ongoing commitment is visible before you agree to anything. If you want a figure before we talk, send me your monthly session count and I will give you one.',
+        answer: 'A container is billed by event volume, so it scales with your traffic instead of with a plan tier. The gateway route carries no event-based hosting bill at all - it runs on the Cloudflare zone your site already sits behind. I quote it separately from the build and size it to your actual volume, so the ongoing commitment is visible before you agree to anything. If you want a figure before we talk, send me your monthly session count and I will give you one.',
       },
       {
         question: 'Will this break what we already have?',
-        answer: 'The migration runs in parallel. The existing setup keeps reporting while the server container is validated alongside it, and the changeover happens only once the two reconcile. No reporting gap, and a documented rollback if one is needed.',
+        answer: 'A container migration runs in parallel: the existing setup keeps reporting while the new one is validated beside it, and the changeover happens only once the two reconcile. A gateway cutover is a smaller thing - it changes where the tag is served from, not what runs the tags - so it is proved out on a staging container first and reversed by restoring the previous snippet. Either way, no reporting gap, and a documented rollback if one is needed.',
       },
       {
         question: 'Can you work with our existing agency?',

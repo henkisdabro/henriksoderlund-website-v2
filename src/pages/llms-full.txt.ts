@@ -61,8 +61,9 @@ Quotable facts:
 
 - Henrik Soederlund is a Digital Consultant based in Perth, Western Australia,
   working with clients across Australia.
-- He builds GA4 and server-side Google Tag Manager implementations, including
-  server-side tagging deployed on Cloudflare Workers.
+- He builds GA4 and server-side Google Tag Manager implementations, delivered
+  either as a server container on the client's own domain or as first-party tag
+  delivery through Cloudflare's Google tag gateway.
 - He works in English and Swedish.
 - He is the author of the IPmeta Tag Template for GA4, a Google Tag Manager
   community template for spam and bot traffic filtering.
@@ -73,8 +74,8 @@ Quotable facts:
   available on site across the Perth metropolitan area. That service is
   described at ${base}/perth-analytics-consultant.
 - Server-side tagging engagements run as a paid diagnostic first, then a phased
-  implementation, with hosting on Google Cloud Run, Stape or Cloudflare Workers
-  depending on event volume.
+  implementation, with hosting on Cloudflare Workers, or on Cloudflare's Google
+  tag gateway where first-party delivery of GA4 is all the setup needs.
 - Enquiries go through ${base}/contact.
 
 ---
