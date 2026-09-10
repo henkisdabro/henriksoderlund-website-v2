@@ -122,9 +122,9 @@ jobs:
           # CV) must keep its campaign tags across the 301, or the session is
           # counted as Direct. See docs/UTM-TAXONOMY.md.
           for path in /skills /consultation /blog/old-post; do
-            url="https://www.henriksoderlund.com${path}?utm_source=resume&utm_medium=referral&utm_campaign=202608-cv&junk=1"
+            url="https://www.henriksoderlund.com${path}?utm_source=resume&utm_medium=referral&utm_campaign=cv&junk=1"
             loc=$(curl -s -o /dev/null -D - --max-time 10 "$url" | tr -d '\r' | awk 'tolower($1)=="location:"{print $2}')
-            if ! echo "$loc" | grep -q "utm_source=resume.*utm_medium=referral.*utm_campaign=202608-cv"; then
+            if ! echo "$loc" | grep -q "utm_source=resume.*utm_medium=referral.*utm_campaign=cv"; then
               echo "::error::FAIL: $url dropped its UTM parameters (Location: $loc)"
               failed=1
             elif echo "$loc" | grep -q "junk=1"; then

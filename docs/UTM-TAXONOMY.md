@@ -11,7 +11,7 @@ owned surfaces is what makes it legible.
 |---|---|
 | `utm_source` | Platform, lower case, no dots. Stable across campaigns. |
 | `utm_medium` | A value GA4's default channel grouping recognises. Never invent one. |
-| `utm_campaign` | `yyyymm-slug` - ISO month first so campaigns sort chronologically. |
+| `utm_campaign` | An evergreen slug naming the surface or theme. No years, no dates - the same surface keeps the same campaign for its whole life. |
 | `utm_content` | Distinguishes several links inside the same asset. |
 
 **`utm_medium` must come from GA4's recognised set** - `social`, `email`,
@@ -22,19 +22,20 @@ document or a slide deck is a `referral`; the fact that it is a PDF belongs in
 
 ## The links
 
-Evergreen surfaces (profile fields, signature) keep the campaign they were first
-tagged with - do not re-stamp the month each time, or the same surface fragments
-across many campaign rows.
+Every campaign below is evergreen: a surface keeps its campaign for good, and a
+link is never re-stamped. Time is already on the session in GA4 - putting it in
+the campaign only fragments one surface across many rows. Where a slug takes a
+placeholder, fill it with the topic, type or event, not a date.
 
 | Surface | source | medium | campaign | content |
 |---|---|---|---|---|
-| LinkedIn profile website field | `linkedin` | `social` | `202608-profile-link` | `profile-website-field` |
-| LinkedIn post or article | `linkedin` | `social` | `yyyymm-<topic>` | `post-link` |
-| GitHub profile bio | `github` | `referral` | `202608-profile-link` | `bio-website-field` |
-| Email signature | `email-signature` | `email` | `202608-signature` | `signature-link` |
-| Proposal or invoice PDF | `document` | `referral` | `yyyymm-proposal-<type>` | `pdf-link` |
-| Talk or conference slides | `talk` | `referral` | `yyyymm-<event>` | `slide-link` |
-| Resume / CV | `resume` | `referral` | `202608-cv` | `contact-link` |
+| LinkedIn profile website field | `linkedin` | `social` | `profile-link` | `profile-website-field` |
+| LinkedIn post or article | `linkedin` | `social` | `post-<topic>` | `post-link` |
+| GitHub profile bio | `github` | `referral` | `profile-link` | `bio-website-field` |
+| Email signature | `email` | `email` | `signature` | `signature-link` |
+| Proposal or invoice PDF | `document` | `referral` | `proposal-<type>` | `pdf-link` |
+| Talk or conference slides | `talk` | `referral` | `talk-<event>` | `slide-link` |
+| Resume / CV | `resume` | `referral` | `cv` | `contact-link` |
 
 ## Redirects keep campaign parameters
 
