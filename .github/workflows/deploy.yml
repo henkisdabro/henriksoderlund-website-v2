@@ -198,20 +198,20 @@ jobs:
           # Worker. If a Worker route ever shadows it, gtm.js 404s and measurement
           # stops silently, so assert the container actually loads - not just health.
           echo "=== Checking the Google tag gateway measurement path ==="
-          status=$(curl -s -o /dev/null -w "%{http_code}" --max-time 20 "https://www.henriksoderlund.com/wf0q/healthy")
+          status=$(curl -s -o /dev/null -w "%{http_code}" --max-time 20 "https://www.henriksoderlund.com/wro1/healthy")
           if [ "$status" -ne 200 ]; then
-            echo "::error::FAIL: /wf0q/healthy should return 200 (got HTTP $status) - tag gateway is down"
+            echo "::error::FAIL: /wro1/healthy should return 200 (got HTTP $status) - tag gateway is down"
             failed=1
           else
-            echo "OK: /wf0q/healthy (200)"
+            echo "OK: /wro1/healthy (200)"
           fi
 
-          status=$(curl -s -o /dev/null -w "%{http_code}" --max-time 20 "https://www.henriksoderlund.com/wf0q/gtm.js?id=GTM-FWR4")
+          status=$(curl -s -o /dev/null -w "%{http_code}" --max-time 20 "https://www.henriksoderlund.com/wro1/gtm.js?id=GTM-KM56HHS2")
           if [ "$status" -ne 200 ]; then
-            echo "::error::FAIL: /wf0q/gtm.js should return 200 (got HTTP $status) - GTM is not loading first-party"
+            echo "::error::FAIL: /wro1/gtm.js should return 200 (got HTTP $status) - GTM is not loading first-party"
             failed=1
           else
-            echo "OK: /wf0q/gtm.js (200)"
+            echo "OK: /wro1/gtm.js (200)"
           fi
 
           echo "=== Checking the contact Action responds ==="

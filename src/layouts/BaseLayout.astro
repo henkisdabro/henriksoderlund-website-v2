@@ -412,16 +412,16 @@ const calendlyHost = new URL(CALENDLY_URL).hostname;
         // Production loads through the Google tag gateway measurement path.
         // That path is same-origin and exists only on the henriksoderlund.com
         // zone, so every other host must go to Google directly - and does so
-        // against the Staging environment (env-8) rather than Live.
+        // against the Staging environment (env-34) rather than Live.
         j.src = w.__isProduction
-          ? '/wf0q/gtm.js?id=' + i
+          ? '/wro1/gtm.js?id=' + i
           : 'https://www.googletagmanager.com/gtm.js?id=' + i +
-            '&gtm_auth=dhxfPfIIp62NuQfRTdCd1w&gtm_preview=env-8&gtm_cookies_win=x';
+            '&gtm_auth=gitcbBbLkLlUUF-B2oiJkQ&gtm_preview=env-34&gtm_cookies_win=x';
         // Loaded straight away rather than on idle: the tag is async and, in
         // production, same-origin, so deferring only lost sessions that ended
         // before the main thread went idle.
         f.parentNode.insertBefore(j, f);
-      })(window, document, 'script', 'dataLayer', 'GTM-FWR4');
+      })(window, document, 'script', 'dataLayer', 'GTM-KM56HHS2');
     </script>
 
     <!-- View Transitions -->
@@ -464,7 +464,7 @@ const calendlyHost = new URL(CALENDLY_URL).hostname;
 
     <!-- Google Tag Manager (noscript) -->
     <noscript>
-      <iframe src="https://www.googletagmanager.com/ns.html?id=GTM-FWR4" height="0" width="0" style="display:none;visibility:hidden"></iframe>
+      <iframe src="https://www.googletagmanager.com/ns.html?id=GTM-KM56HHS2" height="0" width="0" style="display:none;visibility:hidden"></iframe>
     </noscript>
     <!-- End Google Tag Manager (noscript) -->
 
