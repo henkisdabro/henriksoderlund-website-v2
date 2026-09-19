@@ -98,7 +98,8 @@
       "Bash(bq ls *)",
       "WebFetch(domain:registry.npmjs.org)",
       "WebFetch(domain:docs.astro.build)",
-      "WebFetch(domain:devblogs.microsoft.com)"
+      "WebFetch(domain:devblogs.microsoft.com)",
+      "Bash(bq query *)"
     ],
     "deny": [],
     "ask": [],
