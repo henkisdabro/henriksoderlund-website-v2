@@ -26,6 +26,8 @@ interface Props {
    * `ProfilePage` on the homepage, which is about the Person.
    */
   pageSchemaType?: 'WebPage' | 'ProfilePage' | 'AboutPage' | 'ContactPage' | 'CollectionPage';
+  /** The node this page is about, as a typed reference. Defaults to the Person on a ProfilePage. */
+  mainEntity?: { '@type': string; '@id': string };
   /** Analytics content dimension. Defaults to a slug derived from the pathname. */
   pageType?: string;
   /** Passed straight to SEO.astro, which owns the default. */
@@ -39,6 +41,7 @@ const {
   primaryEntity = 'person',
   mentions = [],
   pageSchemaType,
+  mainEntity,
   pageType,
   robots,
 } = Astro.props;
@@ -46,6 +49,13 @@ const {
 const isHomepage = Astro.url.pathname === '/';
 
 const resolvedPageSchemaType = pageSchemaType ?? (isHomepage ? 'ProfilePage' : 'WebPage');
+
+// ProfilePage requires the profiled entity on `mainEntity`. The `@type` is
+// always carried because validators check it without resolving the `@id`,
+// which points into a separate script block.
+const resolvedMainEntity = mainEntity ?? (resolvedPageSchemaType === 'ProfilePage'
+  ? { "@type": "Person", "@id": "https://www.henriksoderlund.com/#person" }
+  : undefined);
 
 // Derived so pages need not pass it: '/' is 'home', everything else is its
 // path slugified to snake_case ('/perth-analytics-consultant' -> 'perth_analytics_consultant').
@@ -215,7 +225,9 @@ const practiceSchemaJSON = JSON.stringify({
     { ...ENTITIES.lookerStudio },
     { ...ENTITIES.cloudflareWorkers }
   ],
-  "serviceType": "AI Automation & Technology Consulting",
+  // No `serviceType` or `availableChannel` here: schema.org defines both on
+  // `Service` only, so they live on the Service nodes of /consultancy and
+  // /perth-analytics-consultant.
   "hasOfferCatalog": {
     "@type": "OfferCatalog",
     "name": "Consulting Services",
@@ -227,14 +239,6 @@ const practiceSchemaJSON = JSON.stringify({
         "description": pillar.description
       }
     }))
-  },
-  "availableChannel": {
-    "@type": "ServiceChannel",
-    "serviceUrl": CALENDLY_URL,
-    "availableLanguage": [
-      { "@type": "Language", "name": "English", "alternateName": "en" },
-      { "@type": "Language", "name": "Swedish", "alternateName": "sv" }
-    ]
   },
   "sameAs": [
     GITHUB_URL,
@@ -261,10 +265,7 @@ const webPageSchemaJSON = JSON.stringify({
       ? "https://www.henriksoderlund.com/#practice"
       : "https://www.henriksoderlund.com/#person"
   },
-  // ProfilePage requires the profiled entity on `mainEntity`.
-  ...(resolvedPageSchemaType === 'ProfilePage' && {
-    mainEntity: { "@id": "https://www.henriksoderlund.com/#person" },
-  }),
+  ...(resolvedMainEntity && { mainEntity: resolvedMainEntity }),
   "primaryImageOfPage": {
     "@type": "ImageObject",
     "url": "https://www.henriksoderlund.com/og_image.png",

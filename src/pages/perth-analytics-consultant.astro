@@ -39,6 +39,21 @@ const serviceSchema = {
     { ...ENTITIES.serverSideTagging },
     { ...ENTITIES.googleTagManager }
   ],
+  // The four-stage ladder shown on the page, each stage a catalog of the
+  // services listed under it.
+  "hasOfferCatalog": {
+    "@type": "OfferCatalog",
+    "name": "Analytics Services",
+    "itemListElement": perthAnalyticsData.ladder.stages.map(stage => ({
+      "@type": "OfferCatalog",
+      "name": stage.name,
+      "description": stage.blurb,
+      "itemListElement": stage.items.map(item => ({
+        "@type": "Offer",
+        "itemOffered": { "@type": "Service", "name": item }
+      }))
+    }))
+  },
   "availableChannel": {
     "@type": "ServiceChannel",
     "serviceUrl": CALENDLY_URL,
@@ -69,6 +84,7 @@ const faqSchema = {
 
 <BaseLayout
   primaryEntity="practice"
+  mainEntity={{ "@type": "Service", "@id": serviceSchema["@id"] }}
   mentions={[
     'googleAnalytics',
     'googleTagManager',
@@ -77,6 +93,7 @@ const faqSchema = {
     'bigQuery',
     'lookerStudio',
     'cloudflareWorkers',
+    'ascribe',
     'perth',
     'westernAustralia',
   ]}
