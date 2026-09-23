@@ -56,6 +56,17 @@ jobs:
         env:
           TURNSTILE_SITE_KEY: '0x4AAAAAACxasQskYMJsn7bk'
 
+      # Hashes each sitemap page as served before this deploy, so the IndexNow
+      # step can submit only the pages whose content actually changed. The
+      # Worker's per-request nonce is the only varying part and is stripped.
+      - name: Snapshot live pages for IndexNow
+        if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+        run: |
+          grep -o '<loc>[^<]*' dist/client/sitemap-0.xml | sed 's/<loc>//' > "$RUNNER_TEMP/indexnow-urls.txt"
+          while read -r url; do
+            echo "$url $(curl -s --compressed --max-time 15 "$url" | sed -E 's/ nonce="[^"]*"//g' | sha256sum | cut -d' ' -f1)"
+          done < "$RUNNER_TEMP/indexnow-urls.txt" > "$RUNNER_TEMP/indexnow-before.txt"
+
       - name: Deploy to Cloudflare Workers
         if: github.ref == 'refs/heads/main' && github.event_name == 'push'
         uses: cloudflare/wrangler-action@v4
@@ -234,6 +245,39 @@ jobs:
           rm -f "$tmpfile"
 
           [ "$failed" -eq 0 ] || exit 1
+
+      # Tells Bing and the other IndexNow engines (not Google, which does not
+      # take part) which pages changed in this deploy. The key is public by
+      # design: engines verify it against public/<key>.txt. A failed submission
+      # warns rather than failing a deploy that has already gone live.
+      - name: Submit changed pages to IndexNow
+        if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+        env:
+          INDEXNOW_KEY: a4f9cd398b26635a931d6bf9e38de485
+        run: |
+          changed=$(while read -r url; do
+            after=$(curl -s --compressed --max-time 15 "$url" | sed -E 's/ nonce="[^"]*"//g' | sha256sum | cut -d' ' -f1)
+            grep -qxF "$url $after" "$RUNNER_TEMP/indexnow-before.txt" || echo "$url"
+          done < "$RUNNER_TEMP/indexnow-urls.txt")
+
+          if [ -z "$changed" ]; then
+            echo "No page content changed; nothing to submit."
+            exit 0
+          fi
+          echo "Changed pages:"
+          echo "$changed"
+
+          payload=$(jq -n --arg key "$INDEXNOW_KEY" --arg urls "$changed" \
+            '{host: "www.henriksoderlund.com", key: $key, urlList: ($urls | split("\n"))}')
+          status=$(curl -s -o /dev/null -w "%{http_code}" --max-time 20 \
+            -X POST "https://api.indexnow.org/indexnow" \
+            -H 'Content-Type: application/json; charset=utf-8' \
+            --data "$payload")
+          if [ "$status" = "200" ] || [ "$status" = "202" ]; then
+            echo "OK: IndexNow accepted the submission (HTTP $status)"
+          else
+            echo "::warning::IndexNow submission returned HTTP $status"
+          fi
 
       - name: Deployment Summary
         if: github.ref == 'refs/heads/main' && github.event_name == 'push'

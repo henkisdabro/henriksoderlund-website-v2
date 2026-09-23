@@ -64,6 +64,12 @@ Add these secrets to your GitHub repository settings (`Settings` > `Secrets and 
 - Separate PR workflow (build-only)
 - Detailed deployment summaries
 
+#### IndexNow Submission
+
+After the smoke test, the workflow submits pages whose content changed in the deploy to IndexNow, which passes them to Bing, Yandex and the other participating engines (Google does not take part). It hashes each sitemap page before and after deploying, with the Worker's per-request `nonce` stripped, so an unchanged page is never resubmitted.
+
+The key lives in the workflow and in `public/<key>.txt`, which engines fetch to verify it. It is public by design, not a secret. To rotate it, change both together. A rejected submission is a warning, not a failed deploy.
+
 ## Generated Files
 
 The following files are automatically generated during `astro build`:
