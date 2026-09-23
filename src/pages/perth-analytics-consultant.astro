@@ -34,11 +34,8 @@ const serviceSchema = {
       "geoRadius": "60000"
     }
   ],
-  "about": [
-    { ...ENTITIES.googleAnalytics },
-    { ...ENTITIES.serverSideTagging },
-    { ...ENTITIES.googleTagManager }
-  ],
+  // No `about`: schema.org defines it on CreativeWork, not Service. The
+  // technologies are carried by the page's WebPage node as `mentions`.
   // The four-stage ladder shown on the page, each stage a catalog of the
   // services listed under it.
   "hasOfferCatalog": {
@@ -92,6 +89,10 @@ const faqSchema = {
     'metaConversionsApi',
     'bigQuery',
     'lookerStudio',
+    'powerBi',
+    'powerQuery',
+    'python',
+    'googleAds',
     'cloudflareWorkers',
     'ascribe',
     'perth',

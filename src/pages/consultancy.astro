@@ -3,6 +3,7 @@ export const prerender = true;
 import BaseLayout from '../layouts/BaseLayout.astro';
 import { consultationData } from '../data/consultation';
 import { CALENDLY_URL } from '../data/links';
+import { ENTITIES } from '../data/entities';
 import { nodeId, pageUrl } from '../utils/pageUrl';
 
 const canonicalUrl = pageUrl(Astro.url.pathname);
@@ -36,14 +37,8 @@ const serviceSchema = {
   },
   "serviceType": "AI automation, analytics infrastructure and digital product consulting",
   "areaServed": [
-    {
-      "@type": "City",
-      "name": "Perth"
-    },
-    {
-      "@type": "Country",
-      "name": "Australia"
-    }
+    { ...ENTITIES.perth },
+    { "@type": "Country", "name": "Australia", "sameAs": "https://www.wikidata.org/wiki/Q408" }
   ],
   "availableChannel": {
     "@type": "ServiceChannel",
@@ -58,7 +53,21 @@ const serviceSchema = {
 
 <BaseLayout
   primaryEntity="practice"
-  mentions={['googleAnalytics', 'googleTagManager', 'serverSideTagging', 'bigQuery', 'perth']}
+  mentions={[
+    'claudeCode',
+    'claude',
+    'openAiCodex',
+    'aiAssistedDevelopment',
+    'googleAnalytics',
+    'googleTagManager',
+    'serverSideTagging',
+    'metaConversionsApi',
+    'bigQuery',
+    'powerBi',
+    'python',
+    'cloudflareWorkers',
+    'perth',
+  ]}
   title="Consultancy - Measurement & AI Automation | Henrik Söderlund"
   description="AI automation and analytics infrastructure delivered as working systems with measurable outcomes. GA4, server-side GTM and BigQuery. Perth, Australia."
 >
