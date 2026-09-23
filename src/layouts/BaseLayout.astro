@@ -52,9 +52,18 @@ const resolvedPageSchemaType = pageSchemaType ?? (isHomepage ? 'ProfilePage' : '
 
 // ProfilePage requires the profiled entity on `mainEntity`. The `@type` is
 // always carried because validators check it without resolving the `@id`,
-// which points into a separate script block.
+// which points into a separate script block. For the same reason the
+// ProfilePage reference repeats the Person's `name` (required by Google),
+// `url` and `image`. Each value must match the Person node exactly, since
+// consumers that do resolve the `@id` merge the two.
 const resolvedMainEntity = mainEntity ?? (resolvedPageSchemaType === 'ProfilePage'
-  ? { "@type": "Person", "@id": "https://www.henriksoderlund.com/#person" }
+  ? {
+      "@type": "Person",
+      "@id": "https://www.henriksoderlund.com/#person",
+      "name": "Henrik Söderlund",
+      "url": "https://www.henriksoderlund.com/",
+      "image": "https://www.henriksoderlund.com/og_image.png"
+    }
   : undefined);
 
 // Derived so pages need not pass it: '/' is 'home', everything else is its
