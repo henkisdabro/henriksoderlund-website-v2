@@ -19,7 +19,13 @@ Generated in `src/layouts/BaseLayout.astro` and `src/components/SEO.astro`:
 
 - **JSON-LD** emits three sitewide nodes from `BaseLayout.astro`: `Person` (`#person` - Perth AU, English and Swedish, education, awards), `ProfessionalService` (`#practice` - address, `areaServed`, `sameAs`, and an offer catalog built from `src/data/consultation.ts`), and `WebSite` (`#website`, authored by `#person` and published by `#practice`).
 - `/consultancy` adds two page-scoped nodes: a `Service` (`/consultancy#service`) whose `provider` points at `#practice`, and a `FAQPage` built from `consultationData.faq`. The offer catalog lives only on `#practice` - do not re-declare it on the page `Service`.
+- `/perth-analytics-consultant` adds its own `Service` and `FAQPage`. That `Service` carries the page's four-stage ladder as a nested offer catalog. This is the page's own offering, not a re-declaration of the `#practice` catalog, and the page's `WebPage` node names it as `mainEntity`.
 - Every node is `@id`-linked rather than repeated, so a change of entity name or service list happens in one place. Validate with the Rich Results Test after touching any of them.
+- **Tools and topics** come from `ENTITIES` in `src/data/entities.ts`, linked to Wikidata and Wikipedia via `sameAs`. They feed `knowsAbout` on `#person` and `#practice` and the per-page `mentions` passed to `BaseLayout`. Four rules:
+  - List only what the page's visible copy names.
+  - Look up a new Wikidata ID with the Wikidata API; do not recall it.
+  - Type software as `Thing`, never `SoftwareApplication` or `Product`: Google reads those as listings that need offers and ratings.
+  - Do not put `about` on a `Service`: schema.org defines it only on creative works such as `WebPage`.
 - **Open Graph** uses `og:type: profile` on the homepage and `website` elsewhere, with a 1200x630 image.
 - **Twitter cards** use summary_large_image with creator and site metadata.
 - **Canonical links** are self-referential on every page, and the canonical `Link` header is set at the Worker level in `src/worker.ts` for 2xx responses. Both must agree.

@@ -88,26 +88,52 @@ const personSchemaJSON = JSON.stringify({
       "name": "Perth"
     }
   },
+  // Tools and fields with a Wikidata item are linked entities, so an answer
+  // engine resolves them unambiguously; the rest stay as text. Every entry is
+  // named in the visible copy of /expertise, /consultancy or the Perth page.
   "knowsAbout": [
     "Artificial Intelligence",
     "Workflow Automation",
     "AI Coding Assistants",
+    { ...ENTITIES.claudeCode },
+    { ...ENTITIES.claude },
+    { ...ENTITIES.openAiCodex },
+    "Gemini CLI",
+    { ...ENTITIES.aiAssistedDevelopment },
+    { ...ENTITIES.modelContextProtocol },
+    { ...ENTITIES.promptEngineering },
+    { ...ENTITIES.largeLanguageModel },
     "Technology Leadership",
     "Analytics Infrastructure",
-    "Server-Side Tracking",
-    "Google Analytics",
-    "Google Tag Manager",
     "Measurement Frameworks",
-    "Cloudflare Workers",
-    "LLM API Integration",
-    "Digital Products",
-    "Programmatic Advertising",
-    "Marketing Technology",
+    { ...ENTITIES.googleAnalytics },
+    { ...ENTITIES.googleTagManager },
+    { ...ENTITIES.serverSideTagging },
+    { ...ENTITIES.metaConversionsApi },
+    "Consent Mode v2",
+    "Adobe Analytics",
+    "Amplitude",
+    { ...ENTITIES.bigQuery },
+    { ...ENTITIES.lookerStudio },
+    { ...ENTITIES.powerBi },
+    { ...ENTITIES.powerQuery },
     "Data Pipeline Architecture",
+    { ...ENTITIES.python },
+    { ...ENTITIES.cloudflareWorkers },
+    "React Development",
+    "Vite",
+    "Hono",
+    "Digital Products",
+    "Marketing Technology",
+    { ...ENTITIES.programmaticAdvertising },
+    { ...ENTITIES.realTimeBidding },
+    { ...ENTITIES.googleAds },
+    { ...ENTITIES.googleSearchConsole },
+    { ...ENTITIES.jsonLd },
+    "Screaming Frog",
+    { ...ENTITIES.googleAppsScript },
     "Team Building & Mentoring",
-    "Process Automation",
-    "Python Programming",
-    "React Development"
+    "Process Automation"
   ],
   "alumniOf": [
     {
@@ -223,7 +249,12 @@ const practiceSchemaJSON = JSON.stringify({
     { ...ENTITIES.serverSideTagging },
     { ...ENTITIES.bigQuery },
     { ...ENTITIES.lookerStudio },
-    { ...ENTITIES.cloudflareWorkers }
+    { ...ENTITIES.powerBi },
+    { ...ENTITIES.metaConversionsApi },
+    { ...ENTITIES.cloudflareWorkers },
+    { ...ENTITIES.claudeCode },
+    { ...ENTITIES.aiAssistedDevelopment },
+    { ...ENTITIES.largeLanguageModel }
   ],
   // No `serviceType` or `availableChannel` here: schema.org defines both on
   // `Service` only, so they live on the Service nodes of /consultancy and
