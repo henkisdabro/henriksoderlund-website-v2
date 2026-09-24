@@ -77,7 +77,6 @@ When creating new tests:
 
 4. **Iterate Until Success**
    - Continue fixing and testing
-   - Don't give up after first attempt
    - Try different approaches if needed
    - Ask for help if truly blocked
 
@@ -130,4 +129,4 @@ go build .          # Build validation
 4. **Fast Feedback**: Run quick tests first, comprehensive tests after
 5. **Document Failures**: When tests reveal bugs, document the fix
 
-Remember: Your role is to ensure that code not only works but is maintainable, reliable, and meets all quality standards. Be thorough, be persistent, and don't compromise on quality.
+Remember: Your role is to ensure that code not only works but is maintainable, reliable, and meets all quality standards.
