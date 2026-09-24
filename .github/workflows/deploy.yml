@@ -10,7 +10,54 @@ permissions:
   contents: read
 
 jobs:
+  # Lead capture, end to end, before anything ships: the contact form through
+  # the built Worker, Turnstile and the Email Service simulator; the booking
+  # CTAs; and the contract between dataLayer events and the published GTM
+  # container. See docs/LEAD-CAPTURE-TESTS.md.
+  e2e:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v7
+        with:
+          fetch-depth: 1
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v6
+        env:
+          NPM_CONFIG_AUDIT: 'false'
+          NPM_CONFIG_FUND: 'false'
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version-file: '.nvmrc'
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Install Chromium
+        run: pnpm exec playwright install --with-deps chromium
+
+      - name: Build
+        run: pnpm run build
+        env:
+          TURNSTILE_SITE_KEY: '0x4AAAAAACxasQskYMJsn7bk'
+
+      - name: Lead-capture tests
+        run: pnpm exec playwright test
+
+      - name: Upload traces
+        if: failure()
+        uses: actions/upload-artifact@v7
+        with:
+          name: e2e-results
+          path: test-results/
+          retention-days: 14
+
   build-and-deploy:
+    needs: e2e
     runs-on: ubuntu-latest
     env:
       LC_ALL: en_US.UTF-8
@@ -248,6 +295,17 @@ jobs:
           rm -f "$tmpfile"
 
           [ "$failed" -eq 0 ] || exit 1
+
+      # The live form, a synthetic submission through the real Turnstile secret
+      # and Email Service, and the Calendly event. The same checks run daily
+      # from lead-capture-monitor.yml, for drift no deploy causes.
+      - name: Lead-capture checks against production
+        if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+        run: |
+          pnpm exec playwright install --with-deps chromium
+          pnpm run test:prod
+        env:
+          CONTACT_SYNTHETIC_TOKEN: ${{ secrets.CONTACT_SYNTHETIC_TOKEN }}
 
       # Tells Bing and the other IndexNow engines (not Google, which does not
       # take part) which pages changed in this deploy. The key is public by

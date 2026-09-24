@@ -54,7 +54,7 @@ Professional portfolio website for Henrik Soderlund - technology leader and AI i
 | Language | [TypeScript 6.0](https://www.typescriptlang.org/) | Strict type safety across all code |
 | Security | Custom Worker + HTMLRewriter | Per-request CSP nonces, security headers |
 | Spam Protection | [Cloudflare Turnstile](https://developers.cloudflare.com/turnstile/) | Privacy-preserving contact form protection |
-| Email | [Resend](https://resend.com/) | Contact form email delivery |
+| Email | [Cloudflare Email Service](https://developers.cloudflare.com/email-service/) | Contact form email delivery (`send_email` binding) |
 | Form Validation | [Zod](https://zod.dev/) (via Astro Actions) | Schema-based input validation |
 | Analytics | Server-side GTM + [Fou Analytics](https://fouanalytics.com/) | Privacy-focused analytics on custom sGTM domain |
 | SEO | [@astrojs/sitemap](https://docs.astro.build/en/guides/integrations-guide/sitemap/) + JSON-LD | Automatic sitemap, structured data |
@@ -269,7 +269,7 @@ npx wrangler tail     # Live log streaming
 
 | Variable | Context | Description |
 |----------|---------|-------------|
-| `RESEND_API_KEY` | Server secret | Email delivery for contact form |
+| `CONTACT_SYNTHETIC_TOKEN` | Server secret | Lets the CI synthetic check submit the contact form without Turnstile |
 | `TURNSTILE_SECRET_KEY` | Server secret | Server-side Turnstile verification |
 | `TURNSTILE_SITE_KEY` | Client public | Turnstile widget site key |
 
@@ -299,6 +299,6 @@ Permanent (301) redirects are handled in `src/worker.ts` (the `REDIRECTS` map pl
 - [Cloudflare Workers Documentation](https://developers.cloudflare.com/workers/)
 - [Astro Cloudflare Adapter](https://docs.astro.build/en/guides/integrations-guide/cloudflare/)
 - [Cloudflare Turnstile](https://developers.cloudflare.com/turnstile/)
-- [Resend Documentation](https://resend.com/docs)
+- [Cloudflare Email Service](https://developers.cloudflare.com/email-service/)
 - [llms.txt Specification](https://llmstxt.org/)
 - [JetBrains Mono](https://www.jetbrains.com/lp/mono/)

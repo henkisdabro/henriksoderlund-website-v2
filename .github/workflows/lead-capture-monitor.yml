@@ -1,0 +1,54 @@
+name: Lead-capture monitor
+
+# The contact form broke once without any deploy: a DNS record was removed and
+# the mail provider silently refused every send for months. This runs the
+# production lead-capture checks daily so drift like that surfaces in a day.
+# GitHub emails the failure to whoever last edited the schedule below.
+
+on:
+  schedule:
+    - cron: '0 22 * * *' # 06:00 Perth
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  production:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v7
+        with:
+          fetch-depth: 1
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v6
+        env:
+          NPM_CONFIG_AUDIT: 'false'
+          NPM_CONFIG_FUND: 'false'
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version-file: '.nvmrc'
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Install Chromium
+        run: pnpm exec playwright install --with-deps chromium
+
+      - name: Lead-capture checks against production
+        run: pnpm run test:prod
+        env:
+          CONTACT_SYNTHETIC_TOKEN: ${{ secrets.CONTACT_SYNTHETIC_TOKEN }}
+
+      - name: Upload traces
+        if: failure()
+        uses: actions/upload-artifact@v7
+        with:
+          name: production-results
+          path: test-results/
+          retention-days: 14

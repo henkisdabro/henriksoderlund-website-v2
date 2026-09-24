@@ -7,6 +7,13 @@
     "enabled": true
   },
   "upload_source_maps": true,
+  "send_email": [
+    {
+      "name": "EMAIL",
+      "allowed_sender_addresses": ["noreply@henriksoderlund.com"],
+      "allowed_destination_addresses": ["admin@henriksoderlund.com", "admin+synthetic@henriksoderlund.com"]
+    }
+  ],
   "vars": {
     "TURNSTILE_SITE_KEY": "0x4AAAAAACxasQskYMJsn7bk"
   },

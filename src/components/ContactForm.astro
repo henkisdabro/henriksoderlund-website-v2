@@ -40,6 +40,11 @@ const errorType =
     : errorCode === 'FORBIDDEN'
       ? 'bot_check'
       : 'server';
+// The server-authored reason ("Failed to send email", "Verification failed"),
+// which tells a mail-provider outage apart from a bot block - both of which
+// otherwise look alike in GA4. Validation messages are left out: they are
+// already reported per field in error_fields.
+const errorReason = errorType === 'validation' ? '' : (error?.message ?? '');
 ---
 
 {success && (
@@ -84,7 +89,7 @@ const errorType =
       <p><strong>Something went wrong.</strong> Please try again or email me directly at <a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a>.</p>
     )}
   </div>
-  <script is:inline data-csp define:vars={{ errorCode, errorType, errorFields: invalidFields }}>
+  <script is:inline data-csp define:vars={{ errorCode, errorType, errorReason, errorFields: invalidFields }}>
     (function () {
       const resultEl = document.getElementById('form-result');
       if (resultEl) resultEl.focus();
@@ -95,6 +100,7 @@ const errorType =
         'form_name': 'contact',
         'error_type': errorType,
         'error_code': errorCode,
+        'error_reason': errorReason,
         'error_fields': errorFields.join(',')
       });
     })();

@@ -39,6 +39,8 @@ coverage/
 .nyc_output/
 *.lcov
 .playwright-cli/
+test-results/
+playwright-report/
 
 # Editor directories and files
 # Keep useful VS Code settings for team, ignore personal ones
