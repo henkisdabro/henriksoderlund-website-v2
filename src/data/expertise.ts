@@ -1,4 +1,4 @@
-import { GITHUB_URL, ASCRIBE_URL, ROTTOSNORKEL_URL } from './links';
+import { GITHUB_URL, ASCRIBE_URL, ROTTOSNORKEL_URL, SANDCASTLE_KIT_URL, SANDCASTLE_KIT_SITE_URL } from './links';
 
 export const expertiseData = {
   intro: {
@@ -20,6 +20,17 @@ export const expertiseData = {
         // signal ink on white, signal amber on the dark theme.
         accentColour: '#9e7b00',
         accentColourDark: '#f2c230',
+      },
+      {
+        title: 'sandcastle-kit',
+        url: SANDCASTLE_KIT_SITE_URL,
+        type: 'Open Source · AI Agents',
+        tagline: 'Turns a ticket backlog into a software factory',
+        description: "Unattended coding agents burn down GitHub issues in Docker sandboxes. One agent implements each ticket, a stronger one reviews it, the project's own lint, test and build gates decide, and green work merges while you are away. Built on Sandcastle by Matt Pocock.",
+        tags: ['Claude Code', 'Codex', 'Docker', 'TypeScript'],
+        image: 'sandcastleKitImage',
+        accentColour: '#b45309',
+        accentColourDark: '#f59e0b',
       },
       {
         title: 'Rotto Snorkel',
@@ -200,6 +211,8 @@ export const expertiseData = {
           'Team Onboarding & Training Programs',
           'Custom Rules & Convention Files',
           'MCP Server Integration',
+          'Unattended Coding Agent Orchestration',
+          'Sandboxed Agent Workflows (Docker)',
         ],
       },
       {
@@ -225,6 +238,11 @@ export const expertiseData = {
   githubContributions: {
     title: 'Open Source & Community',
     contributions: [
+      {
+        title: 'sandcastle-kit',
+        url: SANDCASTLE_KIT_URL,
+        description: 'Unattended coding agents that burn down a GitHub issue backlog in Docker sandboxes - implemented, reviewed, gated and merged.',
+      },
       {
         title: 'Cloudflare Workers React Boilerplate',
         url: `${GITHUB_URL}/cloudflare-workers-react-boilerplate`,

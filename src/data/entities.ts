@@ -12,7 +12,7 @@
  * review, which a passing mention of GA4 can never have.
  */
 
-import { ASCRIBE_URL } from './links';
+import { ASCRIBE_URL, SANDCASTLE_KIT_URL, SANDCASTLE_KIT_SITE_URL } from './links';
 
 export interface EntityRef {
   '@type': string;
@@ -21,6 +21,11 @@ export interface EntityRef {
   url?: string;
   sameAs?: string[];
   founder?: { '@id': string };
+  codeRepository?: string;
+  license?: string;
+  programmingLanguage?: string;
+  author?: { '@id': string };
+  isBasedOn?: string;
 }
 
 export const ENTITIES: Record<string, EntityRef> = {
@@ -212,6 +217,18 @@ export const ENTITIES: Record<string, EntityRef> = {
     name: 'ascribe',
     url: ASCRIBE_URL,
     founder: { '@id': 'https://www.henriksoderlund.com/#person' },
+  },
+  // Henrik's open-source kit. SoftwareSourceCode, not SoftwareApplication: it
+  // is the repository being described, and it carries no rich-result rules.
+  sandcastleKit: {
+    '@type': 'SoftwareSourceCode',
+    name: 'sandcastle-kit',
+    url: SANDCASTLE_KIT_SITE_URL,
+    codeRepository: SANDCASTLE_KIT_URL,
+    license: 'https://opensource.org/licenses/MIT',
+    programmingLanguage: 'TypeScript',
+    author: { '@id': 'https://www.henriksoderlund.com/#person' },
+    isBasedOn: 'https://github.com/mattpocock/sandcastle',
   },
   perth: {
     '@type': 'City',

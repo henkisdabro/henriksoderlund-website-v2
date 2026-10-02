@@ -36,6 +36,19 @@ placeholder, fill it with the topic, type or event, not a date.
 | Proposal or invoice PDF | `document` | `referral` | `proposal-<type>` | `pdf-link` |
 | Talk or conference slides | `talk` | `referral` | `talk-<event>` | `slide-link` |
 | Resume / CV | `resume` | `referral` | `cv` | `contact-link` |
+| sandcastle-kit site, author credit | `sandcastle-kit` | `referral` | `oss-sandcastle-kit` | `footer-author-link` |
+| sandcastle-kit site, more work link | `sandcastle-kit` | `referral` | `oss-sandcastle-kit` | `more-work-link` |
+| sandcastle-kit README, author link | `github` | `referral` | `oss-sandcastle-kit` | `readme-author-link` |
+
+An open-source project site is its own source - the project slug, not the host
+(`github-pages` would lump every project site into one row). The campaign is
+`oss-<project>` for every surface of that project, so filtering on it gives the
+project's whole referral footprint, site and README together.
+
+The three sandcastle-kit links were checked live on 20261002: both footer
+links on <https://henkisdabro.github.io/sandcastle-kit/> and the README author
+link carry exactly the tags above, and the repo's Website field points at the
+site.
 
 ## Redirects keep campaign parameters
 

@@ -20,6 +20,7 @@ const PUNCTUATION: Array<[RegExp, string]> = [
   [/[‘’‚‛]/g, "'"],
   [/[“”„‟]/g, '"'],
   [/…/g, '...'],
+  [/\s*·\s*/g, ' - '],     // middle dot separator, as in a showcase card's type
   [/[\u00A0\u1680\u2000-\u200A\u202F\u205F\u3000]/g, ' '],  // exotic spaces
 ];
 
