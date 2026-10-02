@@ -31,6 +31,10 @@ Generated in `src/layouts/BaseLayout.astro` and `src/components/SEO.astro`:
 - **Canonical links** are self-referential on every page, and the canonical `Link` header is set at the Worker level in `src/worker.ts` for 2xx responses. Both must agree.
 - Google Search Console and Ahrefs verification tags live in the layout.
 
+## Internal links
+
+Contextual body links into `/perth-analytics-consultant` carry descriptive anchor text, one per destination per page, inside sentences that already talk about the target. `tests/e2e/internal-links.spec.ts` pins each one's `href` and text, so rewording a linked phrase fails the suite - update the table in the same change. Paragraphs in `src/data/workExperience.ts` can carry inline links as `{ text, href }` parts; the `.md` endpoint renders them as absolute markdown links.
+
 ## Sitemap priorities
 
 Set in the `serialize` callback in `astro.config.mjs`: home 1.0, expertise 0.9, consultancy / work-experience / contact 0.8, education 0.7, privacy 0.3, anything else 0.5. The `filter` excludes `/api/`, `.md` endpoints and the llms files. A new page with no entry in the priority map silently gets 0.5 - add it deliberately.
