@@ -283,7 +283,7 @@ export const perthAnalyticsData = {
     title: 'Frequently Asked Questions',
     items: [
       {
-        question: 'What does server-side tagging actually fix?',
+        question: 'What does server-side tagging (or server-side tracking) actually fix?',
         answer: 'It moves tag execution from the visitor\'s browser to a container running on a subdomain of your own domain. That recovers a share of the measurement otherwise lost to ad blockers and browser tracking prevention, allows first-party cookies with a longer useful life, reduces the number of third-party scripts slowing your pages, and gives you a single place to control what data each vendor receives. It is an improvement in capture, not a way to see everything - anyone promising the latter is overselling it.',
       },
       {
