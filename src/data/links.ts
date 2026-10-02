@@ -8,3 +8,4 @@ export const CONTACT_EMAIL = 'admin@henriksoderlund.com';
 export const PRIVACY_EMAIL = 'privacy@henriksoderlund.com';
 export const ASCRIBE_URL = 'https://ascribe.to';
 export const ROTTOSNORKEL_URL = 'https://www.rottosnorkel.com';
+export const SANDCASTLE_KIT_URL = 'https://github.com/henkisdabro/sandcastle-kit';
