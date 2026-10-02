@@ -1,4 +1,4 @@
-import { GITHUB_URL, ASCRIBE_URL, ROTTOSNORKEL_URL, SANDCASTLE_KIT_URL } from './links';
+import { GITHUB_URL, ASCRIBE_URL, ROTTOSNORKEL_URL, SANDCASTLE_KIT_URL, SANDCASTLE_KIT_SITE_URL } from './links';
 
 export const expertiseData = {
   intro: {
@@ -23,7 +23,7 @@ export const expertiseData = {
       },
       {
         title: 'sandcastle-kit',
-        url: SANDCASTLE_KIT_URL,
+        url: SANDCASTLE_KIT_SITE_URL,
         type: 'Open Source · AI Agents',
         tagline: 'Turns a ticket backlog into a software factory',
         description: "Unattended coding agents burn down GitHub issues in Docker sandboxes. One agent implements each ticket, a stronger one reviews it, the project's own lint, test and build gates decide, and green work merges while you are away. Built on Sandcastle by Matt Pocock.",
@@ -31,7 +31,6 @@ export const expertiseData = {
         image: 'sandcastleKitImage',
         accentColour: '#b45309',
         accentColourDark: '#f59e0b',
-        cta: 'View on GitHub',
       },
       {
         title: 'Rotto Snorkel',

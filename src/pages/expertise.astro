@@ -105,7 +105,7 @@ import { sectionIcons } from '../utils/sectionIcons';
                     <div class="showcase-tags">
                       {project.tags.map((tag: string) => <span class="showcase-tag">{tag}</span>)}
                     </div>
-                    {isLink && <span class="showcase-cta">{project.cta ?? `Visit ${project.title}`} &rarr;</span>}
+                    {isLink && <span class="showcase-cta">Visit {project.title} &rarr;</span>}
                   </div>
                 </Tag>
               );

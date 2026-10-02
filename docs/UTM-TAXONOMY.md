@@ -45,6 +45,11 @@ An open-source project site is its own source - the project slug, not the host
 `oss-<project>` for every surface of that project, so filtering on it gives the
 project's whole referral footprint, site and README together.
 
+The three sandcastle-kit links were checked live on 20261002: both footer
+links on <https://henkisdabro.github.io/sandcastle-kit/> and the README author
+link carry exactly the tags above, and the repo's Website field points at the
+site.
+
 ## Redirects keep campaign parameters
 
 `src/worker.ts` strips the query string when it 301s a legacy path, which would

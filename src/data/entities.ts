@@ -12,7 +12,7 @@
  * review, which a passing mention of GA4 can never have.
  */
 
-import { ASCRIBE_URL, SANDCASTLE_KIT_URL } from './links';
+import { ASCRIBE_URL, SANDCASTLE_KIT_URL, SANDCASTLE_KIT_SITE_URL } from './links';
 
 export interface EntityRef {
   '@type': string;
@@ -223,7 +223,7 @@ export const ENTITIES: Record<string, EntityRef> = {
   sandcastleKit: {
     '@type': 'SoftwareSourceCode',
     name: 'sandcastle-kit',
-    url: SANDCASTLE_KIT_URL,
+    url: SANDCASTLE_KIT_SITE_URL,
     codeRepository: SANDCASTLE_KIT_URL,
     license: 'https://opensource.org/licenses/MIT',
     programmingLanguage: 'TypeScript',
