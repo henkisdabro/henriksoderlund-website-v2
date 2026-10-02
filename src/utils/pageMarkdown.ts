@@ -1,7 +1,7 @@
 import { consultationData } from '../data/consultation';
 import { perthAnalyticsData } from '../data/perthAnalytics';
 import { expertiseData } from '../data/expertise';
-import { workExperienceData } from '../data/workExperience';
+import { workExperienceData, type Paragraph } from '../data/workExperience';
 import { CALENDLY_URL, LINKEDIN_URL, GITHUB_URL, CONTACT_EMAIL } from '../data/links';
 
 export function getHomeMarkdown(): string {
@@ -289,11 +289,18 @@ ${faqItems}
 `;
 }
 
+function paragraphMarkdown(p: Paragraph): string {
+  if (typeof p === 'string') return p;
+  return p
+    .map((part) => (typeof part === 'string' ? part : `[${part.text}](https://www.henriksoderlund.com${part.href})`))
+    .join('');
+}
+
 export function getWorkExperienceMarkdown(): string {
   const entries = workExperienceData
     .map(
       (entry) =>
-        `## ${entry.title}\n\n${entry.dates} - ${entry.location}\n\n${entry.description.join('\n\n')}`
+        `## ${entry.title}\n\n${entry.dates} - ${entry.location}\n\n${entry.description.map(paragraphMarkdown).join('\n\n')}`
     )
     .join('\n\n---\n\n');
 

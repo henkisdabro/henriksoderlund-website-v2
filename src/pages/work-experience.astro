@@ -18,7 +18,9 @@ import '../styles/content-entry.css';
       <section class="content-entry">
         <h2 id={slugify(job.title)}><img src={job.flag.src} alt={job.location} class="country-flag" width="16" height="12" /> {job.title}</h2>
         <p class="dates">{job.dates}</p>
-        {job.description.map(p => <p>{p}</p>)}
+        {job.description.map(p => (
+          <p>{typeof p === 'string' ? p : p.map(part => typeof part === 'string' ? part : <a href={part.href}>{part.text}</a>)}</p>
+        ))}
       </section>
     ))}
   </div>
