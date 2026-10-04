@@ -14,6 +14,7 @@ export default defineConfig({
         const priorities = {
           '/': 1.0,
           '/expertise': 0.9,
+          '/builds': 0.9,
           '/consultancy': 0.8,
           '/perth-analytics-consultant': 0.8,
           '/work-experience': 0.8,

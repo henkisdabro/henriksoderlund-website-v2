@@ -177,38 +177,6 @@ button:focus-visible {
 
 }
 
-/* Skills Pill Display */
-.skills-minimal-pills {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.4rem;
-  line-height: 1.6;
-}
-
-.skill-pill-minimal {
-  background: var(--color-pill-bg);
-  color: var(--color-pill-text);
-  padding: 0.1rem 0.4rem;
-  border-radius: 4px;
-  font-size: 0.75rem;
-  border: 1px solid var(--color-pill-border);
-  font-family: var(--font-mono);
-  font-weight: normal;
-  cursor: default;
-}
-
-/* Mobile adjustments for skill pills */
-@media (max-width: 768px) {
-  .skill-pill-minimal {
-    font-size: 0.7rem;
-    padding: 0.05rem 0.3rem;
-  }
-
-  .skills-minimal-pills {
-    gap: 0.3rem;
-  }
-}
-
 /* Breathing/Twinkling Keyword Animation */
 .breathe-keyword {
   display: inline;

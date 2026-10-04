@@ -37,7 +37,7 @@ Contextual body links into `/perth-analytics-consultant` carry descriptive ancho
 
 ## Sitemap priorities
 
-Set in the `serialize` callback in `astro.config.mjs`: home 1.0, expertise 0.9, consultancy / work-experience / contact 0.8, education 0.7, privacy 0.3, anything else 0.5. The `filter` excludes `/api/`, `.md` endpoints and the llms files. A new page with no entry in the priority map silently gets 0.5 - add it deliberately.
+Set in the `serialize` callback in `astro.config.mjs`: home 1.0, expertise / builds 0.9, consultancy / work-experience / contact 0.8, education 0.7, privacy 0.3, anything else 0.5. The `filter` excludes `/api/`, `.md` endpoints and the llms files. A new page with no entry in the priority map silently gets 0.5 - add it deliberately.
 
 ## Analytics
 

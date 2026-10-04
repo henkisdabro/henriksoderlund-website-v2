@@ -2,13 +2,19 @@ export const perthAnalyticsData = {
   hero: {
     title: 'Perth Analytics Consultant',
     subtitle: 'Measurement, data models and reporting that hold up - for businesses in Perth and Western Australia.',
-    statement: 'I am an independent Digital Consultant in Perth. People call me when they have stopped believing their own Google Analytics. Conversions that will not reconcile with the CRM. Ad platforms all claiming the same sale. Traffic sitting in Unassigned with no explanation. A tracking setup nobody currently at the company actually built. I do the implementation myself.',
+    statement: 'I am an independent Digital Consultant in Perth. People call me when they have stopped believing their own Google Analytics. I do the implementation myself.',
+    signals: [
+      'Conversions that will not reconcile with the CRM',
+      'Ad platforms all claiming the same sale',
+      'Traffic sitting in Unassigned',
+      'A tracking setup nobody at the company built',
+    ],
   },
 
   ladder: {
     title: 'How the work stacks up',
     intro: 'Four stages. Most engagements start at one and stop where the value runs out.',
-    note: 'Stage one is where most Perth engagements begin, because nothing downstream is worth building on numbers nobody trusts. Plenty of clients stop at stage two.',
+    note: 'Most Perth engagements begin at stage one, because nothing downstream is worth building on numbers nobody trusts. Plenty stop at stage two.',
     stages: [
       {
         name: 'Measure',
@@ -55,12 +61,12 @@ export const perthAnalyticsData = {
 
   proof: {
     title: 'Things you can go and check',
-    intro: 'Anyone can write that they are experienced. These are things you can open and look at without asking me for anything.',
+    intro: 'Open these without asking me for anything.',
     items: [
       {
         kind: 'Open source',
         name: 'IPmeta Tag Template',
-        description: 'A Google Tag Manager community template for spam and bot filtering, published in the public gallery. Anyone can read the code.',
+        description: 'A GTM community template for spam and bot filtering, in the public gallery. Anyone can read the code.',
       },
       {
         kind: 'SaaS platform',
@@ -70,28 +76,28 @@ export const perthAnalyticsData = {
       {
         kind: 'Track record',
         name: 'Agency automation build',
-        description: '75 per cent less administrative time and AUD 285,000 in recovered revenue, across a 150-person agency. The full case study is on the consultancy page.',
+        description: '75 per cent less admin time and AUD 285,000 in recovered revenue across a 150-person agency. Case study on the consultancy page.',
       },
     ],
-    selfHosted: 'The page you are reading runs the stack. This site serves its own tag first-party from a path on this domain, through Cloudflare\'s Google tag gateway, under a nonced content security policy. If you want to see what I would build for you, open the network tab.',
+    selfHosted: 'This page runs the stack: its tag is served first-party from this domain through Cloudflare\'s Google tag gateway, under a nonced content security policy. Open the network tab to see what I would build for you.',
   },
 
   deliverables: {
     title: 'What you are left holding',
-    intro: 'Consulting is easy to buy and hard to point at afterwards. These are the artefacts that exist at the end, and they are yours.',
+    intro: 'The artefacts that exist at the end. They are yours.',
     items: [
-      { name: 'A measurement plan', description: 'the events, parameters and identifiers that matter, and what each reconciles against. Written down, in your language.' },
+      { name: 'A measurement plan', description: 'the events, parameters and identifiers that matter, written down in your language.' },
       { name: 'The container itself', description: 'running in your cloud account, on your domain, under your billing.' },
-      { name: 'A reconciliation report', description: 'your GA4 numbers set against the cart or CRM, with whatever gap is left over named and explained.' },
-      { name: 'Data models', description: 'the SQL or Power BI semantic layer your reporting sits on, documented and version-controlled.' },
-      { name: 'Dashboards people open', description: 'built on modelled data, and short enough that people actually read them.' },
+      { name: 'A reconciliation report', description: 'GA4 set against the cart or CRM, with the remaining gap explained.' },
+      { name: 'Data models', description: 'the SQL or Power BI semantic layer, documented and version-controlled.' },
+      { name: 'Dashboards people open', description: 'built on modelled data, and short enough to read.' },
       { name: 'A runbook and a handover session', description: 'naming conventions, how to add a tag, what to check when something looks wrong.' },
     ],
   },
 
   objections: {
     title: 'The questions you are too polite to ask',
-    intro: 'Hiring one person to build infrastructure raises fair objections. Here they are, answered before you have to raise them.',
+    intro: 'Fair objections to hiring one person, answered before you have to raise them.',
     items: [
       {
         question: 'What happens if you are unavailable?',
@@ -110,13 +116,13 @@ export const perthAnalyticsData = {
 
   credentials: {
     title: 'Business practice',
-    intro: 'Larger WA organisations cannot raise a purchase order without this, and asking for it is awkward. So it is here.',
+    intro: 'Larger WA organisations cannot raise a purchase order without this. So it is here.',
     items: [
       { name: 'Registered Australian business', detail: 'ABN 96 522 684 594, based in Western Australia and registered for GST.' },
       { name: 'Professional indemnity insurance', detail: 'AUD 1 million per claim, AUD 2 million in the aggregate, underwritten by Berkley Insurance Australia.' },
       { name: 'Public liability insurance', detail: 'AUD 10 million per occurrence, for on-site work at client premises.' },
-      { name: 'Standard services agreement', detail: 'Plain-language contract covering scope, intellectual property and termination, provided before any engagement begins.' },
-      { name: 'Your data stays yours', detail: 'Intellectual property in everything built transfers to you on final payment, and infrastructure runs in your own accounts.' },
+      { name: 'Standard services agreement', detail: 'Plain-language contract covering scope, intellectual property and termination.' },
+      { name: 'Your data stays yours', detail: 'Intellectual property transfers to you on final payment, and infrastructure runs in your own accounts.' },
       { name: 'Onshore delivery', detail: 'All work performed in Australia. Nothing is subcontracted offshore.' },
     ],
     footnote: 'Certificates of currency, the services agreement and a mutual NDA are available on request, before any scoping conversation.',
@@ -124,91 +130,91 @@ export const perthAnalyticsData = {
 
   localContext: {
     title: 'Working with a consultant in your own time zone',
-    paragraph: 'Most Australian analytics work is sold out of Sydney and Melbourne, which puts the people doing it two to three hours ahead of Perth. That gap is felt on the days it matters: a tracking break found on Monday morning here is a Monday afternoon problem there, and a deployment window that suits the east coast lands in the middle of a WA trading day.',
+    paragraph: 'Most Australian analytics work is sold out of Sydney and Melbourne, two to three hours ahead of Perth. A tracking break found on Monday morning here is a Monday afternoon problem there.',
     points: [
       {
         label: 'AWST hours',
-        description: 'Based in Perth, working Australian Western Standard Time. Debugging happens while your site is live and your campaigns are spending, not the following morning.',
+        description: 'Debugging happens while your site is live and your campaigns are spending, not the following morning.',
       },
       {
         label: 'On site when it helps',
-        description: 'Workshops, migration planning and handover sessions can run in person across the Perth metropolitan area. Regional WA and interstate clients are supported remotely.',
+        description: 'Workshops, migration planning and handovers in person across the Perth metropolitan area. Regional WA and interstate clients are supported remotely.',
       },
       {
         label: 'Reporting configured for WA',
-        description: 'GA4 properties for WA businesses should report on Australia/Perth, not the Australia/Sydney default that a hurried setup inherits. A two-hour offset quietly moves conversions across day boundaries and distorts every day-of-week and hour-of-day report you build afterwards.',
+        description: 'GA4 should report on Australia/Perth, not the Australia/Sydney default. A two-hour offset moves conversions across day boundaries and distorts every day and hour report.',
       },
       {
         label: 'Australian privacy context',
-        description: 'Implementations are built with the Privacy Act 1988 and the Australian Privacy Principles in mind, and with Consent Mode v2 configured for the European and UK traffic most WA exporters and tourism operators also receive. I am not a lawyer and this is not legal advice - where the answer turns on a legal question, I will say so and work alongside yours.',
+        description: 'Built with the Privacy Act 1988 and the Australian Privacy Principles in mind, with Consent Mode v2 for European and UK traffic. I am not a lawyer and this is not legal advice.',
       },
     ],
   },
 
   audience: {
     title: 'Who this is for',
-    intro: 'The work suits organisations that already have traffic and spend, and now need the measurement underneath it to hold up.',
+    intro: 'Organisations that already have traffic and spend, and need the measurement underneath to hold up.',
     profiles: [
       {
         label: 'WA ecommerce and retail',
-        description: 'Shopify, WooCommerce and custom carts where purchase counts in GA4 no longer match the back end, and where iOS traffic has quietly stopped reporting.',
+        description: 'Shopify, WooCommerce and custom carts where GA4 purchases no longer match the back end, and iOS traffic has quietly stopped reporting.',
       },
       {
         label: 'Tourism, hospitality and events',
-        description: 'Booking engines on a separate domain, where the session that produced the sale is attributed to the booking provider rather than to the campaign that paid for it.',
+        description: 'Booking engines on a separate domain, where the sale is credited to the booking provider instead of the campaign that paid for it.',
       },
       {
         label: 'Resources and industrial services',
-        description: 'Long, high-value B2B enquiry cycles where the only meaningful conversion happens in a CRM weeks after the click, and needs to be sent back to the ad platforms to be useful.',
+        description: 'Long B2B enquiry cycles where the real conversion happens in a CRM weeks after the click, and has to be sent back to the ad platforms.',
       },
       {
         label: 'Perth agencies',
-        description: 'Agencies who need a technical partner to specify, build and document server-side tagging for their own clients without adding a permanent engineering hire.',
+        description: 'A technical partner to specify, build and document server-side tagging for your clients, without a permanent engineering hire.',
       },
     ],
   },
 
   services: {
     title: 'What the work covers',
-    intro: 'Three related bodies of work. Most engagements start at the top and work down, because each one is only worth doing if the one above it is sound.',
+    intro: 'Three bodies of work. Each is only worth doing if the one above it is sound.',
     groups: [
       {
         name: 'GA4 implementation and remediation',
-        description: 'Making a property measure the thing the business actually cares about, and making it agree with the systems of record.',
+        description: 'Making a property measure what the business cares about, and agree with the systems of record.',
         items: [
-          'Audit of an inherited property: data streams, internal traffic filters, cross-domain configuration, referral exclusions, key events and attribution settings',
-          'Event and conversion design built around what the business actually gets paid for. Default enhanced measurement rarely covers it',
-          'Ecommerce tracking to the GA4 specification, including item-scoped parameters that make product reporting usable',
-          'Reconciliation against the source of truth - Shopify orders, the CRM, the invoicing system - with the remaining variance explained rather than ignored',
-          'Bot and spam traffic filtering, including the IPmeta Tag Template I authored and maintain for the GTM community gallery',
-          'BigQuery export configured, then modelled in SQL so reporting is built on complete event data instead of sampled interface reports',
-          'Looker Studio dashboards built on those models, covering the few numbers a decision actually turns on',
+          'Audit of an inherited property: data streams, filters, cross-domain, referral exclusions, key events and attribution',
+          'Event and conversion design around what the business gets paid for',
+          'Ecommerce tracking to the GA4 specification, with item-scoped parameters',
+          'Reconciliation against Shopify, the CRM or invoicing, with the remaining variance explained',
+          'Bot and spam filtering, including the IPmeta Tag Template I maintain',
+          'BigQuery export modelled in SQL, so reporting uses complete event data',
+          'Looker Studio dashboards covering the few numbers a decision turns on',
         ],
       },
       {
         name: 'Server-side tagging',
-        description: 'Moving tag execution off the browser and into a first-party server container, so less is lost to tracking prevention, ad blockers and short cookie lifetimes.',
+        description: 'Moving tag execution off the browser into a first-party server container, so less is lost to tracking prevention, ad blockers and short cookie lifetimes.',
         items: [
-          'Server-side Google Tag Manager deployed on a first-party subdomain of your own domain, not a shared vendor hostname',
-          'First-party cookies written server-side, which typically hold for longer than the equivalent cookie set in the browser and so keep more returning visitors identifiable across visits',
-          'Meta Conversions API, Google Ads enhanced conversions, TikTok Events API and LinkedIn CAPI fed from the server container with hashed identifiers',
-          'Offline and CRM conversion import, so an enquiry that closes six weeks later still reaches the platform that originated it',
-          'Consent Mode v2 wired end to end, with the container checking consent state before it forwards anything',
-          'Hosting on Cloudflare Workers, or on Cloudflare\'s Google tag gateway where first-party delivery of GA4 is all the setup needs, sized to your volume and to where the rest of your stack already lives',
-          'Payload governance: what leaves the browser, what the server forwards, what is hashed, and what is dropped before it reaches a vendor',
+          'Server-side Google Tag Manager on a first-party subdomain of your own domain',
+          'First-party cookies written server-side, which keep returning visitors identifiable for longer',
+          'Meta Conversions API, Google Ads enhanced conversions, TikTok Events API and LinkedIn CAPI, with hashed identifiers',
+          'Offline and CRM conversion import, so an enquiry that closes six weeks later still reaches the platform',
+          'Consent Mode v2 wired end to end',
+          'Hosting on Cloudflare Workers, or Cloudflare\'s Google tag gateway where first-party GA4 delivery is all you need',
+          'Payload governance: what is forwarded, hashed or dropped before it reaches a vendor',
         ],
       },
       {
         name: 'Data models, warehousing and reporting',
-        description: 'Once collection is sound, the value moves to what sits on top of it. This is the work that lets somebody ask a real question on a Tuesday and have an answer before lunch.',
+        description: 'Once collection is sound, the value moves to what sits on top of it.',
         items: [
           'Power BI semantic models with agreed measures, so finance, marketing and the board quote the same number',
-          'DAX measures and Power Query transformations documented, so the logic survives the analyst who wrote it',
-          'BigQuery schema and table design aimed at reporting, with partitioning that keeps cost sane',
-          'Database and warehouse design, incremental loads, and version-controlled models so a definition change is reviewable',
-          'API integrations to ad platforms, CRM and finance systems, scheduled in Python or on Cloudflare Workers',
-          'Looker Studio and Power BI dashboards that read from the model, so two people asking the same question get the same answer',
-          'Reconciliation jobs and anomaly alerting, so a tracking break is caught before it becomes a quarter of bad reporting',
+          'DAX measures and Power Query transformations, documented',
+          'BigQuery schema and table design, partitioned to keep cost sane',
+          'Warehouse design, incremental loads and version-controlled models',
+          'API integrations to ad platforms, CRM and finance, scheduled in Python or on Cloudflare Workers',
+          'Looker Studio and Power BI dashboards that read from the model',
+          'Reconciliation jobs and anomaly alerting, so a tracking break is caught early',
         ],
       },
     ],
@@ -216,32 +222,32 @@ export const perthAnalyticsData = {
 
   diagnostics: {
     title: 'Symptoms worth a conversation',
-    intro: 'Most of these turn out to be a measurement fault, not a marketing one. Each usually has a technical cause worth chasing before anyone touches the media plan.',
+    intro: 'Most of these are measurement faults, not marketing ones.',
     items: [
       {
         symptom: 'GA4 reports fewer conversions than the platform, the CRM or the cart',
-        cause: 'Browser-side tags being blocked, a tag firing after the user has already navigated away, or a purchase event that never fires on a cart that renders client-side.',
-        fix: 'Move the conversion tag server-side so the event originates from your own infrastructure, and validate it against order records rather than against another tag.',
+        cause: 'Browser-side tags being blocked, a tag firing after the user has navigated away, or a purchase event that never fires on a client-side cart.',
+        fix: 'Move the conversion tag server-side and validate it against order records, not against another tag.',
       },
       {
         symptom: 'Google Ads, Meta and GA4 each claim the same sale',
-        cause: 'Three attribution models measuring three different things, compounded by a shrinking cookie window that credits whichever platform got the last observable touch.',
-        fix: 'Establish one server-side source of conversion truth, then read the platform numbers as what they are - each vendor marking its own homework.',
+        cause: 'Three attribution models measuring three different things, plus a shrinking cookie window that credits the last observable touch.',
+        fix: 'Establish one server-side source of conversion truth, and read platform numbers as each vendor marking its own homework.',
       },
       {
         symptom: 'A large share of traffic arrives as Direct or Unassigned',
-        cause: 'Campaign links tagged with a utm_medium GA4 does not recognise, a cross-domain hop that starts a new session, or a redirect that strips the query string.',
-        fix: 'Correct the tagging taxonomy against GA4 channel definitions, then fix the cross-domain and redirect handling. Validate links before launch, while a link can still be changed.',
+        cause: 'A utm_medium GA4 does not recognise, a cross-domain hop that starts a new session, or a redirect that strips the query string.',
+        fix: 'Correct the tagging taxonomy against GA4 channel definitions, fix cross-domain and redirect handling, and validate links before launch.',
       },
       {
         symptom: 'Safari and iPhone traffic behaves nothing like the rest',
-        cause: 'Safari\'s Intelligent Tracking Prevention shortening the life of cookies set in the browser, so returning visitors are counted as new and campaign credit is lost sooner than the sales cycle takes to close.',
-        fix: 'First-party cookies set server-side on your own domain, which are generally treated more favourably than their browser-set equivalents. The exact behaviour moves with each browser release, so I measure the improvement on your own traffic rather than quote a figure at you.',
+        cause: 'Safari\'s Intelligent Tracking Prevention shortening browser-set cookies, so returning visitors count as new and campaign credit is lost early.',
+        fix: 'First-party cookies set server-side on your own domain. Behaviour moves with each browser release, so I measure the improvement on your own traffic.',
       },
       {
         symptom: 'Nobody at the company knows how the current setup works',
         cause: 'Successive agencies layering containers on containers, with no documentation and no owner.',
-        fix: 'A full audit and rebuild, delivered with a documented measurement plan your team can hand to the next person.',
+        fix: 'A full audit and rebuild, with a documented measurement plan your team can hand to the next person.',
       },
     ],
   },
@@ -249,32 +255,32 @@ export const perthAnalyticsData = {
 
   engagement: {
     title: 'How an engagement runs',
-    intro: 'Most engagements start with a conversation and a paid diagnostic, because scoping a build on a setup nobody has read yet is guesswork. After that the commercial shape is up to you. These are the ones clients pick most often.',
+    intro: 'Most engagements start with a conversation and a paid diagnostic. After that the commercial shape is up to you.',
     models: [
       {
         name: 'Diagnostic',
-        description: 'A structured audit of the existing GA4 property, tag manager containers and data layer, delivered as a written report with prioritised findings.',
-        details: 'Fixed scope and fixed price. The report is yours regardless of whether any build follows.',
+        description: 'A structured audit of the GA4 property, tag manager containers and data layer, delivered as a written report with prioritised findings.',
+        details: 'Fixed scope, fixed price. The report is yours whether or not a build follows.',
       },
       {
         name: 'Project based',
-        description: 'A defined build with agreed deliverables and a fixed quote: GA4 remediation, server-side tagging, conversion APIs, a Power BI or BigQuery model, or the lot, phased so each stage is validated before the next begins.',
-        details: 'Priced against the measurement plan agreed in the diagnostic, with documentation and a handover session included rather than quoted as an extra.',
+        description: 'A defined build with agreed deliverables and a fixed quote, phased so each stage is validated before the next.',
+        details: 'Documentation and a handover session are included.',
       },
       {
         name: 'Pooled hours',
-        description: 'A block of hours bought up front and drawn down as you need them, across whatever comes up - a new conversion to wire in, a dashboard to extend, a tag that broke on Friday.',
-        details: 'Suits teams with a steady trickle of work that never quite justifies its own project. Unused hours do not evaporate at the end of the month.',
+        description: 'A block of hours bought up front and drawn down as you need them.',
+        details: 'Unused hours do not evaporate at the end of the month.',
       },
       {
         name: 'Retainer',
-        description: 'A recurring monthly arrangement with agreed availability, for teams running server-side infrastructure and reporting without an in-house owner.',
-        details: 'Covers platform changes, new campaign requirements, monitoring and the occasional broken tag. Common with Perth agencies who want the capability without the permanent hire.',
+        description: 'A monthly arrangement with agreed availability, for teams running server-side infrastructure without an in-house owner.',
+        details: 'Common with Perth agencies who want the capability without the hire.',
       },
       {
         name: 'Something else',
-        description: 'Secondment for a migration, a fixed number of days a month embedded with your team, training and handover only, or a one-off second opinion on somebody else\'s build.',
-        details: 'Not every job fits a template. If you have a shape in mind that is not listed here, propose it and I will tell you honestly whether it works.',
+        description: 'Secondment, embedded days, training only, or a second opinion on somebody else\'s build.',
+        details: 'Propose a shape and I will tell you honestly whether it works.',
       },
     ],
   },

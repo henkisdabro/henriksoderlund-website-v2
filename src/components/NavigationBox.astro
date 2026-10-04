@@ -1,12 +1,12 @@
 ---
 const pathname = Astro.url.pathname;
-const isHomePage = pathname === '/';
 
 const svgAttrs = 'width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"';
 
 const icons: Record<string, string> = {
   '/': `<svg ${svgAttrs}><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>`,
   '/expertise': `<svg ${svgAttrs}><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"></path></svg>`,
+  '/builds': `<svg ${svgAttrs}><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line></svg>`,
   '/consultancy': `<svg ${svgAttrs}><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>`,
   '/work-experience': `<svg ${svgAttrs}><rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path></svg>`,
   '/education': `<svg ${svgAttrs}><path d="M22 10l-10-5L2 10l10 5 10-5z"></path><path d="M6 12v5c0 0 3 3 6 3s6-3 6-3v-5"></path></svg>`,
@@ -17,6 +17,7 @@ const icons: Record<string, string> = {
 const pages = [
   { path: '/', name: 'Home' },
   { path: '/expertise', name: 'Expertise' },
+  { path: '/builds', name: 'Builds' },
   { path: '/consultancy', name: 'Consultancy' },
   { path: '/perth-analytics-consultant', name: 'Perth Analytics' },
   { path: '/work-experience', name: 'Work Experience' },
@@ -56,17 +57,6 @@ const pages = [
         ))}
       </ul>
     </div>
-
-    <!-- Divider and headings - hidden on homepage, populated by JS on other pages -->
-    {!isHomePage && (
-      <>
-        <div class="nav-divider" id="nav-divider" hidden></div>
-        <div class="nav-section" id="headings-section" hidden>
-          <p class="nav-section-label" id="nav-headings-label">On This Page</p>
-          <ul class="nav-list headings-list" id="headings-list" aria-labelledby="nav-headings-label"></ul>
-        </div>
-      </>
-    )}
   </div>
 </nav>
 
@@ -77,7 +67,6 @@ const pages = [
 
     if (!navBox || !collapseBtn) return;
 
-    const isHomePage = window.location.pathname === '/';
     const STORAGE_KEY = 'nav-collapsed';
     const NARROW_MAX_WIDTH = 1024;
     const NARROW_QUERY = '(max-width: ' + NARROW_MAX_WIDTH + 'px)';
@@ -116,14 +105,6 @@ const pages = [
       narrowMQ = window.matchMedia(NARROW_QUERY);
     } catch {
       narrowMQ = null;
-    }
-
-    function prefersReducedMotion() {
-      try {
-        return window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-      } catch {
-        return false;
-      }
     }
 
     function isNarrow() {
@@ -216,88 +197,5 @@ const pages = [
       dismissOverlay();
       collapseBtn.focus();
     });
-
-    // Heading scan - skip on homepage
-    if (isHomePage) return;
-
-    const navDivider = document.getElementById('nav-divider');
-    const headingsSection = document.getElementById('headings-section');
-    const headingsList = document.getElementById('headings-list');
-
-    if (!headingsList) return;
-
-    function scanHeadings() {
-      const mainContent = document.querySelector('.main-content');
-      if (!mainContent) return;
-      const headingElements = mainContent.querySelectorAll('h2, h3, h4, h5, h6');
-      const items = [];
-
-      headingElements.forEach(function (heading, index) {
-        const text = (heading.textContent || '').trim();
-        if (!text) return;
-        // Depth is relative to h2, the shallowest tag scanned: the CSS ladder
-        // starts .heading-level-1 at the same 16px inset as the page links.
-        const level = parseInt(heading.tagName.charAt(1), 10) - 1;
-
-        let id = heading.id;
-        if (!id) {
-          id = 'nav-heading-' + index;
-          while (document.getElementById(id)) {
-            id = 'nav-' + id;
-          }
-          heading.id = id;
-        }
-
-        items.push({ id: id, text: text, level: level });
-      });
-
-      if (!headingsList) return;
-
-      headingsList.innerHTML = '';
-
-      if (items.length > 0) {
-        items.forEach(function (item) {
-          const li = document.createElement('li');
-          li.className = 'heading-level-' + item.level;
-
-          const btn = document.createElement('button');
-          btn.type = 'button';
-          btn.className = 'heading-link';
-          btn.textContent = item.text;
-          btn.addEventListener('click', function () {
-            const el = document.getElementById(item.id);
-            if (el) {
-              // Focus first, with preventScroll so it does not fight the
-              // smooth scroll: collapsing the overlay puts display:none under
-              // this button, which would otherwise drop focus back to <body>
-              // and restart tabbing from the top of the page.
-              el.setAttribute('tabindex', '-1');
-              el.focus({ preventScroll: true });
-              el.scrollIntoView({ behavior: prefersReducedMotion() ? 'auto' : 'smooth', block: 'start' });
-            }
-            if (isNarrow()) dismissOverlay();
-          });
-
-          li.appendChild(btn);
-          headingsList.appendChild(li);
-        });
-
-        if (navDivider) navDivider.hidden = false;
-        if (headingsSection) headingsSection.hidden = false;
-      } else {
-        if (navDivider) navDivider.hidden = true;
-        if (headingsSection) headingsSection.hidden = true;
-      }
-    }
-
-    // The layout renders this component above <main>, so at first run the
-    // inline script is ahead of .main-content in the parse and the scan finds
-    // no container at all. Waiting for the parse is what makes the section
-    // appear; running it eagerly left "On This Page" empty on every page.
-    if (document.readyState === 'loading') {
-      document.addEventListener('DOMContentLoaded', scanHeadings, { once: true });
-    } else {
-      scanHeadings();
-    }
   })();
 </script>

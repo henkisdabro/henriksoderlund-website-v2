@@ -3,6 +3,7 @@ import { plainTextResponse } from '../utils/markdownResponse';
 import {
   getHomeMarkdown,
   getExpertiseMarkdown,
+  getBuildsMarkdown,
   getConsultancyMarkdown,
   getPerthAnalyticsMarkdown,
   getWorkExperienceMarkdown,
@@ -18,6 +19,7 @@ export const GET: APIRoute = ({ site }) => {
   const sections = [
     getHomeMarkdown(),
     getExpertiseMarkdown(),
+    getBuildsMarkdown(),
     getConsultancyMarkdown(),
     getPerthAnalyticsMarkdown(),
     getWorkExperienceMarkdown(),

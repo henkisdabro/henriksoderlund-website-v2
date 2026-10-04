@@ -1,0 +1,151 @@
+---
+// Illustration for the workflow automation build: the stages a signed proposal
+// passes through, as the team sees them on the chat card, and who acts at each.
+const SPINE_X = 48;
+const ROW_GAP = 68;
+const FIRST_ROW = 84;
+
+const steps = [
+  { label: 'WEBHOOK RECEIVED', note: 'Proposal signed, line items matched', badge: 'auto', tone: 'neutral', width: 150 },
+  { label: 'PROPOSAL SIGNED', note: 'Salesperson fills in the brief', badge: '2 min', tone: 'yellow', width: 142 },
+  { label: 'AWAITING SETUP', note: 'PM sets dates and assignees', badge: '5 min', tone: 'blue', width: 134 },
+  { label: 'BUILDING PROJECT', note: 'Milestones, tasks, budgets, billing codes', badge: 'auto', tone: 'blue', width: 150 },
+  { label: 'FULLY COMPLETE', note: 'Team notified with a link to the project', badge: 'auto', tone: 'green', width: 134 },
+].map((step, i) => ({ ...step, y: FIRST_ROW + i * ROW_GAP }));
+
+const lastY = steps[steps.length - 1].y;
+---
+
+<svg class="workflow-art" viewBox="0 0 440 470" role="img" aria-label="Workflow automation stages, from a signed proposal to a live project in 7 minutes">
+  <text class="wa-eyebrow" x="28" y="40">SIGNED PROPOSAL &#8594; LIVE PROJECT</text>
+
+  <line class="wa-spine" x1={SPINE_X} y1={FIRST_ROW} x2={SPINE_X} y2={lastY} />
+  <circle class="wa-pulse" cx={SPINE_X} cy={FIRST_ROW} r="5" style={`--wa-travel: ${lastY - FIRST_ROW}px`} />
+
+  {steps.map((step, i) => (
+    <g class={`wa-step wa-step--${step.tone}`} style={`--wa-delay: ${i * 1.2}s`}>
+      <circle class="wa-node" cx={SPINE_X} cy={step.y} r="7" />
+      <rect class="wa-pill" x="72" y={step.y - 13} width={step.width} height="26" rx="13" />
+      <text class="wa-label" x="84" y={step.y + 4} textLength={step.width - 24} lengthAdjust="spacingAndGlyphs">{step.label}</text>
+      <text class={`wa-badge${step.badge === 'auto' ? '' : ' wa-badge--human'}`} x="412" y={step.y + 4} text-anchor="end">{step.badge}</text>
+      <text class="wa-note" x="72" y={step.y + 31}>{step.note}</text>
+    </g>
+  ))}
+
+  <rect class="wa-result" x="28" y="404" width="384" height="46" rx="10" />
+  <text class="wa-before" x="48" y="432">45-60 min by hand</text>
+  <text class="wa-arrow" x="262" y="432">&#8594;</text>
+  <text class="wa-after" x="396" y="434" text-anchor="end">7 min</text>
+</svg>
+
+<style is:global>
+.workflow-art {
+  display: block;
+  width: 100%;
+  height: 100%;
+  background: var(--color-bg-code);
+  font-family: inherit;
+}
+
+.wa-eyebrow {
+  font-size: 10.5px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  fill: var(--color-text-muted);
+}
+
+.wa-spine {
+  stroke: var(--color-border-primary);
+  stroke-width: 2;
+}
+
+.wa-node {
+  fill: var(--color-bg-code);
+  stroke: var(--wa-tone);
+  stroke-width: 2.5;
+}
+
+.wa-pill {
+  fill: color-mix(in srgb, var(--wa-tone) 16%, transparent);
+  stroke: color-mix(in srgb, var(--wa-tone) 70%, transparent);
+  stroke-width: 1;
+}
+
+.wa-label {
+  font-size: 10.5px;
+  font-weight: 700;
+  fill: var(--color-text-heading);
+}
+
+.wa-note {
+  font-size: 11.5px;
+  fill: var(--color-text-tertiary);
+}
+
+.wa-badge {
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  fill: var(--color-text-muted);
+}
+
+.wa-badge--human {
+  font-weight: 700;
+  fill: var(--color-text-heading);
+}
+
+.wa-step--neutral { --wa-tone: var(--color-text-muted); }
+.wa-step--yellow { --wa-tone: #d9a400; }
+.wa-step--blue { --wa-tone: #3b82f6; }
+.wa-step--green { --wa-tone: #10b981; }
+
+.wa-result {
+  fill: color-mix(in srgb, var(--card-accent, #14b8a6) 10%, transparent);
+  stroke: color-mix(in srgb, var(--card-accent, #14b8a6) 45%, transparent);
+}
+
+.wa-before {
+  font-size: 12px;
+  fill: var(--color-text-muted);
+  text-decoration: line-through;
+}
+
+.wa-arrow {
+  font-size: 16px;
+  fill: var(--color-text-muted);
+}
+
+.wa-after {
+  font-size: 24px;
+  font-weight: 700;
+  fill: var(--card-accent, #14b8a6);
+}
+
+/* A pulse runs down the spine and each stage lights as it passes. */
+.wa-pulse {
+  fill: var(--card-accent, #14b8a6);
+  opacity: 0;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .wa-pulse {
+    animation: wa-travel 6s linear infinite;
+  }
+
+  .wa-node {
+    animation: wa-light 6s linear infinite;
+    animation-delay: var(--wa-delay);
+  }
+}
+
+@keyframes wa-travel {
+  0% { transform: translateY(0); opacity: 0; }
+  4% { opacity: 1; }
+  80% { transform: translateY(var(--wa-travel)); opacity: 1; }
+  86%, 100% { transform: translateY(var(--wa-travel)); opacity: 0; }
+}
+
+@keyframes wa-light {
+  0%, 12%, 100% { fill: var(--color-bg-code); }
+  3% { fill: var(--wa-tone); }
+}
+</style>

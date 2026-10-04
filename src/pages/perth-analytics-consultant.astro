@@ -111,12 +111,20 @@ const faqSchema = {
       <h1>{perthAnalyticsData.hero.title}</h1>
       <p class="hero-subtitle">{perthAnalyticsData.hero.subtitle}</p>
       <p>{perthAnalyticsData.hero.statement}</p>
+      <ul class="perth-signals">
+        {perthAnalyticsData.hero.signals.map(signal => (
+          <li>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
+            {signal}
+          </li>
+        ))}
+      </ul>
     </section>
 
     <!-- Spine: the four-stage ladder, covering the whole practice -->
     <section class="perth-section">
       <h2 id="how-the-work-stacks-up"><span class="section-icon" aria-hidden="true" set:html={sectionIcons.layers} />{perthAnalyticsData.ladder.title}</h2>
-      <p>{perthAnalyticsData.ladder.intro}</p>
+      <p class="perth-intro">{perthAnalyticsData.ladder.intro}</p>
       <ol class="perth-ladder">
         {perthAnalyticsData.ladder.stages.map((stage, i) => (
           <li class="perth-ladder-stage">
@@ -135,11 +143,11 @@ const faqSchema = {
     <!-- Trust: checkable artefacts, not adjectives -->
     <section class="perth-section">
       <h2 id="proof"><span class="section-icon" aria-hidden="true" set:html={sectionIcons.gitBranch} />{perthAnalyticsData.proof.title}</h2>
-      <p>{perthAnalyticsData.proof.intro}</p>
-      <div class="perth-proof-grid">
+      <p class="perth-intro">{perthAnalyticsData.proof.intro}</p>
+      <div class="perth-grid perth-grid--3">
         {perthAnalyticsData.proof.items.map(item => (
-          <div class="perth-proof-card">
-            <span class="proof-kind">{item.kind}</span>
+          <div class="perth-tile">
+            <span class="tile-kind">{item.kind}</span>
             <h3>{item.name}</h3>
             <p>{item.description}</p>
           </div>
@@ -150,11 +158,12 @@ const faqSchema = {
 
     <section class="perth-section">
       <h2 id="who-this-is-for"><span class="section-icon" aria-hidden="true" set:html={sectionIcons.users} />{perthAnalyticsData.audience.title}</h2>
-      <p>{perthAnalyticsData.audience.intro}</p>
-      <div class="perth-cards">
+      <p class="perth-intro">{perthAnalyticsData.audience.intro}</p>
+      <div class="perth-grid perth-grid--2">
         {perthAnalyticsData.audience.profiles.map(profile => (
-          <div class="perth-card">
-            <strong>{profile.label}</strong> {profile.description}
+          <div class="perth-tile">
+            <h3>{profile.label}</h3>
+            <p>{profile.description}</p>
           </div>
         ))}
       </div>
@@ -162,30 +171,39 @@ const faqSchema = {
 
     <section class="perth-section">
       <h2 id="what-the-work-covers"><span class="section-icon" aria-hidden="true" set:html={sectionIcons.wrench} />{perthAnalyticsData.services.title}</h2>
-      <p>{perthAnalyticsData.services.intro}</p>
-      <div class="perth-service-groups">
-        {perthAnalyticsData.services.groups.map(group => (
-          <div class="perth-service-group">
-            <h3>{group.name}</h3>
-            <p class="group-description">{group.description}</p>
-            <ul>
+      <p class="perth-intro">{perthAnalyticsData.services.intro}</p>
+      <div class="perth-accordion">
+        {perthAnalyticsData.services.groups.map((group, i) => (
+          <details class="perth-fold" open={i === 0}>
+            <summary>
+              <span class="fold-index" aria-hidden="true">{i + 1}</span>
+              <span class="fold-heading">
+                <h3>{group.name}</h3>
+                <span class="fold-sub">{group.description}</span>
+              </span>
+            </summary>
+            <ul class="fold-list">
               {group.items.map(item => <li>{item}</li>)}
             </ul>
-          </div>
+          </details>
         ))}
       </div>
     </section>
 
     <section class="perth-section">
       <h2 id="symptoms"><span class="section-icon" aria-hidden="true" set:html={sectionIcons.trendingUp} />{perthAnalyticsData.diagnostics.title}</h2>
-      <p>{perthAnalyticsData.diagnostics.intro}</p>
-      <div class="perth-symptoms">
-        {perthAnalyticsData.diagnostics.items.map(item => (
-          <div class="perth-symptom">
-            <h3>{item.symptom}</h3>
-            <p><span class="symptom-label">Usual cause</span> {item.cause}</p>
-            <p><span class="symptom-label">Fix</span> {item.fix}</p>
-          </div>
+      <p class="perth-intro">{perthAnalyticsData.diagnostics.intro}</p>
+      <div class="perth-accordion">
+        {perthAnalyticsData.diagnostics.items.map((item, i) => (
+          <details class="perth-fold" open={i === 0}>
+            <summary>
+              <span class="fold-heading"><h3>{item.symptom}</h3></span>
+            </summary>
+            <div class="fold-pair">
+              <p><span class="pair-label">Usual cause</span>{item.cause}</p>
+              <p><span class="pair-label pair-label--fix">Fix</span>{item.fix}</p>
+            </div>
+          </details>
         ))}
       </div>
     </section>
@@ -193,7 +211,7 @@ const faqSchema = {
     <!-- The page's only diagram: server-side tagging is the one thing hard to explain in a sentence -->
     <section class="perth-section">
       <h2 id="how-server-side-tagging-works"><span class="section-icon" aria-hidden="true" set:html={sectionIcons.cpu} />How server-side tagging changes the path</h2>
-      <p>Four requests leave the browser and most get blocked. One request leaves instead, to a subdomain of your own domain, and the forwarding happens server-side.</p>
+      <p class="perth-intro">Four requests leave the browser and most get blocked. One request leaves instead, to a subdomain of your own domain, and the forwarding happens server-side.</p>
       <div class="perth-diagram">
         <svg viewBox="0 0 720 178" role="img" aria-label="Diagram comparing browser-side tagging, where three of four vendor requests are blocked, with server-side tagging, where a single request to a first-party subdomain is forwarded on to all four vendors.">
           <text x="0" y="12" class="dg-eyebrow">BEFORE</text>
@@ -240,11 +258,11 @@ const faqSchema = {
 
     <section class="perth-section">
       <h2 id="deliverables"><span class="section-icon" aria-hidden="true" set:html={sectionIcons.sparkles} />{perthAnalyticsData.deliverables.title}</h2>
-      <p>{perthAnalyticsData.deliverables.intro}</p>
-      <ul class="perth-deliverables">
+      <p class="perth-intro">{perthAnalyticsData.deliverables.intro}</p>
+      <ul class="perth-grid perth-grid--3 perth-checks">
         {perthAnalyticsData.deliverables.items.map(item => (
-          <li>
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"></polyline></svg>
+          <li class="perth-tile">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"></polyline></svg>
             <span><strong>{item.name}</strong> - {item.description}</span>
           </li>
         ))}
@@ -253,11 +271,12 @@ const faqSchema = {
 
     <section class="perth-section">
       <h2 id="local-context"><span class="section-icon" aria-hidden="true" set:html={sectionIcons.rocket} />{perthAnalyticsData.localContext.title}</h2>
-      <p>{perthAnalyticsData.localContext.paragraph}</p>
-      <div class="perth-cards">
+      <p class="perth-intro">{perthAnalyticsData.localContext.paragraph}</p>
+      <div class="perth-grid perth-grid--2">
         {perthAnalyticsData.localContext.points.map(point => (
-          <div class="perth-card">
-            <strong>{point.label}</strong> {point.description}
+          <div class="perth-tile">
+            <h3>{point.label}</h3>
+            <p>{point.description}</p>
           </div>
         ))}
       </div>
@@ -265,10 +284,10 @@ const faqSchema = {
 
     <section class="perth-section">
       <h2 id="objections"><span class="section-icon" aria-hidden="true" set:html={sectionIcons.users} />{perthAnalyticsData.objections.title}</h2>
-      <p>{perthAnalyticsData.objections.intro}</p>
-      <div class="perth-objections">
+      <p class="perth-intro">{perthAnalyticsData.objections.intro}</p>
+      <div class="perth-grid perth-grid--3">
         {perthAnalyticsData.objections.items.map(item => (
-          <div class="perth-objection">
+          <div class="perth-tile">
             <h3>{item.question}</h3>
             <p>{item.answer}</p>
           </div>
@@ -278,7 +297,7 @@ const faqSchema = {
 
     <section class="perth-section">
       <h2 id="business-practice"><span class="section-icon" aria-hidden="true" set:html={sectionIcons.wrench} />{perthAnalyticsData.credentials.title}</h2>
-      <p>{perthAnalyticsData.credentials.intro}</p>
+      <p class="perth-intro">{perthAnalyticsData.credentials.intro}</p>
       <div class="perth-credentials">
         {perthAnalyticsData.credentials.items.map(item => (
           <div class="perth-credential">
@@ -292,13 +311,14 @@ const faqSchema = {
 
     <section class="perth-section">
       <h2 id="engagement"><span class="section-icon" aria-hidden="true" set:html={sectionIcons.gitBranch} />{perthAnalyticsData.engagement.title}</h2>
-      <p>{perthAnalyticsData.engagement.intro}</p>
-      <div class="perth-cards">
-        {perthAnalyticsData.engagement.models.map(model => (
-          <div class="perth-card perth-card--stacked">
+      <p class="perth-intro">{perthAnalyticsData.engagement.intro}</p>
+      <div class="perth-grid perth-grid--2">
+        {perthAnalyticsData.engagement.models.map((model, i) => (
+          <div class={`perth-tile${i === 0 ? ' perth-tile--lead' : ''}`}>
+            {i === 0 && <span class="tile-kind">Start here</span>}
             <h3>{model.name}</h3>
             <p>{model.description}</p>
-            <p class="model-details">{model.details}</p>
+            <p class="tile-detail">{model.details}</p>
           </div>
         ))}
       </div>
@@ -318,12 +338,13 @@ const faqSchema = {
       <h2 id="related"><span class="section-icon" aria-hidden="true" set:html={sectionIcons.layers} />Related</h2>
       <ul class="perth-related">
         <li><a href="/consultancy">Consultancy</a> - the full range of engagements, including AI automation and team upskilling, with a case study.</li>
-        <li><a href="/expertise">Expertise</a> - the platforms, projects and open source work behind this practice.</li>
+        <li><a href="/expertise">Expertise</a> - the platforms and skills behind this practice.</li>
+        <li><a href="/builds">Builds</a> - the products and open source work.</li>
         <li><a href="/work-experience">Work Experience</a> - agency and enterprise background across Perth media and marketing.</li>
       </ul>
     </section>
 
-    <section class="perth-section">
+    <section class="perth-section perth-cta">
       <h2 id="contact"><span class="section-icon" aria-hidden="true" set:html={sectionIcons.users} />{perthAnalyticsData.cta.title}</h2>
       <p>{perthAnalyticsData.cta.paragraph}</p>
       <div class="cta-buttons">
@@ -336,11 +357,11 @@ const faqSchema = {
 
 <style is:global>
 .perth-section {
-  margin-bottom: 3rem;
+  margin-bottom: 3.5rem;
 }
 
 .perth-hero {
-  margin-bottom: 3rem;
+  margin-bottom: 3.5rem;
 }
 
 .perth-hero h1 {
@@ -350,159 +371,266 @@ const faqSchema = {
 
 .perth-section h2 {
   font-size: 1.8rem;
-  margin-bottom: 1rem;
+  margin-bottom: 0.5rem;
   color: var(--color-text-heading);
 }
 
-.perth-cards {
-  display: grid;
-  gap: 1rem;
-  margin-top: 1.5rem;
-}
-
-.perth-card {
-  background: var(--color-bg-primary);
-  border: 1px solid var(--color-border-primary);
-  border-radius: 8px;
-  padding: 1.25rem;
-  line-height: 1.6;
-  color: var(--color-text-primary);
-}
-
-.perth-card strong {
-  color: var(--color-text-heading);
-}
-
-.perth-card--stacked h3 {
-  font-size: 1.3rem;
-  color: var(--color-text-heading);
-  margin: 0 0 0.75rem 0;
-}
-
-.model-details {
-  font-size: 0.9rem;
-  color: var(--color-text-secondary);
-  margin-top: 0.5rem;
-}
-
-.perth-service-groups {
-  display: grid;
-  gap: 2rem;
-  margin-top: 1.5rem;
-}
-
-.perth-service-group {
-  background: var(--color-bg-primary);
-  border: 1px solid var(--color-border-primary);
-  border-radius: 8px;
-  padding: 1.5rem;
-}
-
-.perth-service-group h3 {
-  font-size: 1.4rem;
-  color: var(--color-text-heading);
-  margin: 0 0 0.75rem 0;
-}
-
-.group-description {
-  font-size: 1rem;
-  color: var(--color-text-primary);
-  font-weight: 500;
-  margin-bottom: 1rem;
-  line-height: 1.5;
-}
-
-.perth-service-group ul {
-  list-style: none;
-  padding-left: 0;
-  margin: 0;
-}
-
-.perth-service-group li {
-  margin-bottom: 0.6rem;
-  padding-left: 1.5rem;
-  position: relative;
-  color: var(--color-text-secondary);
-  line-height: 1.5;
-}
-
-.perth-service-group li:before {
-  content: "\25B6";
-  position: absolute;
-  left: 0;
-  color: var(--color-marker);
-  font-size: 0.8rem;
-}
-
-.perth-symptoms {
-  display: grid;
-  gap: 1rem;
-  margin-top: 1.5rem;
-}
-
-.perth-symptom {
-  background: var(--color-bg-primary);
-  border: 1px solid var(--color-border-primary);
-  border-radius: 8px;
-  padding: 1.25rem;
-}
-
-.perth-symptom h3 {
-  font-size: 1.1rem;
-  color: var(--color-text-heading);
-  margin: 0 0 0.75rem 0;
-}
-
-.perth-symptom p {
-  color: var(--color-text-secondary);
-  line-height: 1.5;
-  margin: 0 0 0.5rem 0;
-  font-size: 0.95rem;
-}
-
-.perth-symptom p:last-child {
-  margin-bottom: 0;
-}
-
-.symptom-label {
-  display: inline-block;
-  font-size: 0.75rem;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
+/* One short line under each heading, quieter than body copy. */
+.perth-intro {
   color: var(--color-text-tertiary);
-  margin-right: 0.4rem;
-}
-
-.perth-steps {
-  list-style: none;
-  padding-left: 0;
-  margin: 1.5rem 0 1.5rem 0;
-  display: grid;
-  gap: 1rem;
-}
-
-.perth-steps li {
-  background: var(--color-bg-secondary);
-  border: 1px solid var(--color-border-primary);
-  border-radius: 4px;
-  padding: 1rem;
-}
-
-.perth-steps strong {
-  color: var(--color-text-heading);
-}
-
-.perth-steps p {
-  margin: 0.35rem 0 0 0;
-  color: var(--color-text-secondary);
-  font-size: 0.95rem;
-  line-height: 1.5;
+  max-width: 60ch;
+  margin-bottom: 0;
 }
 
 .perth-note {
   font-size: 0.9rem;
   color: var(--color-text-tertiary);
+}
+
+/* Hero: the complaints people arrive with, as chips. */
+.perth-signals {
+  list-style: none;
+  padding: 0;
+  margin: 1.5rem 0 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.perth-signals li {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.4rem 0.8rem;
+  border: 1px solid var(--color-border-primary);
+  border-radius: 999px;
+  background: var(--color-bg-secondary);
+  color: var(--color-text-secondary);
+  font-size: 0.85rem;
+  line-height: 1.3;
+}
+
+.perth-signals svg {
+  color: var(--color-accent);
+  flex-shrink: 0;
+}
+
+/* Tiles: the shared card for every grid on the page. */
+.perth-grid {
+  display: grid;
+  gap: 0.85rem;
+  margin: 1.5rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.perth-grid--2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.perth-grid--3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+
+.perth-tile {
+  background: var(--color-bg-secondary);
+  border: 1px solid var(--color-border-primary);
+  border-radius: 10px;
+  padding: 1.15rem 1.25rem;
+  min-width: 0;
+}
+
+.perth-tile h3 {
+  font-size: 1rem;
+  line-height: 1.35;
+  color: var(--color-text-heading);
+  margin: 0 0 0.4rem;
+}
+
+.perth-tile p {
+  font-size: 0.87rem;
+  color: var(--color-text-secondary);
+  line-height: 1.55;
+  margin: 0;
+}
+
+.perth-tile .tile-detail {
+  margin-top: 0.5rem;
+  color: var(--color-text-tertiary);
+}
+
+.tile-kind {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--color-accent);
+  margin-bottom: 0.5rem;
+}
+
+.perth-tile--lead {
+  grid-column: 1 / -1;
+  background: var(--color-accent-subtle);
+  border-color: var(--color-accent);
+}
+
+.perth-checks .perth-tile {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  font-size: 0.87rem;
+  color: var(--color-text-secondary);
+  line-height: 1.55;
+}
+
+.perth-checks svg {
+  color: var(--color-accent);
+}
+
+.perth-checks strong {
+  color: var(--color-text-heading);
+}
+
+.perth-callout {
+  background: var(--color-bg-secondary);
+  border: 1px solid var(--color-border-primary);
+  border-radius: 10px;
+  padding: 1.15rem 1.25rem;
+  margin-top: 0.85rem;
+  color: var(--color-text-primary);
+  font-size: 0.92rem;
+  line-height: 1.6;
+}
+
+/* Folding rows: services and symptoms open one at a time on demand. */
+.perth-accordion {
+  margin-top: 1.5rem;
+  border: 1px solid var(--color-border-primary);
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.perth-fold + .perth-fold {
+  border-top: 1px solid var(--color-border-primary);
+}
+
+.perth-fold > summary {
+  list-style: none;
+  cursor: pointer;
+  display: flex;
+  align-items: flex-start;
+  gap: 0.9rem;
+  padding: 1rem 1.25rem;
+  background: var(--color-bg-secondary);
+}
+
+.perth-fold > summary::-webkit-details-marker {
+  display: none;
+}
+
+.perth-fold > summary::after {
+  content: '';
+  width: 8px;
+  height: 8px;
+  margin: 0.4rem 0.2rem 0 auto;
+  border-right: 2px solid var(--color-accent);
+  border-bottom: 2px solid var(--color-accent);
+  transform: rotate(45deg);
+  flex-shrink: 0;
+}
+
+.perth-fold[open] > summary::after {
+  transform: rotate(-135deg);
+  margin-top: 0.65rem;
+}
+
+.perth-fold > summary:hover h3 {
+  color: var(--color-accent);
+}
+
+.fold-index {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: var(--color-accent);
+  color: var(--color-accent-text);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.78rem;
+  font-weight: 600;
+  flex-shrink: 0;
+}
+
+.fold-heading {
+  min-width: 0;
+}
+
+.fold-heading h3 {
+  font-size: 1.02rem;
+  line-height: 1.4;
+  color: var(--color-text-heading);
+  margin: 0;
+}
+
+.fold-sub {
+  display: block;
+  margin-top: 0.25rem;
+  font-size: 0.87rem;
+  color: var(--color-text-tertiary);
+  line-height: 1.5;
+}
+
+.fold-list {
+  list-style: none;
+  margin: 0;
+  padding: 1rem 1.25rem 1.15rem;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.55rem 1.5rem;
+}
+
+.fold-list li {
+  position: relative;
+  padding-left: 1.1rem;
+  font-size: 0.87rem;
+  color: var(--color-text-secondary);
+  line-height: 1.5;
+}
+
+.fold-list li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0.55em;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--color-accent);
+}
+
+.fold-pair {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.5rem;
+  padding: 1rem 1.25rem 1.15rem;
+}
+
+.fold-pair p {
+  margin: 0;
+  font-size: 0.87rem;
+  color: var(--color-text-secondary);
+  line-height: 1.55;
+}
+
+.pair-label {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--color-text-tertiary);
+  margin-bottom: 0.3rem;
+}
+
+.pair-label--fix {
+  color: var(--color-success-icon);
 }
 
 .perth-related {
@@ -524,6 +652,7 @@ const faqSchema = {
 
 .perth-page .faq-item:first-of-type {
   border-top: 1px solid var(--color-border-subtle);
+  margin-top: 1rem;
 }
 
 .perth-page .faq-item > summary {
@@ -551,8 +680,8 @@ const faqSchema = {
   content: '';
   width: 7px;
   height: 7px;
-  border-right: 2px solid var(--color-marker);
-  border-bottom: 2px solid var(--color-marker);
+  border-right: 2px solid var(--color-accent);
+  border-bottom: 2px solid var(--color-accent);
   transform: rotate(-45deg);
   flex-shrink: 0;
   margin-top: 0.4rem;
@@ -564,13 +693,14 @@ const faqSchema = {
 }
 
 @media (prefers-reduced-motion: no-preference) {
-  .perth-page .faq-item > summary::before {
+  .perth-page .faq-item > summary::before,
+  .perth-fold > summary::after {
     transition: transform 0.2s ease;
   }
 }
 
 .perth-page .faq-item > summary:hover {
-  color: var(--color-marker);
+  color: var(--color-accent);
 }
 
 /* Answer text lines up with the question text: 0.25rem padding + 7px marker
@@ -582,34 +712,52 @@ const faqSchema = {
   line-height: 1.6;
 }
 
-/* Ladder - the page spine */
+/* Ladder - the page spine. A rail runs through the four numbered markers. */
 .perth-ladder {
   list-style: none;
   padding: 0;
   margin: 1.5rem 0 1rem 0;
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 1.25rem;
+  gap: 0.85rem;
 }
 
 .perth-ladder-stage {
-  border-top: 2px solid var(--color-marker);
-  padding-top: 1rem;
+  position: relative;
+  background: var(--color-bg-secondary);
+  border: 1px solid var(--color-border-primary);
+  border-radius: 10px;
+  padding: 1.15rem 1.1rem;
   min-width: 0;
 }
 
+/* Connector from each stage to the next. */
+.perth-ladder-stage:not(:last-child)::after {
+  content: '';
+  position: absolute;
+  top: calc(1.15rem + 12px);
+  left: calc(1.1rem + 34px);
+  right: calc(-0.85rem - 1.1rem - 1px);
+  height: 2px;
+  background: var(--color-accent);
+  opacity: 0.35;
+  z-index: 1;
+}
+
 .ladder-marker {
+  position: relative;
+  z-index: 2;
   width: 26px;
   height: 26px;
   border-radius: 50%;
-  background: var(--color-marker);
-  color: #ffffff;
+  background: var(--color-accent);
+  color: var(--color-accent-text);
   display: flex;
   align-items: center;
   justify-content: center;
   font-size: 0.78rem;
   font-weight: 600;
-  margin-bottom: 0.65rem;
+  margin-bottom: 0.75rem;
 }
 
 .perth-ladder-stage h3 {
@@ -640,59 +788,10 @@ const faqSchema = {
   line-height: 1.4;
 }
 
-/* Proof */
-.perth-proof-grid {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 1rem;
-  margin-top: 1.5rem;
-}
-
-.perth-proof-card {
-  border: 1px solid var(--color-border-primary);
-  border-radius: 8px;
-  padding: 1.25rem;
-  background: var(--color-bg-primary);
-}
-
-.proof-kind {
-  display: block;
-  font-size: 0.68rem;
-  font-weight: 600;
-  letter-spacing: 0.07em;
-  text-transform: uppercase;
-  color: var(--color-marker);
-  margin-bottom: 0.5rem;
-}
-
-.perth-proof-card h3 {
-  font-size: 1rem;
-  color: var(--color-text-heading);
-  margin: 0 0 0.4rem 0;
-}
-
-.perth-proof-card p {
-  font-size: 0.85rem;
-  color: var(--color-text-secondary);
-  line-height: 1.5;
-  margin: 0;
-}
-
-.perth-callout {
-  background: var(--color-bg-secondary);
-  border: 1px solid var(--color-border-primary);
-  border-left: 3px solid var(--color-marker);
-  border-radius: 8px;
-  padding: 1.15rem 1.4rem;
-  margin-top: 1.25rem;
-  color: var(--color-text-primary);
-  line-height: 1.6;
-}
-
 /* Diagram */
 .perth-diagram {
   border: 1px solid var(--color-border-primary);
-  border-radius: 8px;
+  border-radius: 10px;
   padding: 1.5rem;
   margin-top: 1.5rem;
   overflow-x: auto;
@@ -717,75 +816,20 @@ const faqSchema = {
 .dg-small { font-size: 11px; fill: var(--color-text-secondary); }
 .dg-blocked { font-size: 11px; fill: var(--color-error-text); }
 .dg-box-soft { fill: var(--color-bg-secondary); stroke: var(--color-border-primary); stroke-width: 1; }
-.dg-box-key { fill: var(--color-bg-primary); stroke: var(--color-marker); stroke-width: 1.6; }
+.dg-box-key { fill: var(--color-bg-primary); stroke: var(--color-accent); stroke-width: 1.6; }
 .dg-box-blocked { fill: var(--color-error-bg); stroke: var(--color-error-border); stroke-width: 1; }
 .dg-line-dead { stroke: var(--color-border-secondary); stroke-width: 1.4; }
-.dg-line-live { stroke: var(--color-marker); stroke-width: 1.8; }
-.dg-arrow { fill: var(--color-marker); }
+.dg-line-live { stroke: var(--color-accent); stroke-width: 1.8; }
+.dg-arrow { fill: var(--color-accent); }
 .dg-cross { stroke: var(--color-error-text); stroke-width: 1.5; stroke-linecap: round; }
 .dg-rule { stroke: var(--color-border-subtle); stroke-width: 1; }
-
-/* Deliverables */
-.perth-deliverables {
-  list-style: none;
-  padding: 0;
-  margin: 1.5rem 0 0 0;
-  border: 1px solid var(--color-border-primary);
-  border-radius: 8px;
-  overflow: hidden;
-}
-
-.perth-deliverables li {
-  display: flex;
-  gap: 0.85rem;
-  align-items: flex-start;
-  padding: 1rem 1.15rem;
-  border-bottom: 1px solid var(--color-border-subtle);
-  color: var(--color-text-secondary);
-  line-height: 1.55;
-  font-size: 0.92rem;
-}
-
-.perth-deliverables li:last-child { border-bottom: none; }
-.perth-deliverables li svg { color: var(--color-marker); flex-shrink: 0; margin-top: 0.25rem; }
-.perth-deliverables strong { color: var(--color-text-heading); }
-
-/* Objections */
-.perth-objections {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 1rem;
-  margin-top: 1.5rem;
-}
-
-.perth-objection {
-  border: 1px solid var(--color-border-primary);
-  border-radius: 8px;
-  padding: 1.25rem;
-  background: var(--color-bg-primary);
-}
-
-.perth-objection h3 {
-  font-size: 0.98rem;
-  color: var(--color-text-heading);
-  margin: 0 0 0.5rem 0;
-  line-height: 1.4;
-}
-
-.perth-objection p {
-  font-size: 0.87rem;
-  color: var(--color-text-secondary);
-  line-height: 1.55;
-  margin: 0;
-}
 
 /* Credentials */
 .perth-credentials {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 0;
   border: 1px solid var(--color-border-primary);
-  border-radius: 8px;
+  border-radius: 10px;
   overflow: hidden;
   margin-top: 1.5rem;
   margin-bottom: 0.9rem;
@@ -802,24 +846,41 @@ const faqSchema = {
   line-height: 1.5;
 }
 
-.perth-credential svg { color: var(--color-marker); flex-shrink: 0; margin-top: 0.28rem; }
+.perth-credential svg { color: var(--color-accent); flex-shrink: 0; margin-top: 0.28rem; }
 .perth-credential strong { color: var(--color-text-heading); display: block; }
+
+/* Closing call to action */
+.perth-cta {
+  background: var(--color-bg-secondary);
+  border: 1px solid var(--color-border-primary);
+  border-radius: 12px;
+  padding: 1.75rem;
+}
 
 @media (max-width: 768px) {
   .perth-ladder,
-  .perth-proof-grid,
-  .perth-objections,
-  .perth-credentials {
+  .perth-grid--2,
+  .perth-grid--3,
+  .perth-credentials,
+  .fold-list,
+  .fold-pair {
     grid-template-columns: 1fr;
   }
 
-  .perth-section {
-    margin-bottom: 2rem;
+  .fold-pair {
+    gap: 0.85rem;
   }
 
-  .perth-service-group,
-  .perth-symptom {
-    padding: 1rem;
+  .perth-ladder-stage:not(:last-child)::after {
+    display: none;
+  }
+
+  .perth-section {
+    margin-bottom: 2.5rem;
+  }
+
+  .perth-cta {
+    padding: 1.25rem;
   }
 }
 </style>
