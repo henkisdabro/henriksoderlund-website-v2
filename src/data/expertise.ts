@@ -1,278 +1,79 @@
-import { GITHUB_URL, ASCRIBE_URL, ROTTOSNORKEL_URL, SANDCASTLE_KIT_URL, SANDCASTLE_KIT_SITE_URL } from './links';
+export interface SkillGroup {
+  id: string;
+  name: string;
+  description?: string;
+  skills: string[];
+  core?: string[];
+  platforms?: { label: string; names: string[] }[];
+  /** A build or page where the group's skills can be seen in use. */
+  proof?: { text: string; href: string };
+}
 
 export const expertiseData = {
   intro: {
     title: 'Strategic Technology Leadership & AI Innovation',
     paragraph: 'Senior technology leader bridging cutting-edge AI capabilities with practical business outcomes. I specialise in building intelligent automation systems, advanced measurement frameworks, and leading cross-functional teams to implement scalable technology solutions.',
   },
-  showcase: {
-    title: 'What I Build',
-    projects: [
+  skills: {
+    title: 'Technical Expertise & Platforms',
+    // `core` names the tools in daily use, shown in bold.
+    groups: [
       {
-        title: 'ascribe',
-        url: ASCRIBE_URL,
-        type: 'SaaS Platform',
-        tagline: 'Validates every tracking link against your own GA4 channel definitions',
-        description: 'SaaS platform for marketing teams building trackable URLs. Checks each link against your own GA4 channel groups and shows exactly which channel the traffic will land in before launch - because a GA4 session cannot be retagged afterwards.',
-        tags: ['React', 'Cloudflare Workers', 'SaaS', 'GA4 Integration'],
-        image: 'ascribeImage',
-        // ascribe's own brand tokens, each on the ground it was designed for:
-        // signal ink on white, signal amber on the dark theme.
-        accentColour: '#9e7b00',
-        accentColourDark: '#f2c230',
+        id: 'measurement',
+        name: 'Measurement',
+        skills: ['GA4', 'Google Tag Manager', 'Server-Side Tagging (sGTM)', 'Meta Conversions API', 'Consent Mode v2', 'Adobe Analytics', 'Amplitude', 'AppsFlyer', 'UTM & Tracking Templates', 'Google Search Console', 'JSON-LD Structured Data'],
+        core: ['GA4', 'Google Tag Manager', 'Server-Side Tagging (sGTM)'],
+        proof: { text: 'ascribe', href: '/builds#ascribe' },
       },
       {
-        title: 'sandcastle-kit',
-        url: SANDCASTLE_KIT_SITE_URL,
-        type: 'Open Source · AI Agents',
-        tagline: 'Turns a ticket backlog into a software factory',
-        description: "Unattended coding agents burn down GitHub issues in Docker sandboxes. One agent implements each ticket, a stronger one reviews it, the project's own lint, test and build gates decide, and green work merges while you are away. Built on Sandcastle by Matt Pocock.",
-        tags: ['Claude Code', 'Codex', 'Docker', 'TypeScript'],
-        image: 'sandcastleKitImage',
-        accentColour: '#b45309',
-        accentColourDark: '#f59e0b',
+        id: 'data',
+        name: 'Data & Reporting',
+        skills: ['SQL & BigQuery', 'Power BI & Power Query', 'Microsoft Fabric', 'Looker Studio', 'Python & R', 'ETL Pipelines', 'Regular Expressions (RegEx)'],
+        core: ['SQL & BigQuery', 'Power BI & Power Query'],
+        proof: { text: 'the dashboards build', href: '/builds#dashboards' },
       },
       {
-        title: 'Rotto Snorkel',
-        url: ROTTOSNORKEL_URL,
-        type: 'Public Website',
-        tagline: 'Real-time safety assessments across 39 snorkelling locations',
-        description: 'Comprehensive snorkelling guide for Rottnest Island with live weather APIs, wave height data, and wind analysis delivering traffic light safety ratings.',
-        tags: ['Astro', 'Cloudflare Workers', 'Live Weather API'],
-        image: 'rottoSnorkelImage',
-        accentColour: '#0ea5e9',
+        id: 'ai',
+        name: 'AI & Agents',
+        description: 'Hands-on expertise setting up teams with AI coding assistants and building personal knowledge systems powered by AI. I help developers and professionals adopt these tools effectively - from configuring Claude Code with best practices and conventions, to designing Life OS architectures that turn AI assistants into genuine productivity multipliers.',
+        skills: ['Claude Code', 'OpenAI Codex', 'Antigravity', 'OpenClaw', 'MCP Server Integration', 'Unattended Coding Agent Orchestration', 'Sandboxed Agent Workflows (Docker)', 'LLM API Integration', 'Team Onboarding & Convention Files', 'Personal Knowledge Systems (Life OS)'],
+        core: ['Claude Code'],
+        proof: { text: 'sandcastle-kit', href: '/builds#sandcastle-kit' },
       },
       {
-        title: 'AI-Powered Workflow Automation',
-        type: 'Automation Platform',
-        tagline: 'From signed proposal to live project in 7 minutes',
-        description: 'Intelligent automation connecting proposal platforms to project management systems using AI-assisted data mapping. Replaces 45-60 minutes of manual setup with a streamlined 7-minute workflow - including real-time team notifications and AI-powered project structure creation.',
-        tags: ['Cloudflare Workers', 'AI Integration', 'API Orchestration', 'Chrome Extension'],
-        image: 'automationDiagramImage',
-        accentColour: '#14b8a6',
+        id: 'web',
+        name: 'Web & Edge',
+        skills: ['Cloudflare Workers', 'React / Vite / Hono', 'Astro', 'Git & GitHub Actions CI/CD', 'Security Headers & CSP'],
+        core: ['Cloudflare Workers'],
+        proof: { text: 'Rotto Snorkel', href: '/builds#rotto-snorkel' },
       },
       {
-        title: 'Campaign Performance Dashboards',
-        type: 'Data Visualisation',
-        tagline: 'Executive-level multi-source analytics dashboard',
-        description: 'Designed executive-level dashboards integrating multi-source data streams through advanced ETL processes, custom APIs, and intelligent reporting automation.',
-        tags: ['Looker Studio', 'BigQuery', 'ETL', 'Data Pipeline'],
-        image: 'dashboardImage',
-        accentColour: '#059669',
-      },
-      {
-        title: 'Knowledge Management Systems',
-        type: 'Documentation Platform',
-        tagline: 'Scalable information architecture for teams',
-        description: 'Scalable information architectures that streamline operations, reduce training time, and ensure critical business knowledge is systematically captured and accessible across teams.',
-        tags: ['Notion', 'Process Design', 'Team Operations'],
-        image: 'wikiImage',
-        accentColour: '#d97706',
-      },
-    ],
-  },
-  leadershipExpertise: {
-    title: 'Leadership & Strategy',
-    paragraph: 'I build, mentor, and lead high-performance teams while driving exceptional client relationships and stakeholder engagement. My approach combines systematic people development with strategic business alignment - growing teams and businesses together.',
-    categories: [
-      {
-        category: 'People Development & Team Leadership',
-        skills: [
-          'Team Building, Restructuring & Scaling',
-          'Mentoring & Coaching (20+)',
-          'Talent Development & Career Pathways',
-          'Hiring & Interview Process Design',
-          'Performance Management & Analytics',
-          'Change Management & Training Programs',
-          'Skills Assessment & Gap Analysis',
+        id: 'advertising',
+        name: 'Advertising & Programmatic',
+        description: 'Extensive hands-on experience across addressable and programmatic media buying, supply path optimisation (SPO), and bid request analysis across major advertising platforms. Specialising in cross-platform attribution, server-side tracking implementations, and martech solution architecture - combining AI-driven optimisation strategies with deep technical expertise in enterprise-scale campaign operations.',
+        skills: ['RTB Programmatic Buying', 'Supply Path Optimisation', 'Impression, Click & Ad Tags', 'Google Ads Scripts', 'Merchant Center & Product Feeds'],
+        platforms: [
+          { label: 'Google stack', names: ['Google Ads', 'DV360', 'CM360', 'SA360'] },
+          { label: 'Social', names: ['Meta', 'TikTok Ads', 'Snapchat', 'LinkedIn', 'Reddit', 'X Ads'] },
+          { label: 'Programmatic', names: ['The Trade Desk', 'Yahoo DSP', 'Teads', 'Vistar Media', 'Outbrain DSP'] },
+          { label: 'Native & audio', names: ['Taboola', 'Outbrain', 'Spotify'] },
         ],
+        proof: { text: 'Work Experience', href: '/work-experience' },
       },
       {
-        category: 'Business Engagement & Communication',
-        skills: [
-          'Strategic Account Management & Retention',
-          'Executive Stakeholder Communication',
-          'Client Pitches, Presentations & Training',
-          'Relationship Management & Service Excellence',
-          'Thought Leadership & Conference Speaking',
-          'Cross-functional Collaboration & Alignment',
-          'Knowledge Documentation & Transfer',
-        ],
-      },
-    ],
-  },
-  skillsGrid: [
-    {
-      category: 'Advertising',
-      skills: [
-        'RTB Programmatic Buying',
-        'Cookieless & Privacy',
-        'Tracking Templates & UTM',
-        'Google Apps/Ads Script',
-        'Email Marketing',
-        'Impression, Click & Ad Tags',
-        'Google Merchant Center',
-        'Product Catalogue Feeds',
-      ],
-    },
-    {
-      category: 'Measurement',
-      skills: [
-        'Advanced Google Tag Manager',
-        'Server-Side Tagging (sGTM)',
-        'Meta Conversions API',
-        'Adobe Analytics',
-        'Amplitude',
-        'Google Analytics',
-        'Appsflyer',
-      ],
-    },
-    {
-      category: 'SEO',
-      skills: ['Google Search Console', 'JSON-LD Structured Data', 'Screaming Frog'],
-    },
-    {
-      category: 'Data & AI Analysis',
-      skills: [
-        'Advanced Spreadsheets',
-        'Regular Expressions (RegEx)',
-        'Python & R Programming',
-        'Excel Power Query',
-        'SQL & BigQuery',
-        'AI Prompt Engineering',
-        'LLM API Integration',
-        'Claude Code',
-        'Google Looker Studio',
-        'Microsoft PowerBI',
-        'Automated Data Processing',
-      ],
-    },
-    {
-      category: 'Web & Development',
-      skills: [
-        'HTTP Requests & API Integration',
-        'React/Vite/Hono',
-        'HTML/CSS',
-        'Cloudflare Workers',
-        'Git & GitHub',
-        'DevOps - CI/CD',
-        'AI-Assisted Development',
-        'Server-Side Implementation',
-        'Security Headers & Best Practices',
-      ],
-    },
-    {
-      category: 'Productivity & System Operations',
-      skills: [
-        'Cross-Platform Operations',
-        'System Integration & Architecture',
-        'AI-Enhanced Workflow Design',
-        'Notion & Advanced Documentation',
-        'Process Automation',
-        'Audio/Video Technical Standards',
-      ],
-    },
-    {
-      category: 'Enterprise Cloud Administration',
-      skills: [
-        'Domain & DNS Management',
-        'Google Workspace Administration',
-        'Microsoft 365 Administration',
-        'Email Security (DKIM, SPF, DMARC)',
-        'Cloud Infrastructure Setup',
-        'SaaS Integration & Automation',
-      ],
-    },
-    {
-      category: 'Infrastructure & Advanced Systems',
-      skills: [
-        'Private Lab Infrastructure Design',
-        'Server Administration & VPS Management',
-        'Network Architecture & Security',
-        'Virtualization & Container Technologies',
-        'Docker & Kubernetes',
-        'Zero-Trust Security Implementation',
-        'Blockchain Node Operations',
-        'Infrastructure Automation',
-      ],
-    },
-  ],
-  aiTooling: {
-    title: 'AI Coding Assistants & Personal AI Systems',
-    paragraph: 'Hands-on expertise setting up teams with AI coding assistants and building personal knowledge systems powered by AI. I help developers and professionals adopt these tools effectively - from configuring Claude Code with best practices and conventions, to designing Life OS architectures that turn AI assistants into genuine productivity multipliers.',
-    categories: [
-      {
-        category: 'AI-Assisted Development',
-        skills: [
-          'Claude Code Setup & Best Practices',
-          'OpenAI Codex & Gemini CLI',
-          'OpenClaw & Open-Source AI Tooling',
-          'AI Coding Workflow Design',
-          'Team Onboarding & Training Programs',
-          'Custom Rules & Convention Files',
-          'MCP Server Integration',
-          'Unattended Coding Agent Orchestration',
-          'Sandboxed Agent Workflows (Docker)',
-        ],
+        id: 'leadership',
+        name: 'Leadership & Strategy',
+        description: 'I build, mentor, and lead high-performance teams while driving exceptional client relationships and stakeholder engagement. My approach combines systematic people development with strategic business alignment - growing teams and businesses together.',
+        skills: ['Team Building, Restructuring & Scaling', 'Mentoring & Coaching (20+)', 'Hiring & Interview Process Design', 'Performance Management', 'Change Management & Training Programs', 'Executive Stakeholder Communication', 'Client Pitches & Presentations', 'Conference Speaking'],
+        proof: { text: 'the consultancy case study', href: '/consultancy' },
       },
       {
-        category: 'Personal AI & Knowledge Systems',
-        skills: [
-          'Claude for Professional Productivity',
-          'Personal Knowledge Management (Life OS)',
-          'AI-Native Note-Taking & Documentation',
-          'Custom AI Assistant Configuration',
-          'Prompt Libraries & Workflow Templates',
-          'Cross-Platform AI Integration',
-        ],
+        id: 'range',
+        name: 'Technical Range',
+        // DRAFT COPY: placeholder wording for Henrik to replace.
+        description: 'Not services I sell, but the depth behind the ones I do.',
+        skills: ['Domain & DNS Management', 'Google Workspace & Microsoft 365 Administration', 'Email Security (DKIM, SPF, DMARC)', 'Server Administration & VPS', 'Network Architecture & Security', 'Docker & Kubernetes', 'Zero-Trust Security', 'Private Lab Infrastructure', 'Blockchain Node Operations', 'Audio/Video Technical Standards'],
       },
-    ],
-  },
-  platformExperience: {
-    title: 'Advertising & Programmatic Platform Expertise',
-    paragraph: 'Extensive hands-on experience across addressable and programmatic media buying, supply path optimisation (SPO), and bid request analysis across major advertising platforms. Specialising in cross-platform attribution, server-side tracking implementations, and martech solution architecture - combining AI-driven optimisation strategies with deep technical expertise in enterprise-scale campaign operations.',
-    platforms: [
-      'Meta', 'Google Ads', 'Teads', 'DV360', 'CM360', 'SA360', 'TheTradeDesk', 'Vistar Media', 'Yahoo DSP', 'TikTok Ads', 'Zemanta', 'Snapchat', 'Spotify', 'Linkedin', 'Taboola', 'Outbrain', 'Quora', 'X Ads', 'Reddit',
-    ],
-  },
-  githubContributions: {
-    title: 'Open Source & Community',
-    contributions: [
-      {
-        title: 'sandcastle-kit',
-        url: SANDCASTLE_KIT_URL,
-        description: 'Unattended coding agents that burn down a GitHub issue backlog in Docker sandboxes - implemented, reviewed, gated and merged.',
-      },
-      {
-        title: 'Cloudflare Workers React Boilerplate',
-        url: `${GITHUB_URL}/cloudflare-workers-react-boilerplate`,
-        description: 'Production-ready edge-native web app boilerplate with React 19, AI integration, and automated deployment.',
-      },
-      {
-        title: 'Claude Code MCP Server Selector',
-        url: `${GITHUB_URL}/Claude-Code-MCP-Server-Selector`,
-        description: 'TUI for managing Model Context Protocol servers in Claude Code, optimising AI context window efficiency.',
-      },
-      {
-        title: 'Collection of Platform Click ID Parameters',
-        url: `${GITHUB_URL}/platform-url-click-id-parameters`,
-        description: 'Global database of URL parameters for analytics filtering and ad platform pixel trigger optimisation.',
-      },
-      {
-        title: 'IPmeta Tag Template for GA4',
-        url: `${GITHUB_URL}/gtm-templates-ipmeta-ga4`,
-        description: 'Official GTM Community template for advanced spam and bot traffic filtering with GA4.',
-      },
-      {
-        title: 'Google Chat Tag Template',
-        url: `${GITHUB_URL}/gtm-templates-web-google-chat-webhook`,
-        description: 'GTM template for real-time conversion notifications through Google Workspace Chat.',
-      },
-      {
-        title: 'GTM-integration-Hugo',
-        url: `${GITHUB_URL}/GTM-integration-Hugo`,
-        description: 'Google Tag Manager integration framework for Hugo static sites with environment-specific deployment.',
-      },
-    ],
+    ] as SkillGroup[],
   },
 };

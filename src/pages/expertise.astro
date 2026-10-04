@@ -3,34 +3,26 @@ export const prerender = true;
 import { Image } from 'astro:assets';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import { expertiseData } from '../data/expertise';
-import { GITHUB_URL } from '../data/links';
-import dashboardImage from '../assets/images/screenshots/dashboard.webp';
-import wikiImage from '../assets/images/screenshots/wiki.webp';
+import { buildsData, TEASER_COUNT } from '../data/builds';
+import { sectionIcons } from '../utils/sectionIcons';
+
+const { skills } = expertiseData;
 import ascribeImage from '../assets/images/screenshots/ascribe.webp';
-import rottoSnorkelImage from '../assets/images/screenshots/rotto-snorkel.webp';
 import sandcastleKitImage from '../assets/images/screenshots/sandcastle-kit.webp';
 import automationDiagramImage from '../assets/images/screenshots/automation-diagram.webp';
 
 const imageMap: Record<string, ImageMetadata> = {
-  dashboardImage,
-  wikiImage,
   ascribeImage,
-  rottoSnorkelImage,
   sandcastleKitImage,
   automationDiagramImage,
 };
-
-import { sectionIcons } from '../utils/sectionIcons';
 ---
 
 <BaseLayout
   mentions={[
     'claudeCode',
-    'claude',
     'openAiCodex',
-    'aiAssistedDevelopment',
     'modelContextProtocol',
-    'promptEngineering',
     'largeLanguageModel',
     'googleAnalytics',
     'googleTagManager',
@@ -47,7 +39,6 @@ import { sectionIcons } from '../utils/sectionIcons';
     'googleAds',
     'googleSearchConsole',
     'jsonLd',
-    'googleAppsScript',
     'ascribe',
     'sandcastleKit',
   ]}
@@ -62,89 +53,53 @@ import { sectionIcons } from '../utils/sectionIcons';
       <p>{expertiseData.intro.paragraph}</p>
     </section>
 
-    <section class="showcase-section">
-      <h2 id="showcase-projects"><span class="section-icon" aria-hidden="true" set:html={sectionIcons.layers} />{expertiseData.showcase.title}</h2>
-      <div class="carousel">
-        <div class="carousel-viewport">
-          <div class="carousel-track">
-            {expertiseData.showcase.projects.map((project, i) => {
-              const hasImage = project.image && imageMap[project.image];
-              const isLink = !!project.url;
-              const Tag = isLink ? 'a' : 'div';
-              const linkProps = isLink ? { href: project.url, target: '_blank', rel: 'noopener noreferrer' } : {};
-              return (
-                <Tag
-                  {...linkProps}
-                  class={`showcase-card${i === 0 ? ' showcase-card--active' : ''}${isLink ? '' : ' showcase-card--static'}`}
-                  style={`--card-accent-light: ${project.accentColour}${project.accentColourDark ? `; --card-accent-dark: ${project.accentColourDark}` : ''}`}
-                  data-index={i}
-                  aria-hidden={i !== 0 ? "true" : undefined}
-                  tabindex={i !== 0 ? -1 : undefined}
-                  inert={i !== 0 ? true : undefined}
-                >
-                  <div class="showcase-card-image">
-                    {hasImage ? (
-                      <Image
-                        src={imageMap[project.image]}
-                        alt={`${project.title} screenshot`}
-                        loading="eager"
-                      />
-                    ) : (
-                      <div class="showcase-card-placeholder">
-                        <span class="showcase-card-placeholder-text">{project.title}</span>
-                      </div>
-                    )}
-                  </div>
-                  <div class="showcase-card-content">
-                    <div class="showcase-card-header">
-                      <span class="showcase-type-badge">{project.type}</span>
-                      <h3>{project.title}</h3>
-                    </div>
-                    <p class="showcase-tagline">{project.tagline}</p>
-                    <p class="showcase-description">{project.description}</p>
-                    <div class="showcase-tags">
-                      {project.tags.map((tag: string) => <span class="showcase-tag">{tag}</span>)}
-                    </div>
-                    {isLink && <span class="showcase-cta">Visit {project.title} &rarr;</span>}
-                  </div>
-                </Tag>
-              );
-            })}
-          </div>
-        </div>
-        <button class="carousel-btn carousel-btn--prev" aria-label="Previous project" type="button">&lsaquo;</button>
-        <button class="carousel-btn carousel-btn--next" aria-label="Next project" type="button">&rsaquo;</button>
-        <div class="carousel-dots">
-          {expertiseData.showcase.projects.map((_, i) => (
-            <button class={`carousel-dot${i === 0 ? ' carousel-dot--active' : ''}`} aria-label={`Go to slide ${i + 1}`} data-slide={i} type="button" />
-          ))}
-        </div>
-      </div>
-    </section>
-
-    <section class="leadership-section">
-      <h2 id="leadership"><span class="section-icon" aria-hidden="true" set:html={sectionIcons.users} />{expertiseData.leadershipExpertise.title}</h2>
-      <p>{expertiseData.leadershipExpertise.paragraph}</p>
-      <div class="skills-grid">
-        {expertiseData.leadershipExpertise.categories.map(category => (
-          <div class="skill-category">
-            <h3>{category.category}</h3>
-            <div class="skills-minimal-pills">
-              {category.skills.map(skill => <span class="skill-pill-minimal">{skill}</span>)}
-            </div>
-          </div>
+    <section class="builds-teaser-section">
+      <h2 id="what-i-build"><span class="section-icon" aria-hidden="true" set:html={sectionIcons.layers} />{buildsData.title}</h2>
+      <div class="builds-teaser">
+        {buildsData.projects.slice(0, TEASER_COUNT).map(project => (
+          <a
+            href={`/builds#${project.id}`}
+            class="builds-teaser-tile"
+            style={`--card-accent-light: ${project.accentColour}${project.accentColourDark ? `; --card-accent-dark: ${project.accentColourDark}` : ''}`}
+          >
+            <span class="builds-teaser-type">{project.type}</span>
+            <h3>{project.title}</h3>
+            <p>{project.tagline}</p>
+            <span class="builds-teaser-peek" aria-hidden="true">
+              <Image src={imageMap[project.image]} alt="" width={520} loading="lazy" />
+            </span>
+          </a>
         ))}
       </div>
+      <p class="builds-teaser-more"><a href="/builds">See all builds &rarr;</a></p>
     </section>
 
-    <section class="technical-skills-section">
-      <h2 id="technical-skills"><span class="section-icon" aria-hidden="true" set:html={sectionIcons.wrench} />Technical Expertise & Platform Mastery</h2>
-      <div class="skills-grid">
-        {expertiseData.skillsGrid.map(category => (
-          <div class="skill-category">
-            <h3>{category.category}</h3>
-            <div class="skills-minimal-pills">
-              {category.skills.map(skill => <span class="skill-pill-minimal">{skill}</span>)}
+    <section class="skills-section">
+      <h2 id="technical-skills"><span class="section-icon" aria-hidden="true" set:html={sectionIcons.wrench} />{skills.title}</h2>
+      <div class="skill-rows">
+        {skills.groups.map(group => (
+          <div class="skill-row">
+            <div class="skill-row-head">
+              <h3>{group.name}</h3>
+              {group.proof && <a href={group.proof.href} class="skill-proof">Seen in {group.proof.text} &rarr;</a>}
+            </div>
+            <div class="skill-row-body">
+              <ul class="skill-line">
+                {group.skills.map(skill => (
+                  <li class={group.core?.includes(skill) ? 'skill-core' : undefined}>{skill}</li>
+                ))}
+              </ul>
+              {group.platforms && (
+                <dl class="skill-platforms">
+                  {group.platforms.map(set => (
+                    <div>
+                      <dt>{set.label}</dt>
+                      <dd>{set.names.join(', ')}</dd>
+                    </div>
+                  ))}
+                </dl>
+              )}
+              {group.description && <p class="skill-row-note">{group.description}</p>}
             </div>
           </div>
         ))}
@@ -155,185 +110,8 @@ import { sectionIcons } from '../utils/sectionIcons';
       Perth or Western Australia, and the measurement side is what you need? See
       <a href="/perth-analytics-consultant">GA4 and server-side tagging in Perth</a>.
     </p>
-
-    <section class="ai-tooling-section">
-      <h2 id="ai-tooling"><span class="section-icon" aria-hidden="true" set:html={sectionIcons.cpu} />{expertiseData.aiTooling.title}</h2>
-      <p>{expertiseData.aiTooling.paragraph}</p>
-      <div class="skills-grid">
-        {expertiseData.aiTooling.categories.map(category => (
-          <div class="skill-category">
-            <h3>{category.category}</h3>
-            <div class="skills-minimal-pills">
-              {category.skills.map(skill => <span class="skill-pill-minimal">{skill}</span>)}
-            </div>
-          </div>
-        ))}
-      </div>
-    </section>
-
-    <section class="platform-experience">
-      <h2 id="platform-experience"><span class="section-icon" aria-hidden="true" set:html={sectionIcons.trendingUp} />{expertiseData.platformExperience.title}</h2>
-      <p>{expertiseData.platformExperience.paragraph}</p>
-      <div class="skills-minimal-pills">
-        {expertiseData.platformExperience.platforms.map(platform => <span class="skill-pill-minimal">{platform}</span>)}
-      </div>
-    </section>
-
-    <section class="github-contributions">
-      <h2 id="github-contributions"><span class="section-icon" aria-hidden="true" set:html={sectionIcons.gitBranch} />{expertiseData.githubContributions.title}</h2>
-
-      <div class="opensource-grid">
-        {expertiseData.githubContributions.contributions.map(contribution => (
-          <a href={contribution.url} target="_blank" rel="noopener noreferrer" class="opensource-tile">
-            <div class="opensource-tile-header">
-              <svg class="opensource-tile-icon" width="20" height="20" viewBox="0 0 16 16" fill="currentColor"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"></path></svg>
-              <h3>{contribution.title}</h3>
-            </div>
-            <p class="opensource-tile-description">{contribution.description}</p>
-            <span class="opensource-tile-link">View on GitHub &rarr;</span>
-          </a>
-        ))}
-      </div>
-
-      <div class="github-activity">
-        <h3>GitHub Contribution Activity</h3>
-        <p class="github-activity-description">Daily contributions across public and private repositories over the past year. View my full profile on <a href={GITHUB_URL} target="_blank" rel="noopener noreferrer">GitHub</a>.</p>
-        <a href={GITHUB_URL} target="_blank" rel="noopener noreferrer" class="github-chart-link">
-          <img
-            src="https://ghchart.rshah.org/henkisdabro"
-            alt="Henrik's GitHub contribution graph showing daily activity over the past year"
-            class="github-chart"
-            width="663"
-            height="104"
-            loading="lazy"
-            decoding="async"
-          />
-        </a>
-      </div>
-    </section>
   </div>
 </BaseLayout>
-
-<script is:inline type="module" data-csp>
-  function initCarousel() {
-    const carousel = document.querySelector('.carousel');
-    if (!carousel) return;
-
-    const trackEl = carousel.querySelector('.carousel-track');
-    const cards = carousel.querySelectorAll('.showcase-card');
-    const dots = carousel.querySelectorAll('.carousel-dot');
-    const prevBtn = carousel.querySelector('.carousel-btn--prev');
-    const nextBtn = carousel.querySelector('.carousel-btn--next');
-    if (!trackEl || cards.length === 0) return;
-
-    // Re-bind after the null guard so TypeScript narrows the type in closures
-    const track = trackEl;
-    const total = cards.length;
-    let current = 0;
-
-    function goTo(index) {
-      current = ((index % total) + total) % total;
-      track.style.transform = `translateX(-${current * 100}%)`;
-
-      cards.forEach((card, i) => {
-        const isActive = i === current;
-        card.classList.toggle('showcase-card--active', isActive);
-        card.setAttribute('aria-hidden', String(!isActive));
-        card.setAttribute('tabindex', isActive ? '0' : '-1');
-        card.inert = !isActive;
-      });
-
-      dots.forEach((dot, i) => {
-        dot.classList.toggle('carousel-dot--active', i === current);
-      });
-    }
-
-    cards.forEach(card => {
-      card.addEventListener('click', (e) => {
-        const index = Number(card.dataset.index);
-        if (index !== current) {
-          e.preventDefault();
-          goTo(index);
-        }
-      });
-    });
-
-    prevBtn?.addEventListener('click', () => goTo(current - 1));
-    nextBtn?.addEventListener('click', () => goTo(current + 1));
-
-    dots.forEach(dot => {
-      dot.addEventListener('click', () => goTo(Number(dot.dataset.slide)));
-    });
-
-    carousel.addEventListener('keydown', (e) => {
-      if (e.key === 'ArrowLeft') goTo(current - 1);
-      if (e.key === 'ArrowRight') goTo(current + 1);
-    });
-
-    const AUTO_DELAY = 5000;
-    let timer = setInterval(() => goTo(current + 1), AUTO_DELAY);
-
-    function pauseAuto() { clearInterval(timer); }
-    function resumeAuto() {
-      clearInterval(timer);
-      timer = setInterval(() => goTo(current + 1), AUTO_DELAY);
-    }
-
-    carousel.addEventListener('mouseenter', pauseAuto);
-    carousel.addEventListener('mouseleave', resumeAuto);
-    carousel.addEventListener('focusin', pauseAuto);
-    carousel.addEventListener('focusout', resumeAuto);
-
-    // Touch swipe support
-    let touchStartX = 0;
-    let touchStartY = 0;
-    let touchDeltaX = 0;
-    let swiping = null; // null = undecided, true = horizontal, false = vertical
-
-    carousel.addEventListener('touchstart', (e) => {
-      touchStartX = e.touches[0].clientX;
-      touchStartY = e.touches[0].clientY;
-      touchDeltaX = 0;
-      swiping = null;
-      pauseAuto();
-    }, { passive: true });
-
-    carousel.addEventListener('touchmove', (e) => {
-      const dx = e.touches[0].clientX - touchStartX;
-      const dy = e.touches[0].clientY - touchStartY;
-
-      // Decide direction intent after 10px of movement
-      if (swiping === null && (Math.abs(dx) > 10 || Math.abs(dy) > 10)) {
-        swiping = Math.abs(dx) > Math.abs(dy);
-      }
-
-      if (!swiping) return; // vertical scroll - don't interfere
-
-      e.preventDefault();
-      touchDeltaX = dx;
-      track.style.transition = 'none';
-      track.style.transform = `translateX(calc(-${current * 100}% + ${touchDeltaX}px))`;
-    }, { passive: false });
-
-    carousel.addEventListener('touchend', () => {
-      track.style.transition = '';
-
-      if (swiping && Math.abs(touchDeltaX) > 50) {
-        goTo(touchDeltaX < 0 ? current + 1 : current - 1);
-      } else {
-        goTo(current); // snap back
-      }
-
-      touchDeltaX = 0;
-      swiping = null;
-      resumeAuto();
-    }, { passive: true });
-
-    goTo(0);
-  }
-
-  initCarousel();
-</script>
 
 <style is:global>
 /* Skills Page Styles */
@@ -342,465 +120,221 @@ import { sectionIcons } from '../utils/sectionIcons';
 }
 
 .consultancy-section h2,
-.platform-experience h2,
-.github-contributions h2,
-.leadership-section h2,
-.technical-skills-section h2,
-.ai-tooling-section h2 {
+.builds-teaser-section h2,
+.skills-section h2 {
   font-size: 2rem;
   margin-bottom: 1rem;
   color: var(--color-text-heading);
 }
 
-.skills-grid {
+.skills-section {
+  margin-bottom: 3rem;
+}
+
+.skill-proof {
+  font-size: 0.8rem;
+  font-weight: 500;
+}
+
+/* One row per group, terms as a plain line of text. */
+.skill-rows {
+  border-top: 1px solid var(--color-border-primary);
+}
+
+.skill-row {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-  gap: 0.75rem;
-  margin-bottom: 0.75rem;
-  max-width: 100%;
+  grid-template-columns: 11.5rem minmax(0, 1fr);
+  gap: 1.5rem;
+  padding: 1.25rem 0;
+  border-bottom: 1px solid var(--color-border-primary);
 }
 
-.skill-category {
-  background: var(--color-bg-code);
-  border-radius: 8px;
-  padding: 1.5rem;
-  border: 1px solid var(--color-accent-subtle);
-  box-shadow: 0 1px 3px var(--color-shadow);
-  margin-bottom: 1rem;
+.skill-row-head h3 {
+  font-size: 1.05rem;
+  line-height: 1.35;
+  color: var(--color-text-heading);
+  margin: 0 0 0.35rem;
 }
 
-.skill-category h3 {
-  font-size: 1.3rem;
-  margin-top: -0.15rem;
-  margin-bottom: 1rem;
+.skill-line {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  font-size: 0.92rem;
+  line-height: 1.75;
+  color: var(--color-text-secondary);
+}
+
+.skill-line li {
+  display: inline;
+}
+
+.skill-line li:not(:last-child)::after {
+  content: '\00b7';
+  margin: 0 0.5rem;
+  color: var(--color-text-muted);
+  font-weight: 400;
+}
+
+.skill-core {
+  font-weight: 700;
   color: var(--color-text-heading);
 }
 
-.platform-experience {
-  margin-bottom: 3rem;
+.skill-platforms {
+  margin: 0.75rem 0 0;
+  display: grid;
+  gap: 0.25rem;
+  font-size: 0.87rem;
+  line-height: 1.6;
 }
 
-.github-contributions {
-  margin-bottom: 3rem;
+.skill-platforms div {
+  display: grid;
+  grid-template-columns: 7.5rem minmax(0, 1fr);
+  gap: 0.75rem;
 }
 
-/* Showcase Section (Featured Product) */
-.showcase-section {
+.skill-platforms dt {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  line-height: 1.95;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--color-text-muted);
+}
+
+.skill-platforms dd {
+  margin: 0;
+  color: var(--color-text-secondary);
+}
+
+.skill-row-note {
+  margin: 0.75rem 0 0;
+  font-size: 0.85rem;
+  line-height: 1.6;
+  color: var(--color-text-tertiary);
+}
+
+/* Builds teaser - the builds themselves live on /builds */
+.builds-teaser-section {
   margin-top: 2rem;
   margin-bottom: 2rem;
 }
 
-.showcase-section h2 {
-  font-size: 2rem;
-  margin-bottom: 1.5rem;
-  color: var(--color-text-heading);
+.builds-teaser {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 0.75rem;
 }
 
-/* Carousel layout */
-.carousel {
-  position: relative;
-}
-
-.carousel-viewport {
-  overflow: hidden;
-  margin: 0 -20%;
-  padding: 0 20%;
-  -webkit-mask-image: linear-gradient(to right, transparent, black 8%, black 92%, transparent);
-  mask-image: linear-gradient(to right, transparent, black 8%, black 92%, transparent);
-}
-
-.carousel-track {
-  display: flex;
-  transition: transform 0.35s ease-out;
-}
-
-/* --card-accent renders as text on both theme grounds, so a card may carry a
-   second value for dark. Cards without --card-accent-dark keep the single one. */
-.showcase-card {
+/* Each tile shows its build's screenshot peeking over the bottom edge, tilted
+   like a print on a desk; hover straightens it and slides it up into view.
+   --card-accent only tints the glow behind the screenshot. */
+.builds-teaser-tile {
   --card-accent: var(--card-accent-light);
-  display: block;
+  display: flex;
+  flex-direction: column;
+  background: var(--color-bg-code);
+  border: 1px solid var(--color-border-primary);
+  border-radius: 12px;
+  padding: 1.25rem 1.25rem 0;
+  overflow: hidden;
   text-decoration: none;
   color: inherit;
-  background: var(--color-bg-primary);
-  border: 1px solid var(--color-border-primary);
-  box-shadow: 0 0 0 1px var(--color-border-primary);
-  border-radius: 12px;
-  overflow: hidden;
-  flex: 0 0 100%;
-  min-width: 0;
-  opacity: 0.45;
-  transform: scale(0.92);
-  filter: blur(1px);
-  transition: opacity 0.35s ease, transform 0.35s ease, filter 0.35s ease,
-              box-shadow 0.2s ease-out;
-  cursor: pointer;
+  transition: border-color 0.25s ease, box-shadow 0.25s ease;
 }
 
-:root[data-theme="dark"] .showcase-card {
+:root[data-theme="dark"] .builds-teaser-tile {
   --card-accent: var(--card-accent-dark, var(--card-accent-light));
 }
 
-/* Unstamped dark, where theme.css flips the palette with no data-theme set. */
 @media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) .showcase-card {
+  :root:not([data-theme="light"]) .builds-teaser-tile {
     --card-accent: var(--card-accent-dark, var(--card-accent-light));
   }
 }
 
-.showcase-card--active {
-  opacity: 1;
-  transform: scale(1);
-  filter: blur(0);
-  box-shadow: none;
-}
-
-.showcase-card--active:hover {
-  box-shadow: 0 16px 32px var(--color-shadow-heavy),
-              0 0 24px color-mix(in srgb, var(--card-accent) 20%, transparent);
+.builds-teaser-tile:hover {
+  border-color: var(--color-text-muted);
+  box-shadow: 0 10px 28px var(--color-shadow-heavy);
   text-decoration: none;
 }
 
-.showcase-card-image {
-  overflow: hidden;
-  aspect-ratio: 16 / 9;
-  background: var(--color-bg-tertiary);
-}
-
-.showcase-card-image img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  transition: transform 0.3s ease-out;
-}
-
-.showcase-card--active:hover .showcase-card-image img {
-  transform: scale(1.05);
-}
-
-.showcase-card-placeholder {
-  width: 100%;
-  height: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: linear-gradient(135deg, var(--color-bg-tertiary), var(--color-bg-secondary));
-}
-
-.showcase-card-placeholder-text {
-  font-size: 2rem;
-  font-weight: 600;
-  color: var(--color-text-muted);
-  letter-spacing: 0.05em;
-}
-
-.showcase-card-content {
-  padding: 1.5rem 2rem 2rem;
-}
-
-.showcase-card-header {
-  margin-bottom: 0.75rem;
-}
-
-.showcase-type-badge {
-  display: inline-block;
-  font-size: 0.7rem;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  color: var(--card-accent);
-  background: color-mix(in srgb, var(--card-accent) 10%, transparent);
-  padding: 0.2rem 0.6rem;
-  border-radius: 4px;
-  margin-bottom: 0.5rem;
-}
-
-.showcase-card-header h3 {
-  font-size: 1.6rem;
-  color: var(--color-text-heading);
-  margin: 0;
-}
-
-.showcase-tagline {
-  font-size: 1rem;
-  color: var(--color-text-secondary);
-  margin-bottom: 0.75rem;
-  font-weight: 500;
-}
-
-.showcase-description {
-  font-size: 0.9rem;
-  color: var(--color-text-tertiary);
-  line-height: 1.6;
-  margin-bottom: 1rem;
-}
-
-.showcase-tags {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.4rem;
-  margin-bottom: 1rem;
-}
-
-.showcase-tag {
-  display: inline-block;
-  background: var(--color-pill-bg);
-  border: 1px solid var(--color-pill-border);
-  color: var(--color-pill-text);
-  padding: 0.15rem 0.5rem;
-  border-radius: 4px;
-  font-size: 0.7rem;
+.builds-teaser-type {
   font-family: var(--font-mono);
-}
-
-.showcase-cta {
-  display: inline-block;
-  color: var(--card-accent);
-  font-weight: 600;
-  font-size: 0.9rem;
-  transition: letter-spacing 0.3s ease;
-}
-
-.showcase-card--active:hover .showcase-cta {
-  letter-spacing: 0.5px;
-}
-
-.showcase-card--static.showcase-card--active {
-  cursor: default;
-}
-
-/* Carousel navigation buttons */
-.carousel-btn {
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  z-index: 2;
-  background: var(--color-bg-secondary);
-  border: 1px solid var(--color-border-primary);
-  border-radius: 50%;
-  width: 3.5rem;
-  height: 3.5rem;
-  font-size: 1.8rem;
-  line-height: 1;
-  padding: 0;
-  color: var(--color-text-secondary);
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-family: 'JetBrains Mono', monospace;
-  box-shadow: 0 2px 8px var(--color-shadow);
-  opacity: 0.75;
-  transition: background 0.15s ease, color 0.15s ease, opacity 0.15s ease;
-}
-
-.carousel-btn:hover {
-  background: var(--color-bg-tertiary);
-  color: var(--color-text-heading);
-  opacity: 1;
-}
-
-.carousel-btn--prev {
-  left: -1.25rem;
-}
-
-.carousel-btn--next {
-  right: -1.25rem;
-}
-
-/* Carousel dots */
-.carousel-dots {
-  display: flex;
-  justify-content: center;
-  gap: 0.5rem;
-  margin-top: 1.25rem;
-}
-
-.carousel-dot {
-  width: 0.6rem;
-  height: 0.6rem;
-  border-radius: 50%;
-  border: none;
-  background-color: var(--color-text-muted);
-  cursor: pointer;
-  padding: 0;
-  opacity: 0.7;
-  transition: background-color 0.2s ease, opacity 0.2s ease, transform 0.2s ease;
-  position: relative;
-}
-
-.carousel-dot::before {
-  content: '';
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 44px;
-  height: 44px;
-}
-
-.carousel-dot--active {
-  background-color: var(--color-accent);
-  opacity: 1;
-  transform: scale(1.3);
-}
-
-/* Open Source & Community Section */
-.opensource-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-  gap: 0.75rem;
-  margin-bottom: 1.5rem;
-}
-
-.opensource-tile {
-  display: flex;
-  flex-direction: column;
-  background: var(--color-bg-code);
-  border: 1px solid var(--color-accent-subtle);
-  border-radius: 8px;
-  padding: 1.25rem 1.5rem;
-  text-decoration: none;
-  color: inherit;
-  box-shadow: 0 1px 3px var(--color-shadow);
-  transition: border-color 0.2s ease, box-shadow 0.2s ease;
-}
-
-.opensource-tile:hover {
-  border-color: var(--color-accent);
-  box-shadow: 0 2px 8px var(--color-shadow);
-  text-decoration: none;
-}
-
-.opensource-tile-header {
-  display: flex;
-  align-items: center;
-  gap: 0.6rem;
-  margin-bottom: 0.5rem;
-}
-
-.opensource-tile-icon {
-  flex-shrink: 0;
+  font-size: 0.7rem;
   color: var(--color-text-muted);
 }
 
-.opensource-tile-header h3 {
-  font-size: 1rem;
-  margin: 0;
-  line-height: 1.3;
+.builds-teaser-tile h3 {
+  font-size: 1.15rem;
+  margin: 0.3rem 0 0.4rem;
   color: var(--color-text-heading);
 }
 
-.opensource-tile-description {
-  font-size: 0.875rem;
+.builds-teaser-tile p {
+  font-size: 0.9rem;
   color: var(--color-text-tertiary);
   line-height: 1.5;
-  margin: 0 0 auto;
-  padding-bottom: 0.75rem;
+  margin: 0;
 }
 
-.opensource-tile-link {
-  font-size: 0.8rem;
-  font-weight: 500;
-  color: var(--color-link-default);
-}
-
-.github-activity {
-  margin-top: 2rem;
-}
-
-.github-activity h3 {
-  font-size: 1.2rem;
-  margin-bottom: 0.4rem;
-  color: var(--color-text-heading);
-}
-
-.github-activity-description {
-  font-size: 0.9rem;
-  color: var(--color-text-muted);
-  margin-bottom: 1rem;
-}
-
-.github-chart-link {
+.builds-teaser-peek {
   display: block;
+  height: 7rem;
+  margin-top: auto;
+  padding-top: 1.25rem;
 }
 
-.github-chart {
+.builds-teaser-peek img {
+  display: block;
   width: 100%;
+  height: auto;
+  border: 1px solid var(--color-border-primary);
   border-radius: 8px;
-  opacity: 0.85;
-  transition: opacity 0.2s ease;
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--card-accent) 0%, transparent),
+              0 -4px 22px color-mix(in srgb, var(--card-accent) 22%, transparent);
+  transform: translateY(1.5rem) rotate(-3deg);
+  transform-origin: 20% 0;
+  transition: transform 0.45s cubic-bezier(0.2, 0.9, 0.25, 1.15), box-shadow 0.3s ease;
 }
 
-:root[data-theme="dark"] .github-chart {
-  filter: invert(1) hue-rotate(180deg);
+.builds-teaser-tile:hover .builds-teaser-peek img,
+.builds-teaser-tile:focus-visible .builds-teaser-peek img {
+  transform: translateY(0.1rem) rotate(0deg);
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--card-accent) 45%, transparent),
+              0 -6px 30px color-mix(in srgb, var(--card-accent) 38%, transparent);
 }
 
-/* Unstamped dark, where theme.css flips the palette with no data-theme set -
-   without this the chart keeps its white background on a #0f1117 page. */
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) .github-chart {
-    filter: invert(1) hue-rotate(180deg);
-  }
+.builds-teaser-more {
+  margin-top: 1rem;
+  font-weight: 600;
 }
 
-.github-chart-link:hover .github-chart {
-  opacity: 1;
-}
-
-/* Reduced motion */
 @media (prefers-reduced-motion: reduce) {
-  .carousel-track,
-  .showcase-card,
-  .showcase-card-image img,
-  .showcase-cta,
-  .carousel-dot,
-  .github-chart,
-  .opensource-tile {
+  .builds-teaser-tile,
+  .builds-teaser-peek img {
     transition: none;
-  }
-
-  .showcase-card--active:hover .showcase-card-image img {
-    transform: none;
   }
 }
 
 /* Expertise page mobile responsive */
 @media (max-width: 768px) {
   .consultancy-section h2,
-  .platform-experience h2,
-  .github-contributions h2,
-  .leadership-section h2,
-  .technical-skills-section h2,
-  .ai-tooling-section h2 {
+  .builds-teaser-section h2,
+  .skills-section h2 {
     font-size: 1.3em;
   }
 
-  .showcase-section h2 {
-    font-size: 1.3em;
+  .skill-row {
+    grid-template-columns: 1fr;
+    gap: 0.6rem;
   }
 
-  .carousel-btn {
-    opacity: 0.9;
-  }
-
-  .carousel-btn--prev {
-    left: -0.5rem;
-  }
-
-  .carousel-btn--next {
-    right: -0.5rem;
-  }
-
-  .showcase-card-content {
-    padding: 1rem 1.25rem 1.5rem;
-  }
-
-  .showcase-card-header h3 {
-    font-size: 1.3rem;
-  }
-
-  .showcase-card-placeholder-text {
-    font-size: 1.5rem;
+  .skill-platforms div {
+    grid-template-columns: 1fr;
+    gap: 0;
   }
 }
 </style>

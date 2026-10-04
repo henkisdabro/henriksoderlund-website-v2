@@ -118,8 +118,8 @@ Professional portfolio website for Henrik Soderlund - technology leader and AI i
 - **Theme persistence** - localStorage with system preference detection via `prefers-color-scheme`
 - **FOUC prevention** - Theme detection script runs before paint
 - **Breathing animation** - Homepage keywords glow with 3-second cubic-bezier animation, random selection every 4 seconds
-- **Project carousel** - Expertise page showcase with auto-advance (5s), keyboard navigation (arrow keys), dot indicators, pause on hover/focus
-- **Collapsible navigation** - Sidebar with "On This Page" heading scan, session-persisted state, auto-close on mobile after navigation
+- **Builds page** - featured build cards with hover-scrolling screenshots and a fullscreen `<dialog>` overlay
+- **Collapsible navigation** - Sidebar of main pages, session-persisted state, auto-close on mobile after navigation
 - **Mobile-responsive** - Navigation hidden on <1024px
 - **Native accordions** - `<details>/<summary>` for case study content
 - **GitHub contribution chart** - 1-year heatmap from `ghchart.rshah.org` with dark mode CSS filter inversion
@@ -127,10 +127,9 @@ Professional portfolio website for Henrik Soderlund - technology leader and AI i
 
 ### Accessibility
 
-- **ARIA labels** - Comprehensive on buttons (carousel, navigation, theme toggle)
-- **Keyboard navigation** - Arrow keys for carousel, tab/enter for navigation
+- **ARIA labels** - Comprehensive on buttons (build screenshots, navigation, theme toggle)
+- **Keyboard navigation** - Tab/enter for navigation, Escape closes the build overlay
 - **Reduced motion** - `prefers-reduced-motion` compliance across all animations
-- **Inert attribute** - Inactive carousel cards properly marked inert
 - **External links** - `rel="noopener noreferrer"` on all external links
 - **Semantic HTML** - Proper heading hierarchy, section tags, main content areas
 - **Alt text** - Descriptive alt text on all images
@@ -148,8 +147,7 @@ src/
   components/                   # Astro components
     ContactForm.astro           #   Form with Turnstile, validation, dataLayer tracking
     Footer.astro                #   Site footer with tech stack logos
-    GitHubLink.astro            #   GitHub profile link
-    LinkedInLink.astro          #   LinkedIn profile link
+    SocialLinks.astro           #   X, LinkedIn and GitHub profile links
     NavigationBox.astro         #   Collapsible sidebar with heading scan
     SEO.astro                   #   Open Graph, Twitter Cards, verification tags
     ThemeToggle.astro           #   Dark/light mode toggle with sun/moon icons
@@ -161,7 +159,8 @@ src/
   layouts/BaseLayout.astro      # Main layout: sGTM, Fou Analytics, JSON-LD, view transitions, SEO
   pages/                        # File-based routing
     index.astro                 #   Homepage with breathing animation
-    expertise.astro             #   Skills and project carousel
+    expertise.astro             #   Skills and builds teaser
+    builds.astro                #   Products, client builds and open source
     consultancy.astro           #   Service offerings and case studies
     work-experience.astro       #   Professional experience timeline
     education.astro             #   Educational background
@@ -200,7 +199,8 @@ public/
 | Page | Path | Rendering | Description |
 |------|------|-----------|-------------|
 | Home | `/` | Prerendered | Landing page with breathing keyword animation |
-| Expertise | `/expertise` | Prerendered | Technical skills, project carousel, GitHub chart |
+| Expertise | `/expertise` | Prerendered | Technical skills, leadership, builds teaser |
+| Builds | `/builds` | Prerendered | Products, client builds, open source, GitHub chart |
 | Consultancy | `/consultancy` | Prerendered | Service offerings, case studies, Calendly booking |
 | Work Experience | `/work-experience` | Prerendered | Professional experience timeline |
 | Education | `/education` | Prerendered | Educational background |

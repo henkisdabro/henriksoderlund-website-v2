@@ -1,6 +1,7 @@
 import { consultationData } from '../data/consultation';
 import { perthAnalyticsData } from '../data/perthAnalytics';
 import { expertiseData } from '../data/expertise';
+import { buildsData, TEASER_COUNT } from '../data/builds';
 import { workExperienceData, type Paragraph } from '../data/workExperience';
 import { CALENDLY_URL, LINKEDIN_URL, GITHUB_URL, CONTACT_EMAIL } from '../data/links';
 
@@ -13,39 +14,52 @@ Technology Leader & Automation Architect. I build automation, analytics infrastr
 
 Businesses come to me when manual work is consuming hours that should go toward growth, when reporting can't keep pace with decision-making, and when teams need someone who can see the full picture and fix it properly. I work across the full surface - workflow automation with AI, server-side tracking, measurement frameworks, custom reporting, security hardening - and what I leave behind goes beyond the deliverables: working systems, full documentation, streamlined operations, and teams that have started thinking in systems themselves. Staff who were buried in repetitive processes start identifying their own efficiencies. That compounding effect is where the real value sits.
 
-The range comes from building on both sides. I founded and grew the award-winning [Creme Digital](https://www.cremedigital.com), then moved into enterprise media at [Initiative](https://initiative.com/) Perth ([KINESSO](https://kinesso.com), [Interpublic Group](https://www.interpublic.com/)), where I built measurement systems for large-scale programmatic campaigns and led teams through difficult transitions. Agency founder and enterprise operator - that combination means I know what is technically possible and what is actually worth doing. I don't stop at implementation. I keep going until the operation runs the way it should, and the team has learned to spot the next automation themselves.
+The range comes from building on both sides. I co-founded and grew the award-winning [Creme Digital](https://www.cremedigital.com), then moved into enterprise media inside one of the global agency networks, where I built measurement systems for large-scale programmatic campaigns and led teams through two mergers. Agency co-founder and enterprise operator - that combination means I know what is technically possible and what is actually worth doing. I don't stop at implementation. I keep going until the operation runs the way it should, and the team has learned to spot the next automation themselves.
 
 - [See the full picture](https://www.henriksoderlund.com/expertise)
+- [See what I build](https://www.henriksoderlund.com/builds)
 - [GA4 & analytics in Perth](https://www.henriksoderlund.com/perth-analytics-consultant)
 `;
 }
 
-export function getExpertiseMarkdown(): string {
-  const { showcase, leadershipExpertise, skillsGrid, platformExperience, githubContributions } = expertiseData;
-
-  const showcaseProjects = showcase.projects
-    .map((p) => `### ${p.title}\n\n${p.type} - ${p.tagline}\n\n${p.description}${p.url ? `\n\nURL: ${p.url}` : ''}`)
-    .join('\n\n');
-
-  const leadershipCategories = leadershipExpertise.categories
+export function getBuildsMarkdown(): string {
+  const projects = buildsData.projects
     .map(
-      (cat) =>
-        `### ${cat.category}\n\n${cat.skills.map((s) => `- ${s}`).join('\n')}`
+      (p) =>
+        `### ${p.title}\n\n${p.type} - ${p.tagline}\n\n${p.description}\n\nBuilt with: ${p.tags.join(', ')}${p.url ? `\n\nURL: ${p.url}` : ''}${p.sourceUrl ? `\n\nSource: ${p.sourceUrl}` : ''}`
     )
     .join('\n\n');
 
-  const skillCategories = skillsGrid
-    .map(
-      (cat) =>
-        `### ${cat.category}\n\n${cat.skills.map((s) => `- ${s}`).join('\n')}`
-    )
-    .join('\n\n');
-
-  const platforms = platformExperience.platforms.join(', ');
-
-  const opensourceProjects = githubContributions.contributions
+  const opensourceProjects = buildsData.githubContributions.contributions
     .map((p) => `- [${p.title}](${p.url}) - ${p.description}`)
     .join('\n');
+
+  return `# Builds - Henrik Soederlund
+
+## ${buildsData.title}
+
+${projects}
+
+## ${buildsData.githubContributions.title}
+
+${opensourceProjects}
+`;
+}
+
+export function getExpertiseMarkdown(): string {
+  const featuredBuilds = buildsData.projects
+    .slice(0, TEASER_COUNT)
+    .map((p) => `- [${p.title}](https://www.henriksoderlund.com/builds#${p.id}) - ${p.tagline}`)
+    .join('\n');
+
+  const skillGroups = expertiseData.skills.groups
+    .map((g) => {
+      const platforms = g.platforms
+        ? `\n\n${g.platforms.map((set) => `- ${set.label}: ${set.names.join(', ')}`).join('\n')}`
+        : '';
+      return `### ${g.name}\n\n${g.description ? `${g.description}\n\n` : ''}${g.skills.map((skill) => `- ${skill}`).join('\n')}${platforms}`;
+    })
+    .join('\n\n');
 
   return `# Expertise - Henrik Soederlund
 
@@ -53,29 +67,15 @@ Strategic Technology Leadership & AI Innovation
 
 ${expertiseData.intro.paragraph}
 
-## What I Build
+## ${buildsData.title}
 
-${showcaseProjects}
+${featuredBuilds}
 
-## Leadership & Strategy
+[See all builds](https://www.henriksoderlund.com/builds)
 
-${leadershipExpertise.paragraph}
+## ${expertiseData.skills.title}
 
-${leadershipCategories}
-
-## Technical Skills
-
-${skillCategories}
-
-## Advertising Platform Expertise
-
-${platformExperience.paragraph}
-
-Platforms: ${platforms}
-
-## Open Source & Community
-
-${opensourceProjects}
+${skillGroups}
 `;
 }
 
@@ -216,6 +216,8 @@ export function getPerthAnalyticsMarkdown(): string {
 ${hero.subtitle}
 
 ${hero.statement}
+
+${hero.signals.map((sig) => `- ${sig}`).join('\n')}
 
 ## ${ladder.title}
 

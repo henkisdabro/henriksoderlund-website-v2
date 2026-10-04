@@ -1,0 +1,944 @@
+---
+export const prerender = true;
+import { Image, getImage } from 'astro:assets';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import WorkflowArt from '../components/WorkflowArt.astro';
+import { buildsData, FEATURED_COUNT, type Build } from '../data/builds';
+import { ENTITIES } from '../data/entities';
+import { GITHUB_URL } from '../data/links';
+import { pageUrl } from '../utils/pageUrl';
+import { sectionIcons } from '../utils/sectionIcons';
+import dashboardImage from '../assets/images/screenshots/dashboard.webp';
+import ascribeImage from '../assets/images/screenshots/ascribe.webp';
+import ascribeTallImage from '../assets/images/screenshots/ascribe-tall.webp';
+import rottoSnorkelImage from '../assets/images/screenshots/rotto-snorkel.webp';
+import sandcastleKitImage from '../assets/images/screenshots/sandcastle-kit.webp';
+import sandcastleKitTallImage from '../assets/images/screenshots/sandcastle-kit-tall.webp';
+import automationDiagramImage from '../assets/images/screenshots/automation-diagram.webp';
+import rottoSnorkelVideo from '../assets/videos/rotto-snorkel.mp4?url';
+import sandcastleKitStatusVideo from '../assets/videos/sandcastle-kit-status.mp4?url';
+
+const videoMap: Record<string, string> = { rottoSnorkelVideo, sandcastleKitStatusVideo };
+
+const imageMap: Record<string, ImageMetadata> = {
+  dashboardImage,
+  ascribeImage,
+  ascribeTallImage,
+  rottoSnorkelImage,
+  sandcastleKitImage,
+  sandcastleKitTallImage,
+  automationDiagramImage,
+};
+
+// The overlay shows each capture at its full resolution; the card shows a
+// downsized copy of the same file.
+const projects = await Promise.all(
+  buildsData.projects.map(async (project, i) => {
+    const source = imageMap[project.tallImage ?? project.image];
+    const full = await getImage({ src: source, width: source.width });
+    // A build left alone on the last row takes the full width as well.
+    const total = buildsData.projects.length;
+    const alone = i === total - 1 && (total - FEATURED_COUNT) % 2 === 1;
+    return {
+      ...project,
+      source,
+      fullSrc: full.src,
+      videoSrc: project.video && videoMap[project.video],
+      hoverVideoSrc: project.hoverVideo && videoMap[project.hoverVideo],
+      featured: i < FEATURED_COUNT || alone,
+    };
+  })
+);
+
+const PERSON = { '@id': 'https://www.henriksoderlund.com/#person' };
+const listUrl = `${pageUrl('/builds')}#builds`;
+
+// ascribe and sandcastle-kit reuse their sitewide entity nodes; the rest are
+// plain CreativeWorks. Every item points back at the Person as its creator.
+function buildNode(project: Build) {
+  if (project.id === 'ascribe') return ENTITIES.ascribe;
+  if (project.id === 'sandcastle-kit') return ENTITIES.sandcastleKit;
+  return {
+    '@type': project.url ? 'WebSite' : 'CreativeWork',
+    name: project.title,
+    description: project.description,
+    ...(project.url && { url: project.url }),
+    creator: PERSON,
+  };
+}
+
+const itemListSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'ItemList',
+  '@id': listUrl,
+  name: buildsData.title,
+  itemListElement: buildsData.projects.map((project, i) => ({
+    '@type': 'ListItem',
+    position: i + 1,
+    url: `${pageUrl('/builds')}#${project.id}`,
+    item: buildNode(project),
+  })),
+};
+
+const hostOf = (url: string) => new URL(url).host.replace(/^www\./, '');
+---
+
+<BaseLayout
+  pageSchemaType="CollectionPage"
+  mainEntity={{ '@type': 'ItemList', '@id': listUrl }}
+  mentions={[
+    'ascribe',
+    'sandcastleKit',
+    'googleAnalytics',
+    'cloudflareWorkers',
+    'claudeCode',
+    'openAiCodex',
+    'lookerStudio',
+    'bigQuery',
+    'powerBi',
+    'modelContextProtocol',
+    'googleTagManager',
+  ]}
+  title="What I Build | Henrik Söderlund"
+  description="Products, automation and open source built by Henrik Söderlund - ascribe, sandcastle-kit, Rotto Snorkel, workflow automation and analytics dashboards. Perth, Australia."
+>
+  <script type="application/ld+json" set:html={JSON.stringify(itemListSchema)} is:inline />
+  <div class="expertise-page builds-page">
+    <h1>Builds</h1>
+
+    <section class="builds-section">
+      <h2 id="what-i-build"><span class="section-icon" aria-hidden="true" set:html={sectionIcons.layers} />{buildsData.title}</h2>
+      <div class="builds-list">
+        {projects.map((project) => (
+          <article
+            class={`build-card${project.featured ? ' build-card--featured' : ''}${project.tallImage ? ' build-card--tall' : ''}${project.hoverVideoSrc ? ' build-card--hover-video' : ''}${project.art ? ' build-card--art' : ''}`}
+            style={`--card-accent-light: ${project.accentColour}${project.accentColourDark ? `; --card-accent-dark: ${project.accentColourDark}` : ''}`}
+          >
+            <button
+              class="build-shot"
+              type="button"
+              aria-label={`View ${project.title} fullscreen`}
+              data-full={project.fullSrc}
+              data-title={project.title}
+              data-url={project.url}
+              data-video={project.videoSrc}
+            >
+              <span class="build-shot-chrome" aria-hidden="true">
+                <i></i><i></i><i></i>
+                <span class="build-shot-address">{project.url ? hostOf(project.url) : project.type}</span>
+              </span>
+              <span class="build-shot-frame">
+                {project.art === 'workflow' ? (
+                  <WorkflowArt />
+                ) : project.videoSrc ? (
+                  <video
+                    src={project.videoSrc}
+                    poster={project.fullSrc}
+                    aria-label={`${project.title} screen recording`}
+                    muted
+                    loop
+                    playsinline
+                    preload="metadata"
+                  />
+                ) : (
+                  <Image
+                    src={project.source}
+                    alt={`${project.title} screenshot`}
+                    width={Math.min(project.source.width, 1200)}
+                    loading={project.featured ? 'eager' : 'lazy'}
+                  />
+                )}
+                {project.hoverVideoSrc && (
+                  <video class="build-shot-hover" src={project.hoverVideoSrc} muted loop playsinline preload="none" aria-hidden="true" />
+                )}
+              </span>
+              <span class="build-shot-hint" aria-hidden="true">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 3 21 3 21 9"></polyline><polyline points="9 21 3 21 3 15"></polyline><line x1="21" y1="3" x2="14" y2="10"></line><line x1="3" y1="21" x2="10" y2="14"></line></svg>
+                Fullscreen
+              </span>
+            </button>
+            <div class="build-body">
+              <span class="build-type">{project.type}</span>
+              <h3 id={project.id}>{project.title}</h3>
+              <p class="build-tagline">{project.tagline}</p>
+              <p class="build-description">{project.description}</p>
+              <div class="build-tags">
+                {project.tags.map((tag) => <span class="build-tag">{tag}</span>)}
+              </div>
+              {(project.url || project.sourceUrl) && (
+                <div class="build-links">
+                  {project.url && <a href={project.url} target="_blank" rel="noopener noreferrer" class="build-link">Visit {project.title} &rarr;</a>}
+                  {project.sourceUrl && <a href={project.sourceUrl} target="_blank" rel="noopener noreferrer" class="build-link build-link--secondary">View on GitHub &rarr;</a>}
+                </div>
+              )}
+            </div>
+          </article>
+        ))}
+      </div>
+    </section>
+
+    <section class="github-contributions">
+      <h2 id="github-contributions"><span class="section-icon" aria-hidden="true" set:html={sectionIcons.gitBranch} />{buildsData.githubContributions.title}</h2>
+
+      <div class="opensource-grid">
+        {buildsData.githubContributions.contributions.map(contribution => (
+          <a href={contribution.url} target="_blank" rel="noopener noreferrer" class="opensource-tile">
+            <div class="opensource-tile-header">
+              <svg class="opensource-tile-icon" width="20" height="20" viewBox="0 0 16 16" fill="currentColor"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"></path></svg>
+              <h3>{contribution.title}</h3>
+            </div>
+            <p class="opensource-tile-description">{contribution.description}</p>
+            <span class="opensource-tile-link">View on GitHub &rarr;</span>
+          </a>
+        ))}
+      </div>
+
+      <div class="github-activity">
+        <h3>GitHub Contribution Activity</h3>
+        <p class="github-activity-description">Daily contributions across public and private repositories over the past year. View my full profile on <a href={GITHUB_URL} target="_blank" rel="noopener noreferrer">GitHub</a>.</p>
+        <a href={GITHUB_URL} target="_blank" rel="noopener noreferrer" class="github-chart-link">
+          <img
+            src="https://ghchart.rshah.org/henkisdabro"
+            alt="Henrik's GitHub contribution graph showing daily activity over the past year"
+            class="github-chart"
+            width="663"
+            height="104"
+            loading="lazy"
+            decoding="async"
+          />
+        </a>
+      </div>
+    </section>
+
+    <!-- DRAFT COPY: placeholder wording for Henrik to replace. -->
+    <p class="page-crosslink">
+      Want something like this built for your team? See
+      <a href="/consultancy">how I work with clients</a> or <a href="/contact">get in touch</a>.
+    </p>
+  </div>
+
+  <dialog class="build-dialog" id="build-dialog" aria-labelledby="build-dialog-title">
+    <div class="build-dialog-bar">
+      <p class="build-dialog-title" id="build-dialog-title"></p>
+      <a class="build-dialog-visit" target="_blank" rel="noopener noreferrer" hidden></a>
+      <button class="build-dialog-close" type="button" aria-label="Close fullscreen view">&times;</button>
+    </div>
+    <div class="build-dialog-scroll">
+      <img alt="" />
+      <video muted loop playsinline hidden></video>
+      <div class="build-dialog-art" hidden></div>
+    </div>
+  </dialog>
+</BaseLayout>
+
+<script is:inline type="module" data-csp>
+  const dialog = document.getElementById('build-dialog');
+  if (dialog) {
+    const dialogImg = dialog.querySelector('img');
+    const dialogVideo = dialog.querySelector('video');
+    const dialogArt = dialog.querySelector('.build-dialog-art');
+    const dialogTitle = dialog.querySelector('.build-dialog-title');
+    const dialogVisit = dialog.querySelector('.build-dialog-visit');
+    const dialogScroll = dialog.querySelector('.build-dialog-scroll');
+    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    function openBuild(shot) {
+      // The card's media is an image, a screen recording or a drawn illustration.
+      const media = shot.querySelector('svg, img, video');
+      const { full, title, url, video } = shot.dataset;
+      const art = media instanceof SVGElement;
+      const target = art ? dialogArt : video ? dialogVideo : dialogImg;
+
+      const show = () => {
+        media.style.viewTransitionName = '';
+        dialogImg.hidden = art || !!video;
+        dialogVideo.hidden = art || !video;
+        dialogArt.hidden = !art;
+        if (art) {
+          dialogArt.replaceChildren(media.cloneNode(true));
+        } else if (video) {
+          dialogVideo.poster = full;
+          dialogVideo.src = video;
+          dialogVideo.play();
+        } else {
+          dialogImg.src = full;
+          dialogImg.alt = media.alt;
+        }
+        target.style.viewTransitionName = 'build-shot';
+        dialogTitle.textContent = title;
+        dialogVisit.hidden = !url;
+        if (url) {
+          dialogVisit.href = url;
+          dialogVisit.textContent = `Visit ${title} →`;
+        }
+        dialog.showModal();
+        dialogScroll.scrollTop = 0;
+      };
+
+      // The card image morphs into the overlay where the browser supports it.
+      if (!document.startViewTransition || reducedMotion) return show();
+      media.style.viewTransitionName = 'build-shot';
+      document.startViewTransition(show);
+    }
+
+    document.querySelectorAll('.build-shot').forEach((shot) => {
+      shot.addEventListener('click', () => openBuild(shot));
+    });
+
+    dialog.querySelector('.build-dialog-close').addEventListener('click', () => dialog.close());
+    // A click on the dialog element itself is a click on the backdrop.
+    dialog.addEventListener('click', (e) => {
+      if (e.target === dialog) dialog.close();
+    });
+    dialog.addEventListener('close', () => {
+      dialogImg.style.viewTransitionName = '';
+      dialogVideo.style.viewTransitionName = '';
+      dialogArt.style.viewTransitionName = '';
+      dialogVideo.pause();
+    });
+
+    // Screen recordings play only while their card is on screen, and stay on
+    // the poster frame for visitors who prefer reduced motion.
+    if (!reducedMotion) {
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(({ target, isIntersecting }) => {
+          if (isIntersecting) target.play();
+          else target.pause();
+        });
+      }, { threshold: 0.4 });
+      document.querySelectorAll('.build-shot video:not(.build-shot-hover)').forEach((v) => observer.observe(v));
+
+      // A hover recording plays only while its card is hovered or focused.
+      document.querySelectorAll('.build-card--hover-video').forEach((card) => {
+        const hoverVideo = card.querySelector('.build-shot-hover');
+        const start = () => hoverVideo.play();
+        const stop = () => hoverVideo.pause();
+        card.addEventListener('pointerenter', start);
+        card.addEventListener('pointerleave', stop);
+        card.addEventListener('focusin', start);
+        card.addEventListener('focusout', stop);
+      });
+    }
+
+    // Accent glow that follows the pointer across a card.
+    document.querySelectorAll('.build-card').forEach((card) => {
+      card.addEventListener('pointermove', (e) => {
+        const rect = card.getBoundingClientRect();
+        card.style.setProperty('--glow-x', `${e.clientX - rect.left}px`);
+        card.style.setProperty('--glow-y', `${e.clientY - rect.top}px`);
+      });
+    });
+  }
+</script>
+
+<style is:global>
+.builds-section h2,
+.github-contributions h2 {
+  font-size: 2rem;
+  margin-bottom: 1.5rem;
+  color: var(--color-text-heading);
+}
+
+.builds-section {
+  margin-top: 2rem;
+  margin-bottom: 3rem;
+}
+
+.github-contributions {
+  margin-bottom: 3rem;
+}
+
+/* Featured builds span the row; the rest pair up beneath them. */
+.builds-list {
+  container-type: inline-size;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.25rem;
+}
+
+/* --card-accent renders as text on both theme grounds, so a card may carry a
+   second value for dark. Cards without --card-accent-dark keep the single one. */
+.build-card {
+  --card-accent: var(--card-accent-light);
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  background: var(--color-bg-primary);
+  border: 1px solid var(--color-border-primary);
+  border-radius: 12px;
+  overflow: hidden;
+  transition: border-color 0.25s ease, box-shadow 0.25s ease, transform 0.25s ease;
+}
+
+:root[data-theme="dark"] .build-card {
+  --card-accent: var(--card-accent-dark, var(--card-accent-light));
+}
+
+/* Unstamped dark, where theme.css flips the palette with no data-theme set. */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .build-card {
+    --card-accent: var(--card-accent-dark, var(--card-accent-light));
+  }
+}
+
+.build-card--featured {
+  grid-column: 1 / -1;
+}
+
+/* Pointer-following accent glow; --glow-x/--glow-y are set from the script. */
+.build-card::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(
+    420px circle at var(--glow-x, 50%) var(--glow-y, 0%),
+    color-mix(in srgb, var(--card-accent) 16%, transparent),
+    transparent 65%
+  );
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.build-card:hover {
+  border-color: color-mix(in srgb, var(--card-accent) 55%, var(--color-border-primary));
+  box-shadow: 0 18px 40px var(--color-shadow-heavy),
+              0 0 28px color-mix(in srgb, var(--card-accent) 18%, transparent);
+  transform: translateY(-3px);
+}
+
+.build-card:hover::after {
+  opacity: 1;
+}
+
+/* Screenshot in a browser frame - the whole frame is the fullscreen trigger. */
+.build-shot {
+  position: relative;
+  display: block;
+  width: 100%;
+  padding: 0;
+  border: none;
+  border-bottom: 1px solid var(--color-border-primary);
+  background: var(--color-bg-tertiary);
+  cursor: zoom-in;
+  font: inherit;
+  color: inherit;
+  text-align: left;
+}
+
+.build-shot-chrome {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.5rem 0.75rem;
+  background: var(--color-bg-secondary);
+  border-bottom: 1px solid var(--color-border-primary);
+}
+
+.build-shot-chrome i {
+  width: 0.55rem;
+  height: 0.55rem;
+  border-radius: 50%;
+  background: var(--color-text-muted);
+  opacity: 0.45;
+}
+
+.build-shot-address {
+  margin-left: 0.5rem;
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  color: var(--color-text-muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.build-shot-frame {
+  position: relative;
+  display: block;
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+}
+
+/* A drawn illustration is near-square and sets its own frame shape. */
+.build-card--art .build-shot-frame {
+  aspect-ratio: 440 / 470;
+}
+
+/* Recording that fades and settles in over the screenshot on hover. */
+.build-shot-frame .build-shot-hover {
+  position: absolute;
+  inset: 0;
+  object-position: left top;
+  opacity: 0;
+  transform: scale(1.12);
+  transition: opacity 0.35s ease, transform 0.6s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.build-card--hover-video:hover .build-shot-hover,
+.build-card--hover-video .build-shot:focus-visible .build-shot-hover {
+  opacity: 1;
+  transform: none;
+}
+
+.build-shot-frame img,
+.build-shot-frame video {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center top;
+  transition: transform 0.4s ease-out, object-position 1.2s ease-out;
+}
+
+.build-card:hover .build-shot-frame img {
+  transform: scale(1.04);
+}
+
+/* A full-page capture scrolls through the frame instead of zooming. */
+.build-card--tall:hover .build-shot-frame img,
+.build-card--tall .build-shot:focus-visible .build-shot-frame img {
+  transform: none;
+  object-position: center bottom;
+  transition: object-position 9s linear;
+}
+
+/* With a hover recording the screenshot stays put underneath it. */
+.build-card--hover-video:hover .build-shot-frame img,
+.build-card--hover-video .build-shot:focus-visible .build-shot-frame img {
+  object-position: center top;
+  transition: none;
+}
+
+.build-shot-hint {
+  position: absolute;
+  right: 0.75rem;
+  bottom: 0.75rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.35rem 0.65rem;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--color-bg-primary) 88%, transparent);
+  border: 1px solid var(--color-border-primary);
+  color: var(--color-text-heading);
+  font-size: 0.72rem;
+  font-weight: 600;
+  opacity: 0;
+  transform: translateY(4px);
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.build-card:hover .build-shot-hint,
+.build-shot:focus-visible .build-shot-hint {
+  opacity: 1;
+  transform: none;
+}
+
+/* No hover on touch screens, so the hint is always shown there. */
+@media (hover: none) {
+  .build-shot-hint {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.build-shot:focus-visible {
+  outline: 2px solid var(--card-accent);
+  outline-offset: -2px;
+}
+
+.build-body {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  padding: 1.25rem 1.5rem 1.5rem;
+}
+
+.build-type {
+  align-self: flex-start;
+  font-size: 0.7rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--card-accent);
+  background: color-mix(in srgb, var(--card-accent) 10%, transparent);
+  padding: 0.2rem 0.6rem;
+  border-radius: 4px;
+  margin-bottom: 0.5rem;
+}
+
+.build-body h3 {
+  font-size: 1.3rem;
+  color: var(--color-text-heading);
+  margin: 0 0 0.5rem;
+}
+
+.build-card--featured .build-body h3 {
+  font-size: 1.6rem;
+}
+
+.build-tagline {
+  font-size: 1rem;
+  color: var(--color-text-secondary);
+  margin-bottom: 0.75rem;
+  font-weight: 500;
+}
+
+.build-description {
+  font-size: 0.9rem;
+  color: var(--color-text-tertiary);
+  line-height: 1.6;
+  margin-bottom: 1rem;
+}
+
+.build-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin-bottom: 1rem;
+}
+
+.build-tag {
+  display: inline-block;
+  background: var(--color-pill-bg);
+  border: 1px solid var(--color-pill-border);
+  color: var(--color-pill-text);
+  padding: 0.15rem 0.5rem;
+  border-radius: 4px;
+  font-size: 0.7rem;
+  font-family: var(--font-mono);
+}
+
+.build-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1.25rem;
+  margin-top: auto;
+}
+
+.build-link {
+  color: var(--card-accent);
+  font-weight: 600;
+  font-size: 0.9rem;
+  text-decoration: none;
+}
+
+.build-link:hover {
+  color: var(--card-accent);
+  text-decoration: underline;
+}
+
+.build-link--secondary {
+  color: var(--color-text-secondary);
+}
+
+/* Featured cards go side by side once the column is wide enough. */
+@container (min-width: 720px) {
+  .build-card--featured {
+    flex-direction: row;
+  }
+
+  .build-card--featured .build-shot {
+    flex: 0 0 56%;
+    display: flex;
+    flex-direction: column;
+    border-bottom: none;
+    border-right: 1px solid var(--color-border-primary);
+  }
+
+  .build-card--featured .build-shot-frame {
+    flex: 1;
+    aspect-ratio: 16 / 10;
+  }
+
+  /* The frame is taller than a 16:9 capture here, so media fills it and
+     crops: images keep their top-left corner, recordings their centre. */
+  .build-card--featured:not(.build-card--tall) .build-shot-frame img {
+    object-position: left top;
+  }
+
+  .build-card--featured .build-shot-frame video:not(.build-shot-hover) {
+    object-position: center;
+  }
+
+  .build-card--featured .build-body {
+    padding: 1.75rem 2rem;
+    justify-content: center;
+  }
+
+  .build-card--featured .build-links {
+    margin-top: 0;
+  }
+}
+
+@container (max-width: 560px) {
+  .build-card {
+    grid-column: 1 / -1;
+  }
+}
+
+/* Cards rise into place as they scroll into view, where supported. */
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .build-card {
+      animation: build-rise linear both;
+      animation-timeline: view();
+      animation-range: entry 0% entry 45%;
+    }
+  }
+}
+
+@keyframes build-rise {
+  from {
+    opacity: 0;
+    translate: 0 28px;
+  }
+}
+
+/* Fullscreen overlay */
+.build-dialog {
+  width: min(1280px, 94vw);
+  max-width: none;
+  height: 92vh;
+  max-height: none;
+  margin: auto;
+  padding: 0;
+  border: 1px solid var(--color-border-primary);
+  border-radius: 12px;
+  background: var(--color-bg-primary);
+  color: var(--color-text-primary);
+  overflow: hidden;
+  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.45);
+}
+
+.build-dialog[open] {
+  display: flex;
+  flex-direction: column;
+}
+
+.build-dialog::backdrop {
+  background: rgba(8, 10, 16, 0.72);
+  backdrop-filter: blur(6px);
+}
+
+.build-dialog-bar {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.6rem 0.75rem 0.6rem 1.25rem;
+  border-bottom: 1px solid var(--color-border-primary);
+  background: var(--color-bg-secondary);
+}
+
+.build-dialog-title {
+  margin: 0 auto 0 0;
+  font-weight: 600;
+  color: var(--color-text-heading);
+}
+
+.build-dialog-visit {
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.build-dialog-close {
+  width: 2.5rem;
+  height: 2.5rem;
+  padding: 0;
+  border: none;
+  border-radius: 50%;
+  background: none;
+  color: var(--color-text-secondary);
+  font-size: 1.6rem;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.build-dialog-close:hover {
+  background: var(--color-bg-tertiary);
+  color: var(--color-text-heading);
+}
+
+.build-dialog-scroll {
+  flex: 1;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  background: var(--color-bg-tertiary);
+}
+
+.build-dialog-scroll img,
+.build-dialog-scroll video {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.build-dialog-scroll [hidden] {
+  display: none;
+}
+
+.build-dialog-art {
+  height: 100%;
+}
+
+/* Open Source & Community Section */
+.opensource-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 0.75rem;
+  margin-bottom: 1.5rem;
+}
+
+.opensource-tile {
+  display: flex;
+  flex-direction: column;
+  background: var(--color-bg-code);
+  border: 1px solid var(--color-accent-subtle);
+  border-radius: 8px;
+  padding: 1.25rem 1.5rem;
+  text-decoration: none;
+  color: inherit;
+  box-shadow: 0 1px 3px var(--color-shadow);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.opensource-tile:hover {
+  border-color: var(--color-accent);
+  box-shadow: 0 2px 8px var(--color-shadow);
+  text-decoration: none;
+}
+
+.opensource-tile-header {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin-bottom: 0.5rem;
+}
+
+.opensource-tile-icon {
+  flex-shrink: 0;
+  color: var(--color-text-muted);
+}
+
+.opensource-tile-header h3 {
+  font-size: 1rem;
+  margin: 0;
+  line-height: 1.3;
+  color: var(--color-text-heading);
+}
+
+.opensource-tile-description {
+  font-size: 0.875rem;
+  color: var(--color-text-tertiary);
+  line-height: 1.5;
+  margin: 0 0 auto;
+  padding-bottom: 0.75rem;
+}
+
+.opensource-tile-link {
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: var(--color-link-default);
+}
+
+.github-activity {
+  margin-top: 2rem;
+}
+
+.github-activity h3 {
+  font-size: 1.2rem;
+  margin-bottom: 0.4rem;
+  color: var(--color-text-heading);
+}
+
+.github-activity-description {
+  font-size: 0.9rem;
+  color: var(--color-text-muted);
+  margin-bottom: 1rem;
+}
+
+.github-chart-link {
+  display: block;
+}
+
+.github-chart {
+  width: 100%;
+  border-radius: 8px;
+  opacity: 0.85;
+  transition: opacity 0.2s ease;
+}
+
+:root[data-theme="dark"] .github-chart {
+  filter: invert(1) hue-rotate(180deg);
+}
+
+/* Unstamped dark, where theme.css flips the palette with no data-theme set -
+   without this the chart keeps its white background on a #0f1117 page. */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .github-chart {
+    filter: invert(1) hue-rotate(180deg);
+  }
+}
+
+.github-chart-link:hover .github-chart {
+  opacity: 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .build-shot-frame .build-shot-hover {
+    display: none;
+  }
+
+  .build-card,
+  .build-card::after,
+  .build-shot-frame img,
+  .build-shot-hint,
+  .github-chart,
+  .opensource-tile {
+    transition: none;
+  }
+
+  .build-card:hover,
+  .build-card:hover .build-shot-frame img {
+    transform: none;
+  }
+
+  .build-card--tall:hover .build-shot-frame img,
+  .build-card--tall .build-shot:focus-visible .build-shot-frame img {
+    object-position: center top;
+    transition: none;
+  }
+}
+
+@media (max-width: 768px) {
+  .builds-section h2,
+  .github-contributions h2 {
+    font-size: 1.3em;
+  }
+
+  .build-body {
+    padding: 1rem 1.25rem 1.5rem;
+  }
+
+  .build-card--featured .build-body h3 {
+    font-size: 1.3rem;
+  }
+
+  .build-dialog {
+    width: 100vw;
+    height: 100dvh;
+    border: none;
+    border-radius: 0;
+  }
+}
+
+@media print {
+  .build-shot-hint,
+  .build-dialog {
+    display: none !important;
+  }
+}
+</style>

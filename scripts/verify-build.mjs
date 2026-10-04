@@ -13,6 +13,7 @@ const RESET = '\x1b[0m';
 const htmlPages = [
   { path: 'dist/client/index.html', minBytes: 10000 },
   { path: 'dist/client/expertise/index.html', minBytes: 10000 },
+  { path: 'dist/client/builds/index.html', minBytes: 10000 },
   { path: 'dist/client/consultancy/index.html', minBytes: 10000 },
   { path: 'dist/client/perth-analytics-consultant/index.html', minBytes: 10000 },
   { path: 'dist/client/work-experience/index.html', minBytes: 5000 },
@@ -25,6 +26,7 @@ const textEndpoints = [
   { path: 'dist/client/llms.txt', minBytes: 500 },
   { path: 'dist/client/llms-full.txt', minBytes: 5000 },
   { path: 'dist/client/expertise.md', minBytes: 500 },
+  { path: 'dist/client/builds.md', minBytes: 500 },
   { path: 'dist/client/consultancy.md', minBytes: 500 },
   { path: 'dist/client/perth-analytics-consultant.md', minBytes: 500 },
   { path: 'dist/client/work-experience.md', minBytes: 500 },
