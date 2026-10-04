@@ -53,27 +53,6 @@ const imageMap: Record<string, ImageMetadata> = {
       <p>{expertiseData.intro.paragraph}</p>
     </section>
 
-    <section class="builds-teaser-section">
-      <h2 id="what-i-build"><span class="section-icon" aria-hidden="true" set:html={sectionIcons.layers} />{buildsData.title}</h2>
-      <div class="builds-teaser">
-        {buildsData.projects.slice(0, TEASER_COUNT).map(project => (
-          <a
-            href={`/builds#${project.id}`}
-            class="builds-teaser-tile"
-            style={`--card-accent-light: ${project.accentColour}${project.accentColourDark ? `; --card-accent-dark: ${project.accentColourDark}` : ''}`}
-          >
-            <span class="builds-teaser-type">{project.type}</span>
-            <h3>{project.title}</h3>
-            <p>{project.tagline}</p>
-            <span class="builds-teaser-peek" aria-hidden="true">
-              <Image src={imageMap[project.image]} alt="" width={520} loading="lazy" />
-            </span>
-          </a>
-        ))}
-      </div>
-      <p class="builds-teaser-more"><a href="/builds">See all builds &rarr;</a></p>
-    </section>
-
     <section class="skills-section">
       <h2 id="technical-skills"><span class="section-icon" aria-hidden="true" set:html={sectionIcons.wrench} />{skills.title}</h2>
       <div class="skill-rows">
@@ -104,6 +83,27 @@ const imageMap: Record<string, ImageMetadata> = {
           </div>
         ))}
       </div>
+    </section>
+
+    <section class="builds-teaser-section">
+      <h2 id="what-i-build"><span class="section-icon" aria-hidden="true" set:html={sectionIcons.layers} />{buildsData.title}</h2>
+      <div class="builds-teaser">
+        {buildsData.projects.slice(0, TEASER_COUNT).map(project => (
+          <a
+            href={`/builds#${project.id}`}
+            class="builds-teaser-tile"
+            style={`--card-accent-light: ${project.accentColour}${project.accentColourDark ? `; --card-accent-dark: ${project.accentColourDark}` : ''}`}
+          >
+            <span class="builds-teaser-type">{project.type}</span>
+            <h3>{project.title}</h3>
+            <p>{project.tagline}</p>
+            <span class="builds-teaser-peek" aria-hidden="true">
+              <Image src={imageMap[project.image]} alt="" width={520} loading="lazy" />
+            </span>
+          </a>
+        ))}
+      </div>
+      <p class="builds-teaser-more"><a href="/builds">See all builds &rarr;</a></p>
     </section>
 
     <p class="page-crosslink">
