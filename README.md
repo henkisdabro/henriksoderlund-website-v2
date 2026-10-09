@@ -117,7 +117,7 @@ Professional portfolio website for Henrik Soderlund - independent technology con
 - **Light mode** with clean, minimal serif typography
 - **Theme persistence** - localStorage with system preference detection via `prefers-color-scheme`
 - **FOUC prevention** - Theme detection script runs before paint
-- **Motion surface** - pointer spotlight on `[data-glow]` buttons and cards, drawn-in link underlines and cross-page view transitions (`App.css`, `BaseLayout.astro`); on the homepage, a glow behind the portrait and a canvas depth field behind the hero that starts after load, pauses off-screen and holds still under `prefers-reduced-motion`
+- **Motion surface** - pointer spotlight on `[data-glow]` buttons and cards, drawn-in link underlines and cross-page view transitions (`App.css`, `BaseLayout.astro`); on the homepage, a glow behind the portrait and a depth field behind the hero - a faint WebGL2 mesh gradient with film grain ([Paper Shaders](https://shaders.paper.design), Apache-2.0) under drifting hairlines. Source in `src/scripts/depth-grain.js`; `scripts/build-depth-grain.mjs` bundles it before `dev` and `build`, and `index.astro` inlines the result so the CSP nonce covers it. It starts after load, pauses off-screen, falls back to a still CSS haze without WebGL2 and holds still under `prefers-reduced-motion`
 - **Builds page** - featured build cards with hover-scrolling screenshots and a fullscreen `<dialog>` overlay
 - **Collapsible navigation** - Sidebar of main pages, session-persisted state, auto-close on mobile after navigation
 - **Mobile-responsive** - Navigation hidden on <1024px

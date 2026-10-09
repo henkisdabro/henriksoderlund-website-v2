@@ -4,7 +4,7 @@ import tseslint from "typescript-eslint";
 import astro from "eslint-plugin-astro";
 
 export default tseslint.config(
-  { ignores: ["dist", ".astro", "worker-configuration.d.ts"] },
+  { ignores: ["dist", ".astro", "worker-configuration.d.ts", "src/generated"] },
 
   // Base JS rules for every linted file. Nesting this inside the block that
   // carries `files: ["**/*.{ts,tsx}"]` scoped it to TypeScript only, which
@@ -18,6 +18,14 @@ export default tseslint.config(
       ecmaVersion: "latest",
       sourceType: "module",
       globals: globals.node,
+    },
+  },
+
+  // Browser modules bundled into the page (scripts/build-depth-grain.mjs).
+  {
+    files: ["src/scripts/**/*.js"],
+    languageOptions: {
+      globals: globals.browser,
     },
   },
 
