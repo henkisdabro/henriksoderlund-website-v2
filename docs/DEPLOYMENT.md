@@ -53,7 +53,7 @@ Add these secrets to your GitHub repository settings (`Settings` > `Secrets and 
 #### Build Verification
 
 - Dependency installation with pnpm, frozen lockfile
-- ESLint code quality checks
+- Oxlint code quality checks
 - Astro check (type checking)
 - Astro build process
 - Markdown endpoint generation

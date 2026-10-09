@@ -7,7 +7,7 @@
 [![CI/CD](https://img.shields.io/github/actions/workflow/status/henkisdabro/henriksoderlund-website-v2/deploy.yml?branch=main&label=deploy&logo=githubactions&logoColor=white)](https://github.com/henkisdabro/henriksoderlund-website-v2/actions)
 [![Node.js](https://img.shields.io/badge/node.js-24_LTS-339933?style=flat&logo=node.js&logoColor=white)](https://nodejs.org/)
 [![pnpm](https://img.shields.io/badge/pnpm-11-F69220?style=flat&logo=pnpm&logoColor=white)](https://pnpm.io/)
-[![ESLint](https://img.shields.io/badge/eslint-10-4B32C3?style=flat&logo=eslint&logoColor=white)](https://eslint.org/)
+[![Oxlint](https://img.shields.io/badge/oxlint-1.87-32F3E9?style=flat)](https://oxc.rs/docs/guide/usage/linter)
 [![License](https://img.shields.io/badge/licence-private-lightgrey?style=flat)](#)
 
 Professional portfolio website for Henrik Soderlund - independent technology consultant. Built with Astro 6, deployed globally on Cloudflare Workers with hybrid rendering, per-request CSP nonces, server-side GTM, and dark mode theming.
@@ -59,7 +59,7 @@ Professional portfolio website for Henrik Soderlund - independent technology con
 | Analytics | Server-side GTM + [Fou Analytics](https://fouanalytics.com/) | Privacy-focused analytics on custom sGTM domain |
 | SEO | [@astrojs/sitemap](https://docs.astro.build/en/guides/integrations-guide/sitemap/) + JSON-LD | Automatic sitemap, structured data |
 | Fonts | [JetBrains Mono](https://www.jetbrains.com/lp/mono/) | Coding font for dark mode (6 weights) |
-| Linting | [ESLint 10](https://eslint.org/) | Code quality with TypeScript support |
+| Linting | [Oxlint](https://oxc.rs/docs/guide/usage/linter) | Rust linter; covers `.astro` frontmatter and `<script>` blocks, TypeScript and the build scripts (`.oxlintrc.json`) |
 | Package Manager | [pnpm 11](https://pnpm.io/) | Pinned via `packageManager`, used by CI |
 | CI/CD | [GitHub Actions](https://github.com/features/actions) | Automated build, lint, deploy, smoke tests |
 | CLI | [Wrangler 4](https://developers.cloudflare.com/workers/wrangler/) | Cloudflare Workers development toolkit |
@@ -235,7 +235,7 @@ pnpm run dev          # Start dev server at http://localhost:4321
 
 ```bash
 pnpm run build        # Production build (astro check + astro build + wrangler patch + verify)
-pnpm run lint         # ESLint code quality check
+pnpm run lint         # Oxlint code quality check
 pnpm run check        # Full validation (type check + build + wrangler patch + verify)
 pnpm run cf-typegen   # Generate Cloudflare Workers types
 ```
