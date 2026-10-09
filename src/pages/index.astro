@@ -212,9 +212,12 @@ import depthGrain from '../generated/depth-grain.js?raw';
 @keyframes hero-bloom { from { opacity: 0; transform: scale(0.82); } }
 @keyframes hero-rise { from { opacity: 0; transform: translateY(10px); } }
 
-/* Depth field behind the hero. It sits outside .app, so .app is lifted above
-   it - only on this page, where the field exists. */
-.gg-field ~ .app {
+/* Depth field behind the hero. It sits outside .app, so the content is lifted
+   above it - only on this page, where the field exists. Lift .app's content,
+   not .app: positioning .app would make it the containing block for the
+   absolutely positioned .social-links and pull the pill in from the gutter. */
+.gg-field ~ .app > .main-content,
+.gg-field ~ .app > .site-footer {
   position: relative;
   z-index: 1;
 }
