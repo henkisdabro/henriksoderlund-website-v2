@@ -12,7 +12,7 @@ const CSP_TEMPLATE = [
   "style-src 'self' 'unsafe-inline' https://tagmanager.google.com https://fonts.googleapis.com https://www.googletagmanager.com",
   "img-src 'self' data: https://www.googletagmanager.com https://*.google-analytics.com https://stats.g.doubleclick.net https://ssl.gstatic.com https://www.gstatic.com https://fonts.gstatic.com *.google.com *.google.com.au https://ghchart.rshah.org https://api.fouanalytics.com",
   "font-src 'self' data: https://fonts.gstatic.com",
-  "frame-src 'self' https://www.googletagmanager.com https://challenges.cloudflare.com",
+  "frame-src 'self' https://www.googletagmanager.com https://challenges.cloudflare.com https://calendly.com",
   "worker-src 'self' blob:",
   "child-src 'self' blob:",
   "object-src 'none'",

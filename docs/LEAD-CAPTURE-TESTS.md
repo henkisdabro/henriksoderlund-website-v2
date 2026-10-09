@@ -42,7 +42,11 @@ Analytics requests are blocked in every test (`fixtures.ts`), so runs never coun
 
 - every `event:` pushed anywhere in `src/` fires a GA4 tag, unless it is in `UNTRACKED_EVENTS` with a reason
 - no trigger waits for an event nothing in `src/` pushes, which is how a rename shows up
-- every key the lead flows actually push at runtime (`generate_lead`, `form_error`, `booking_start`) is forwarded by the tag
+- every key the lead flows actually push at runtime (`generate_lead`, `form_error`, `booking_start`, `booking_complete`) is forwarded by the tag
+
+## Booking popup
+
+A plain click on any Calendly link opens the booking page in an on-site `<dialog>` (`src/layouts/BaseLayout.astro`) instead of a new tab, because only an embedded booking page can report back. It posts `calendly.event_scheduled` from the `https://calendly.com` origin, which pushes `booking_complete` with the opening CTA's `cta_location` and `link_url` plus `time_to_book_sec`. A modified click (cmd/ctrl/shift) still opens Calendly in a new tab, and that booking goes unmeasured. `cta.spec` stands in for Calendly with a stub that sends the same message from the same origin, and checks the frame passes the CSP (`frame-src https://calendly.com`).
 
 So a new or renamed event fails CI until GTM is published to match. Publish GTM first; a trigger can match both names during the switch.
 
