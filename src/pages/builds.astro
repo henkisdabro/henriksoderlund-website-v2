@@ -111,7 +111,7 @@ const hostOf = (url: string) => new URL(url).host.replace(/^www\./, '');
       <div class="builds-list">
         {projects.map((project) => (
           <article
-            class={`build-card${project.featured ? ' build-card--featured' : ''}${project.tallImage ? ' build-card--tall' : ''}${project.hoverVideoSrc ? ' build-card--hover-video' : ''}${project.art ? ' build-card--art' : ''}`}
+            class={`build-card${project.featured ? ' build-card--featured' : ''}${project.tallImage ? ' build-card--tall' : ''}${project.hoverVideoSrc ? ' build-card--hover-video' : ''}${project.videoSrc ? ' build-card--video' : ''}${project.art ? ' build-card--art' : ''}`}
             style={`--card-accent-light: ${project.accentColour}${project.accentColourDark ? `; --card-accent-dark: ${project.accentColourDark}` : ''}`}
           >
             <button
@@ -460,6 +460,11 @@ const hostOf = (url: string) => new URL(url).host.replace(/^www\./, '');
   overflow: hidden;
 }
 
+/* Recordings are captured at 16:10 and show uncropped. */
+.build-card--video .build-shot-frame {
+  aspect-ratio: 16 / 10;
+}
+
 /* A drawn illustration is near-square and sets its own frame shape. */
 .build-card--art .build-shot-frame {
   aspect-ratio: 440 / 470;
@@ -655,13 +660,9 @@ const hostOf = (url: string) => new URL(url).host.replace(/^www\./, '');
   }
 
   /* The frame is taller than a 16:9 capture here, so media fills it and
-     crops: images keep their top-left corner, recordings their centre. */
+     crops, keeping its top-left corner. */
   .build-card--featured:not(.build-card--tall) .build-shot-frame img {
     object-position: left top;
-  }
-
-  .build-card--featured .build-shot-frame video:not(.build-shot-hover) {
-    object-position: center;
   }
 
   .build-card--featured .build-body {
@@ -671,6 +672,18 @@ const hostOf = (url: string) => new URL(url).host.replace(/^www\./, '');
 
   .build-card--featured .build-links {
     margin-top: 0;
+  }
+
+  /* A desktop recording would lose its edges in the side-by-side frame, so it
+     keeps the stacked layout and its own 16:10 shape. */
+  .build-card--featured.build-card--video {
+    flex-direction: column;
+  }
+
+  .build-card--featured.build-card--video .build-shot {
+    flex: none;
+    border-right: none;
+    border-bottom: 1px solid var(--color-border-primary);
   }
 }
 
