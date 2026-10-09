@@ -18,7 +18,7 @@ export const workExperienceData: { location: string; flag: ImageMetadata; title:
         { text: 'advanced analytics and measurement frameworks', href: '/perth-analytics-consultant' },
         ', and custom web applications. Projects range from intelligent workflow systems and data pipeline architecture to consumer-facing digital products.',
       ],
-      'Independently launched products including ascribe.to, a SaaS platform that validates marketing tracking links against GA4 channel definitions before launch, and Rottosnorkel.com, a live snorkelling guide for Rottnest Island providing real-time safety ratings across 39 locations. Leading with rapid prototyping, building working solutions quickly, validating with data, and iterating based on evidence.',
+      'Independently launched products including ascribe.to, a SaaS platform that validates marketing tracking links against GA4 channel definitions before launch, and Rottosnorkel.com, a live snorkelling guide for Rottnest Island providing real-time safety ratings across 36 spots and wrecks. Leading with rapid prototyping, building working solutions quickly, validating with data, and iterating based on evidence.',
     ],
   },
   {
