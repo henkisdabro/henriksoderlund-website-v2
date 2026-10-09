@@ -14,7 +14,7 @@ Independent consultant in Perth. I work out what is slowing a business down, the
 
 ## What clients bring me
 
-Usually some version of the same thing: numbers nobody trusts, reporting someone rebuilds by hand every month, or work that still runs on email and spreadsheets. I have fixed it for WA government, agencies, ad tech, entertainment and not-for-profit health. For one 150-person agency, automating project and billing workflows cut admin time by 75 per cent and recovered AUD 285,000 in unbilled work. I do the implementation myself.
+Usually some version of the same thing: numbers nobody trusts, reporting someone rebuilds by hand every month, or work that still runs on email and spreadsheets. I have fixed it for WA government, agencies, ad tech, entertainment and not-for-profit health. For one 150-person agency, automating project and billing workflows cut admin time by 75 per cent. I do the implementation myself.
 
 ## How I build
 
