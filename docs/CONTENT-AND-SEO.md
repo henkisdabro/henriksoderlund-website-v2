@@ -6,12 +6,12 @@ Rules specific to this site. The house style rules that apply to all of Henrik's
 
 Professional, direct, technical without excessive formality. This is a consulting shopfront, so claims are specific and evidenced rather than promotional. Terminology stays uniform across pages, structured data and the markdown endpoints - the same service should not be "consultancy" in one place and "consulting services" in another.
 
-Henrik's positioning line varies by surface and each surface keeps the one it already uses:
-**Technology Leader & Automation Architect** in the `Person` and `WebSite` structured data
-(`BaseLayout.astro`), **Technology Leader & AI Innovator** in the markdown endpoints
-(`pageMarkdown.ts`, `llms.txt.ts`), and the plain job title **Digital Consultant** in the prose of
-`llms-full.txt.ts`. Do not swap one for another without asking - they are deliberate register
-differences, not drift.
+Henrik's positioning is one label everywhere since 20261009: **Independent Technology Consultant**
+(title case as a job title in structured data and on Work Experience, lower case in prose). It
+replaced "Technology Leader & Automation Architect", "Technology Leader & AI Innovator" and
+"Digital Consultant", which had drifted apart across surfaces - do not reintroduce them. The
+homepage leads with the problem and the building, not with analytics; the Perth page is where the
+GA4 and measurement specialism lives.
 
 ## Structured data and social metadata
 
@@ -37,7 +37,7 @@ Contextual body links into `/perth-analytics-consultant` carry descriptive ancho
 
 ## Sitemap priorities
 
-Set in the `serialize` callback in `astro.config.mjs`: home 1.0, expertise / builds 0.9, consultancy / work-experience / contact 0.8, education 0.7, privacy 0.3, anything else 0.5. The `filter` excludes `/api/`, `.md` endpoints and the llms files. A new page with no entry in the priority map silently gets 0.5 - add it deliberately.
+Set in the `serialize` callback in `astro.config.mjs`: home 1.0, expertise / builds 0.9, consultancy / perth-analytics-consultant / work-experience / contact 0.8, privacy 0.3, anything else 0.5. The `filter` excludes `/api/`, `.md` endpoints and the llms files. A new page with no entry in the priority map silently gets 0.5 - add it deliberately.
 
 ## Analytics
 

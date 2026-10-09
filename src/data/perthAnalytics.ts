@@ -2,7 +2,7 @@ export const perthAnalyticsData = {
   hero: {
     title: 'Perth Analytics Consultant',
     subtitle: 'Measurement, data models and reporting that hold up - for businesses in Perth and Western Australia.',
-    statement: 'I am an independent Digital Consultant in Perth. People call me when they have stopped believing their own Google Analytics. I do the implementation myself.',
+    statement: 'I am an independent technology consultant in Perth. People call me when they have stopped believing their own Google Analytics. I do the implementation myself.',
     signals: [
       'Conversions that will not reconcile with the CRM',
       'Ad platforms all claiming the same sale',
@@ -123,6 +123,7 @@ export const perthAnalyticsData = {
       { name: 'Public liability insurance', detail: 'AUD 10 million per occurrence, for on-site work at client premises.' },
       { name: 'Standard services agreement', detail: 'Plain-language contract covering scope, intellectual property and termination.' },
       { name: 'Your data stays yours', detail: 'Intellectual property transfers to you on final payment, and infrastructure runs in your own accounts.' },
+      { name: 'WA government experience', detail: 'Engaged directly by a WA government agency for data and reporting work.' },
       { name: 'Onshore delivery', detail: 'All work performed in Australia. Nothing is subcontracted offshore.' },
     ],
     footnote: 'Certificates of currency, the services agreement and a mutual NDA are available on request, before any scoping conversation.',

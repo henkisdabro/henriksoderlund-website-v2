@@ -9,5 +9,23 @@ export const CONTACT_EMAIL = 'admin@henriksoderlund.com';
 export const PRIVACY_EMAIL = 'privacy@henriksoderlund.com';
 export const ASCRIBE_URL = 'https://ascribe.to';
 export const ROTTOSNORKEL_URL = 'https://www.rottosnorkel.com';
+
+// Links out to Henrik's own products carry UTMs: every external link on this
+// site is rel="noreferrer", which drops the referrer and would land the visit
+// in Direct on the product's GA4. Convention in docs/UTM-TAXONOMY.md.
+const TAGGED_PRODUCTS = new Set([ASCRIBE_URL, ROTTOSNORKEL_URL]);
+
+export function productLink(url: string, content: string): string {
+  if (!TAGGED_PRODUCTS.has(url)) return url;
+  const tagged = new URL(url);
+  tagged.search = new URLSearchParams({
+    utm_source: 'henriksoderlund',
+    utm_medium: 'referral',
+    utm_campaign: 'portfolio',
+    utm_content: content,
+  }).toString();
+  return tagged.toString();
+}
+
 export const SANDCASTLE_KIT_URL = 'https://github.com/henkisdabro/sandcastle-kit';
 export const SANDCASTLE_KIT_SITE_URL = 'https://henkisdabro.github.io/sandcastle-kit/';

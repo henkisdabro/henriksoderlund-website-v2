@@ -131,8 +131,23 @@
   --color-link-default: #646cff;
   --color-link-hover: #535bf2;
 
-  /* Breathing animation */
-  --color-breathe-glow: rgba(66, 133, 244, 0.18);
+  /* Motion surface: glow behind the portrait, pointer spotlight, link rest line */
+  --aurora-1: rgba(0, 122, 204, 0.30);
+  --aurora-2: rgba(102, 126, 234, 0.26);
+  --aurora-3: rgba(56, 189, 248, 0.28);
+  --aurora-blur: 24px;
+  --aurora-ring: 0;
+  --glow-fill: rgba(0, 122, 204, 0.07);
+  --glow-edge: rgba(0, 122, 204, 0.5);
+  --glow-fill-solid: rgba(255, 255, 255, 0.26);
+  --glow-edge-solid: rgba(255, 255, 255, 0.55);
+  --link-rest: color-mix(in srgb, currentColor 26%, transparent);
+
+  /* Homepage depth field (RGB triplets, read by its canvas script) */
+  --field-line: 44, 62, 80;
+  --field-accent: 0, 122, 204;
+  --field-k: 0.38;
+  --field-blur: 1.1px;
 
   /* Fonts */
   --font-body: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
@@ -225,8 +240,23 @@
     --color-link-default: #818cf8;
     --color-link-hover: #a5b4fc;
 
-    /* Breathing animation */
-    --color-breathe-glow: rgba(56, 189, 248, 0.2);
+    /* Motion surface: glow behind the portrait, pointer spotlight, link rest line */
+    --aurora-1: rgba(56, 189, 248, 0.42);
+    --aurora-2: rgba(129, 140, 248, 0.40);
+    --aurora-3: rgba(34, 211, 238, 0.30);
+    --aurora-blur: 30px;
+    --aurora-ring: 1;
+    --glow-fill: rgba(56, 189, 248, 0.07);
+    --glow-edge: rgba(125, 211, 252, 0.95);
+    --glow-fill-solid: rgba(255, 255, 255, 0.38);
+    --glow-edge-solid: rgba(255, 255, 255, 0.8);
+    --link-rest: color-mix(in srgb, currentColor 40%, transparent);
+
+    /* Homepage depth field (RGB triplets, read by its canvas script) */
+    --field-line: 160, 174, 198;
+    --field-accent: 56, 189, 248;
+    --field-k: 0.5;
+    --field-blur: 1.6px;
 
     /* Fonts - coding font in dark mode */
     --font-body: 'JetBrains Mono', 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
@@ -312,8 +342,23 @@
   --color-link-default: #818cf8;
   --color-link-hover: #a5b4fc;
 
-  /* Breathing animation */
-  --color-breathe-glow: rgba(56, 189, 248, 0.2);
+  /* Motion surface: glow behind the portrait, pointer spotlight, link rest line */
+  --aurora-1: rgba(56, 189, 248, 0.42);
+  --aurora-2: rgba(129, 140, 248, 0.40);
+  --aurora-3: rgba(34, 211, 238, 0.30);
+  --aurora-blur: 30px;
+  --aurora-ring: 1;
+  --glow-fill: rgba(56, 189, 248, 0.07);
+  --glow-edge: rgba(125, 211, 252, 0.95);
+  --glow-fill-solid: rgba(255, 255, 255, 0.38);
+  --glow-edge-solid: rgba(255, 255, 255, 0.8);
+  --link-rest: color-mix(in srgb, currentColor 40%, transparent);
+
+  /* Homepage depth field (RGB triplets, read by its canvas script) */
+  --field-line: 160, 174, 198;
+  --field-accent: 56, 189, 248;
+  --field-k: 0.5;
+  --field-blur: 1.6px;
 
   /* Fonts - coding font in dark mode */
   --font-body: 'JetBrains Mono', 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;

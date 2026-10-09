@@ -9,7 +9,7 @@ test.beforeAll(async () => {
   container = await loadContainer();
 });
 
-for (const path of ['/consultancy', '/perth-analytics-consultant', '/contact']) {
+for (const path of ['/', '/consultancy', '/perth-analytics-consultant', '/contact']) {
   test(`${path}: the booking CTA opens Calendly and both steps are measured`, async ({ page, context }) => {
     await page.goto(path);
     // The Calendly page itself is checked in production.spec.ts. This stub
@@ -43,7 +43,7 @@ for (const path of ['/consultancy', '/perth-analytics-consultant', '/contact']) 
   });
 }
 
-for (const path of ['/consultancy', '/perth-analytics-consultant']) {
+for (const path of ['/', '/consultancy', '/perth-analytics-consultant']) {
   test(`${path}: "Send a Message" reaches the contact form`, async ({ page }) => {
     await page.goto(path);
     await page.getByRole('link', { name: 'Send a Message' }).click();

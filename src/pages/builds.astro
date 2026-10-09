@@ -5,7 +5,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import WorkflowArt from '../components/WorkflowArt.astro';
 import { buildsData, FEATURED_COUNT, type Build } from '../data/builds';
 import { ENTITIES } from '../data/entities';
-import { GITHUB_URL } from '../data/links';
+import { GITHUB_URL, productLink } from '../data/links';
 import { pageUrl } from '../utils/pageUrl';
 import { sectionIcons } from '../utils/sectionIcons';
 import dashboardImage from '../assets/images/screenshots/dashboard.webp';
@@ -120,7 +120,7 @@ const hostOf = (url: string) => new URL(url).host.replace(/^www\./, '');
               aria-label={`View ${project.title} fullscreen`}
               data-full={project.fullSrc}
               data-title={project.title}
-              data-url={project.url}
+              data-url={project.url && productLink(project.url, 'builds-overlay-link')}
               data-video={project.videoSrc}
             >
               <span class="build-shot-chrome" aria-hidden="true">
@@ -167,7 +167,7 @@ const hostOf = (url: string) => new URL(url).host.replace(/^www\./, '');
               </div>
               {(project.url || project.sourceUrl) && (
                 <div class="build-links">
-                  {project.url && <a href={project.url} target="_blank" rel="noopener noreferrer" class="build-link">Visit {project.title} &rarr;</a>}
+                  {project.url && <a href={productLink(project.url, 'builds-visit-link')} target="_blank" rel="noopener noreferrer" class="build-link">Visit {project.title} &rarr;</a>}
                   {project.sourceUrl && <a href={project.sourceUrl} target="_blank" rel="noopener noreferrer" class="build-link build-link--secondary">View on GitHub &rarr;</a>}
                 </div>
               )}

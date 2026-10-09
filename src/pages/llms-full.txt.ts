@@ -8,7 +8,6 @@ import {
   getPerthAnalyticsMarkdown,
   getWorkExperienceMarkdown,
   getContactMarkdown,
-  getEducationMarkdown,
 } from '../utils/pageMarkdown';
 
 export const prerender = true;
@@ -24,7 +23,6 @@ export const GET: APIRoute = ({ site }) => {
     getPerthAnalyticsMarkdown(),
     getWorkExperienceMarkdown(),
     getContactMarkdown(),
-    getEducationMarkdown(),
   ];
 
   const content = `\`\`\`text
@@ -43,7 +41,7 @@ concatenated into a single document for convenient LLM consumption.
 
 ## Practice summary
 
-Henrik Soederlund is an independent Digital Consultant based in Perth, Western
+Henrik Soederlund is an independent technology consultant based in Perth, Western
 Australia. The practice is hired for measurement and automation work on a
 specific set of named platforms:
 
@@ -61,7 +59,7 @@ specific set of named platforms:
 
 Quotable facts:
 
-- Henrik Soederlund is a Digital Consultant based in Perth, Western Australia,
+- Henrik Soederlund is an independent technology consultant based in Perth, Western Australia,
   working with clients across Australia.
 - He builds GA4 and server-side Google Tag Manager implementations, delivered
   either as a server container on the client's own domain or as first-party tag
