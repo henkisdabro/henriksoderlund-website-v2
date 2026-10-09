@@ -129,6 +129,9 @@ importers:
       '@eslint/js':
         specifier: 10.0.1
         version: 10.0.1(eslint@10.12.0(supports-color@10.2.2))
+      '@paper-design/shaders':
+        specifier: 0.0.81
+        version: 0.0.81
       '@playwright/test':
         specifier: 1.63.0
         version: 1.63.0
@@ -138,6 +141,9 @@ importers:
       astro-eslint-parser:
         specifier: 3.2.0
         version: 3.2.0(supports-color@10.2.2)
+      esbuild:
+        specifier: 0.28.2
+        version: 0.28.2
       eslint:
         specifier: 10.12.0
         version: 10.12.0(supports-color@10.2.2)
@@ -1061,6 +1067,9 @@ packages:
 
   '@oxc-project/types@0.150.0':
     resolution: {integrity: sha512-rDS5/31E9HfPl/CIzGrn0DOlvBbXFseQ5URJ9sYMfstbKLD/c6Gm9vmRzRGDdAXyOIL4zmO37lc9RIwYqVruZw==}
+
+  '@paper-design/shaders@0.0.81':
+    resolution: {integrity: sha512-jeGdyjMscZ2bxmQdo8lhwUufHUf4iq3s1ayjh8PXU7Go42Rw8E3I0It1FZdc3HuWt5J82m//DRWaxsRqRfA4Gg==}
 
   '@pkgr/core@0.3.6':
     resolution: {integrity: sha512-SEeaJLb3qBNF/OaXnaR1NmmBbFYk1zC0ZH/52fATcRPLFg/p791YrcyFFy44Bo9sLaGuSuLp5Q6axbb/O+v/RA==}
@@ -3396,6 +3405,8 @@ snapshots:
   '@oslojs/encoding@1.1.0': {}
 
   '@oxc-project/types@0.150.0': {}
+
+  '@paper-design/shaders@0.0.81': {}
 
   '@pkgr/core@0.3.6': {}
 

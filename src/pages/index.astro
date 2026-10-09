@@ -4,6 +4,8 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import profileImage from '../assets/images/henrik-profile-small.webp';
 import { sectionIcons } from '../utils/sectionIcons';
 import { CALENDLY_URL, ASCRIBE_URL, ROTTOSNORKEL_URL, productLink } from '../data/links';
+// Bundled from src/scripts/depth-grain.js by scripts/build-depth-grain.mjs.
+import depthGrain from '../generated/depth-grain.js?raw';
 ---
 
 <BaseLayout
@@ -12,7 +14,7 @@ import { CALENDLY_URL, ASCRIBE_URL, ROTTOSNORKEL_URL, productLink } from '../dat
   description="Independent technology consultant in Perth. I work out what is slowing a business down, then build the fix - usually some mix of automation, data and software."
   ogType="profile"
 >
-  <div class="sd-field" id="sd-field" slot="backdrop" aria-hidden="true"><canvas class="sd-far"></canvas><canvas class="sd-near"></canvas></div>
+  <div class="gg-field" id="gg-field" slot="backdrop" aria-hidden="true"><div class="gg-haze"></div><canvas class="gg-far"></canvas><canvas class="gg-near"></canvas></div>
 
   <!-- Hero entrance: once per session, never under reduced motion. Runs before
        the hero is parsed, so the first paint already starts the animation. -->
@@ -97,303 +99,11 @@ import { CALENDLY_URL, ASCRIBE_URL, ROTTOSNORKEL_URL, productLink } from '../dat
   </div>
 </BaseLayout>
 
-<!-- Soft depth: three layers of unseen points drift behind the hero. Hairline
-     links fade in when two points come close, live a few seconds, then fade
-     out, so the network is never drawn all at once. Now and then an accent
-     light travels along one link - the only colour in the field. -->
-<script is:inline data-csp>
-// Soft depth: three layers of unseen points drift behind the hero. Hairline
-// links fade in when two points come close, live a few seconds, then fade out,
-// so the network is never drawn all at once. Now and then a soft accent light
-// travels along one link - the only colour in the field.
-(function () {
-  const root = document.getElementById('sd-field');
-  const hero = document.querySelector('.hero-section');
-  if (!root || !hero) return;
-  const d = document.documentElement;
-  const cvF = root.children[0], cvN = root.children[1];
-  const cF = cvF.getContext('2d'), cN = cvN.getContext('2d');
-  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
-  const coarse = matchMedia('(pointer: coarse)').matches;
-  const M = Math, rnd = M.random;
-  let W = 0, H = 0, dpr = 1, th = {}, Q = { x: 0, y: 0, rx: 1, ry: 1 };
-  const ptr = { x: -1e4, y: -1e4, on: 0, to: 0 };
-  let glint = null, nextGlint = 0, last = 0, raf = 0, vis = !document.hidden, inView = true;
-
-  // far -> near: density (px^2 per point), drift px/s, pointer parallax px,
-  // scroll parallax, alpha, line width, link cap. Link range follows spacing.
-  const L = [
-    { den: 24000, max: 40, v: 3, par: 5, scr: .22, a: .75, w: 1, cap: 7 },
-    { den: 34000, max: 28, v: 5, par: 11, scr: .1, a: .85, w: .8, cap: 6 },
-    { den: 50000, max: 18, v: 8, par: 20, scr: 0, a: 1, w: 1, cap: 5 }
-  ];
-
-  function ss(a, b, x) { x = M.max(0, M.min(1, (x - a) / (b - a))); return x * x * (3 - 2 * x); }
-  function ease(x) { return x < .5 ? 2 * x * x : 1 - M.pow(-2 * x + 2, 2) / 2; }
-  function rgba(c, a) { return 'rgba(' + c + ',' + (a > 0 ? a : 0).toFixed(3) + ')'; }
-
-  function readTheme() {
-    const s = getComputedStyle(d);
-    th = {
-      line: s.getPropertyValue('--field-line').trim(),
-      acc: s.getPropertyValue('--field-accent').trim(),
-      k: parseFloat(s.getPropertyValue('--field-k')) || .2,
-      dark: d.getAttribute('data-theme') === 'dark'
-    };
-  }
-
-  // Quiet zone behind the name, lead and CTAs: links there drop
-  // to a fraction of their strength. A squircle, so it hugs the text block.
-  function quiet(x, y) {
-    const e = M.pow(M.pow((x - Q.x) / Q.rx, 4) + M.pow((y - Q.y) / Q.ry, 4), .25);
-    const f = W < 700 ? .42 : .22; // on phones the text spans the field
-    return f + (1 - f) * ss(.8, 1.3, e);
-  }
-
-  function measure() {
-    const r0 = root.getBoundingClientRect();
-    const lead = hero.querySelector('.lead').getBoundingClientRect();
-    const top = hero.querySelector('h1').getBoundingClientRect().top - 12; // the portrait covers what is behind it
-    const bot = hero.querySelector('.home-cta').getBoundingClientRect().bottom;
-    root.style.height = M.round(bot - r0.top + 56) + 'px';
-    Q = { x: lead.left + lead.width / 2 - r0.left, y: (top + bot) / 2 - r0.top, rx: lead.width / 2 + 28, ry: (bot - top) / 2 + 24 };
-    const w = root.clientWidth, h = root.clientHeight, resized = w !== W || M.abs(h - H) > 40;
-    W = w; H = h;
-    dpr = M.min(2, window.devicePixelRatio || 1);
-    cvN.width = W * dpr; cvN.height = H * dpr;
-    cvF.width = W; cvF.height = H; // the far layer is blurred anyway
-    if (resized) seed();
-  }
-
-  function addLink(l, i, j, ph, a, dur) {
-    l.k[i * 99 + j] = { i: i, j: j, ph: ph, t: 0, d: dur, a: a, a0: a };
-  }
-
-  // Jittered grid per layer so points never clump; a first set of links is
-  // already mid-life, so the field does not assemble itself on arrival.
-  function seed() {
-    L.forEach(function (l) {
-      const n = M.max(4, M.min(l.max, M.round(W * H / l.den)));
-      const cols = M.ceil(M.sqrt(n * W / H)), rows = M.ceil(n / cols);
-      l.n = []; l.k = {}; l.R = 1.15 * M.sqrt(W * H / n);
-      for (let i = 0; i < n; i++) {
-        l.n.push({
-          x: ((i % cols) + .15 + rnd() * .7) / cols * W,
-          y: (((i / cols) | 0) + .15 + rnd() * .7) / rows * H,
-          h: rnd() * 6.28, s: rnd() * 99
-        });
-      }
-      spawn(l, 1, 1);
-    });
-  }
-
-  function dist(l, i, j) { const p = l.n[i], q = l.n[j]; return M.hypot(p.x - q.x, p.y - q.y); }
-
-  // Opens links between free pairs in range. chance=1 is the initial seeding.
-  function spawn(l, chance, initial) {
-    const deg = [], n = l.n.length;
-    let live = 0, i, j, key;
-    for (key in l.k) { const k = l.k[key]; if (k.ph < 3) { deg[k.i] = (deg[k.i] || 0) + 1; deg[k.j] = (deg[k.j] || 0) + 1; live++; } }
-    for (i = 0; i < n && live < l.cap; i++) for (j = i + 1; j < n && live < l.cap; j++) {
-      if (l.k[i * 99 + j] || (deg[i] || 0) > 1 || (deg[j] || 0) > 1 || dist(l, i, j) > l.R * .85 || rnd() > chance) continue;
-      if (initial) addLink(l, i, j, 1, .45 + rnd() * .55, 800 + rnd() * 7000);
-      else addLink(l, i, j, 0, 0, 2600 + rnd() * 1800);
-      deg[i] = (deg[i] || 0) + 1; deg[j] = (deg[j] || 0) + 1; live++;
-    }
-  }
-
-  function tick(dt, t) {
-    const f = dt / 1000;
-    L.forEach(function (l) {
-      l.n.forEach(function (p, i) {
-        p.h += M.sin(t / 5000 + p.s) * .25 * f;
-        p.x += M.cos(p.h) * l.v * f; p.y += M.sin(p.h) * l.v * f;
-        const m = 60;
-        let wrapped = false;
-        if (p.x < -m) { p.x = W + m; wrapped = true; } else if (p.x > W + m) { p.x = -m; wrapped = true; }
-        if (p.y < -m) { p.y = H + m; wrapped = true; } else if (p.y > H + m) { p.y = -m; wrapped = true; }
-        if (wrapped) for (const key in l.k) if (l.k[key].i === i || l.k[key].j === i) delete l.k[key];
-      });
-      for (const key in l.k) {
-        const k = l.k[key];
-        k.t += dt;
-        if (k.ph < 2 && dist(l, k.i, k.j) > l.R * 1.1) { k.ph = 2; k.t = 0; k.d = 2400; k.a0 = k.a; }
-        if (k.ph === 0) { k.a = ease(M.min(1, k.t / k.d)); if (k.t >= k.d) { k.ph = 1; k.t = 0; k.d = 3000 + rnd() * 6000; } }
-        else if (k.ph === 1) { if (k.t >= k.d) { k.ph = 2; k.t = 0; k.d = 2600 + rnd() * 2000; k.a0 = k.a; } }
-        else if (k.ph === 2) { k.a = k.a0 * (1 - ease(M.min(1, k.t / k.d))); if (k.t >= k.d) { k.ph = 3; k.t = 0; k.d = 4000 + rnd() * 8000; k.a = 0; } }
-        else if (k.t >= k.d) delete l.k[key];
-      }
-      spawn(l, f * .3);
-    });
-    // pointer presence eases in and out; parallax follows it slowly
-    ptr.on += (ptr.to - ptr.on) * M.min(1, dt / (ptr.to ? 400 : 1100));
-    const sy = window.scrollY;
-    L.forEach(function (l) {
-      const tx = ptr.to ? (ptr.x / W - .5) * l.par : 0, ty = ptr.to ? (ptr.y / H - .5) * l.par * .6 : 0;
-      l.px = (l.px || 0) + (tx - (l.px || 0)) * M.min(1, dt / 900);
-      l.py = (l.py || 0) + (ty - (l.py || 0)) * M.min(1, dt / 900);
-      l.oy = l.py + sy * l.scr;
-    });
-    if (glint) { glint.t += dt; if (glint.t > glint.d || !glint.l.k[glint.key]) glint = null; }
-    if (!glint && t > nextGlint) { launch(); nextGlint = t + 5000 + rnd() * 5000; }
-  }
-
-  // An accent light sets off along a settled link on the mid or near layer -
-  // the one nearest (x, y) after a tap, otherwise any.
-  function launch(x, y) {
-    let best = null, bd = 1e9;
-    [L[1], L[2]].forEach(function (l) {
-      for (const key in l.k) {
-        const k = l.k[key], p = l.n[k.i], q = l.n[k.j];
-        if (k.ph !== 1 || k.a < .5) continue;
-        const mx = (p.x + q.x) / 2 + l.px, my = (p.y + q.y) / 2 + l.oy;
-        const s = x == null ? rnd() * (2 - quiet(mx, my)) : M.hypot(mx - x, my - y);
-        if (s < bd) { bd = s; best = { l: l, key: key, t: 0, d: 2000 + rnd() * 900, r: rnd() < .5 }; }
-      }
-    });
-    if (best && (x == null || bd < 420)) glint = best;
-  }
-
-  function segDist(x, y, x1, y1, x2, y2) {
-    const dx = x2 - x1, dy = y2 - y1, u = M.max(0, M.min(1, ((x - x1) * dx + (y - y1) * dy) / (dx * dx + dy * dy || 1)));
-    return M.hypot(x - x1 - u * dx, y - y1 - u * dy);
-  }
-
-  function drawLayer(c, l, s) {
-    c.setTransform(s, 0, 0, s, 0, 0);
-    c.lineCap = 'round';
-    for (const key in l.k) {
-      const k = l.k[key];
-      if (k.a < .004) continue;
-      const p = l.n[k.i], q = l.n[k.j];
-      const x1 = p.x + l.px, y1 = p.y + l.oy, x2 = q.x + l.px, y2 = q.y + l.oy;
-      const len = M.hypot(x2 - x1, y2 - y1);
-      let A = k.a * (1 - ss(l.R * .9, l.R * 1.1, len)) * th.k * l.a;
-      // brightening never lifts a link that sits behind text
-      const qm = quiet((x1 + x2) / 2, (y1 + y2) / 2);
-      let lift = 1.6 * ptr.on * (1 - ss(0, 190, segDist(ptr.x, ptr.y, x1, y1, x2, y2)));
-      if (glint && glint.l === l && glint.key === key) lift += .9 * M.sin(M.PI * glint.t / glint.d);
-      A *= 1 + lift * qm * qm;
-      const g = c.createLinearGradient(x1, y1, x2, y2);
-      g.addColorStop(0, rgba(th.line, A * .35 * quiet(x1, y1)));
-      g.addColorStop(.5, rgba(th.line, A * qm));
-      g.addColorStop(1, rgba(th.line, A * .35 * quiet(x2, y2)));
-      c.strokeStyle = g; c.lineWidth = l.w;
-      c.beginPath(); c.moveTo(x1, y1); c.lineTo(x2, y2); c.stroke();
-    }
-  }
-
-  function drawGlint(c, pos, env, still) {
-    const l = glint.l, k = l.k[glint.key];
-    let p = l.n[k.i], q = l.n[k.j];
-    if (glint.r) { const o = p; p = q; q = o; }
-    const x1 = p.x + l.px, y1 = p.y + l.oy, x2 = q.x + l.px, y2 = q.y + l.oy;
-    const len = M.hypot(x2 - x1, y2 - y1) || 1, tail = M.min(.45, 70 / len);
-    const hx = x1 + (x2 - x1) * pos, hy = y1 + (y2 - y1) * pos;
-    const s0 = M.max(0, pos - tail), tx = x1 + (x2 - x1) * s0, ty = y1 + (y2 - y1) * s0;
-    const fade = quiet(hx, hy), a = env * k.a * fade * fade;
-    const g = c.createLinearGradient(tx, ty, hx, hy);
-    g.addColorStop(0, rgba(th.acc, 0));
-    g.addColorStop(1, rgba(th.acc, a * .9));
-    c.strokeStyle = g; c.lineWidth = 1.25;
-    c.beginPath(); c.moveTo(tx, ty); c.lineTo(hx, hy); c.stroke();
-    if (still) return; // a still frame keeps the lit stroke, not a resting dot
-    const r = th.dark ? 14 : 12, h = c.createRadialGradient(hx, hy, 0, hx, hy, r);
-    h.addColorStop(0, rgba(th.acc, a * (th.dark ? .3 : .25)));
-    h.addColorStop(1, rgba(th.acc, 0));
-    c.globalCompositeOperation = th.dark ? 'lighter' : 'source-over';
-    c.fillStyle = h; c.fillRect(hx - r, hy - r, r * 2, r * 2);
-    c.globalCompositeOperation = 'source-over';
-  }
-
-  function render() {
-    cF.setTransform(1, 0, 0, 1, 0, 0); cF.clearRect(0, 0, W, H);
-    cN.setTransform(1, 0, 0, 1, 0, 0); cN.clearRect(0, 0, cvN.width, cvN.height);
-    drawLayer(cF, L[0], 1);
-    drawLayer(cN, L[1], dpr);
-    drawLayer(cN, L[2], dpr);
-    if (glint) {
-      const u = glint.t / glint.d;
-      drawGlint(cN, ease(u), M.sin(M.PI * u));
-    }
-  }
-
-  function frame(t) {
-    raf = 0; loop();
-    if (coarse && t - last < 31) return; // ~30 fps on touch devices
-    const dt = last ? M.min(64, t - last) : 16;
-    last = t;
-    const r = root.getBoundingClientRect();
-    if (ptr.cx != null) { ptr.x = ptr.cx - r.left; ptr.y = ptr.cy - r.top; }
-    tick(dt, t); render();
-  }
-  function loop() {
-    if (vis && inView && !reduce) { if (!raf) raf = requestAnimationFrame(frame); }
-    else if (raf) { cancelAnimationFrame(raf); raf = 0; last = 0; }
-  }
-
-  // Reduced motion: one composed still - links mid-life, one light resting.
-  function still() {
-    let best = null, bq = -2e9;
-    L.forEach(function (l) { l.px = 0; l.oy = 0; });
-    [L[2], L[1]].forEach(function (l) {
-      for (const key in l.k) {
-        const k = l.k[key], p = l.n[k.i], q = l.n[k.j];
-        let v = quiet((p.x + q.x) / 2, (p.y + q.y) / 2);
-        k.a = M.max(k.a, .7);
-        v = -M.hypot((p.x + q.x) / 2 - Q.x - Q.rx - 60, (p.y + q.y) / 2 - Q.y + Q.ry * .3) - (v < .7) * 400; // right of the text, clear of the nav
-        if (v > bq) { bq = v; best = { l: l, key: key, t: 0, d: 1, r: false }; }
-      }
-    });
-    glint = best;
-    render();
-    if (glint) drawGlint(cN, .62, .8, 1);
-  }
-
-  // The portrait glow is pure CSS; pause it with the field.
-  const portrait = hero.querySelector('.portrait');
-  function pauseGlow() { portrait.classList.toggle('is-paused', !vis || !inView); }
-
-  function start() {
-    readTheme(); measure();
-    if (reduce) still();
-    root.classList.add('is-on');
-    nextGlint = performance.now() + 2500;
-    loop();
-
-    new MutationObserver(function () { readTheme(); if (reduce) still(); }).observe(d, { attributes: true, attributeFilter: ['data-theme'] });
-    let rt = 0;
-    function remeasure() { clearTimeout(rt); rt = setTimeout(function () { measure(); if (reduce) still(); }, 150); }
-    if ('ResizeObserver' in window) new ResizeObserver(remeasure).observe(hero);
-    window.addEventListener('resize', remeasure);
-    document.addEventListener('visibilitychange', function () { vis = !document.hidden; loop(); pauseGlow(); });
-    if ('IntersectionObserver' in window) new IntersectionObserver(function (e) { inView = e[0].isIntersecting; loop(); pauseGlow(); }).observe(root);
-
-    // Mouse: gentle parallax, nearby links brighten. Nothing is pushed away.
-    document.addEventListener('pointermove', function (e) {
-      if (e.pointerType === 'touch') return;
-      ptr.cx = e.clientX; ptr.cy = e.clientY;
-      const r = root.getBoundingClientRect();
-      ptr.to = e.clientY < r.bottom && e.clientY > r.top ? 1 : 0;
-    }, { passive: true });
-    document.addEventListener('pointerleave', function () { ptr.to = 0; });
-    // Tap or click on open hero space: links under the finger brighten, then
-    // a light sets off from the nearest one.
-    document.addEventListener('pointerdown', function (e) {
-      if (reduce || e.target.closest('a,button,nav,input,summary,.social-links')) return;
-      const r = root.getBoundingClientRect();
-      if (e.clientY > r.bottom) return;
-      ptr.cx = e.clientX; ptr.cy = e.clientY; ptr.x = e.clientX - r.left; ptr.y = e.clientY - r.top;
-      ptr.on = 1; ptr.to = e.pointerType === 'touch' ? 0 : 1;
-      launch(ptr.x, ptr.y);
-    }, { passive: true });
-  }
-
-  // After load, so the field never competes with the portrait for LCP.
-  function later() { (window.requestIdleCallback || setTimeout)(start, { timeout: 600 }); }
-  if (document.readyState === 'complete') later(); else window.addEventListener('load', later);
-})();
-</script>
+<!-- Depth over grain: a faint mesh gradient in the accent family (Paper
+     Shaders, WebGL2) with film grain, under drifting hairlines that take their
+     tint from it. Source in src/scripts/depth-grain.js; inlined so the Worker's
+     nonce covers it. -->
+<script is:inline data-csp set:html={depthGrain}></script>
 
 <style is:global>
 /* Home Page Styles */
@@ -504,18 +214,20 @@ import { CALENDLY_URL, ASCRIBE_URL, ROTTOSNORKEL_URL, productLink } from '../dat
 
 /* Depth field behind the hero. It sits outside .app, so .app is lifted above
    it - only on this page, where the field exists. */
-.sd-field ~ .app {
+.gg-field ~ .app {
   position: relative;
   z-index: 1;
 }
 
-.sd-field {
+.gg-field {
   position: absolute;
   top: 0;
   left: 0;
   z-index: 0;
   width: 100%;
   height: 760px;
+  overflow: hidden;
+  contain: paint;
   pointer-events: none;
   opacity: 0;
   transition: opacity 1.8s var(--ease-out);
@@ -526,16 +238,45 @@ import { CALENDLY_URL, ASCRIBE_URL, ROTTOSNORKEL_URL, productLink } from '../dat
   mask-composite: intersect;
 }
 
-.sd-field.is-on { opacity: 1; }
+.gg-field.is-on { opacity: 1; }
 
-.sd-field canvas {
+.gg-field > canvas {
   position: absolute;
   inset: 0;
   width: 100%;
   height: 100%;
 }
 
-.sd-field .sd-far { filter: blur(var(--field-blur)); }
+.gg-field .gg-far { filter: blur(var(--field-blur)); }
+
+/* The haze overscans the field by 40px so the pointer can shift it without
+   showing an edge, and fades out from just below the portrait. */
+.gg-haze {
+  position: absolute;
+  inset: -40px;
+  opacity: var(--haze-k);
+  transition: opacity 0.6s var(--ease-out);
+  --gx: 50%;
+  --gy: 25%;
+  -webkit-mask-image: radial-gradient(ellipse min(620px, 62%) min(440px, 72%) at var(--gx) var(--gy), #000, rgba(0, 0, 0, 0.55) 45%, transparent);
+  mask-image: radial-gradient(ellipse min(620px, 62%) min(440px, 72%) at var(--gx) var(--gy), #000, rgba(0, 0, 0, 0.55) 45%, transparent);
+}
+
+.gg-haze canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+/* No WebGL2, or the context was lost: a still CSS haze in the same colours. */
+.gg-field.no-gl .gg-haze {
+  background:
+    radial-gradient(closest-side at calc(var(--gx) - 140px) calc(var(--gy) + 30px), rgba(var(--haze-1)), transparent),
+    radial-gradient(closest-side at calc(var(--gx) + 160px) calc(var(--gy) - 10px), rgba(var(--haze-2)), transparent),
+    radial-gradient(closest-side at var(--gx) calc(var(--gy) + 120px), rgba(var(--haze-3)), transparent);
+  background-size: 100% 100%;
+}
 
 .hero-section h1 {
   margin-bottom: 1rem;
@@ -630,7 +371,8 @@ import { CALENDLY_URL, ASCRIBE_URL, ROTTOSNORKEL_URL, productLink } from '../dat
   .aurora::after,
   .portrait-ring { animation: none; }
   .portrait-ring { transform: rotate(200deg); }
-  .sd-field,
+  .gg-field,
+  .gg-haze,
   .expertise-link .label,
   .expertise-link .arrow { transition: none; }
 }

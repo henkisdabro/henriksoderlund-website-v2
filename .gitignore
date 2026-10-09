@@ -3,6 +3,9 @@ node_modules
 *.pnp
 .pnp.js
 
+# Generated at build time (scripts/build-depth-grain.mjs)
+src/generated/
+
 # Production builds
 dist/
 build/
