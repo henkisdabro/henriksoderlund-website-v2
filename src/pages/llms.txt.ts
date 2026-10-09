@@ -8,7 +8,7 @@ export const GET: APIRoute = ({ site }) => {
 
   const content = `# Henrik Soederlund
 
-> Technology Leader & AI Innovator based in Perth, Australia. Portfolio showcasing expertise in AI solutions, intelligent automation, advanced analytics, and high-performance team development.
+> Independent technology consultant based in Perth, Australia. Works out what is slowing a business down, then builds the fix - usually some mix of automation, data and software - and builds products of his own.
 
 \`\`\`text
     _  _ ____ _  _ ____ _ _  _
@@ -28,7 +28,6 @@ export const GET: APIRoute = ({ site }) => {
 - [Perth Analytics Consultant](${base}/perth-analytics-consultant.md): GA4 and server-side tagging services for Perth and Western Australia
 - [Work Experience](${base}/work-experience.md): Full career history from independent consulting to agency leadership
 - [Contact](${base}/contact.md): Contact methods, booking link, and location
-- [Education](${base}/education.md): Academic background including Master of Music
 
 ## Optional
 

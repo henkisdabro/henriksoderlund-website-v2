@@ -48,7 +48,6 @@ p {
 .home-page,
 .expertise-page,
 .work-experience-page,
-.education-page,
 .consultation-page,
 .contact-page,
 .privacy-page,
@@ -67,7 +66,6 @@ p {
 
   .expertise-page,
   .work-experience-page,
-  .education-page,
   .consultation-page,
   .contact-page,
   .privacy-page,
@@ -466,7 +464,6 @@ a:hover {
   .home-page h1,
   .expertise-page h1,
   .work-experience-page h1,
-  .education-page h1,
   .consultation-page h1,
   .privacy-page h1 {
     margin-top: 1rem;
@@ -631,7 +628,6 @@ a:hover {
   .home-page,
   .expertise-page,
   .work-experience-page,
-  .education-page,
   .consultation-page,
   .contact-page,
   .privacy-page {
@@ -770,7 +766,6 @@ a:hover {
   .home-page,
   .expertise-page,
   .work-experience-page,
-  .education-page,
   .consultation-page,
   .contact-page,
   .privacy-page {
@@ -1233,5 +1228,126 @@ a:hover {
   :root:not([data-theme="light"]) body {
     line-height: 1.55;
     letter-spacing: -0.01em;
+  }
+}
+/* Motion surface ------------------------------------------------------------
+   Light that follows the pointer on anything pressable, and underlines that
+   draw in. Theme colours live in theme.css; these are theme-agnostic. */
+:root {
+  --ease-out: cubic-bezier(0.2, 0.7, 0.2, 1);
+  --dur-base: 320ms;
+  --stagger: 60ms;
+}
+
+/* Spotlight: [data-glow] gets an inner tint (::before) and a lit edge (::after,
+   masked to the border ring) centred on --mx/--my, which one delegated script
+   in BaseLayout writes. A tap flashes .is-pressed; keyboard focus centres it. */
+:where([data-glow]) {
+  position: relative;
+}
+
+[data-glow] {
+  isolation: isolate;
+  --mx: 50%;
+  --my: 50%;
+  --bw: 0px;
+  --glow-r: 180px;
+}
+
+[data-glow]::before,
+[data-glow]::after {
+  content: "";
+  position: absolute;
+  inset: calc(-1 * var(--bw));
+  border-radius: inherit;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity var(--dur-base) var(--ease-out);
+}
+
+[data-glow]::before {
+  z-index: -1;
+  background: radial-gradient(var(--glow-r) circle at calc(var(--mx) + var(--bw)) calc(var(--my) + var(--bw)), var(--glow-fill), transparent 70%);
+}
+
+[data-glow]::after {
+  padding: max(var(--bw), 1px);
+  background: radial-gradient(calc(var(--glow-r) * 0.8) circle at calc(var(--mx) + var(--bw)) calc(var(--my) + var(--bw)), var(--glow-edge), transparent 70%);
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  mask-composite: exclude;
+}
+
+[data-glow]:hover::before,
+[data-glow]:hover::after,
+[data-glow]:focus-visible::before,
+[data-glow]:focus-visible::after,
+[data-glow].is-pressed::before,
+[data-glow].is-pressed::after {
+  opacity: 1;
+}
+
+[data-glow].is-pressed::before,
+[data-glow].is-pressed::after {
+  transition-duration: 60ms;
+}
+
+.cta-primary[data-glow],
+.cta-secondary[data-glow] {
+  --bw: 2px;
+  --glow-r: 140px;
+}
+
+.cta-primary[data-glow],
+.cta-secondary[data-glow]:hover {
+  --glow-fill: var(--glow-fill-solid);
+  --glow-edge: var(--glow-edge-solid);
+}
+
+.service-pillar[data-glow] {
+  --bw: 1px;
+  --glow-r: 360px;
+}
+
+.icon-button[data-glow] {
+  --bw: 1px;
+  --glow-r: 60px;
+}
+
+/* Links in running text keep a faint resting underline, so colour is not the
+   only cue, and draw a solid one over it from the left. */
+.prose a,
+.cta-footnote a,
+.footer-legal a {
+  text-decoration: none;
+  background:
+    linear-gradient(currentColor, currentColor) left 100% / 0% 1px no-repeat,
+    linear-gradient(var(--link-rest), var(--link-rest)) left 100% / 100% 1px no-repeat;
+  padding-bottom: 1px;
+  transition: background-size var(--dur-base) var(--ease-out);
+}
+
+.footer-legal a {
+  background-size: 0% 1px, 0% 1px;
+}
+
+.prose a:hover,
+.prose a:focus-visible,
+.cta-footnote a:hover,
+.cta-footnote a:focus-visible,
+.footer-legal a:hover,
+.footer-legal a:focus-visible {
+  text-decoration: none;
+  background-size: 100% 1px, 100% 1px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  [data-glow]::before,
+  [data-glow]::after,
+  .prose a,
+  .cta-footnote a,
+  .footer-legal a {
+    transition: none;
   }
 }

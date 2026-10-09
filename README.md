@@ -10,7 +10,7 @@
 [![ESLint](https://img.shields.io/badge/eslint-10-4B32C3?style=flat&logo=eslint&logoColor=white)](https://eslint.org/)
 [![License](https://img.shields.io/badge/licence-private-lightgrey?style=flat)](#)
 
-Professional portfolio website for Henrik Soderlund - technology leader and AI innovation specialist. Built with Astro 6, deployed globally on Cloudflare Workers with hybrid rendering, per-request CSP nonces, server-side GTM, and dark mode theming.
+Professional portfolio website for Henrik Soderlund - independent technology consultant. Built with Astro 6, deployed globally on Cloudflare Workers with hybrid rendering, per-request CSP nonces, server-side GTM, and dark mode theming.
 
 > Migrated from a React SPA (Vite) to Astro 6 in March 2026 for better performance, SEO, and maintainability.
 
@@ -104,7 +104,7 @@ Professional portfolio website for Henrik Soderlund - technology leader and AI i
 
 - **JSON-LD structured data** - Person (with location, languages, education, awards), ProfessionalService, WebSite schemas
 - **Open Graph** (11+ tags including profile metadata), **Twitter Cards** (summary large image, 8+ tags)
-- **Automatic sitemap** via `@astrojs/sitemap` with per-page priorities (1.0 for home down to 0.7 for education)
+- **Automatic sitemap** via `@astrojs/sitemap` with per-page priorities (1.0 for home down to 0.3 for privacy)
 - **Site verification** - Google Search Console and Ahrefs
 - **AI-optimised content** - Per-page markdown endpoints following the [llms.txt](https://llmstxt.org/) specification
 - **robots.txt** - Explicit AI-friendly rules ("AI systems are welcome")
@@ -117,7 +117,7 @@ Professional portfolio website for Henrik Soderlund - technology leader and AI i
 - **Light mode** with clean, minimal serif typography
 - **Theme persistence** - localStorage with system preference detection via `prefers-color-scheme`
 - **FOUC prevention** - Theme detection script runs before paint
-- **Breathing animation** - Homepage keywords glow with 3-second cubic-bezier animation, random selection every 4 seconds
+- **Motion surface** - pointer spotlight on `[data-glow]` buttons and cards, drawn-in link underlines and cross-page view transitions (`App.css`, `BaseLayout.astro`); on the homepage, a glow behind the portrait and a canvas depth field behind the hero that starts after load, pauses off-screen and holds still under `prefers-reduced-motion`
 - **Builds page** - featured build cards with hover-scrolling screenshots and a fullscreen `<dialog>` overlay
 - **Collapsible navigation** - Sidebar of main pages, session-persisted state, auto-close on mobile after navigation
 - **Mobile-responsive** - Navigation hidden on <1024px
@@ -140,7 +140,7 @@ Professional portfolio website for Henrik Soderlund - technology leader and AI i
 src/
   actions/index.ts              # Astro Actions (contact form with Turnstile + Resend + Zod)
   assets/                       # Images, logos, icons, flags
-    flags/                      #   Country flags (Swedish flag on education)
+    flags/                      #   Country flags (work experience)
     icons/                      #   UI icons
     images/screenshots/         #   Project screenshots (WebP)
     logos/                      #   Brand logos (Cloudflare, Claude - SVG/PNG)
@@ -158,12 +158,11 @@ src/
     workExperience.ts           #   Professional experience with achievements
   layouts/BaseLayout.astro      # Main layout: sGTM, Fou Analytics, JSON-LD, view transitions, SEO
   pages/                        # File-based routing
-    index.astro                 #   Homepage with breathing animation
+    index.astro                 #   Homepage
     expertise.astro             #   Skills and builds teaser
     builds.astro                #   Products, client builds and open source
     consultancy.astro           #   Service offerings and case studies
     work-experience.astro       #   Professional experience timeline
-    education.astro             #   Educational background
     privacy.astro               #   Privacy policy
     contact.astro               #   Contact form (SSR)
     404.astro                   #   Custom not-found page with ASCII art
@@ -198,12 +197,11 @@ public/
 
 | Page | Path | Rendering | Description |
 |------|------|-----------|-------------|
-| Home | `/` | Prerendered | Landing page with breathing keyword animation |
+| Home | `/` | Prerendered | Landing page |
 | Expertise | `/expertise` | Prerendered | Technical skills, leadership, builds teaser |
 | Builds | `/builds` | Prerendered | Products, client builds, open source, GitHub chart |
 | Consultancy | `/consultancy` | Prerendered | Service offerings, case studies, Calendly booking |
 | Work Experience | `/work-experience` | Prerendered | Professional experience timeline |
-| Education | `/education` | Prerendered | Educational background |
 | Privacy | `/privacy` | Prerendered | Privacy policy |
 | Contact | `/contact` | SSR | Contact form with Turnstile + Resend |
 | 404 | `/404` | Prerendered | Custom not-found page with ASCII art |

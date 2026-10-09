@@ -6,19 +6,32 @@ import { workExperienceData, type Paragraph } from '../data/workExperience';
 import { CALENDLY_URL, LINKEDIN_URL, GITHUB_URL, CONTACT_EMAIL } from '../data/links';
 
 export function getHomeMarkdown(): string {
-  return `# Henrik Soederlund - Technology Leader & Automation Architect
+  return `# Henrik Soederlund - Independent Technology Consultant, Perth
 
-Technology Leader & Automation Architect. I build automation, analytics infrastructure, and digital products that free teams to focus on higher-value work - and give them the systems thinking to keep improving long after the engagement ends.
+Independent consultant in Perth. I work out what is slowing a business down, then build the fix - usually some mix of automation, data and software.
 
-## Hello!
+- [Book a discovery call](${CALENDLY_URL})
 
-Businesses come to me when manual work is consuming hours that should go toward growth, when reporting can't keep pace with decision-making, and when teams need someone who can see the full picture and fix it properly. I work across the full surface - workflow automation with AI, server-side tracking, measurement frameworks, custom reporting, security hardening - and what I leave behind goes beyond the deliverables: working systems, full documentation, streamlined operations, and teams that have started thinking in systems themselves. Staff who were buried in repetitive processes start identifying their own efficiencies. That compounding effect is where the real value sits.
+## What clients bring me
 
-The range comes from building on both sides. I co-founded and grew the award-winning [Creme Digital](https://www.cremedigital.com), then moved into enterprise media inside one of the global agency networks, where I built measurement systems for large-scale programmatic campaigns and led teams through two mergers. Agency co-founder and enterprise operator - that combination means I know what is technically possible and what is actually worth doing. I don't stop at implementation. I keep going until the operation runs the way it should, and the team has learned to spot the next automation themselves.
+Since going independent that has included a membership dashboard and segmentation pipeline for a WA government agency, and health-service reporting for a not-for-profit. I do the implementation myself.
 
-- [See the full picture](https://www.henriksoderlund.com/expertise)
+## How I build
+
+I build with AI coding agents, and I review and test everything they write. One workflow I built turns a signed proposal into a live project in seven minutes, down from 45-60. My own practice runs the same way, on agents I built to handle proposals and invoicing.
+
+## Things I've built
+
+[ascribe](https://www.henriksoderlund.com/builds#ascribe) checks marketing tracking links against an organisation's own GA4 channel definitions before launch. [Rotto Snorkel](https://www.henriksoderlund.com/builds#rotto-snorkel) turns live wind, wave and swell data into safety ratings for 36 snorkel spots around Rottnest.
+
+## Background
+
+Before going independent I spent more than ten years on the media side: I co-founded the award-winning [Creme Digital](https://www.cremedigital.com) in Kuala Lumpur, then led activation teams at Initiative Perth. Before that, I played trombone for a living.
+
+- [How I work with clients](https://www.henriksoderlund.com/consultancy)
 - [See what I build](https://www.henriksoderlund.com/builds)
 - [GA4 & analytics in Perth](https://www.henriksoderlund.com/perth-analytics-consultant)
+- [Full background](https://www.henriksoderlund.com/work-experience)
 `;
 }
 
@@ -63,7 +76,7 @@ export function getExpertiseMarkdown(): string {
 
   return `# Expertise - Henrik Soederlund
 
-Strategic Technology Leadership & AI Innovation
+${expertiseData.intro.title}
 
 ${expertiseData.intro.paragraph}
 
@@ -80,7 +93,7 @@ ${skillGroups}
 }
 
 export function getConsultancyMarkdown(): string {
-  const { hero, idealClients, services, engagementModels, caseStudy } = consultationData;
+  const { hero, idealClients, services, performanceNote, engagementModels, caseStudy } = consultationData;
 
   const clientProfiles = idealClients.profiles
     .map((p) => `- **${p.label}** ${p.description}`)
@@ -124,6 +137,10 @@ ${clientProfiles}
 ## ${services.title}
 
 ${servicePillars}
+
+### ${performanceNote.title}
+
+${performanceNote.paragraph}
 
 ## ${engagementModels.title}
 
@@ -331,34 +348,5 @@ Fill out the contact form on the website and I'll get back to you within one bus
 ## Based In
 
 Perth, Western Australia
-`;
-}
-
-export function getEducationMarkdown(): string {
-  return `# Education - Henrik Soederlund
-
-## Tertiary Education
-
-1999-2006 - Sweden
-
-Master of Music [M.Mus.] Instrument: Trombone at Lund University
-
-Malmoe, Sweden
-
-## Secondary Education
-
-1996-1999 - Sweden
-
-Natural Sciences at Kattegattgymnasiet
-
-Malmoe, Sweden
-
-## Primary Education
-
-1987-1996 - Sweden
-
-Elementary at Oerjanskolan
-
-Halmstad, Sweden
 `;
 }

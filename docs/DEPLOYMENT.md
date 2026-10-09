@@ -84,7 +84,6 @@ Generated from Astro `.md.ts` endpoint files in `src/pages/`:
 - **Homepage**: `/index.html.md`
 - **Expertise**: `/expertise.md`
 - **Work Experience**: `/work-experience.md`
-- **Education**: `/education.md`
 - **Consultancy**: `/consultancy.md`
 
 All files follow the [llms.txt specification](https://llmstxt.org/) for optimal AI consumption.
@@ -151,7 +150,6 @@ The workflow verifies these files exist in build output:
 
 - `dist/expertise.md`
 - `dist/work-experience.md`
-- `dist/education.md`
 - `dist/consultancy.md`
 - `dist/index.html.md`
 

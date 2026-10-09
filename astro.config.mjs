@@ -19,7 +19,6 @@ export default defineConfig({
           '/perth-analytics-consultant': 0.8,
           '/work-experience': 0.8,
           '/contact': 0.8,
-          '/education': 0.7,
           '/privacy': 0.3,
         };
         const path = new URL(item.url).pathname;

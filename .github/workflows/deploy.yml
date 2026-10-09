@@ -129,7 +129,7 @@ jobs:
         run: |
           sleep 5
           failed=0
-          for path in / /expertise /consultancy /work-experience /education /contact /privacy; do
+          for path in / /expertise /consultancy /work-experience /contact /privacy; do
             url="https://www.henriksoderlund.com${path}"
             tmpfile=$(mktemp)
             status=$(curl -s --compressed -o "$tmpfile" -w "%{http_code}" --max-time 15 "$url")
@@ -352,6 +352,5 @@ jobs:
           | Expertise | https://www.henriksoderlund.com/expertise |
           | Consultancy | https://www.henriksoderlund.com/consultancy |
           | Work Experience | https://www.henriksoderlund.com/work-experience |
-          | Education | https://www.henriksoderlund.com/education |
           | Contact | https://www.henriksoderlund.com/contact |
           EOF

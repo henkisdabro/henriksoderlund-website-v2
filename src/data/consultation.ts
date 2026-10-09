@@ -70,6 +70,10 @@ export const consultationData = {
       },
     ],
   },
+  performanceNote: {
+    title: 'Performance media, by arrangement',
+    paragraph: 'Through an agency partnership I also run paid search and social for a small number of advertisers. I take these on where measurement and media need to be one job.',
+  },
   engagementModels: {
     title: 'How We Work Together',
     intro: 'Every engagement starts with a discovery conversation to understand your situation, objectives, and constraints. From there, we agree on the right model for your needs.',
@@ -200,7 +204,7 @@ export const consultationData = {
     },
     {
       question: 'What industries do you work with?',
-      answer: 'I work across a range of industries including digital agencies, marketing teams, scaling businesses, and organisations navigating AI adoption. Past engagements have spanned advertising, media, wildlife conservation, SaaS, and enterprise operations.',
+      answer: 'I work across a range of industries including digital agencies, marketing teams, scaling businesses, and organisations navigating AI adoption. Past engagements have spanned WA government, advertising, media, wildlife conservation, SaaS, and enterprise operations.',
     },
     {
       question: 'What results can I expect?',

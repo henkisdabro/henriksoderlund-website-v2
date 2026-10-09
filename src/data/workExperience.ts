@@ -9,14 +9,14 @@ export const workExperienceData: { location: string; flag: ImageMetadata; title:
   {
     location: 'Australia',
     flag: australiaFlag,
-    title: 'Independent AI & Technology Consultant',
+    title: 'Independent Technology Consultant',
     dates: 'SEP 2025–PRESENT',
     description: [
       'Running an independent consultancy delivering AI-powered solutions, automation systems, and digital products. Architecting and shipping agentic workflows, intelligent automation systems, and AI-powered tools that solve real operational problems for clients across diverse sectors.',
       [
-        'Currently partnering with organisations spanning digital agencies, wildlife conservation, and other industries to deliver end-to-end solutions including AI automation, ',
+        'Currently partnering with organisations spanning WA government, digital agencies, ad tech, entertainment and a not-for-profit health provider to deliver end-to-end solutions including AI automation, ',
         { text: 'advanced analytics and measurement frameworks', href: '/perth-analytics-consultant' },
-        ', and custom web applications. Projects range from intelligent workflow systems and data pipeline architecture to consumer-facing digital products.',
+        ', and custom web applications. Projects range from intelligent workflow systems and data pipeline architecture to consumer-facing digital products. Since mid-2026, also running paid search and social for property-development advertisers through a Perth agency partnership.',
       ],
       'Independently launched products including ascribe.to, a SaaS platform that validates marketing tracking links against GA4 channel definitions before launch, and Rottosnorkel.com, a live snorkelling guide for Rottnest Island providing real-time safety ratings across 36 spots and wrecks. Leading with rapid prototyping, building working solutions quickly, validating with data, and iterating based on evidence.',
     ],
@@ -70,7 +70,7 @@ export const workExperienceData: { location: string; flag: ImageMetadata; title:
     title: 'Musician @ Various Employers',
     dates: '2006–2012',
     description: [
-      'Professional musician spanning two decades, from early training at age 10 through conservatory studies in Rotterdam to freelance performance work beginning at 16. Built a distinguished international career as trombonist and euphonium player, performing with prestigious orchestras and ensembles across five continents and 20 countries, including appearances at world-renowned venues such as Amsterdam\'s Concertgebouw and the Royal Castle in Stockholm.',
+      'Professional musician spanning two decades, from early training at age 10 through conservatory studies in Lund and Rotterdam (Master of Music, Lund University) to freelance performance work beginning at 16. Built a distinguished international career as trombonist and euphonium player, performing with prestigious orchestras and ensembles across five continents and 20 countries, including appearances at world-renowned venues such as Amsterdam\'s Concertgebouw and the Royal Castle in Stockholm.',
       'Delivered featured solo performances and recordings with the Malaysian Philharmonic Orchestra and Sweden\'s Malmö Fire Brigade Band, with performances broadcast on national television and radio across multiple countries. This extensive musical background—representing the majority of my professional life until 2012—developed core competencies in precision, collaboration, and performance under pressure that continue to inform my leadership approach in technology and business environments.',
     ],
   },

@@ -11,8 +11,8 @@ export interface SkillGroup {
 
 export const expertiseData = {
   intro: {
-    title: 'Strategic Technology Leadership & AI Innovation',
-    paragraph: 'Senior technology leader bridging cutting-edge AI capabilities with practical business outcomes. I specialise in building intelligent automation systems, advanced measurement frameworks, and leading cross-functional teams to implement scalable technology solutions.',
+    title: 'What I work with',
+    paragraph: 'I build with AI coding agents, so I choose tools for the job rather than out of habit. These are the platforms I know well. Most are where your data and your team already live, which is where the finished work has to run. The ones in bold I use every day.',
   },
   skills: {
     title: 'Technical Expertise & Platforms',
@@ -21,14 +21,14 @@ export const expertiseData = {
       {
         id: 'measurement',
         name: 'Measurement',
-        skills: ['GA4', 'Google Tag Manager', 'Server-Side Tagging (sGTM)', 'Meta Conversions API', 'Consent Mode v2', 'Adobe Analytics', 'Amplitude', 'AppsFlyer', 'UTM & Tracking Templates', 'Google Search Console', 'JSON-LD Structured Data'],
+        skills: ['GA4', 'Google Tag Manager', 'Server-Side Tagging (sGTM)', 'Meta Conversions API', 'Consent Mode v2', 'Adobe Analytics', 'Amplitude', 'AppsFlyer', 'UTM & Tracking Templates', 'Google Search Console', 'Screaming Frog', 'JSON-LD Structured Data'],
         core: ['GA4', 'Google Tag Manager', 'Server-Side Tagging (sGTM)'],
         proof: { text: 'ascribe', href: '/builds#ascribe' },
       },
       {
         id: 'data',
         name: 'Data & Reporting',
-        skills: ['SQL & BigQuery', 'Power BI & Power Query', 'Microsoft Fabric', 'Looker Studio', 'Python & R', 'ETL Pipelines', 'Regular Expressions (RegEx)'],
+        skills: ['SQL & BigQuery', 'Power BI & Power Query', 'Microsoft Fabric', 'Looker Studio', 'Python & R', 'ETL Pipelines', 'Google Apps Script', 'Regular Expressions (RegEx)'],
         core: ['SQL & BigQuery', 'Power BI & Power Query'],
         proof: { text: 'the dashboards build', href: '/builds#dashboards' },
       },
@@ -70,8 +70,6 @@ export const expertiseData = {
       {
         id: 'range',
         name: 'Technical Range',
-        // DRAFT COPY: placeholder wording for Henrik to replace.
-        description: 'Not services I sell, but the depth behind the ones I do.',
         skills: ['Domain & DNS Management', 'Google Workspace & Microsoft 365 Administration', 'Email Security (DKIM, SPF, DMARC)', 'Server Administration & VPS', 'Network Architecture & Security', 'Docker & Kubernetes', 'Zero-Trust Security', 'Private Lab Infrastructure', 'Blockchain Node Operations', 'Audio/Video Technical Standards'],
       },
     ] as SkillGroup[],

@@ -79,8 +79,8 @@ const personSchemaJSON = JSON.stringify({
   "name": "Henrik Söderlund",
   "url": "https://www.henriksoderlund.com/",
   "image": "https://www.henriksoderlund.com/og_image.png",
-  "jobTitle": "Technology Leader & Automation Architect",
-  "description": "Technology Leader and Automation Architect building automation, analytics infrastructure, and digital products that free teams to focus on higher-value work. Agency founder and enterprise operator based in Perth, Australia.",
+  "jobTitle": "Independent Technology Consultant",
+  "description": "Independent technology consultant based in Perth, Australia. Works out what is slowing a business down, then builds the fix - usually some mix of automation, data and software.",
   "address": {
     "@type": "PostalAddress",
     "addressLocality": "Perth",
@@ -89,7 +89,7 @@ const personSchemaJSON = JSON.stringify({
   },
   "hasOccupation": {
     "@type": "Occupation",
-    "name": "Independent AI & Technology Consultant",
+    "name": "Independent Technology Consultant",
     "description": "Independent consultant delivering AI automation, analytics infrastructure, and digital products",
     "occupationLocation": {
       "@type": "City",
@@ -322,9 +322,9 @@ const websiteSchemaJSON = JSON.stringify({
   "@context": "https://schema.org",
   "@type": "WebSite",
   "@id": "https://www.henriksoderlund.com/#website",
-  "name": "Henrik Söderlund - Technology Leader & Automation Architect",
+  "name": "Henrik Söderlund - Independent Technology Consultant",
   "url": "https://www.henriksoderlund.com/",
-  "description": "The personal website of Henrik Söderlund, a Technology Leader and Automation Architect based in Perth, Australia.",
+  "description": "The personal website of Henrik Söderlund, an independent technology consultant based in Perth, Australia.",
   "author": {
     "@id": "https://www.henriksoderlund.com/#person"
   },
@@ -469,8 +469,13 @@ const calendlyHost = new URL(CALENDLY_URL).hostname;
     <!-- View Transitions -->
     <style is:global>
       @view-transition { navigation: auto; }
-      ::view-transition-old(root) { animation: none; }
-      ::view-transition-new(root) { animation: none; }
+      ::view-transition-old(root) { animation: 160ms ease both vt-out; }
+      ::view-transition-new(root) { animation: 260ms var(--ease-out) 60ms both vt-in; }
+      @keyframes vt-out { to { opacity: 0; } }
+      @keyframes vt-in { from { opacity: 0; transform: translateY(6px); } }
+      @media (prefers-reduced-motion: reduce) {
+        ::view-transition-old(root), ::view-transition-new(root) { animation: none; }
+      }
 
       /* Skip link - visually hidden until it takes keyboard focus (WCAG 2.4.1). */
       .skip-link {
@@ -586,6 +591,8 @@ const calendlyHost = new URL(CALENDLY_URL).hostname;
 
     <noscript><img src="https://api.fouanalytics.com/api/noscript-6686ht0xp1ec4dc5q5z4.gif" alt="Fou Analytics tracking pixel" width="1" height="1" /></noscript>
 
+    <slot name="backdrop" />
+
     <div class="app">
       <NavigationBox />
       <ThemeToggle />
@@ -608,6 +615,41 @@ const calendlyHost = new URL(CALENDLY_URL).hostname;
       </div>
       <iframe title="Book a discovery call on Calendly"></iframe>
     </dialog>
+
+    <!-- Spotlight on [data-glow]: one delegated listener, one rAF write per frame -->
+    <script is:inline data-csp>
+      (function () {
+        let target = null, px = 0, py = 0, raf = 0;
+        function paint() {
+          raf = 0;
+          if (!target) return;
+          const r = target.getBoundingClientRect();
+          target.style.setProperty('--mx', (px - r.left) + 'px');
+          target.style.setProperty('--my', (py - r.top) + 'px');
+        }
+        function track(e) {
+          const g = e.target.closest && e.target.closest('[data-glow]');
+          if (g) { target = g; px = e.clientX; py = e.clientY; }
+          return g;
+        }
+        document.addEventListener('pointermove', function (e) {
+          if (e.pointerType !== 'touch' && track(e) && !raf) raf = requestAnimationFrame(paint);
+        }, { passive: true });
+        // Touch: the glow blooms from where the finger landed, then fades.
+        document.addEventListener('pointerdown', function (e) {
+          const g = track(e);
+          if (!g) return;
+          paint();
+          g.classList.add('is-pressed');
+          setTimeout(function () { g.classList.remove('is-pressed'); }, 420);
+        }, { passive: true });
+        // Keyboard: the light sits in the centre of the focused control.
+        document.addEventListener('focusin', function (e) {
+          const g = e.target.closest && e.target.closest('[data-glow]');
+          if (g) { g.style.removeProperty('--mx'); g.style.removeProperty('--my'); }
+        });
+      })();
+    </script>
 
     <!-- Delegated interaction tracking -->
     <script is:inline data-csp define:vars={{ calendlyHost }}>

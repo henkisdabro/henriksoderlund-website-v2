@@ -17,7 +17,6 @@ const htmlPages = [
   { path: 'dist/client/consultancy/index.html', minBytes: 10000 },
   { path: 'dist/client/perth-analytics-consultant/index.html', minBytes: 10000 },
   { path: 'dist/client/work-experience/index.html', minBytes: 5000 },
-  { path: 'dist/client/education/index.html', minBytes: 2000 },
   { path: 'dist/client/privacy/index.html', minBytes: 2000 },
   { path: 'dist/client/404.html', minBytes: 1000 },
 ];
@@ -30,7 +29,6 @@ const textEndpoints = [
   { path: 'dist/client/consultancy.md', minBytes: 500 },
   { path: 'dist/client/perth-analytics-consultant.md', minBytes: 500 },
   { path: 'dist/client/work-experience.md', minBytes: 500 },
-  { path: 'dist/client/education.md', minBytes: 100 },
   { path: 'dist/client/contact.md', minBytes: 100 },
   { path: 'dist/client/index.html.md', minBytes: 100 },
 ];
