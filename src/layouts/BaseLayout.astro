@@ -500,9 +500,13 @@ const calendlyHost = new URL(CALENDLY_URL).hostname;
       }
 
       /* Calendly booking popup, opened by the delegated click handler below. */
+      /* Sized to Calendly's own layout: from a 1000px-wide frame up it switches
+         to side by side, whose tallest step (the details form) needs ~750px.
+         Narrower, it stacks to ~900px and scrolls inside the frame. Height is
+         the bar plus a 760px frame. */
       .booking-dialog {
-        width: min(1000px, 100% - 2rem);
-        height: min(760px, 100dvh - 2rem);
+        width: min(1002px, 100% - 2rem);
+        height: min(806px, 100dvh - 2rem);
         /* The global reset zeroes margins; auto restores the native centring. */
         margin: auto;
         padding: 0;
@@ -515,6 +519,10 @@ const calendlyHost = new URL(CALENDLY_URL).hostname;
       .booking-dialog[open] {
         display: flex;
         flex-direction: column;
+      }
+
+      .booking-dialog:focus {
+        outline: none;
       }
 
       .booking-dialog::backdrop {
@@ -537,15 +545,27 @@ const calendlyHost = new URL(CALENDLY_URL).hostname;
       }
 
       .booking-dialog-close {
-        width: 2.25rem;
-        height: 2.25rem;
-        border: 1px solid var(--color-border-primary);
-        border-radius: 50%;
-        background: var(--color-bg-elevated);
-        color: var(--color-text-primary);
-        font-size: 1.25rem;
-        line-height: 1;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 2rem;
+        height: 2rem;
+        padding: 0;
+        border: 0;
+        border-radius: 6px;
+        background: transparent;
+        color: var(--color-text-secondary);
         cursor: pointer;
+      }
+
+      .booking-dialog-close:hover {
+        background: var(--color-bg-tertiary);
+        color: var(--color-text-primary);
+      }
+
+      .booking-dialog-close svg {
+        width: 1.125rem;
+        height: 1.125rem;
       }
 
       .booking-dialog-close:focus-visible {
@@ -578,9 +598,13 @@ const calendlyHost = new URL(CALENDLY_URL).hostname;
       <Footer />
     </div>
 
-    <dialog id="booking-dialog" class="booking-dialog" aria-label="Book a discovery call">
+    <dialog id="booking-dialog" class="booking-dialog" aria-label="Book a discovery call" tabindex="-1">
       <div class="booking-dialog-bar">
-        <button type="button" class="booking-dialog-close" aria-label="Close">&times;</button>
+        <button type="button" class="booking-dialog-close" aria-label="Close">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+            <path d="M6 6l12 12M18 6L6 18" />
+          </svg>
+        </button>
       </div>
       <iframe title="Book a discovery call on Calendly"></iframe>
     </dialog>
@@ -670,6 +694,9 @@ const calendlyHost = new URL(CALENDLY_URL).hostname;
               embed.searchParams.set('embed_type', 'PopupWidget');
               frame.src = embed.href;
               dialog.showModal();
+              // showModal() focuses the close button, which then shows its
+              // focus ring on open; focus the dialog itself instead.
+              dialog.focus();
               return;
             }
 
