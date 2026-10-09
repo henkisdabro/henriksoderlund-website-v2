@@ -112,3 +112,6 @@ package-lock.json
 
 # Agent worktrees
 .claude/worktrees/
+
+# Machine-local Claude Code settings
+.claude/settings.local.json
