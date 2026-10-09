@@ -15,7 +15,7 @@ const SYNTHETIC_RECIPIENT = 'admin+synthetic@henriksoderlund.com';
 
 // Control characters (including CR/LF) in the name would land in the email
 // subject header. The browser input strips them; a raw POST does not.
-// eslint-disable-next-line no-control-regex
+// oxlint-disable-next-line no-control-regex
 const CONTROL_CHARS = /[\x00-\x1f\x7f]/;
 
 export const server = {
