@@ -2,7 +2,7 @@
 
 The contact form and the booking CTAs are the site's only conversions, and both have failed silently before. The mail provider's sending domain lost its DKIM record and every submission was refused for months. At the same time, a dataLayer rename left GA4 without a single lead or form error. The deploy smoke test passed throughout: it proved the route existed, not that a message arrived.
 
-This suite checks the outcome instead. It is Playwright, in `tests/e2e/`, with one config and two targets. It drives the installed Google Chrome (`channel: 'chrome'`), not a Playwright-downloaded Chromium: GitHub's ubuntu runners ship Chrome, so CI has no browser install step, and locally it needs Chrome in its usual place.
+This suite checks the outcome instead. It is Playwright, in `tests/e2e/`, with one config and two targets. CI installs only Playwright's Chromium headless shell, without `--with-deps`: GitHub's ubuntu runners already carry Chrome's system libraries, so the install takes ~4 s instead of ~20 s. Full Chrome (`channel: 'chrome'`, preinstalled there) was tried and dropped - no download, but every test ran ~1.5x slower, for a slower job overall.
 
 ## What runs where
 
