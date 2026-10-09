@@ -60,7 +60,7 @@ and in structured data.
 
 | Placement | source | medium | campaign | content |
 |---|---|---|---|---|
-| Homepage "Things I've built" | `henriksoderlund` | `referral` | `portfolio` | `home-built-link` |
+| Homepage "Products I've built" | `henriksoderlund` | `referral` | `portfolio` | `home-built-link` |
 | /builds card "Visit" link | `henriksoderlund` | `referral` | `portfolio` | `builds-visit-link` |
 | /builds fullscreen overlay "Visit" link | `henriksoderlund` | `referral` | `portfolio` | `builds-overlay-link` |
 

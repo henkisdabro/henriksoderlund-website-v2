@@ -14,15 +14,15 @@ Independent consultant in Perth. I work out what is slowing a business down, the
 
 ## What clients bring me
 
-Usually some version of the same thing: numbers nobody trusts, reporting someone rebuilds by hand every month, or work that still runs on email and spreadsheets. I have fixed it for WA government, agencies, ad tech, entertainment and not-for-profit health. For one 150-person agency, automating project and billing workflows cut admin time by 75 per cent. I do the implementation myself.
+Usually some version of the same thing: numbers nobody trusts, reporting someone rebuilds by hand every month, work that still runs on email and spreadsheets, or a product idea that needs building properly. I have done this for WA government, agencies, ad tech, entertainment and not-for-profit health. For one 150-person agency, automating project and billing workflows cut admin time by 75 per cent. I do the implementation myself.
 
 ## How I build
 
 I build with AI coding agents, and I review and test everything they write. One workflow I built turns a signed proposal into a live project in seven minutes, down from 45-60. My own practice runs the same way, on agents I built to handle proposals and invoicing.
 
-## Things I've built
+## Products I've built
 
-[ascribe](https://www.henriksoderlund.com/builds#ascribe) checks marketing tracking links against an organisation's own GA4 channel definitions before launch. [Rotto Snorkel](https://www.henriksoderlund.com/builds#rotto-snorkel) turns live wind, wave and swell data into safety ratings for 36 snorkel spots around Rottnest.
+I also build and run my own products. [ascribe](https://www.henriksoderlund.com/builds#ascribe) is a SaaS platform that checks marketing tracking links against an organisation's own GA4 channel definitions before launch. [Rotto Snorkel](https://www.henriksoderlund.com/builds#rotto-snorkel) is a free community app that turns live wind, wave and swell data into safety ratings for 36 snorkel spots around Rottnest.
 
 ## Background
 
