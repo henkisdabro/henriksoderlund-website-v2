@@ -24,9 +24,6 @@ export default defineConfig({
   reporter: process.env.CI ? [['github'], ['list']] : 'list',
   use: {
     ...devices['Desktop Chrome'],
-    // The installed Google Chrome, not Playwright's bundled Chromium: GitHub's
-    // ubuntu runners ship it, so CI skips a ~20 s browser download per job.
-    channel: 'chrome',
     baseURL: production ? 'https://www.henriksoderlund.com' : 'http://127.0.0.1:8801',
     trace: 'retain-on-failure',
   },

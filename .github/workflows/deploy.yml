@@ -65,8 +65,11 @@ jobs:
         env:
           TURNSTILE_SITE_KEY: '0x4AAAAAACxasQskYMJsn7bk'
 
-      # Runs in the runner image's preinstalled Google Chrome (channel: 'chrome'
-      # in playwright.config.ts), so there is no browser download.
+      # Only the headless shell (what Playwright runs headless) and no apt
+      # deps: the runner image already has Chrome's system libraries.
+      - name: Install Chromium headless shell
+        run: pnpm exec playwright install --only-shell chromium
+
       - name: Lead-capture tests
         run: pnpm exec playwright test
 
