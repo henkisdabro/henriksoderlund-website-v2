@@ -10,54 +10,13 @@ permissions:
   contents: read
 
 jobs:
-  # Lead capture, end to end, before anything ships: the contact form through
-  # the built Worker, Turnstile and the Email Service simulator; the booking
-  # CTAs; and the contract between dataLayer events and the published GTM
-  # container. See docs/LEAD-CAPTURE-TESTS.md.
-  e2e:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v7
-        with:
-          fetch-depth: 1
-
-      - name: Setup pnpm
-        uses: pnpm/action-setup@v6
-        env:
-          NPM_CONFIG_AUDIT: 'false'
-          NPM_CONFIG_FUND: 'false'
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v7
-        with:
-          node-version-file: '.nvmrc'
-          cache: 'pnpm'
-
-      - name: Install dependencies
-        run: pnpm install --frozen-lockfile
-
-      - name: Install Chromium
-        run: pnpm exec playwright install --with-deps chromium
-
-      - name: Build
-        run: pnpm run build
-        env:
-          TURNSTILE_SITE_KEY: '0x4AAAAAACxasQskYMJsn7bk'
-
-      - name: Lead-capture tests
-        run: pnpm exec playwright test
-
-      - name: Upload traces
-        if: failure()
-        uses: actions/upload-artifact@v7
-        with:
-          name: e2e-results
-          path: test-results/
-          retention-days: 14
-
-  build-and-deploy:
-    needs: e2e
+  # One job, so the site is built and set up once. Lead capture is tested end
+  # to end before anything ships: the contact form through the built Worker,
+  # Turnstile and the Email Service simulator; the booking CTAs; and the
+  # contract between dataLayer events and the published GTM container. The
+  # deploy steps after it only run on a push to main. See
+  # docs/LEAD-CAPTURE-TESTS.md.
+  build-test-deploy:
     runs-on: ubuntu-latest
     env:
       LC_ALL: en_US.UTF-8
@@ -105,6 +64,22 @@ jobs:
         run: pnpm run build
         env:
           TURNSTILE_SITE_KEY: '0x4AAAAAACxasQskYMJsn7bk'
+
+      # Only the headless shell (what Playwright runs headless) and no apt
+      # deps: the runner image already has Chrome's system libraries.
+      - name: Install Chromium headless shell
+        run: pnpm exec playwright install --only-shell chromium
+
+      - name: Lead-capture tests
+        run: pnpm exec playwright test
+
+      - name: Upload traces
+        if: failure()
+        uses: actions/upload-artifact@v7
+        with:
+          name: e2e-results
+          path: test-results/
+          retention-days: 14
 
       # Hashes each sitemap page as served before this deploy, so the IndexNow
       # step can submit only the pages whose content actually changed. The
@@ -301,9 +276,7 @@ jobs:
       # from lead-capture-monitor.yml, for drift no deploy causes.
       - name: Lead-capture checks against production
         if: github.ref == 'refs/heads/main' && github.event_name == 'push'
-        run: |
-          pnpm exec playwright install --with-deps chromium
-          pnpm run test:prod
+        run: pnpm run test:prod
         env:
           CONTACT_SYNTHETIC_TOKEN: ${{ secrets.CONTACT_SYNTHETIC_TOKEN }}
 

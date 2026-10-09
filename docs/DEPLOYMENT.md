@@ -8,9 +8,11 @@ This document outlines the automated deployment process for the website using Gi
 
 The website uses GitHub Actions for automated building and deployment to Cloudflare Workers. The workflow includes:
 
-1. **Lead-capture tests** (`e2e` job): the contact form, booking CTAs and GTM contract against the built Worker. The deploy job `needs` it - see `docs/LEAD-CAPTURE-TESTS.md`
-2. **Build Process**: Dependencies, linting, Astro check, and Astro build
-3. **Verification**: Ensures all required files are generated
+One job, `build-test-deploy`, runs these in order, so a failure at any step stops the deploy:
+
+1. **Build Process**: Dependencies, linting, Astro check, and Astro build
+2. **Verification**: Ensures all required files are generated
+3. **Lead-capture tests**: the contact form, booking CTAs and GTM contract against the built Worker, in Playwright's Chromium headless shell - see `docs/LEAD-CAPTURE-TESTS.md`
 4. **Deployment**: Deploys to Cloudflare Workers (main branch only), then runs the same lead-capture checks against production
 
 ### Workflow Triggers
