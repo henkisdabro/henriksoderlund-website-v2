@@ -97,6 +97,66 @@ function keepCampaignParams(url: URL): void {
   url.search = kept.toString();
 }
 
+// Google tag gateway, self-served (Google's manual setup). /wro1/ is the
+// measurement path for GTM-KM56HHS2: the container loads from it and GA4 hits
+// post to it, and this forwards both to Google's origin, fps.goog, which reads
+// the measurement path from the URL, so path and query stay as they are.
+// While Cloudflare's own gateway integration is on, its edge answers /wro1/
+// before this Worker runs, so this only takes over once that is switched off.
+const TAG_PATH = '/wro1/';
+const TAG_ID = 'GTM-KM56HHS2';
+
+const isAscii = (v: unknown): v is string => typeof v === 'string' && /^[\x20-\x7e]+$/.test(v);
+
+function tagGateway(request: Request, url: URL): Promise<Response> {
+  const target = new URL(url.pathname + url.search, 'https://fps.goog');
+  const headers = new Headers(request.headers);
+  headers.delete('host');
+  headers.set('X-Gtg-Implementation', 'Snippet');
+  headers.set('X-Gtg-Tag-Id', TAG_ID);
+  // Set rather than appended, so a client-sent chain is dropped.
+  const ip = request.headers.get('CF-Connecting-IP');
+  if (ip) headers.set('X-Forwarded-For', ip);
+  else headers.delete('X-Forwarded-For');
+  // Google prefers X-Forwarded-CountryRegion over the country/region pair
+  // below, so a client-sent copy would override the real location.
+  headers.delete('X-Forwarded-CountryRegion');
+  // Every geo value is optional, and a header value must be ASCII, so a city
+  // like Zürich is left out rather than sent mangled. XX is an unknown
+  // country and T1 is Tor.
+  const { country, regionCode, latitude, longitude, city } = request.cf ?? ({} as Partial<IncomingRequestCfProperties>);
+  const knownCountry = isAscii(country) && country !== 'XX' && country !== 'T1';
+  const geo = [
+    isAscii(latitude) && isAscii(longitude) && `latlong=${latitude},${longitude}`,
+    isAscii(city) && `city=${city.replace(/[;,]/g, ' ')}`,
+  ]
+    .filter(Boolean)
+    .join(';');
+  for (const [name, value] of [
+    ['X-Forwarded-Country', knownCountry && country],
+    ['X-Forwarded-Region', knownCountry && regionCode],
+    ['X-Forwarded-Geolocation', geo],
+  ] as const) {
+    if (isAscii(value)) headers.set(name, value);
+    else headers.delete(name);
+  }
+  // Passed straight through: Google's status, redirects (it sometimes falls
+  // back to googletagmanager.com), encoding and cookies all reach the browser
+  // untouched. Never cached here - the container is per-region - and a POST is
+  // never retried, as a failed hit may already have been counted.
+  return fetch(target, {
+    method: request.method,
+    headers,
+    body: request.body,
+    redirect: 'manual',
+    cache: 'no-store',
+  }).catch((error) => {
+    // Without this an unreachable fps.goog surfaces as Cloudflare's 1101 page.
+    console.error('Tag gateway fetch failed', url.pathname, error);
+    return new Response(null, { status: 502 });
+  });
+}
+
 export default {
   async fetch(request: Request, env: Env, ctx: ExecutionContext): Promise<Response> {
     const url = new URL(request.url);
@@ -114,6 +174,10 @@ export default {
       setSecurityHeaders(headers);
       return new Response(null, { status: 301, headers });
     }
+
+    // Ahead of everything below: the trailing-slash redirect would bounce
+    // /wro1/ itself, and the HTML handling must not touch Google's responses.
+    if (url.pathname.startsWith(TAG_PATH)) return tagGateway(request, url);
 
     // Enforce trailingSlash: 'never' (astro.config.mjs). The Cloudflare asset
     // binding serves the slash variant as 200, creating a duplicate URL with a

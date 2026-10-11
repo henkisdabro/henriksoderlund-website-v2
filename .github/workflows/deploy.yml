@@ -230,9 +230,12 @@ jobs:
             echo "OK: /expertise/ (301 to non-slash)"
           fi
 
-          # The measurement path is served by Cloudflare at the edge, ahead of the
-          # Worker. If a Worker route ever shadows it, gtm.js 404s and measurement
-          # stops silently, so assert the container actually loads - not just health.
+          # The measurement path is answered by Cloudflare's gateway integration
+          # while it is on, and by the Worker's tagGateway() proxy once it is off.
+          # If anything ever shadows it, gtm.js 404s and measurement stops
+          # silently, so assert the container actually loads - not just health -
+          # and that a country reaches Google (validate_geo answers 500 without
+          # X-Forwarded-Country).
           echo "=== Checking the Google tag gateway measurement path ==="
           status=$(curl -s -o /dev/null -w "%{http_code}" --max-time 20 "https://www.henriksoderlund.com/wro1/healthy")
           if [ "$status" -ne 200 ]; then
@@ -248,6 +251,14 @@ jobs:
             failed=1
           else
             echo "OK: /wro1/gtm.js (200)"
+          fi
+
+          status=$(curl -s -o /dev/null -w "%{http_code}" --max-time 20 "https://www.henriksoderlund.com/wro1/?validate_geo=healthy")
+          if [ "$status" -ne 200 ]; then
+            echo "::error::FAIL: /wro1/?validate_geo=healthy should return 200 (got HTTP $status) - geo headers are not reaching Google"
+            failed=1
+          else
+            echo "OK: /wro1/?validate_geo=healthy (200)"
           fi
 
           echo "=== Checking the contact Action responds ==="
