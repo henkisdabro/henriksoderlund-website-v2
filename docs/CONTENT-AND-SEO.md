@@ -41,7 +41,7 @@ Set in the `serialize` callback in `astro.config.mjs`: home 1.0, expertise / bui
 
 ## Analytics
 
-- **GTM** container `GTM-KM56HHS2`, loaded first-party through the Google tag gateway measurement path `/wro1/gtm.js`. Cloudflare handles that path at the edge; `src/worker.ts` never sees it.
+- **GTM** container `GTM-KM56HHS2`, loaded first-party through the Google tag gateway measurement path `/wro1/gtm.js`, which `src/worker.ts` proxies to Google's origin, `fps.goog`.
 - **Fou Analytics** via `api.fouanalytics.com`, with a noscript pixel fallback. Its scripts require `'unsafe-eval'` in the CSP.
 - **dataLayer** is initialised in `BaseLayout.astro` before GTM loads, with production/development detection based on hostname.
 - **Contact form events** are pushed from `src/components/ContactForm.astro`, all of them carrying `form_name: 'contact'`:

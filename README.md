@@ -75,7 +75,7 @@ Professional portfolio website for Henrik Soderlund - independent technology con
 
 ### Analytics and Tracking
 
-- **Google tag gateway** - Google Tag Manager served first-party from `/wro1/*` on the site's own domain
+- **Google tag gateway** - Google Tag Manager served first-party from `/wro1/*` on the site's own domain, proxied to Google by the Worker
 - **Fou Analytics** - Privacy-focused analytics via `api.fouanalytics.com` with noscript fallback
 - **dataLayer** - Global `window.dataLayer` with environment detection (production vs development)
 - **Custom events** - `contact_form_submission` event with session-based deduplication

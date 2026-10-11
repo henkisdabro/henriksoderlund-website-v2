@@ -79,7 +79,7 @@ export const perthAnalyticsData = {
         description: '75 per cent less admin time and AUD 285,000 in recovered revenue across a 150-person agency. Case study on the consultancy page.',
       },
     ],
-    selfHosted: 'This page runs the stack: its tag is served first-party from this domain through Cloudflare\'s Google tag gateway, under a nonced content security policy. Open the network tab to see what I would build for you.',
+    selfHosted: 'This page runs the stack: its tag is served first-party from this domain through Google\'s tag gateway, proxied by the site\'s own Cloudflare Worker, under a nonced content security policy. Open the network tab to see what I would build for you.',
   },
 
   deliverables: {

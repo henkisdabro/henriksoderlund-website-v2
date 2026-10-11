@@ -9,14 +9,6 @@ declare global {
   }
 }
 
-// Cloudflare's Google tag gateway injects its own loader at the edge, after
-// the Worker, so it never gets a nonce and the CSP blocks it. "Set up tag" is
-// off in the dashboard, but a known Cloudflare bug keeps injecting anyway
-// (same on ascribe.to). Blocking it is harmless - the site loads GTM itself -
-// so only those two scripts are ignored, recognised by content rather than a
-// hash, which would pin bytes Cloudflare controls.
-const CLOUDFLARE_GATEWAY_LOADER = /google_tags_first_party|'set', 'developer_id\./;
-
 export { expect } from '@playwright/test';
 
 export const test = base.extend({
@@ -50,8 +42,7 @@ export const dataLayerEvents = (page: Page) =>
     )
   );
 
-/** CSP violations on the page, minus Cloudflare's injected gateway loader. */
+/** CSP violations on the page. */
 export const cspViolations = async (page: Page) =>
   (await page.evaluate(() => window.__cspViolations ?? []))
-    .filter((v) => !(v.blocked === 'inline' && CLOUDFLARE_GATEWAY_LOADER.test(v.script)))
     .map((v) => `${v.directive} ${v.blocked}${v.script ? `: ${v.script.slice(0, 80)}` : ''}`);

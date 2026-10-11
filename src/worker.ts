@@ -101,8 +101,8 @@ function keepCampaignParams(url: URL): void {
 // measurement path for GTM-KM56HHS2: the container loads from it and GA4 hits
 // post to it, and this forwards both to Google's origin, fps.goog, which reads
 // the measurement path from the URL, so path and query stay as they are.
-// While Cloudflare's own gateway integration is on, its edge answers /wro1/
-// before this Worker runs, so this only takes over once that is switched off.
+// Cloudflare's dashboard integration for the gateway must stay off: when on,
+// its edge answers /wro1/ ahead of this Worker and injects unnonced scripts.
 const TAG_PATH = '/wro1/';
 const TAG_ID = 'GTM-KM56HHS2';
 

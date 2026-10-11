@@ -230,8 +230,7 @@ jobs:
             echo "OK: /expertise/ (301 to non-slash)"
           fi
 
-          # The measurement path is answered by Cloudflare's gateway integration
-          # while it is on, and by the Worker's tagGateway() proxy once it is off.
+          # The measurement path is proxied to Google by the Worker's tagGateway().
           # If anything ever shadows it, gtm.js 404s and measurement stops
           # silently, so assert the container actually loads - not just health -
           # and that a country reaches Google (validate_geo answers 500 without
