@@ -20,3 +20,11 @@ for (const path of HTML) {
     expect(headers['content-security-policy']).toContain("frame-ancestors 'none'");
   });
 }
+
+test('one banner landmark holds the theme toggle and social links', async ({ page }) => {
+  await page.goto('/');
+  const banner = page.getByRole('banner');
+  await expect(banner).toHaveCount(1);
+  await expect(banner.locator('#theme-toggle')).toHaveCount(1);
+  await expect(banner.locator('a.social-link')).toHaveCount(3);
+});
