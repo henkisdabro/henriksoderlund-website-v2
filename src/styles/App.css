@@ -560,7 +560,7 @@ a:hover {
   padding: 2rem 1rem;
   margin-top: 3rem;
   color: var(--color-text-faint);
-  font-size: 0.7rem;
+  font-size: 0.8rem;
   width: 100%;
   position: relative;
 }
@@ -590,7 +590,7 @@ a:hover {
   margin: 0 0.3rem;
   vertical-align: middle;
   line-height: 1;
-  font-size: 0.75rem;
+  font-size: 0.8rem;
 }
 
 .tech-icon {
