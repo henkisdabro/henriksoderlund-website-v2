@@ -1,302 +1,115 @@
 # Henrik Soderlund - Personal Website
 
-[![Live Site](https://img.shields.io/badge/live-henriksoderlund.com-0ea5e9?style=flat&logo=googlechrome&logoColor=white)](https://www.henriksoderlund.com/)
-[![Astro](https://img.shields.io/badge/astro-6-BC52EE?style=flat&logo=astro&logoColor=white)](https://astro.build/)
-[![TypeScript](https://img.shields.io/badge/typescript-6.0-3178C6?style=flat&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
-[![Cloudflare Workers](https://img.shields.io/badge/cloudflare%20workers-deployed-F38020?style=flat&logo=cloudflare&logoColor=white)](https://workers.cloudflare.com/)
-[![CI/CD](https://img.shields.io/github/actions/workflow/status/henkisdabro/henriksoderlund-website-v2/deploy.yml?branch=main&label=deploy&logo=githubactions&logoColor=white)](https://github.com/henkisdabro/henriksoderlund-website-v2/actions)
-[![Node.js](https://img.shields.io/badge/node.js-24_LTS-339933?style=flat&logo=node.js&logoColor=white)](https://nodejs.org/)
-[![pnpm](https://img.shields.io/badge/pnpm-11-F69220?style=flat&logo=pnpm&logoColor=white)](https://pnpm.io/)
-[![Oxlint](https://img.shields.io/badge/oxlint-1.87-32F3E9?style=flat)](https://oxc.rs/docs/guide/usage/linter)
-[![License](https://img.shields.io/badge/licence-private-lightgrey?style=flat)](#)
+[![Deploy](https://img.shields.io/github/actions/workflow/status/henkisdabro/henriksoderlund-website-v2/deploy.yml?branch=main&label=deploy&logo=githubactions&logoColor=white)](https://github.com/henkisdabro/henriksoderlund-website-v2/actions/workflows/deploy.yml)
+[![Astro](https://img.shields.io/badge/astro-7-BC52EE?logo=astro&logoColor=white)](https://astro.build/)
+[![Cloudflare Workers](https://img.shields.io/badge/cloudflare%20workers-F38020?logo=cloudflare&logoColor=white)](https://workers.cloudflare.com/)
 
-Professional portfolio website for Henrik Soderlund - independent technology consultant. Built with Astro 6, deployed globally on Cloudflare Workers with hybrid rendering, per-request CSP nonces, server-side GTM, and dark mode theming.
+Professional portfolio site for Henrik Soderlund, an independent technology consultant based in Perth, Western Australia. Live at <https://www.henriksoderlund.com>.
 
-> Migrated from a React SPA (Vite) to Astro 6 in March 2026 for better performance, SEO, and maintainability.
+Astro runs on Cloudflare Workers behind a custom Worker entry (`src/worker.ts`). Most pages are prerendered; the contact page and its Astro Action render on demand.
+
+Copy on this site is Henrik's own. SEO, structure and formatting fixes are fine; ask before changing wording.
 
 ## Architecture
 
-```text
-                    +-------------------+
-                    |   Cloudflare CDN  |
-                    | (prerendered HTML)|
-                    +--------+----------+
-                             |
-              +--------------+--------------+
-              |                             |
-     +--------v--------+          +--------v--------+
-     |  Static Pages   |          |  SSR Contact    |
-     |  (6 pages, CDN) |          |  (Astro Actions)|
-     +--------+--------+          +--------+--------+
-              |                             |
-              +--------------+--------------+
-                             |
-                    +--------v--------+
-                    |  Custom Worker   |
-                    |  (src/worker.ts) |
-                    |  CSP nonces,     |
-                    |  security headers|
-                    +--------+--------+
-                             |
-                    +--------v--------+
-                    |  HTMLRewriter    |
-                    |  (nonce inject)  |
-                    +-----------------+
+```mermaid
+flowchart TD
+    V([Visitor]) --> E[Cloudflare edge]
+    E --> W["Worker entry: src/worker.ts"]
+
+    W --> A{"Request path"}
+    A -->|"apex host"| R1["301 to www"]
+    A -->|"/wro1/*"| G["Google tag gateway proxy to fps.goog<br/>runs first after the apex redirect<br/>passed through untouched, never cached"]
+    A -->|"trailing slash"| R2["301 to non-slash form"]
+    A -->|"REDIRECTS map, /blog/*"| R3["301, campaign params kept"]
+    A -->|"GONE set (old feeds)"| R4["410 Gone"]
+    A -->|"everything else"| H["Prerendered pages and text endpoints<br/>env.ASSETS<br/>SSR routes: Astro handler"]
+
+    H --> S["Security headers, charset, canonical Link,<br/>X-Robots-Tag on text/JSON endpoints"]
+    S --> N["HTML only: per-request CSP nonce<br/>HTMLRewriter nonces script[data-csp]"]
+
+    H --> C["/contact and /_actions/contact (SSR)"]
+    C --> T["Turnstile siteverify"]
+    T --> M["EMAIL binding: Cloudflare Email Service send_email"]
 ```
 
-## Tech Stack
+Bindings in `wrangler.json`: `EMAIL` (`send_email`) and the `TURNSTILE_SITE_KEY` var. The Astro Cloudflare adapter adds the `ASSETS` and `IMAGES` bindings at build time. `scripts/patch-wrangler.mjs` adds `run_worker_first` to the built config so the Worker sees prerendered pages too.
 
-| Layer | Technology | Purpose |
-|-------|-----------|---------|
-| Framework | [Astro 6](https://astro.build/) | Hybrid rendering (prerendered + SSR) |
-| Adapter | [@astrojs/cloudflare](https://docs.astro.build/en/guides/integrations-guide/cloudflare/) | First-party Cloudflare Workers adapter |
-| Runtime | [Cloudflare Workers](https://developers.cloudflare.com/workers/) | Edge computing with global deployment |
-| Language | [TypeScript 6.0](https://www.typescriptlang.org/) | Strict type safety across all code |
-| Security | Custom Worker + HTMLRewriter | Per-request CSP nonces, security headers |
-| Spam Protection | [Cloudflare Turnstile](https://developers.cloudflare.com/turnstile/) | Privacy-preserving contact form protection |
-| Email | [Cloudflare Email Service](https://developers.cloudflare.com/email-service/) | Contact form email delivery (`send_email` binding) |
-| Form Validation | [Zod](https://zod.dev/) (via Astro Actions) | Schema-based input validation |
-| Analytics | Server-side GTM + [Fou Analytics](https://fouanalytics.com/) | Privacy-focused analytics on custom sGTM domain |
-| SEO | [@astrojs/sitemap](https://docs.astro.build/en/guides/integrations-guide/sitemap/) + JSON-LD | Automatic sitemap, structured data |
-| Fonts | [JetBrains Mono](https://www.jetbrains.com/lp/mono/) | Coding font for dark mode (6 weights) |
-| Linting | [Oxlint](https://oxc.rs/docs/guide/usage/linter) | Rust linter; covers `.astro` frontmatter and `<script>` blocks, TypeScript and the build scripts (`.oxlintrc.json`) |
-| Package Manager | [pnpm 11](https://pnpm.io/) | Pinned via `packageManager`, used by CI |
-| CI/CD | [GitHub Actions](https://github.com/features/actions) | Automated build, lint, deploy, smoke tests |
-| CLI | [Wrangler 4](https://developers.cloudflare.com/workers/wrangler/) | Cloudflare Workers development toolkit |
+### CI/CD
 
-## Key Features
-
-### Performance
-
-- **Hybrid rendering** - 6 of 7 content pages prerendered at build time (sub-10ms TTFB from CDN edge); contact page SSR for form handling
-- **Zero-JS page transitions** - CSS View Transitions (`@view-transition { navigation: auto; }`)
-- **Identical HTML for all visitors** - No dual rendering or crawler detection
-- **Optimised images** - WebP format, lazy loading, `decoding="async"`, proper dimensions
-
-### Analytics and Tracking
-
-- **Google tag gateway** - Google Tag Manager served first-party from `/wro1/*` on the site's own domain, proxied to Google by the Worker
-- **Fou Analytics** - Privacy-focused analytics via `api.fouanalytics.com` with noscript fallback
-- **dataLayer** - Global `window.dataLayer` with environment detection (production vs development)
-- **Custom events** - `contact_form_submission` event with session-based deduplication
-- **Cloudflare Insights** - Platform-level observability
-
-### Contact Form
-
-- **Astro Actions** - Server-side form handling with progressive enhancement
-- **Zod validation** - Schema-based: name (1-100 chars), email (valid, max 200), message (10-2000 chars)
-- **Cloudflare Turnstile** - Privacy-preserving CAPTCHA with theme-aware re-rendering on dark/light mode toggle
-- **Resend integration** - Email delivery to `admin@henriksoderlund.com` with reply-to from submitter
-- **IP forwarding** - `CF-Connecting-IP` header passed to Turnstile for verification
-- **Error handling** - Typed `ActionError` codes (FORBIDDEN, BAD_REQUEST, INTERNAL_SERVER_ERROR)
-
-### Security
-
-- **CSP nonces** - Per-request cryptographic nonces via custom Worker entry using Cloudflare HTMLRewriter (streaming, no buffering). Only scripts carrying the `data-csp` marker are nonced; the build fails on any authored script without it
-- **`'strict-dynamic'`** - GTM child scripts inherit trust automatically
-- **Security headers** - X-Frame-Options (DENY) with CSP `frame-ancestors 'none'`, HSTS (1 year + preload), Referrer-Policy, Permissions-Policy (camera/mic/geo/payment disabled), X-Content-Type-Options
-- **security.txt** - RFC 9116 compliant at `/.well-known/security.txt` with contact, policy, and expiration
-- **Turnstile** - Server-side token verification in Astro Actions
-- **Rate limiting** - Cloudflare WAF dashboard rules
-- **Canonical Link header** - Set at Worker level for `www.henriksoderlund.com`
-
-### SEO and AI
-
-- **JSON-LD structured data** - Person (with location, languages, education, awards), ProfessionalService, WebSite schemas
-- **Open Graph** (11+ tags including profile metadata), **Twitter Cards** (summary large image, 8+ tags)
-- **Automatic sitemap** via `@astrojs/sitemap` with per-page priorities (1.0 for home down to 0.3 for privacy)
-- **Site verification** - Google Search Console and Ahrefs
-- **AI-optimised content** - Per-page markdown endpoints following the [llms.txt](https://llmstxt.org/) specification
-- **robots.txt** - Explicit AI-friendly rules ("AI systems are welcome")
-- **Cloudflare Crawler Hints** - Enabled via dashboard
-- **Canonical links** - Self-referential on all pages
-
-### Design and UX
-
-- **Dark mode** with JetBrains Mono coding font (6 weights) and theme toggle with sun/moon icons
-- **Light mode** with clean, minimal serif typography
-- **Theme persistence** - localStorage with system preference detection via `prefers-color-scheme`
-- **FOUC prevention** - Theme detection script runs before paint
-- **Motion surface** - pointer spotlight on `[data-glow]` buttons and cards, drawn-in link underlines and cross-page view transitions (`App.css`, `BaseLayout.astro`); on the homepage, a glow behind the portrait and a depth field behind the hero - a faint WebGL2 mesh gradient with film grain ([Paper Shaders](https://shaders.paper.design), Apache-2.0) under drifting hairlines. Source in `src/scripts/depth-grain.js`; `scripts/build-depth-grain.mjs` bundles it before `dev` and `build`, and `index.astro` inlines the result so the CSP nonce covers it. It starts after load, pauses off-screen, falls back to a still CSS haze without WebGL2 and holds still under `prefers-reduced-motion`
-- **Builds page** - featured build cards with hover-scrolling screenshots and a fullscreen `<dialog>` overlay
-- **Collapsible navigation** - Sidebar of main pages, session-persisted state, auto-close on mobile after navigation
-- **Mobile-responsive** - Navigation hidden on <1024px
-- **Native accordions** - `<details>/<summary>` for case study content
-- **GitHub contribution chart** - 1-year heatmap from `ghchart.rshah.org` with dark mode CSS filter inversion
-- **Smooth scrolling** - Dynamic heading detection with scroll-to-section
-
-### Accessibility
-
-- **ARIA labels** - Comprehensive on buttons (build screenshots, navigation, theme toggle)
-- **Keyboard navigation** - Tab/enter for navigation, Escape closes the build overlay
-- **Reduced motion** - `prefers-reduced-motion` compliance across all animations
-- **External links** - `rel="noopener noreferrer"` on all external links
-- **Semantic HTML** - Proper heading hierarchy, section tags, main content areas
-- **Alt text** - Descriptive alt text on all images
-
-## Project Structure
-
-```text
-src/
-  actions/index.ts              # Astro Actions (contact form with Turnstile + Resend + Zod)
-  assets/                       # Images, logos, icons, flags
-    flags/                      #   Country flags (work experience)
-    icons/                      #   UI icons
-    images/screenshots/         #   Project screenshots (WebP)
-    logos/                      #   Brand logos (Cloudflare, Claude - SVG/PNG)
-  components/                   # Astro components
-    ContactForm.astro           #   Form with Turnstile, validation, dataLayer tracking
-    Footer.astro                #   Site footer with tech stack logos
-    SocialLinks.astro           #   X, LinkedIn and GitHub profile links
-    NavigationBox.astro         #   Collapsible sidebar with heading scan
-    SEO.astro                   #   Open Graph, Twitter Cards, verification tags
-    ThemeToggle.astro           #   Dark/light mode toggle with sun/moon icons
-  data/                         # Centralised business data
-    consultation.ts             #   Service offerings, methodology, case studies
-    expertise.ts                #   Technical skills, GitHub projects, AI tooling
-    links.ts                    #   External URLs (Calendly, LinkedIn, GitHub)
-    workExperience.ts           #   Professional experience with achievements
-  layouts/BaseLayout.astro      # Main layout: sGTM, Fou Analytics, JSON-LD, view transitions, SEO
-  pages/                        # File-based routing
-    index.astro                 #   Homepage
-    expertise.astro             #   Skills and builds teaser
-    builds.astro                #   Products, client builds and open source
-    consultancy.astro           #   Service offerings and case studies
-    work-experience.astro       #   Professional experience timeline
-    privacy.astro               #   Privacy policy
-    contact.astro               #   Contact form (SSR)
-    404.astro                   #   Custom not-found page with ASCII art
-    *.md.ts                     #   Per-page markdown endpoints (llms.txt)
-    llms.txt.ts                 #   AI entry point with ASCII art logo
-    llms-full.txt.ts            #   Complete site content for LLMs
-    health.ts                   #   Service status endpoint
-    metrics.ts                  #   Worker metrics (CF-Ray, CF-IPCountry, CF-IPColo)
-    .well-known/security.txt.ts #   RFC 9116 security contact
-  styles/
-    App.css                     #   Main application styles (~44KB)
-    index.css                   #   Base/reset styles
-    theme.css                   #   Light/dark mode design tokens (40+ CSS variables)
-  utils/
-    markdownResponse.ts         #   Markdown HTTP response helper
-    pageMarkdown.ts             #   Page content to markdown converter
-    removeEmojis.ts             #   Character encoding normalisation
-  worker.ts                     # Custom Worker entry: CSP nonces, security headers, HTMLRewriter, 301 redirects
-scripts/
-  patch-wrangler.mjs            # Post-build: injects run_worker_first into built wrangler config
-  verify-build.mjs              # Build artifact verification (size thresholds, completeness)
-public/
-  fonts/                        # JetBrains Mono WOFF2 files (6 weights)
-  robots.txt                    # AI-friendly crawler rules
-  og_image.png                  # Open Graph / Twitter card image
-  favicon.svg                   # HS monogram favicon
-  google*.html, ahrefs*         # Search Console / Ahrefs site verification
-.github/workflows/deploy.yml   # CI/CD: lint, build, verify, deploy, smoke test
+```mermaid
+flowchart LR
+    P["PR or push to main"] --> B["Lint, build, verify-build"]
+    B --> E["Playwright E2E against the built Worker"]
+    E -->|"main only"| D["Deploy with wrangler-action"]
+    D --> S["Post-deploy smoke test"]
+    S --> PE["Playwright against production"]
+    PE --> I["IndexNow for changed pages"]
+    M["Daily lead-capture monitor"] --> PE2["Playwright against production"]
 ```
+
+Pull requests stop after the E2E step. The daily monitor is `.github/workflows/lead-capture-monitor.yml`.
+
+## Stack
+
+| Area | Used |
+|------|------|
+| Framework | Astro 7 (`output: 'server'`, pages opt into prerendering), `@astrojs/cloudflare` 14, `@astrojs/sitemap` |
+| Runtime | Cloudflare Workers, Wrangler 4 |
+| Language | TypeScript 6 |
+| Contact form | Astro Actions with Zod validation, Cloudflare Turnstile, Cloudflare Email Service |
+| Analytics | GTM served first-party via the `/wro1/*` tag gateway, Fou Analytics |
+| Lint | Oxlint |
+| Tests | Playwright (E2E and lead-capture suite) |
+| Tooling | Node 24 (`.nvmrc`), pnpm 12 (pinned by `packageManager`) |
+| Font | JetBrains Mono (self-hosted) |
 
 ## Pages
 
-| Page | Path | Rendering | Description |
-|------|------|-----------|-------------|
-| Home | `/` | Prerendered | Landing page |
-| Expertise | `/expertise` | Prerendered | Technical skills, leadership, builds teaser |
-| Builds | `/builds` | Prerendered | Products, client builds, open source, GitHub chart |
-| Consultancy | `/consultancy` | Prerendered | Service offerings, case studies, Calendly booking |
-| Work Experience | `/work-experience` | Prerendered | Professional experience timeline |
-| Privacy | `/privacy` | Prerendered | Privacy policy |
-| Contact | `/contact` | SSR | Contact form with Turnstile + Resend |
-| 404 | `/404` | Prerendered | Custom not-found page with ASCII art |
+Navigation order, as in `src/components/NavigationBox.astro`:
 
-### API Endpoints
+| Route | Rendering | Content |
+|-------|-----------|---------|
+| `/` | Prerendered | Home |
+| `/consultancy` | Prerendered | Services and case studies |
+| `/builds` | Prerendered | Products, client builds, open source |
+| `/perth-analytics-consultant` | Prerendered | Perth analytics landing page |
+| `/expertise` | Prerendered | Skills and tooling |
+| `/work-experience` | Prerendered | Experience and education |
+| `/contact` | SSR | Contact form |
 
-| Endpoint | Description |
-|----------|-------------|
-| `/health` | Service status |
-| `/metrics` | Worker metrics (CF-Ray, CF-IPCountry, CF-IPColo) |
-| `/.well-known/security.txt` | RFC 9116 security contact |
-| `/llms.txt` | AI entry point with page directory |
-| `/llms-full.txt` | Complete site content for LLMs |
-| `/*.md` | Per-page markdown versions |
+Not in the navigation: `/privacy` and `/404` (prerendered), `/health`, `/metrics` and `/.well-known/security.txt` (SSR).
 
-## Getting Started
+Machine-readable endpoints, all prerendered plain text or markdown:
 
-### Prerequisites
+- `/llms.txt` and `/llms-full.txt` - site index and full content for LLMs
+- Markdown twins of the main pages: `/index.html.md`, `/consultancy.md`, `/builds.md`, `/perth-analytics-consultant.md`, `/expertise.md`, `/work-experience.md`, `/contact.md`
 
-- [Node.js 24 LTS](https://nodejs.org/)
-- [pnpm 11](https://pnpm.io/) (pinned via `packageManager`; `corepack enable` will provision it)
+## Local development
 
-### Development
+Requires Node 24 and pnpm (`corepack enable` provisions the pinned version).
 
 ```bash
-pnpm install          # Install dependencies
-pnpm run dev          # Start dev server at http://localhost:4321
+pnpm install
+pnpm run dev          # http://localhost:4321
+pnpm run lint         # oxlint
+pnpm run build        # depth-grain bundle, astro check, build, wrangler patch, nonce strip, verify-build
+pnpm run test:e2e     # build, then Playwright against the built Worker
 ```
 
-### Build and Validate
+`pnpm run check` is the same script as `pnpm run build`; run one, not both. `pnpm run preview` does not work: the Cloudflare adapter does not support `astro preview` under `output: 'server'`. To test redirects, headers or CSP locally, read [docs/LOCAL-WORKER-TESTING.md](docs/LOCAL-WORKER-TESTING.md) first.
 
-```bash
-pnpm run build        # Production build (astro check + astro build + wrangler patch + verify)
-pnpm run lint         # Oxlint code quality check
-pnpm run check        # Full validation (type check + build + wrangler patch + verify)
-pnpm run cf-typegen   # Generate Cloudflare Workers types
-```
+Server secrets (`TURNSTILE_SECRET_KEY`, `CONTACT_SYNTHETIC_TOKEN`) go in a local `.dev.vars`. Both must stay `optional: true` in `astro.config.mjs`; see [AGENTS.md](AGENTS.md).
 
-> `pnpm run preview` (`astro preview`) does **not** work with the Cloudflare `output: 'server'` adapter. To test Worker behaviour (redirects, headers, CSP) locally, run the built bundle under Wrangler:
->
-> ```bash
-> pnpm run build
-> npx wrangler dev -c dist/server/wrangler.json --port 8801 --local --ip 127.0.0.1
-> ```
+## Deployment
 
-### Deployment
+Production deploys from GitHub Actions on push to `main`. Do not deploy by hand, and keep Cloudflare's own auto-build disabled. The CI build verification guards against the 0-byte-HTML failure described in AGENTS.md.
 
-Production deployment is **fully automated** via GitHub Actions on push to `main`:
+## Deeper docs
 
-1. Checkout, setup pnpm + Node 24, `pnpm install --frozen-lockfile`, lint
-2. Build with artifact verification (markdown endpoints, llms.txt)
-3. Deploy to Cloudflare Workers via `wrangler-action`
-4. Post-deploy smoke tests: 7 pages (HTTP status + body size), API endpoints (`/health`, `/llms.txt`, sitemaps), and 301 redirects (`/skills`, `/blog`, `/about`)
-
-Manual deploy for development/testing only:
-
-```bash
-pnpm run deploy       # Build + deploy to Cloudflare Workers
-npx wrangler tail     # Live log streaming
-```
-
-## Environment Variables
-
-| Variable | Context | Description |
-|----------|---------|-------------|
-| `CONTACT_SYNTHETIC_TOKEN` | Server secret | Lets the CI synthetic check submit the contact form without Turnstile |
-| `TURNSTILE_SECRET_KEY` | Server secret | Server-side Turnstile verification |
-| `TURNSTILE_SITE_KEY` | Client public | Turnstile widget site key |
-
-Configured via `astro:env` schema in `astro.config.mjs` for type-safe access.
-
-CI/CD secrets (GitHub Actions):
-
-| Secret | Description |
-|--------|-------------|
-| `CLOUDFLARE_API_TOKEN` | Wrangler deploy authentication |
-| `CLOUDFLARE_ACCOUNT_ID` | Cloudflare account identifier |
-
-## Redirects
-
-Permanent (301) redirects are handled in `src/worker.ts` (the `REDIRECTS` map plus a `/blog/*` prefix rule and a naked-domain to `www` canonicalisation), since Cloudflare's asset binding intercepts before Astro routing:
-
-- **Naked domain**: `henriksoderlund.com/*` to `https://www.henriksoderlund.com/*`
-- **Rebranding**: `/skills`, `/skill`, `/skills.html` to `/expertise`
-- **Legacy Hugo/Thulite paths**: `/content/*` and `*.html` to current clean URLs
-- **Removed sections**: `/blog`, `/blog/*`, `/about` to `/`
-- **Legacy feeds**: `/feed`, `/feed.xml`, `/rss.xml`, `/atom.xml`, `/index.xml` to `/`
-- **Sitemap/markdown**: `/sitemap.xml` to `/sitemap-index.xml`, `/index.md` to `/index.html.md`
-
-## Additional Resources
-
-- [Astro Documentation](https://docs.astro.build/)
-- [Cloudflare Workers Documentation](https://developers.cloudflare.com/workers/)
-- [Astro Cloudflare Adapter](https://docs.astro.build/en/guides/integrations-guide/cloudflare/)
-- [Cloudflare Turnstile](https://developers.cloudflare.com/turnstile/)
-- [Cloudflare Email Service](https://developers.cloudflare.com/email-service/)
-- [llms.txt Specification](https://llmstxt.org/)
-- [JetBrains Mono](https://www.jetbrains.com/lp/mono/)
+- [AGENTS.md](AGENTS.md) - architecture rules and traps (Worker edges, CSP, tag gateway, secrets)
+- [docs/LOCAL-WORKER-TESTING.md](docs/LOCAL-WORKER-TESTING.md) - running the Worker locally
+- [docs/CONTENT-AND-SEO.md](docs/CONTENT-AND-SEO.md) - structured data, Open Graph, sitemap, llms.txt
+- [docs/DEPLOYMENT.md](docs/DEPLOYMENT.md) - CI workflow and Cloudflare setup
+- [docs/LEAD-CAPTURE-TESTS.md](docs/LEAD-CAPTURE-TESTS.md) - contact form, CTA and dataLayer tests
+- [docs/UTM-TAXONOMY.md](docs/UTM-TAXONOMY.md) - tagging inbound links
