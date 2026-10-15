@@ -575,47 +575,20 @@ a:hover {
   margin: 0 auto 1.5rem auto;
 }
 
-.site-footer p {
+.footer-line {
   display: flex;
-  justify-content: center;
-  align-items: center;
   flex-wrap: wrap;
+  justify-content: center;
+  list-style: none;
   margin: 0;
+  padding: 0;
 }
 
-.tech-stack {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.4rem;
-  margin: 0 0.3rem;
-  vertical-align: middle;
-  line-height: 1;
-  font-size: 0.8rem;
-}
-
-.tech-icon {
-  width: 14px;
-  height: 14px;
-  vertical-align: middle;
-  filter: grayscale(100%) opacity(0.85);
-}
-
-/* Inline SVGs using currentColor inherit text colour; skip grayscale filter */
-.tech-stack svg.tech-icon {
-  filter: none;
-}
-
-/* Tech row styling for desktop */
-.tech-row {
-  display: inline;
-}
-
-.tech-row .tech-stack {
-  margin: 0 0.3rem;
-}
-
-.footer-legal {
-  margin-top: 1rem;
+/* Empty alt text keeps screen readers from announcing each separator. */
+.footer-line li + li::before {
+  content: "·";
+  content: "·" / "";
+  margin: 0 0.6rem;
 }
 
 .cloudflare-icon {
@@ -650,27 +623,13 @@ a:hover {
     font-size: 1.1rem;
   }
 
-  /* Footer tech stack mobile styling */
-  .site-footer p {
-    flex-direction: column;
-    gap: 0.5rem;
-    align-items: center;
+  /* A wrapped line would start on a separator, so space the items instead. */
+  .footer-line {
+    gap: 0.35rem 1rem;
   }
 
-  .powered-by {
-    margin-bottom: 0.5rem;
-  }
-
-  .tech-row {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 0.6rem;
-    margin: 0.2rem 0;
-  }
-
-  .tech-row .tech-stack {
-    margin: 0;
+  .footer-line li + li::before {
+    content: none;
   }
 
   /* Social link mobile styles */
@@ -1319,7 +1278,7 @@ a:hover {
    only cue, and draw a solid one over it from the left. */
 .prose a,
 .cta-footnote a,
-.footer-legal a {
+.footer-line a {
   text-decoration: none;
   background:
     linear-gradient(currentColor, currentColor) left 100% / 0% 1px no-repeat,
@@ -1328,7 +1287,7 @@ a:hover {
   transition: background-size var(--dur-base) var(--ease-out);
 }
 
-.footer-legal a {
+.footer-line a {
   background-size: 0% 1px, 0% 1px;
 }
 
@@ -1336,8 +1295,8 @@ a:hover {
 .prose a:focus-visible,
 .cta-footnote a:hover,
 .cta-footnote a:focus-visible,
-.footer-legal a:hover,
-.footer-legal a:focus-visible {
+.footer-line a:hover,
+.footer-line a:focus-visible {
   text-decoration: none;
   background-size: 100% 1px, 100% 1px;
 }
@@ -1347,7 +1306,7 @@ a:hover {
   [data-glow]::after,
   .prose a,
   .cta-footnote a,
-  .footer-legal a {
+  .footer-line a {
     transition: none;
   }
 }
