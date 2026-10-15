@@ -211,6 +211,21 @@ jobs:
             failed=1
           fi
 
+          if grep -i '^content-security-policy:' "$hdrs" | grep -q "frame-ancestors 'none'"; then
+            echo "OK: CSP sets frame-ancestors 'none'"
+          else
+            echo "::error::FAIL: CSP lost frame-ancestors 'none'"
+            failed=1
+          fi
+
+          # The asset binding serves prerendered HTML as bare text/html.
+          if grep -i '^content-type:' "$hdrs" | grep -qi 'charset=utf-8'; then
+            echo "OK: Content-Type declares charset=utf-8"
+          else
+            echo "::error::FAIL: Content-Type lost charset=utf-8"
+            failed=1
+          fi
+
           for header in strict-transport-security x-content-type-options referrer-policy x-frame-options; do
             if grep -qi "^${header}:" "$hdrs"; then
               echo "OK: ${header} present"

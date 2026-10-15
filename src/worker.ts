@@ -19,6 +19,7 @@ const CSP_TEMPLATE = [
   "manifest-src 'self'",
   "base-uri 'self'",
   "form-action 'self'",
+  "frame-ancestors 'none'",
 ].join('; ');
 
 function buildCSP(nonce: string): string {
@@ -240,6 +241,12 @@ export default {
     const headers = new Headers(response.headers);
     setSecurityHeaders(headers);
     headers.delete('speculation-rules');
+
+    // Prerendered pages and text endpoints come from the asset binding, which
+    // sends a bare media type and drops the charset their source set.
+    if (/^text\/(html|plain|markdown)\s*$/i.test(contentType)) {
+      headers.set('Content-Type', `${contentType}; charset=utf-8`);
+    }
 
     // Machine-readable endpoints (markdown twins, llms.txt, /health, /metrics)
     // are never search results.

@@ -595,8 +595,13 @@ const calendlyHost = new URL(CALENDLY_URL).hostname;
 
     <div class="app">
       <NavigationBox />
-      <ThemeToggle />
-      <SocialLinks />
+      <!-- Banner landmark. Keep it bare: locationOf() reads the id, aria-label
+           or class of the nearest header, and positioning it would re-anchor
+           the absolutely positioned .social-links. -->
+      <header>
+        <ThemeToggle />
+        <SocialLinks />
+      </header>
 
       <main class="main-content" id="main" tabindex="-1">
         <slot />
