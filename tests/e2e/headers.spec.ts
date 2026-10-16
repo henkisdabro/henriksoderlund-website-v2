@@ -21,6 +21,14 @@ for (const path of HTML) {
   });
 }
 
+for (const path of HTML) {
+  test(`${path} lets the browser keep the page but never the edge`, async ({ request }) => {
+    const headers = (await request.get(path)).headers();
+    expect(headers['cache-control']).toBe('private, no-cache');
+    expect(headers['cdn-cache-control']).toBe('no-store');
+  });
+}
+
 test('one banner landmark holds the theme toggle and social links', async ({ page }) => {
   await page.goto('/');
   const banner = page.getByRole('banner');

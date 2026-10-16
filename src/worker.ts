@@ -269,7 +269,15 @@ export default {
 
       const nonce = crypto.randomUUID();
       headers.set('Content-Security-Policy', buildCSP(nonce));
-      headers.set('Cache-Control', 'no-store, no-cache, must-revalidate, max-age=0');
+      // HTML carries a per-request nonce, so no cache may ever answer a
+      // request for it. CDN-Cache-Control: no-store keeps Cloudflare's edge
+      // from storing it. The browser gets private, no-cache instead of
+      // no-store: it may keep the page, which is what the back/forward cache
+      // needs, but must come back here before reusing it. HTML has no ETag or
+      // Last-Modified, so that trip is always a full 200 with a fresh nonce,
+      // never a 304 onto an old body. A bfcache restore re-parses nothing,
+      // so the restored page's nonce is no more exposed than it was in use.
+      headers.set('Cache-Control', 'private, no-cache');
       headers.set('CDN-Cache-Control', 'no-store');
 
       const prepared = new Response(response.body, {
