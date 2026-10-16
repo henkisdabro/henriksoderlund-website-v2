@@ -369,6 +369,20 @@ const calendlyHost = new URL(CALENDLY_URL).hostname;
         const theme = readStoredTheme() || (prefersDark() ? 'dark' : 'light');
         document.documentElement.setAttribute('data-theme', theme);
 
+        // JetBrains Mono is the dark theme's font only, so it is preloaded only
+        // when this load resolves dark. A static <link rel="preload"> made every
+        // light-mode visitor download 44 KB they never render. A toggle to dark
+        // mid-page loads it on use instead, behind font-display: swap.
+        if (theme === 'dark') {
+          const font = document.createElement('link');
+          font.rel = 'preload';
+          font.href = '/fonts/JetBrainsMono-Regular.woff2';
+          font.as = 'font';
+          font.type = 'font/woff2';
+          font.crossOrigin = 'anonymous';
+          document.head.appendChild(font);
+        }
+
         // This layout owns the theme and nothing else. Anything that has to
         // react to a change - the toggle's accessible name, the contact form's
         // Turnstile widget - listens for `site:theme` and owns its own
@@ -416,8 +430,7 @@ const calendlyHost = new URL(CALENDLY_URL).hostname;
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-    <!-- Preload critical fonts to reduce render-blocking -->
-    <link rel="preload" href="/fonts/JetBrainsMono-Regular.woff2" as="font" type="font/woff2" crossorigin />
+    <!-- The dark-mode font preload is added by the theme script above, dark only -->
     <title>{title}</title>
     <meta name="description" content={description} />
 
