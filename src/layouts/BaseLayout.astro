@@ -405,6 +405,18 @@ const calendlyHost = new URL(CALENDLY_URL).hostname;
           setTheme(current === 'dark' ? 'light' : 'dark');
         });
 
+        // A page restored from the back/forward cache comes back exactly as it
+        // was left, so a toggle made on a later page would not show here until
+        // a reload. Re-resolve on restore, without writing storage: nothing was
+        // chosen on this page.
+        window.addEventListener('pageshow', function(e) {
+          if (!e.persisted) return;
+          const t = readStoredTheme() || (prefersDark() ? 'dark' : 'light');
+          if (t === document.documentElement.getAttribute('data-theme')) return;
+          document.documentElement.setAttribute('data-theme', t);
+          document.dispatchEvent(new CustomEvent('site:theme', { detail: { theme: t } }));
+        });
+
         try {
           window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', function(e) {
             if (!readStoredTheme()) {
@@ -454,6 +466,11 @@ const calendlyHost = new URL(CALENDLY_URL).hostname;
         event: 'dl_init',
         environment: window.__isProduction ? 'production' : 'development',
         page_type: pageType
+      });
+      // A back/forward cache restore runs no script again, so GA4 would count
+      // no page view for it. GTM fires a GA4 page_view on this event.
+      window.addEventListener('pageshow', function (e) {
+        if (e.persisted) window.dataLayer.push({ event: 'page_restore' });
       });
     </script>
 
