@@ -115,6 +115,13 @@ function init(root, hero) {
         u_worldHeight: 0,
       }, { alpha: true, premultipliedAlpha: true, antialias: false, powerPreference: 'low-power' },
       0, haze.frame, 1, haze.w * haze.h * dpr * dpr);
+      // A software renderer (no usable GPU) draws the shader on the CPU and
+      // blocks the main thread for seconds, so it gets the CSS haze instead.
+      const { gl } = haze.mount;
+      const info = gl.getExtension('WEBGL_debug_renderer_info');
+      if (/swiftshader|llvmpipe|softpipe|software/i.test(gl.getParameter(info ? info.UNMASKED_RENDERER_WEBGL : gl.RENDERER))) {
+        throw new Error('software WebGL');
+      }
       haze.mount.canvasElement.addEventListener('webglcontextlost', () => {
         haze.mount?.dispose();
         haze.mount = null;
@@ -122,6 +129,7 @@ function init(root, hero) {
       });
     } catch {
       // No WebGL2: a static CSS haze stands in, and the lines carry on.
+      haze.mount?.dispose();
       hazeEl.querySelector('canvas')?.remove();
       haze.mount = null;
       root.classList.add('no-gl');
