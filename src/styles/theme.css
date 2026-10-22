@@ -3,10 +3,16 @@
    CSS custom properties for light/dark mode theming
    ========================================================================== */
 
-/* Font Faces - JetBrains Mono for dark mode */
+/* Font Faces - JetBrains Mono for dark mode
+   The -v2 files are the upstream statics run through
+   `pyftsubset --unicodes=<the unicode-range below>
+   --layout-features='calt,ccmp,locl,case,kern,mark,mkmk' --flavor=woff2`,
+   which drops the unused character variants, stylistic sets and fraction
+   features (about 6.7 KB a file) and keeps hinting and the default shaping.
+   /fonts/* is immutable for a year, so a re-cut needs a new filename. */
 @font-face {
   font-family: 'JetBrains Mono';
-  src: url('/fonts/JetBrainsMono-Regular.woff2') format('woff2');
+  src: url('/fonts/JetBrainsMono-Regular-v2.woff2') format('woff2');
   unicode-range: U+0000-017F, U+02BC-02DC, U+2000-206F, U+20A0-20BF, U+2122, U+2190-21FF, U+2500-25FF;
   font-weight: 400;
   font-style: normal;
@@ -15,7 +21,7 @@
 
 @font-face {
   font-family: 'JetBrains Mono';
-  src: url('/fonts/JetBrainsMono-Medium.woff2') format('woff2');
+  src: url('/fonts/JetBrainsMono-Medium-v2.woff2') format('woff2');
   unicode-range: U+0000-017F, U+02BC-02DC, U+2000-206F, U+20A0-20BF, U+2122, U+2190-21FF, U+2500-25FF;
   font-weight: 500;
   font-style: normal;
@@ -24,7 +30,7 @@
 
 @font-face {
   font-family: 'JetBrains Mono';
-  src: url('/fonts/JetBrainsMono-Italic.woff2') format('woff2');
+  src: url('/fonts/JetBrainsMono-Italic-v2.woff2') format('woff2');
   unicode-range: U+0000-017F, U+02BC-02DC, U+2000-206F, U+20A0-20BF, U+2122, U+2190-21FF, U+2500-25FF;
   font-weight: 400;
   font-style: italic;
@@ -33,7 +39,7 @@
 
 @font-face {
   font-family: 'JetBrains Mono';
-  src: url('/fonts/JetBrainsMono-SemiBold.woff2') format('woff2');
+  src: url('/fonts/JetBrainsMono-SemiBold-v2.woff2') format('woff2');
   unicode-range: U+0000-017F, U+02BC-02DC, U+2000-206F, U+20A0-20BF, U+2122, U+2190-21FF, U+2500-25FF;
   font-weight: 600;
   font-style: normal;
@@ -42,11 +48,38 @@
 
 @font-face {
   font-family: 'JetBrains Mono';
-  src: url('/fonts/JetBrainsMono-Bold.woff2') format('woff2');
+  src: url('/fonts/JetBrainsMono-Bold-v2.woff2') format('woff2');
   unicode-range: U+0000-017F, U+02BC-02DC, U+2000-206F, U+20A0-20BF, U+2122, U+2190-21FF, U+2500-25FF;
   font-weight: 700;
   font-style: normal;
   font-display: swap;
+}
+
+/* Width-matched stand-in for the swap window. The dark stacks otherwise fall
+   back to bare `monospace`, which on Windows is Consolas at 0.55em a glyph
+   against JetBrains Mono's 0.60em, so every line rewraps when the webfont
+   arrives. These overrides scale Consolas to JetBrains Mono's advance and
+   vertical metrics. Where Consolas is not installed the face fails to load and
+   the stack carries on to Monaco/Menlo as before. Both weights are needed
+   because of font-synthesis: none. */
+@font-face {
+  font-family: 'JetBrains Mono Fallback';
+  src: local('Consolas');
+  font-weight: 400;
+  size-adjust: 109.13%;
+  ascent-override: 93.47%;
+  descent-override: 27.49%;
+  line-gap-override: 0%;
+}
+
+@font-face {
+  font-family: 'JetBrains Mono Fallback';
+  src: local('Consolas Bold');
+  font-weight: 700;
+  size-adjust: 109.13%;
+  ascent-override: 93.47%;
+  descent-override: 27.49%;
+  line-gap-override: 0%;
 }
 
 /* ==========================================================================
@@ -279,10 +312,10 @@
     --haze-tint: 0.75;
 
     /* Fonts - coding font in dark mode */
-    --font-body: 'JetBrains Mono', 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
-    --font-body-alt: 'JetBrains Mono', monospace;
-    --font-mono: 'JetBrains Mono', 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
-    --font-code: 'JetBrains Mono', source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
+    --font-body: 'JetBrains Mono', 'JetBrains Mono Fallback', 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+    --font-body-alt: 'JetBrains Mono', 'JetBrains Mono Fallback', monospace;
+    --font-mono: 'JetBrains Mono', 'JetBrains Mono Fallback', 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+    --font-code: 'JetBrains Mono', 'JetBrains Mono Fallback', source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
   }
 }
 
@@ -391,10 +424,10 @@
   --haze-tint: 0.75;
 
   /* Fonts - coding font in dark mode */
-  --font-body: 'JetBrains Mono', 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
-  --font-body-alt: 'JetBrains Mono', monospace;
-  --font-mono: 'JetBrains Mono', 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
-  --font-code: 'JetBrains Mono', source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
+  --font-body: 'JetBrains Mono', 'JetBrains Mono Fallback', 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+  --font-body-alt: 'JetBrains Mono', 'JetBrains Mono Fallback', monospace;
+  --font-mono: 'JetBrains Mono', 'JetBrains Mono Fallback', 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+  --font-code: 'JetBrains Mono', 'JetBrains Mono Fallback', source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
 
 }
 

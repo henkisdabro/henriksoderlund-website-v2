@@ -35,9 +35,9 @@ for (const path of ['/', '/expertise']) {
       await expect(page.locator('html')).toHaveAttribute('data-theme', 'dark');
       await expect(page.locator('head link[rel=preload][as=font]')).toHaveAttribute(
         'href',
-        '/fonts/JetBrainsMono-Regular.woff2'
+        '/fonts/JetBrainsMono-Regular-v2.woff2'
       );
-      expect(fonts).toContain('/fonts/JetBrainsMono-Regular.woff2');
+      expect(fonts).toContain('/fonts/JetBrainsMono-Regular-v2.woff2');
     });
   });
 }
