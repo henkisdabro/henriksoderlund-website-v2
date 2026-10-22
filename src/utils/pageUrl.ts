@@ -43,9 +43,15 @@ const MARKDOWN_ROUTES = new Set(
   )
 );
 
-/** Absolute URL of a page's plain-text twin, or `null` where it has none. */
-export function markdownTwinUrl(pathname: string): string | null {
+/** Path of a page's plain-text twin, or `null` where it has none. */
+export function markdownTwinPath(pathname: string): string | null {
   const path = pathname.replace(/\/+$/, '');
   const candidate = path === '' ? '/index.html.md' : `${path}.md`;
-  return MARKDOWN_ROUTES.has(candidate) ? `${SITE_ORIGIN}${candidate}` : null;
+  return MARKDOWN_ROUTES.has(candidate) ? candidate : null;
+}
+
+/** Absolute URL of a page's plain-text twin, or `null` where it has none. */
+export function markdownTwinUrl(pathname: string): string | null {
+  const path = markdownTwinPath(pathname);
+  return path && `${SITE_ORIGIN}${path}`;
 }

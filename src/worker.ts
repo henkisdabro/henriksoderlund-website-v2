@@ -1,4 +1,5 @@
 import { handle } from '@astrojs/cloudflare/handler';
+import { markdownTwinPath } from './utils/pageUrl';
 
 // 'unsafe-eval' in script-src is deliberate, not an oversight: the GTM
 // container has a Custom JavaScript variable (cjs - hit timestamp), and GTM
@@ -225,9 +226,18 @@ export default {
       return new Response(null, { status: 301, headers });
     }
 
+    // Markdown for Agents: a page with a markdown twin serves that twin at its
+    // own URL to a request whose Accept names text/markdown. Browsers never
+    // send it, so they still get HTML.
+    const twin = markdownTwinPath(url.pathname);
+    const wantsMarkdown =
+      twin !== null &&
+      (request.method === 'GET' || request.method === 'HEAD') &&
+      /text\/markdown/i.test(request.headers.get('accept') ?? '');
+
     let response: Response;
     try {
-      response = await handle(request, env, ctx);
+      response = await handle(wantsMarkdown ? new Request(new URL(twin, url), request) : request, env, ctx);
     } catch (error) {
       // Synchronous and pre-stream failures only - routing errors and anything
       // that throws before handle() resolves. Under output: 'server' Astro
@@ -250,6 +260,7 @@ export default {
     const headers = new Headers(response.headers);
     setSecurityHeaders(headers);
     headers.delete('speculation-rules');
+    if (twin) headers.append('Vary', 'Accept');
 
     // Prerendered pages and text endpoints come from the asset binding, which
     // sends a bare media type and drops the charset their source set.
@@ -271,9 +282,15 @@ export default {
       // Canonical Link header on HTML only: pairing it with the X-Robots-Tag
       // noindex on the .md and .txt endpoints is a contradictory signal, and on
       // static assets it is merely noise. Pathname only, no query params.
-      const host = request.headers.get('host');
-      if (host === 'www.henriksoderlund.com' && response.status >= 200 && response.status < 300) {
-        headers.set('Link', `<https://www.henriksoderlund.com${url.pathname}>; rel="canonical"`);
+      // describedby and the markdown alternate point agents at the plain-text
+      // versions (RFC 8288).
+      if (response.status >= 200 && response.status < 300) {
+        const links = ['</llms.txt>; rel="describedby"; type="text/plain"'];
+        if (twin) links.push(`<${twin}>; rel="alternate"; type="text/markdown"`);
+        if (request.headers.get('host') === 'www.henriksoderlund.com') {
+          links.unshift(`<https://www.henriksoderlund.com${url.pathname}>; rel="canonical"`);
+        }
+        headers.set('Link', links.join(', '));
       }
 
       const nonce = crypto.randomUUID();

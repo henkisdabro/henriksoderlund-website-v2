@@ -64,6 +64,10 @@ User-agent: SlackBot
 User-agent: DiscordBot
 Allow: /
 
+# Content Signals (https://contentsignals.org/): search, AI answers and AI
+# training are all permitted
+Content-Signal: search=yes, ai-input=yes, ai-train=yes
+
 # AI-friendly structured content
 Allow: /llms.txt
 Allow: /llms-full.txt
@@ -87,6 +91,10 @@ Crawl-delay: 1
 # === ALL OTHER BOTS (General Rules) ===
 User-agent: *
 Allow: /
+
+# Content Signals (https://contentsignals.org/): search, AI answers and AI
+# training are all permitted
+Content-Signal: search=yes, ai-input=yes, ai-train=yes
 
 # AI-friendly structured content
 Allow: /llms.txt
