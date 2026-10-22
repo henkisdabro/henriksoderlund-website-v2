@@ -7,16 +7,19 @@ import { handle } from '@astrojs/cloudflare/handler';
 // that variable as a custom template is what would let this go. 'strict-dynamic'
 // still prevents unauthorised script injection, the separate attack surface.
 //
-// img-src allows any https: origin on purpose. GA4's Google Signals beacon
-// (/ads/ga-audiences) goes to the visitor's regional Google domain -
-// google.com.tw, google.de, google.co.uk and so on - and CSP cannot wildcard
-// a TLD, so an allowlist blocks it for every country it does not name.
+// img-src names only what loads images: GA4 and GTM image fallbacks, the
+// gstatic hosts Tag Assistant preview needs, and the GitHub contribution chart
+// on /builds. It was briefly any https: origin, for the Google Signals /
+// personalised-ads beacon (/ads/ga-audiences on the visitor's regional Google
+// domain, which CSP cannot wildcard). Signals and the Ads link's personalised
+// advertising are both off in GA4, so that beacon should not be sent; if it
+// comes back it is blocked here, which is the intended outcome.
 const CSP_TEMPLATE = [
   "default-src 'self'",
   "script-src '%%NONCE%%' 'strict-dynamic' https://tagmanager.google.com https://www.googletagmanager.com https://static.cloudflareinsights.com https://challenges.cloudflare.com https: 'unsafe-inline' 'unsafe-eval'",
   "connect-src 'self' https://*.google-analytics.com https://analytics.google.com https://*.analytics.google.com https://www.googletagmanager.com https://stats.g.doubleclick.net https://*.g.doubleclick.net https://*.google.com https://cloudflareinsights.com",
   "style-src 'self' 'unsafe-inline' https://tagmanager.google.com https://fonts.googleapis.com https://www.googletagmanager.com",
-  "img-src 'self' data: https:",
+  "img-src 'self' data: https://*.google-analytics.com https://*.analytics.google.com https://*.googletagmanager.com https://ssl.gstatic.com https://www.gstatic.com https://ghchart.rshah.org",
   "font-src 'self' data: https://fonts.gstatic.com",
   "frame-src 'self' https://www.googletagmanager.com https://challenges.cloudflare.com https://calendly.com",
   "worker-src 'self' blob:",
