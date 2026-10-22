@@ -5,12 +5,17 @@ import { handle } from '@astrojs/cloudflare/handler';
 // eval()/new Function() for runtime integrity checks, and fail with a "blocks
 // the use of 'eval'" violation without it. 'strict-dynamic' still prevents
 // unauthorised script injection, which is the separate attack surface.
+//
+// img-src allows any https: origin on purpose. GA4's Google Signals beacon
+// (/ads/ga-audiences) goes to the visitor's regional Google domain -
+// google.com.tw, google.de, google.co.uk and so on - and CSP cannot wildcard
+// a TLD, so an allowlist blocks it for every country it does not name.
 const CSP_TEMPLATE = [
   "default-src 'self'",
   "script-src '%%NONCE%%' 'strict-dynamic' https://*.fouanalytics.com https://api.fouanalytics.com https://tagmanager.google.com https://www.googletagmanager.com https://static.cloudflareinsights.com https://challenges.cloudflare.com https: 'unsafe-inline' 'unsafe-eval'",
-  "connect-src 'self' https://*.fouanalytics.com https://api.fouanalytics.com wss://api.fouanalytics.com https://*.google-analytics.com https://analytics.google.com https://*.analytics.google.com https://www.googletagmanager.com https://stats.g.doubleclick.net https://apix.b2c.com https://cloudflareinsights.com",
+  "connect-src 'self' https://*.fouanalytics.com https://api.fouanalytics.com wss://api.fouanalytics.com https://*.google-analytics.com https://analytics.google.com https://*.analytics.google.com https://www.googletagmanager.com https://stats.g.doubleclick.net https://*.g.doubleclick.net https://*.google.com https://apix.b2c.com https://cloudflareinsights.com",
   "style-src 'self' 'unsafe-inline' https://tagmanager.google.com https://fonts.googleapis.com https://www.googletagmanager.com",
-  "img-src 'self' data: https://www.googletagmanager.com https://*.google-analytics.com https://stats.g.doubleclick.net https://ssl.gstatic.com https://www.gstatic.com https://fonts.gstatic.com *.google.com *.google.com.au https://ghchart.rshah.org https://api.fouanalytics.com",
+  "img-src 'self' data: https:",
   "font-src 'self' data: https://fonts.gstatic.com",
   "frame-src 'self' https://www.googletagmanager.com https://challenges.cloudflare.com https://calendly.com",
   "worker-src 'self' blob:",
