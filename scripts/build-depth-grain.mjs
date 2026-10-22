@@ -1,6 +1,6 @@
 // Bundles the homepage depth field (src/scripts/depth-grain.js plus Paper
-// Shaders) into one IIFE that index.astro inlines in a data-csp script, so the
-// Worker's per-request nonce covers it like every other script on the site.
+// Shaders) into one IIFE. index.astro imports it with ?url, so Vite emits it as
+// a hashed /_astro file, and a nonced data-csp loader inserts it.
 // Runs before `astro dev` and `astro build`; the output is gitignored.
 import { readFileSync } from 'node:fs';
 import { build } from 'esbuild';

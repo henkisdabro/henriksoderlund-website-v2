@@ -5,7 +5,12 @@ import profileImage from '../assets/images/henrik-profile-small.webp';
 import { sectionIcons } from '../utils/sectionIcons';
 import { CALENDLY_URL, ASCRIBE_URL, ROTTOSNORKEL_URL, productLink } from '../data/links';
 // Bundled from src/scripts/depth-grain.js by scripts/build-depth-grain.mjs.
-import depthGrain from '../generated/depth-grain.js?raw';
+// Served as a hashed, immutable file rather than inlined, so its ~30 KB is
+// cached instead of riding along with every homepage load. The nonced loader
+// below inserts it, and 'strict-dynamic' extends trust to a script a trusted
+// one creates. The bundle gates itself on `load` plus idle, so the field
+// starts exactly when it did inline.
+import depthGrainSrc from '../generated/depth-grain.js?url';
 ---
 
 <BaseLayout
@@ -101,9 +106,12 @@ import depthGrain from '../generated/depth-grain.js?raw';
 
 <!-- Depth over grain: a faint mesh gradient in the accent family (Paper
      Shaders, WebGL2) with film grain, under drifting hairlines that take their
-     tint from it. Source in src/scripts/depth-grain.js; inlined so the Worker's
-     nonce covers it. -->
-<script is:inline data-csp set:html={depthGrain}></script>
+     tint from it. Source in src/scripts/depth-grain.js. -->
+<script is:inline data-csp define:vars={{ depthGrainSrc }}>
+  const s = document.createElement('script');
+  s.src = depthGrainSrc;
+  document.body.append(s);
+</script>
 
 <style is:global>
 /* Home Page Styles */
