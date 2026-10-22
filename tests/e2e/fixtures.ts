@@ -13,11 +13,11 @@ export { expect } from '@playwright/test';
 
 export const test = base.extend({
   page: async ({ page }, use) => {
-    // Nothing reaches Google or Fou Analytics: every run would otherwise count
-    // as a real visit, and the contact test as a real lead. The dataLayer
+    // Nothing reaches Google or Cloudflare Web Analytics: every run would
+    // otherwise count as a real visit, and the contact test as a real lead. The dataLayer
     // still fills, and that is what the assertions read.
     await page.route(
-      /googletagmanager\.com|google-analytics\.com|fouanalytics\.com|cloudflareinsights\.com|\/wro1\//,
+      /googletagmanager\.com|google-analytics\.com|cloudflareinsights\.com|\/wro1\//,
       (route) => route.abort()
     );
     await page.addInitScript(() => {

@@ -26,8 +26,8 @@ test('Back restores the page from the bfcache with the current theme and a page 
   });
   await page.goto('/');
   // Chrome lets even a no-store page into the bfcache unless a cookie changes
-  // while it is open. GA4 and Fou write cookies on every page in production;
-  // the fixtures block both, so this stands in for them.
+  // while it is open. GA4 writes cookies on every page in production; the
+  // fixtures block it, so this stands in for it.
   await page.evaluate(() => {
     document.cookie = 'bfcache_probe=1; path=/';
   });

@@ -451,17 +451,14 @@ const calendlyHost = new URL(CALENDLY_URL).hostname;
     <!-- Page-specific JSON-LD slot -->
     <slot name="head" />
 
-    {/* Both hosts serve scripts the GTM container injects as plain (no-cors,
-        credentialed) script elements: Fou Analytics' init script and the
-        web-vitals library. A `crossorigin` preconnect would open an anonymous
-        socket those requests cannot reuse, so neither carries it. */}
-    <link rel="preconnect" href="https://api.fouanalytics.com" />
-    <link rel="dns-prefetch" href="https://api.fouanalytics.com" />
+    {/* The GTM container injects the web-vitals library from unpkg as a plain
+        (no-cors, credentialed) script element. A `crossorigin` preconnect would
+        open an anonymous socket that request cannot reuse, so this one has none. */}
     <link rel="preconnect" href="https://unpkg.com" />
 
     {/* Same-origin pages are fetched (not prerendered) on hover or pointer
         down, so the next navigation skips its request round trip. A prefetch
-        runs no script, so GTM, GA4 and Fou see nothing until the page is
+        runs no script, so GTM and GA4 see nothing until the page is
         actually visited. */}
     <script type="speculationrules" data-csp>
       {
@@ -642,7 +639,6 @@ const calendlyHost = new URL(CALENDLY_URL).hostname;
     </noscript>
     <!-- End Google Tag Manager (noscript) -->
 
-    <noscript><img src="https://api.fouanalytics.com/api/noscript-6686ht0xp1ec4dc5q5z4.gif" alt="Fou Analytics tracking pixel" width="1" height="1" /></noscript>
 
     <slot name="backdrop" />
 

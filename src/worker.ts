@@ -1,10 +1,11 @@
 import { handle } from '@astrojs/cloudflare/handler';
 
-// 'unsafe-eval' in script-src is deliberate, not an oversight: Fou Analytics'
-// anti-adblock and fraud-detection scripts (https://*.fouanalytics.com) run
-// eval()/new Function() for runtime integrity checks, and fail with a "blocks
-// the use of 'eval'" violation without it. 'strict-dynamic' still prevents
-// unauthorised script injection, which is the separate attack surface.
+// 'unsafe-eval' in script-src is deliberate, not an oversight: the GTM
+// container has a Custom JavaScript variable (cjs - hit timestamp), and GTM
+// evaluates those with eval, so without it they resolve to undefined
+// (https://developers.google.com/tag-platform/security/guides/csp). Rebuilding
+// that variable as a custom template is what would let this go. 'strict-dynamic'
+// still prevents unauthorised script injection, the separate attack surface.
 //
 // img-src allows any https: origin on purpose. GA4's Google Signals beacon
 // (/ads/ga-audiences) goes to the visitor's regional Google domain -
@@ -12,8 +13,8 @@ import { handle } from '@astrojs/cloudflare/handler';
 // a TLD, so an allowlist blocks it for every country it does not name.
 const CSP_TEMPLATE = [
   "default-src 'self'",
-  "script-src '%%NONCE%%' 'strict-dynamic' https://*.fouanalytics.com https://api.fouanalytics.com https://tagmanager.google.com https://www.googletagmanager.com https://static.cloudflareinsights.com https://challenges.cloudflare.com https: 'unsafe-inline' 'unsafe-eval'",
-  "connect-src 'self' https://*.fouanalytics.com https://api.fouanalytics.com wss://api.fouanalytics.com https://*.google-analytics.com https://analytics.google.com https://*.analytics.google.com https://www.googletagmanager.com https://stats.g.doubleclick.net https://*.g.doubleclick.net https://*.google.com https://apix.b2c.com https://cloudflareinsights.com",
+  "script-src '%%NONCE%%' 'strict-dynamic' https://tagmanager.google.com https://www.googletagmanager.com https://static.cloudflareinsights.com https://challenges.cloudflare.com https: 'unsafe-inline' 'unsafe-eval'",
+  "connect-src 'self' https://*.google-analytics.com https://analytics.google.com https://*.analytics.google.com https://www.googletagmanager.com https://stats.g.doubleclick.net https://*.g.doubleclick.net https://*.google.com https://cloudflareinsights.com",
   "style-src 'self' 'unsafe-inline' https://tagmanager.google.com https://fonts.googleapis.com https://www.googletagmanager.com",
   "img-src 'self' data: https:",
   "font-src 'self' data: https://fonts.gstatic.com",

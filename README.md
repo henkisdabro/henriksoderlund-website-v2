@@ -58,7 +58,7 @@ Pull requests stop after the E2E step. The daily monitor is `.github/workflows/l
 | Runtime | Cloudflare Workers, Wrangler 4 |
 | Language | TypeScript 6 |
 | Contact form | Astro Actions with Zod validation, Cloudflare Turnstile, Cloudflare Email Service |
-| Analytics | GTM served first-party via the `/wro1/*` tag gateway, Fou Analytics |
+| Analytics | GTM served first-party via the `/wro1/*` tag gateway |
 | Lint | Oxlint |
 | Tests | Playwright (E2E and lead-capture suite) |
 | Tooling | Node 24 (`.nvmrc`), pnpm 12 (pinned by `packageManager`) |
