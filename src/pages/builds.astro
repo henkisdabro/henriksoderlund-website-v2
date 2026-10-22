@@ -220,7 +220,7 @@ const hostOf = (url: string) => new URL(url).host.replace(/^www\./, '');
   <dialog class="build-dialog" id="build-dialog" aria-labelledby="build-dialog-title">
     <div class="build-dialog-bar">
       <p class="build-dialog-title" id="build-dialog-title"></p>
-      <a class="build-dialog-visit" target="_blank" rel="noopener noreferrer" hidden></a>
+      <a class="build-dialog-visit" id="build-dialog-visit" hidden></a>
       <button class="build-dialog-close" type="button" aria-label="Close fullscreen view">&times;</button>
     </div>
     <div class="build-dialog-scroll">
@@ -238,7 +238,7 @@ const hostOf = (url: string) => new URL(url).host.replace(/^www\./, '');
     const dialogVideo = dialog.querySelector('video');
     const dialogArt = dialog.querySelector('.build-dialog-art');
     const dialogTitle = dialog.querySelector('.build-dialog-title');
-    const dialogVisit = dialog.querySelector('.build-dialog-visit');
+    const dialogVisit = document.getElementById('build-dialog-visit');
     const dialogScroll = dialog.querySelector('.build-dialog-scroll');
     const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
@@ -268,7 +268,10 @@ const hostOf = (url: string) => new URL(url).host.replace(/^www\./, '');
         dialogTitle.textContent = title;
         dialogVisit.hidden = !url;
         if (url) {
-          dialogVisit.href = url;
+          // target and rel only once there is an href: until then this is an
+          // href-less placeholder (kept identified by its id), which HTML
+          // forbids them on and crawlers would flag as an uncrawlable link.
+          Object.assign(dialogVisit, { href: url, target: '_blank', rel: 'noopener noreferrer' });
           dialogVisit.textContent = `Visit ${title} →`;
         }
         dialog.showModal();
