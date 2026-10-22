@@ -50,6 +50,15 @@ const projects = await Promise.all(
   })
 );
 
+// The width a featured card's capture renders at, measured from the layout: a
+// 56% column of the 800px page once .builds-list reaches its 720px container
+// breakpoint, full card width below it. Without this the srcset assumes the
+// 1200px default and a 446px frame downloads the 1200w file.
+const FEATURED_SIZES = '(min-width: 880px) 446px, (min-width: 800px) calc(56vw - 46px), calc(100vw - 69px)';
+// The first three cards reach into a 1280x900 first viewport (the third starts
+// at y=683), so they load eagerly; the rest wait until they near the screen.
+const EAGER_CARDS = 3;
+
 const PERSON = { '@id': 'https://www.henriksoderlund.com/#person' };
 const listUrl = `${pageUrl('/builds')}#builds`;
 
@@ -109,7 +118,7 @@ const hostOf = (url: string) => new URL(url).host.replace(/^www\./, '');
     <section class="builds-section">
       <h2 id="what-i-build"><span class="section-icon" aria-hidden="true" set:html={sectionIcons.layers} />{buildsData.title}</h2>
       <div class="builds-list">
-        {projects.map((project) => (
+        {projects.map((project, i) => (
           <article
             class={`build-card${project.featured ? ' build-card--featured' : ''}${project.tallImage ? ' build-card--tall' : ''}${project.hoverVideoSrc ? ' build-card--hover-video' : ''}${project.videoSrc ? ' build-card--video' : ''}${project.art ? ' build-card--art' : ''}`}
             style={`--card-accent-light: ${project.accentColour}${project.accentColourDark ? `; --card-accent-dark: ${project.accentColourDark}` : ''}`}
@@ -138,14 +147,16 @@ const hostOf = (url: string) => new URL(url).host.replace(/^www\./, '');
                     muted
                     loop
                     playsinline
-                    preload="metadata"
+                    preload="none"
                   />
                 ) : (
                   <Image
                     src={project.source}
                     alt={`${project.title} screenshot`}
                     width={Math.min(project.source.width, 1200)}
-                    loading={project.featured ? 'eager' : 'lazy'}
+                    sizes={project.featured ? FEATURED_SIZES : undefined}
+                    loading={i < EAGER_CARDS ? 'eager' : 'lazy'}
+                    fetchpriority={i === 0 ? 'high' : undefined}
                   />
                 )}
                 {project.hoverVideoSrc && (
