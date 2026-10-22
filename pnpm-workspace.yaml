@@ -8,13 +8,3 @@ allowBuilds:
 minimumReleaseAge: 4320
 minimumReleaseAgeExclude: []
 autoInstallPeers: true
-
-# Security overrides for transitive dependencies that upstream still pins to
-# vulnerable versions. Each entry clears an open Dependabot alert; drop an entry
-# once the direct dependency's own range has moved past it.
-overrides:
-  # miniflare (via @cloudflare/vite-plugin) pins undici 7.29.0 - GHSA-rfgv-xxqx-mfg5,
-  # GHSA-w293-vg96-wgc3 et al.
-  undici@7: 7.29.1
-  # miniflare pins sharp 0.35.4 - GHSA-wq5f-xc86-pv6w.
-  sharp@0.35: 0.35.5
