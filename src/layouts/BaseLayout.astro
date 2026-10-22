@@ -376,7 +376,7 @@ const calendlyHost = new URL(CALENDLY_URL).hostname;
         if (theme === 'dark') {
           const font = document.createElement('link');
           font.rel = 'preload';
-          font.href = '/fonts/JetBrainsMono-Regular.woff2';
+          font.href = '/fonts/JetBrainsMono-Regular-v2.woff2';
           font.as = 'font';
           font.type = 'font/woff2';
           font.crossOrigin = 'anonymous';
@@ -451,8 +451,31 @@ const calendlyHost = new URL(CALENDLY_URL).hostname;
     <!-- Page-specific JSON-LD slot -->
     <slot name="head" />
 
-    <link rel="preconnect" href="https://api.fouanalytics.com" crossorigin />
+    {/* Both hosts serve scripts the GTM container injects as plain (no-cors,
+        credentialed) script elements: Fou Analytics' init script and the
+        web-vitals library. A `crossorigin` preconnect would open an anonymous
+        socket those requests cannot reuse, so neither carries it. */}
+    <link rel="preconnect" href="https://api.fouanalytics.com" />
     <link rel="dns-prefetch" href="https://api.fouanalytics.com" />
+    <link rel="preconnect" href="https://unpkg.com" />
+
+    {/* Same-origin pages are fetched (not prerendered) on hover or pointer
+        down, so the next navigation skips its request round trip. A prefetch
+        runs no script, so GTM, GA4 and Fou see nothing until the page is
+        actually visited. */}
+    <script type="speculationrules" data-csp>
+      {
+        "prefetch": [{
+          "where": {
+            "and": [
+              { "href_matches": "/*" },
+              { "not": { "href_matches": ["/wro1/*", "/*.md", "/*.txt", "/health", "/metrics", "/cdn-cgi/*"] } }
+            ]
+          },
+          "eagerness": "moderate"
+        }]
+      }
+    </script>
 
     <!-- Initialize dataLayer before GTM -->
     <script is:inline data-csp define:vars={{ pageType: resolvedPageType }}>
@@ -797,6 +820,24 @@ const calendlyHost = new URL(CALENDLY_URL).hostname;
         dialog.addEventListener('close', function () {
           frame.removeAttribute('src');
         });
+
+        // Warm the connections the booking frame needs as soon as a booking
+        // link is pointed at or focused, so the popup skips a cold
+        // DNS + TLS setup. Nothing is fetched until the click.
+        let warmed = false;
+        function warm(event) {
+          const a = !warmed && event.target.closest && event.target.closest('a[href]');
+          if (!a || a.hostname !== CALENDLY_HOST) return;
+          warmed = true;
+          ['https://' + CALENDLY_HOST, 'https://assets.calendly.com'].forEach(function (href) {
+            const link = document.createElement('link');
+            link.rel = 'preconnect';
+            link.href = href;
+            document.head.appendChild(link);
+          });
+        }
+        document.addEventListener('pointerover', warm, { passive: true });
+        document.addEventListener('focusin', warm);
 
         // The embedded booking page reports progress by postMessage. Only a
         // completed booking is measured, once per popup opening.
