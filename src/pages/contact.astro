@@ -263,9 +263,15 @@ import { CALENDLY_URL, LINKEDIN_URL, GITHUB_URL } from '../data/links';
   border-bottom-color: var(--color-accent);
 }
 
+/* The widget renders on first use of the form (see ContactForm.astro), so its
+   300x65 slot is held from the start and the button never moves under it.
+   line-height: 0 reaches the iframe inside Turnstile's shadow root and drops
+   the line-box gap under it, which otherwise adds a font-dependent ~7px. */
 .cf-turnstile {
   margin: 1rem 0;
   max-width: 100%;
+  min-height: 65px;
+  line-height: 0;
 }
 
 .cf-turnstile iframe {

@@ -8,6 +8,8 @@ import { CALENDLY_URL } from '../../src/data/links';
 test('the live contact form loads its Turnstile challenge under the site CSP', async ({ page }) => {
   await page.goto('/contact');
   await expect(page.getByRole('button', { name: 'Send Message' })).toBeVisible();
+  // Turnstile loads on the first use of the form, not with the page.
+  await page.getByLabel('Name').focus();
   await expect
     .poll(() => page.frames().some((f) => f.url().startsWith('https://challenges.cloudflare.com/')), {
       message: 'Turnstile iframe never loaded',

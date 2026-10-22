@@ -164,11 +164,58 @@ const errorReason = errorType === 'validation' ? '' : (error?.message ?? '');
     </script>
     <script is:inline data-csp>
       (function () {
+        const form = document.currentScript && document.currentScript.closest('form');
+        if (!form) return;
+
         // The widget, its id and its outcome callbacks are all private to this
         // component. BaseLayout announces a theme change and nothing more; the
         // remove()/render() pair that a change implies belongs here, with the
         // callbacks, so a re-render can never drop them.
         let widgetId = null;
+
+        // api.js and its challenge (~1 MB of iframe and XHR) load on the first
+        // sign of someone using the form, not with the page. A submit that
+        // beats the token is held and resent once the challenge solves. If
+        // Turnstile cannot load or errors, the submit goes through and the
+        // server's verification decides, as it would without this hold.
+        let requested = false;
+        let held = false;
+        let release = false;
+
+        function load() {
+          if (requested) return;
+          requested = true;
+          const s = document.createElement('script');
+          s.src = 'https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit&onload=onTurnstileLoad';
+          s.async = true;
+          s.onerror = function () { settle(); };
+          document.head.appendChild(s);
+        }
+
+        // A solved challenge resends a held submit; a failed one also lets
+        // every later submit through to the server.
+        function resend() {
+          if (!held) return;
+          held = false;
+          form.requestSubmit();
+        }
+
+        function settle() {
+          release = true;
+          resend();
+        }
+
+        ['focusin', 'pointerdown', 'input'].forEach(function (type) {
+          form.addEventListener(type, load, { once: true, passive: true });
+        });
+
+        form.addEventListener('submit', function (event) {
+          const token = form.querySelector('input[name="cf-turnstile-response"]');
+          if (release || (token && token.value)) return;
+          event.preventDefault();
+          held = true;
+          load();
+        });
 
         function reportOutcome(outcome, code) {
           window.dataLayer = window.dataLayer || [];
@@ -188,10 +235,10 @@ const errorReason = errorType === 'validation' ? '' : (error?.message ?? '');
           return window.turnstile.render(tw, {
             sitekey: tw.getAttribute('data-sitekey'),
             theme: theme || document.documentElement.getAttribute('data-theme') || 'light',
-            'callback': function () { reportOutcome('success'); },
-            'error-callback': function (code) { reportOutcome('error', code); },
+            'callback': function () { reportOutcome('success'); resend(); },
+            'error-callback': function (code) { reportOutcome('error', code); settle(); },
             'expired-callback': function () { reportOutcome('expired'); },
-            'timeout-callback': function () { reportOutcome('timeout'); }
+            'timeout-callback': function () { reportOutcome('timeout'); settle(); }
           });
         }
 
@@ -213,6 +260,6 @@ const errorReason = errorType === 'validation' ? '' : (error?.message ?? '');
         });
       })();
     </script>
-    <script is:inline data-csp src="https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit&onload=onTurnstileLoad" async defer></script>
+    <link rel="preconnect" href="https://challenges.cloudflare.com" />
   </form>
 )}
