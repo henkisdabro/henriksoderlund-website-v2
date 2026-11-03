@@ -58,5 +58,6 @@ test('the Calendly event behind the booking CTA has bookable times', async ({ pa
   await expect(available.first(), 'no bookable day this month or next').toBeVisible();
 
   await available.first().click();
-  await expect(page.getByRole('button', { name: /^\d{1,2}:\d{2}(am|pm)$/ }).first()).toBeVisible();
+  // Calendly has labelled slots both "3:00pm" and "3:00 pm"; accept either.
+  await expect(page.getByRole('button', { name: /^\d{1,2}:\d{2}\s?(am|pm)$/i }).first()).toBeVisible();
 });
