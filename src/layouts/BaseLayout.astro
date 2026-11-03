@@ -496,24 +496,30 @@ const calendlyHost = new URL(CALENDLY_URL).hostname;
 
     <!-- Google Tag Manager (async, loaded immediately) -->
     <script is:inline data-csp>
-      (function (w, d, s, l, i) {
-        w[l] = w[l] || [];
-        w[l].push({ 'gtm.start': new Date().getTime(), event: 'gtm.js' });
-        const f = d.getElementsByTagName(s)[0], j = d.createElement(s);
+      // Google's current GTM snippet: a gtag('js') bootstrap in place of the
+      // old `gtm.start` push. Its static async script tag becomes an injected
+      // one, because prerendered HTML is identical on every host and only
+      // runtime code can pick the source by hostname (Live via the gateway,
+      // or the Staging snippet's env-34 URL).
+      window.dataLayer = window.dataLayer || [];
+      function gtag() { dataLayer.push(arguments); }
+      gtag('js', new Date());
+      (function (d, id) {
+        const j = d.createElement('script');
         j.async = true;
         // Production loads through the Google tag gateway measurement path.
         // That path is same-origin and exists only on the henriksoderlund.com
         // zone, so every other host must go to Google directly - and does so
         // against the Staging environment (env-34) rather than Live.
-        j.src = w.__isProduction
-          ? '/wro1/gtm.js?id=' + i
-          : 'https://www.googletagmanager.com/gtm.js?id=' + i +
+        j.src = window.__isProduction
+          ? '/wro1/gtm.js?id=' + id
+          : 'https://www.googletagmanager.com/gtm.js?id=' + id +
             '&gtm_auth=gitcbBbLkLlUUF-B2oiJkQ&gtm_preview=env-34&gtm_cookies_win=x';
         // Loaded straight away rather than on idle: the tag is async and, in
         // production, same-origin, so deferring only lost sessions that ended
         // before the main thread went idle.
-        f.parentNode.insertBefore(j, f);
-      })(window, document, 'script', 'dataLayer', 'GTM-KM56HHS2');
+        d.head.appendChild(j);
+      })(document, 'GTM-KM56HHS2');
     </script>
 
     <!-- View Transitions -->
@@ -632,13 +638,6 @@ const calendlyHost = new URL(CALENDLY_URL).hostname;
 
   <body>
     <a class="skip-link" href="#main">Skip to main content</a>
-
-    <!-- Google Tag Manager (noscript) -->
-    <noscript>
-      <iframe src="https://www.googletagmanager.com/ns.html?id=GTM-KM56HHS2" height="0" width="0" style="display:none;visibility:hidden"></iframe>
-    </noscript>
-    <!-- End Google Tag Manager (noscript) -->
-
 
     <slot name="backdrop" />
 
