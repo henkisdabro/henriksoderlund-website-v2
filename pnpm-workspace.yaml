@@ -8,3 +8,12 @@ allowBuilds:
 minimumReleaseAge: 4320
 minimumReleaseAgeExclude: []
 autoInstallPeers: true
+
+# @napi-rs/wasm-runtime 1.2.6+ lists the emnapi 2.0.0 betas in its peer range,
+# and autoInstallPeers then picks the beta. Under it `astro check` cannot load
+# @astrojs/check and the build dies in emnapi's exit cleanup
+# (`this.bridge.deleteEnv is not a function`). Hold emnapi on 1.x until 2.0 is
+# stable and the toolchain supports it.
+overrides:
+  '@emnapi/core': ^1.11.3
+  '@emnapi/runtime': ^1.11.3
