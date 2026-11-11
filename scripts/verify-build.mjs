@@ -6,9 +6,24 @@ import { statSync, existsSync, readFileSync } from 'node:fs';
 
 import { CLIENT_ROOT, NONCE_ATTR, htmlFiles } from './strip-prerender-nonce.mjs';
 
-const RED = '\x1b[31m';
-const GREEN = '\x1b[32m';
-const RESET = '\x1b[0m';
+// A pass prints one summary line; each check's OK line and section header show
+// only in a terminal or with VERBOSE=1 (QUIET=1 forces the short form). Agents
+// run this inside every build, and its output lands in their context in full.
+// FAIL lines always print, and each one names the file it is about.
+const tty = process.stdout.isTTY === true;
+const verbose = process.env.VERBOSE === '1' || (tty && process.env.QUIET !== '1');
+const RED = tty ? '\x1b[31m' : '';
+const GREEN = tty ? '\x1b[32m' : '';
+const RESET = tty ? '\x1b[0m' : '';
+
+let passed = 0;
+function ok(message) {
+  passed++;
+  if (verbose) console.log(`${GREEN}OK${RESET}:   ${message}`);
+}
+function section(label) {
+  if (verbose) console.log(`\n=== ${label} ===`);
+}
 
 const htmlPages = [
   { path: 'dist/client/index.html', minBytes: 10000 },
@@ -46,7 +61,7 @@ const serverFiles = [
 let failed = 0;
 
 function check(label, files) {
-  console.log(`\n=== ${label} ===`);
+  section(label);
   for (const { path, minBytes } of files) {
     if (!existsSync(path)) {
       console.error(`${RED}FAIL${RESET}: ${path} - not found`);
@@ -60,7 +75,7 @@ function check(label, files) {
       );
       failed++;
     } else {
-      console.log(`${GREEN}OK${RESET}:   ${path} (${size} bytes)`);
+      ok(`${path} (${size} bytes)`);
     }
   }
 }
@@ -88,7 +103,7 @@ if (existsSync('dist/client/sitemap.xml')) {
 // Walks every HTML file in dist/client with the stripper's own walk and
 // pattern, rather than the eight pages listed above: a page added later is
 // stripped by that walk, and must be asserted by this one too.
-console.log('\n=== Prerendered HTML has no baked-in CSP nonce ===');
+section('Prerendered HTML has no baked-in CSP nonce');
 let nonceChecked = 0;
 if (!existsSync(CLIENT_ROOT)) {
   console.error(`${RED}FAIL${RESET}: ${CLIENT_ROOT} - not found`);
@@ -105,13 +120,13 @@ if (!existsSync(CLIENT_ROOT)) {
       nonceChecked++;
     }
   }
-  console.log(`${GREEN}OK${RESET}:   ${nonceChecked} HTML file(s) carry no nonce attribute`);
+  ok(`${nonceChecked} HTML file(s) carry no nonce attribute`);
 }
 
 // src/worker.ts nonces only `script[data-csp]`. Under 'strict-dynamic' a
 // script without the marker gets no nonce and is blocked in every browser, so
 // an authored script that forgot it is a broken page, not a warning.
-console.log('\n=== Every script carries the data-csp marker ===');
+section('Every script carries the data-csp marker');
 if (existsSync(CLIENT_ROOT)) {
   let marked = 0;
   for (const path of htmlFiles(CLIENT_ROOT)) {
@@ -126,7 +141,7 @@ if (existsSync(CLIENT_ROOT)) {
       }
     }
   }
-  console.log(`${GREEN}OK${RESET}:   ${marked} script(s) marked across the prerendered HTML`);
+  ok(`${marked} script(s) marked across the prerendered HTML`);
 }
 
 // Check wrangler.json has run_worker_first patched in
@@ -139,7 +154,7 @@ if (existsSync(wranglerPath)) {
     );
     failed++;
   } else {
-    console.log(`\n${GREEN}OK${RESET}:   run_worker_first is patched`);
+    ok('run_worker_first is patched');
   }
 }
 
@@ -173,7 +188,7 @@ function themeTokens(css, selector) {
   return tokens;
 }
 
-console.log('\n=== Theme palette blocks in sync ===');
+section('Theme palette blocks in sync');
 const themeFailures = failed;
 if (!existsSync(THEME_CSS)) {
   console.error(`${RED}FAIL${RESET}: ${THEME_CSS} - not found`);
@@ -222,14 +237,12 @@ if (!existsSync(THEME_CSS)) {
     }
 
     if (failed === themeFailures) {
-      console.log(
-        `${GREEN}OK${RESET}:   ${blocks.map(([label, , tokens]) => `${label} ${tokens.size}`).join(', ')} tokens, dark blocks identical`,
-      );
+      ok(`${blocks.map(([label, , tokens]) => `${label} ${tokens.size}`).join(', ')} tokens, dark blocks identical`);
     }
   }
 }
 
 console.log(
-  `\n${failed === 0 ? GREEN : RED}${failed} failure(s)${RESET}\n`,
+  `${verbose ? '\n' : ''}verify-build: ${failed === 0 ? GREEN : RED}${failed} failure(s)${RESET}, ${passed} check(s) passed`,
 );
 process.exit(failed > 0 ? 1 : 0);

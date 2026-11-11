@@ -5,6 +5,7 @@
     "src",
     "worker-configuration.d.ts"
   ],
+  "exclude": ["dist", "src/generated"],
   "compilerOptions": {
     "strict": true,
     "forceConsistentCasingInFileNames": true
