@@ -341,6 +341,11 @@ const calendlyHost = new URL(CALENDLY_URL).hostname;
   <head>
     <meta charset="UTF-8" />
 
+    <!-- Declares both schemes before any CSS arrives, so the first canvas is
+         already the right colour. The script below narrows it to one side
+         when a theme has been chosen. -->
+    <meta name="color-scheme" content="light dark" />
+
     <!-- Theme detection - must run before any paint to prevent FOUC -->
     <script is:inline data-csp>
       (function() {
@@ -349,8 +354,8 @@ const calendlyHost = new URL(CALENDLY_URL).hostname;
         // profiles all throw SecurityError on localStorage. An unguarded throw
         // here would abort this IIFE before it binds the toggle-request
         // listener, leaving the theme toggle inert for the whole session.
-        // (The page itself still renders: theme.css defines the full palette on
-        // bare :root, so a missing data-theme falls back to the light theme.)
+        // (The page itself still renders: theme.css follows the system
+        // preference on bare :root, with no data-theme at all.)
         function readStoredTheme() {
           try {
             const stored = localStorage.getItem('theme');
@@ -358,16 +363,34 @@ const calendlyHost = new URL(CALENDLY_URL).hostname;
           } catch { return null; }
         }
 
+        // Only an override is ever stored. `null` clears it, which hands the
+        // theme back to the system preference.
         function writeStoredTheme(t) {
-          try { localStorage.setItem('theme', t); } catch { /* storage unavailable */ }
+          try {
+            if (t) localStorage.setItem('theme', t);
+            else localStorage.removeItem('theme');
+          } catch { /* storage unavailable */ }
         }
 
-        function prefersDark() {
-          try { return window.matchMedia('(prefers-color-scheme: dark)').matches; } catch { return false; }
+        let darkQuery = null;
+        try { darkQuery = window.matchMedia('(prefers-color-scheme: dark)'); } catch { /* matchMedia unavailable */ }
+
+        function systemTheme() {
+          return darkQuery && darkQuery.matches ? 'dark' : 'light';
         }
 
-        const theme = readStoredTheme() || (prefersDark() ? 'dark' : 'light');
-        document.documentElement.setAttribute('data-theme', theme);
+        const schemeMeta = document.querySelector('meta[name="color-scheme"]');
+
+        // data-theme carries the theme in force and is what the stylesheets,
+        // the toggle and the contact form key off. The meta mirrors it: it is
+        // all the browser has to colour the canvas with before the CSS lands.
+        function stamp(t) {
+          document.documentElement.setAttribute('data-theme', t);
+          if (schemeMeta) schemeMeta.content = t;
+        }
+
+        const theme = readStoredTheme() || systemTheme();
+        stamp(theme);
 
         // JetBrains Mono is the dark theme's font only, so it is preloaded only
         // when this load resolves dark. A static <link rel="preload"> made every
@@ -389,41 +412,48 @@ const calendlyHost = new URL(CALENDLY_URL).hostname;
         // reaction, so this script never has to know which of them is on the
         // page. CustomEvent needs no eval and no inline handler attribute, so
         // it costs the CSP nothing.
-        function setTheme(t) {
+        function show(t) {
+          if (t === document.documentElement.getAttribute('data-theme')) return;
           // Enable transitions only during theme switch
           document.documentElement.classList.add('theme-transitioning');
-          document.documentElement.setAttribute('data-theme', t);
-          writeStoredTheme(t);
+          stamp(t);
           setTimeout(function() { document.documentElement.classList.remove('theme-transitioning'); }, 350);
           document.dispatchEvent(new CustomEvent('site:theme', { detail: { theme: t } }));
         }
 
         // The toggle button does not exist yet when this runs in <head>, so it
         // asks for a change by event rather than being wired up from here.
+        // The target is the opposite of what is on screen. It is stored only
+        // when it differs from the system preference: toggling back to what
+        // the system already says undoes the override, and the site follows
+        // the system again. The comparison is made here and nowhere else - a
+        // stored choice that the system later comes to match is kept, or a
+        // device that switches by time of day could never be pinned.
         document.addEventListener('site:theme:toggle', function() {
           const current = document.documentElement.getAttribute('data-theme');
-          setTheme(current === 'dark' ? 'light' : 'dark');
+          const target = current === 'dark' ? 'light' : 'dark';
+          writeStoredTheme(target === systemTheme() ? null : target);
+          show(target);
         });
+
+        // Re-resolve without writing storage: nothing was chosen on this page.
+        function resync() {
+          show(readStoredTheme() || systemTheme());
+        }
 
         // A page restored from the back/forward cache comes back exactly as it
         // was left, so a toggle made on a later page would not show here until
-        // a reload. Re-resolve on restore, without writing storage: nothing was
-        // chosen on this page.
+        // a reload.
         window.addEventListener('pageshow', function(e) {
-          if (!e.persisted) return;
-          const t = readStoredTheme() || (prefersDark() ? 'dark' : 'light');
-          if (t === document.documentElement.getAttribute('data-theme')) return;
-          document.documentElement.setAttribute('data-theme', t);
-          document.dispatchEvent(new CustomEvent('site:theme', { detail: { theme: t } }));
+          if (e.persisted) resync();
         });
 
-        try {
-          window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', function(e) {
-            if (!readStoredTheme()) {
-              setTheme(e.matches ? 'dark' : 'light');
-            }
-          });
-        } catch { /* matchMedia unavailable */ }
+        // A toggle made in another tab.
+        window.addEventListener('storage', function(e) {
+          if (e.key === 'theme' || e.key === null) resync();
+        });
+
+        if (darkQuery && darkQuery.addEventListener) darkQuery.addEventListener('change', resync);
       })();
     </script>
 
@@ -590,6 +620,54 @@ const calendlyHost = new URL(CALENDLY_URL).hostname;
         background: rgba(0, 0, 0, 0.55);
       }
 
+      /* Fades in from its starting style and, where display and overlay can
+         be transitioned (Chromium), back out. Elsewhere it closes at once.
+         transition-behavior is its own declaration so that a browser without
+         it keeps the rest. */
+      .booking-dialog,
+      .booking-dialog::backdrop {
+        opacity: 0;
+        transition-property: opacity, translate, display, overlay;
+        transition-duration: 220ms;
+        transition-timing-function: var(--ease-out);
+        transition-behavior: allow-discrete;
+      }
+
+      .booking-dialog[open],
+      .booking-dialog[open]::backdrop {
+        opacity: 1;
+      }
+
+      @starting-style {
+        .booking-dialog[open],
+        .booking-dialog[open]::backdrop {
+          opacity: 0;
+        }
+      }
+
+      @media (prefers-reduced-motion: no-preference) {
+        .booking-dialog {
+          translate: 0 10px;
+        }
+
+        .booking-dialog[open] {
+          translate: 0 0;
+        }
+
+        @starting-style {
+          .booking-dialog[open] {
+            translate: 0 10px;
+          }
+        }
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        .booking-dialog,
+        .booking-dialog::backdrop {
+          transition-duration: 100ms;
+        }
+      }
+
       /* The close button gets its own bar so it never covers Calendly's page. */
       .booking-dialog-bar {
         display: flex;
@@ -658,7 +736,7 @@ const calendlyHost = new URL(CALENDLY_URL).hostname;
       <Footer />
     </div>
 
-    <dialog id="booking-dialog" class="booking-dialog" aria-label="Book a discovery call" tabindex="-1">
+    <dialog id="booking-dialog" class="booking-dialog" aria-label="Book a discovery call" tabindex="-1" closedby="any">
       <div class="booking-dialog-bar">
         <button type="button" class="booking-dialog-close" aria-label="Close">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
@@ -806,14 +884,28 @@ const calendlyHost = new URL(CALENDLY_URL).hostname;
           } catch { /* never throw out of a click handler */ }
         }, true);
 
-        // The close button and a click on the backdrop (which targets the
-        // dialog itself) close the popup; Escape is native. Unloading the frame
-        // stops Calendly and makes the next open start fresh.
-        dialog.addEventListener('click', function (event) {
-          if (event.target === dialog || event.target.closest('.booking-dialog-close')) dialog.close();
+        // The close button closes the popup; Escape and a click on the
+        // backdrop are native (closedby="any").
+        dialog.querySelector('.booking-dialog-close').addEventListener('click', function () {
+          dialog.close();
         });
+        // Stands in for closedby="any" on every dialog of the site where the
+        // attribute is unsupported (Safari): a click that targets the dialog
+        // element itself landed on its backdrop.
+        if (!('closedBy' in HTMLDialogElement.prototype)) {
+          document.addEventListener('click', function (event) {
+            const d = event.target;
+            if (d instanceof HTMLDialogElement && d.open && d.getAttribute('closedby') === 'any') d.close();
+          });
+        }
+        // Unloading the frame stops Calendly and makes the next open start
+        // fresh. It waits out the closing fade, which would otherwise show an
+        // emptied frame (there is none to wait for where the exit cannot be
+        // animated), and stands down if the popup was reopened meanwhile.
         dialog.addEventListener('close', function () {
-          frame.removeAttribute('src');
+          Promise.allSettled(dialog.getAnimations().map(function (a) { return a.finished; })).then(function () {
+            if (!dialog.open) frame.removeAttribute('src');
+          });
         });
 
         // Warm the connections the booking frame needs as soon as a booking

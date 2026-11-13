@@ -125,7 +125,7 @@ a:hover {
   top: 20px;
   left: 20px;
   width: 240px;
-  max-height: calc(100vh - 40px);
+  max-height: calc(100dvh - 40px);
   background: var(--color-bg-overlay);
   -webkit-backdrop-filter: blur(5px);
   backdrop-filter: blur(5px);
@@ -258,7 +258,7 @@ a:hover {
 }
 
 .nav-box-content {
-  max-height: calc(100vh - 100px);
+  max-height: calc(100dvh - 100px);
   overflow-y: auto;
   padding: 8px 0;
 }
@@ -411,7 +411,7 @@ a:hover {
     border-radius: 12px;
     top: 22px;
     left: 10px;
-    max-height: calc(100vh - 180px);
+    max-height: calc(100dvh - 180px);
   }
 
   .navigation-box:not(.collapsed) .nav-box-header {
@@ -1196,6 +1196,43 @@ a:hover {
   --ease-out: cubic-bezier(0.2, 0.7, 0.2, 1);
   --dur-base: 320ms;
   --stagger: 60ms;
+}
+
+/* A modal dialog keeps scrolling to itself. The backdrop is made a scroll
+   container that does not scroll, so a wheel or swipe over it cannot move
+   the page behind. */
+dialog:modal {
+  overscroll-behavior: contain;
+}
+
+dialog::backdrop {
+  overflow: hidden;
+  overscroll-behavior: contain;
+}
+
+/* Disclosures slide open and shut. The height can only be interpolated to
+   and from `auto` where interpolate-size exists (Chromium); elsewhere they
+   open at once, as before. Closed content stays content-visibility: hidden,
+   the browser default, so find-in-page still reaches it. */
+details::details-content {
+  interpolate-size: allow-keywords;
+  overflow: clip;
+  /* Constant across both states, or the toggle jitters on a child's margin. */
+  contain: layout;
+}
+
+details:not([open])::details-content {
+  block-size: 0;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  details::details-content {
+    transition-property: block-size, content-visibility, display;
+    transition-duration: var(--dur-base);
+    transition-timing-function: var(--ease-out);
+    /* Keeps the content rendered until the collapse has finished. */
+    transition-behavior: allow-discrete;
+  }
 }
 
 /* Spotlight: [data-glow] gets an inner tint (::before) and a lit edge (::after,

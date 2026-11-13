@@ -228,7 +228,7 @@ const hostOf = (url: string) => new URL(url).host.replace(/^www\./, '');
     </p>
   </div>
 
-  <dialog class="build-dialog" id="build-dialog" aria-labelledby="build-dialog-title">
+  <dialog class="build-dialog" id="build-dialog" aria-labelledby="build-dialog-title" closedby="any">
     <div class="build-dialog-bar">
       <p class="build-dialog-title" id="build-dialog-title"></p>
       <a class="build-dialog-visit" id="build-dialog-visit" hidden></a>
@@ -300,10 +300,8 @@ const hostOf = (url: string) => new URL(url).host.replace(/^www\./, '');
     });
 
     dialog.querySelector('.build-dialog-close').addEventListener('click', () => dialog.close());
-    // A click on the dialog element itself is a click on the backdrop.
-    dialog.addEventListener('click', (e) => {
-      if (e.target === dialog) dialog.close();
-    });
+    // A backdrop click dismisses through closedby="any"; BaseLayout carries
+    // the stand-in for browsers without it.
     dialog.addEventListener('close', () => {
       dialogImg.style.viewTransitionName = '';
       dialogVideo.style.viewTransitionName = '';
@@ -708,7 +706,7 @@ const hostOf = (url: string) => new URL(url).host.replace(/^www\./, '');
 }
 
 /* Cards rise into place as they scroll into view, where supported. */
-@supports (animation-timeline: view()) {
+@supports ((animation-timeline: view()) and (animation-range: entry)) {
   @media (prefers-reduced-motion: no-preference) {
     .build-card {
       animation: build-rise linear both;

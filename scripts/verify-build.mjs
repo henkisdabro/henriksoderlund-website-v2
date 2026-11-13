@@ -158,13 +158,16 @@ if (existsSync(wranglerPath)) {
   }
 }
 
-// src/styles/theme.css declares the dark palette twice - once under
+// src/styles/theme.css pairs every colour as light-dark(light, dark) on bare
+// :root. The tokens light-dark() cannot carry - font stacks, RGB triplets,
+// plain numbers - have their dark values declared twice: once under
 // @media (prefers-color-scheme: dark) for the unstamped state, once under
-// :root[data-theme="dark"] for an explicit choice. The two must stay
+// :root[data-theme="dark"] for an explicit choice. Those two must stay
 // byte-identical: if they drift, a visitor whose OS is dark but who has never
-// touched the toggle gets one block's text colours on the other's backgrounds.
-// A source comment asks editors to keep them in sync; this enforces it. The
-// key-set check across all three blocks catches a token added to only one.
+// touched the toggle gets a different dark theme from one who has. A source
+// comment asks editors to keep them in sync; this enforces it, and checks that
+// neither block overrides a token the base block does not define and that
+// every base token has a dark value one way or the other.
 const THEME_CSS = 'src/styles/theme.css';
 
 function themeTokens(css, selector) {
@@ -197,7 +200,7 @@ if (!existsSync(THEME_CSS)) {
   // Comments name these selectors in prose, and would otherwise be found first.
   const css = readFileSync(THEME_CSS, 'utf-8').replace(/\/\*[\s\S]*?\*\//g, '');
   const blocks = [
-    ['light', ':root[data-theme="light"]'],
+    ['base', ':root'],
     ['media-dark', ':root:not([data-theme="light"])'],
     ['attribute-dark', ':root[data-theme="dark"]'],
   ].map(([label, selector]) => [label, selector, themeTokens(css, selector)]);
@@ -209,26 +212,32 @@ if (!existsSync(THEME_CSS)) {
       failed++;
     }
   } else {
-    // Every block must declare the same token keys.
-    const [[, , reference]] = blocks;
+    const [[, , base], [, , mediaDark], [, , attributeDark]] = blocks;
+
+    // A dark override of a token the base never defines is a typo or a leftover.
     for (const [label, , tokens] of blocks.slice(1)) {
-      const extra = [...tokens.keys()].filter((key) => !reference.has(key));
-      const absent = [...reference.keys()].filter((key) => !tokens.has(key));
-      for (const key of extra) {
-        console.error(`${RED}FAIL${RESET}: ${THEME_CSS} - ${key} declared in ${label} but not in light`);
-        failed++;
+      for (const key of tokens.keys()) {
+        if (!base.has(key)) {
+          console.error(`${RED}FAIL${RESET}: ${THEME_CSS} - ${key} declared in ${label} but not in base`);
+          failed++;
+        }
       }
-      for (const key of absent) {
-        console.error(`${RED}FAIL${RESET}: ${THEME_CSS} - ${key} declared in light but not in ${label}`);
+    }
+
+    // A base token that is neither a light-dark() pair nor overridden for dark
+    // would ship its light value into the dark theme.
+    for (const [key, value] of base) {
+      if (!value.startsWith('light-dark(') && !attributeDark.has(key)) {
+        console.error(`${RED}FAIL${RESET}: ${THEME_CSS} - ${key} has no dark value: not a light-dark() pair and not in the dark blocks`);
         failed++;
       }
     }
 
-    // The two dark blocks must additionally agree on every value.
-    const [, [, , mediaDark], [, , attributeDark]] = blocks;
-    for (const [key, value] of mediaDark) {
+    // The two dark blocks must declare the same tokens with the same values.
+    for (const key of new Set([...mediaDark.keys(), ...attributeDark.keys()])) {
+      const value = mediaDark.get(key);
       const other = attributeDark.get(key);
-      if (other !== undefined && other !== value) {
+      if (value !== other) {
         console.error(
           `${RED}FAIL${RESET}: ${THEME_CSS} - ${key} differs between the dark blocks: media-dark "${value}" vs attribute-dark "${other}"`,
         );

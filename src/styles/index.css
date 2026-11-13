@@ -10,6 +10,13 @@
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+
+  /* Checkboxes, radios, range and progress controls drawn by the browser. */
+  accent-color: var(--color-accent);
+}
+
+::selection {
+  background: color-mix(in srgb, var(--color-accent) 28%, transparent);
 }
 
 a {
@@ -29,6 +36,13 @@ body {
 
 h1, h2, h3 {
   font-weight: 700;
+  text-wrap: balance;
+}
+
+/* Avoids a lone last word. Scoped to running text: it costs more than the
+   default wrap, so it is not applied to everything. */
+p, li, blockquote {
+  text-wrap: pretty;
 }
 
 h1 {
@@ -151,8 +165,10 @@ button:focus-visible {
 
 /* Mobile responsive adjustments */
 @media (max-width: 768px) {
+  /* A percentage, not px: 15px at the default 16px, and it still follows a
+     reader who has changed their browser's font size. */
   html {
-    font-size: 15px;
+    font-size: 93.75%;
   }
 
   body {

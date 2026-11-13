@@ -174,18 +174,20 @@ const faqSchema = {
       <p class="perth-intro">{perthAnalyticsData.services.intro}</p>
       <div class="perth-accordion">
         {perthAnalyticsData.services.groups.map((group, i) => (
-          <details class="perth-fold" open={i === 0}>
-            <summary>
+          <div class="perth-fold">
+            <div class="fold-head">
               <span class="fold-index" aria-hidden="true">{i + 1}</span>
               <span class="fold-heading">
-                <h3>{group.name}</h3>
+                <h3><button type="button" class="fold-trigger" aria-expanded="true" aria-controls={`service-panel-${i}`}>{group.name}</button></h3>
                 <span class="fold-sub">{group.description}</span>
               </span>
-            </summary>
-            <ul class="fold-list">
-              {group.items.map(item => <li>{item}</li>)}
-            </ul>
-          </details>
+            </div>
+            <div class="fold-panel" id={`service-panel-${i}`}>
+              <ul class="fold-list">
+                {group.items.map(item => <li>{item}</li>)}
+              </ul>
+            </div>
+          </div>
         ))}
       </div>
     </section>
@@ -195,18 +197,57 @@ const faqSchema = {
       <p class="perth-intro">{perthAnalyticsData.diagnostics.intro}</p>
       <div class="perth-accordion">
         {perthAnalyticsData.diagnostics.items.map((item, i) => (
-          <details class="perth-fold" open={i === 0}>
-            <summary>
-              <span class="fold-heading"><h3>{item.symptom}</h3></span>
-            </summary>
-            <div class="fold-pair">
-              <p><span class="pair-label">Usual cause</span>{item.cause}</p>
-              <p><span class="pair-label pair-label--fix">Fix</span>{item.fix}</p>
+          <div class="perth-fold">
+            <div class="fold-head">
+              <span class="fold-heading"><h3><button type="button" class="fold-trigger" aria-expanded="true" aria-controls={`symptom-panel-${i}`}>{item.symptom}</button></h3></span>
             </div>
-          </details>
+            <div class="fold-panel" id={`symptom-panel-${i}`}>
+              <div class="fold-pair">
+                <p><span class="pair-label">Usual cause</span>{item.cause}</p>
+                <p><span class="pair-label pair-label--fix">Fix</span>{item.fix}</p>
+              </div>
+            </div>
+          </div>
         ))}
       </div>
     </section>
+
+    <!-- Folding rows. Each row's heading holds a button rather than sitting
+         inside a <summary>, which screen readers expose as a button and so
+         drop the heading from. The markup above is fully open: this script
+         is what folds every row but the first, so with no script the content
+         is simply all there. It runs before the rows are painted. -->
+    <script is:inline data-csp>
+      (function () {
+        function panelOf(trigger) {
+          return document.getElementById(trigger.getAttribute('aria-controls'));
+        }
+        function set(trigger, open) {
+          const panel = panelOf(trigger);
+          if (!panel) return;
+          trigger.setAttribute('aria-expanded', String(open));
+          // until-found keeps a folded row reachable by find-in-page; where it
+          // is unsupported the attribute is a plain `hidden`.
+          if (open) panel.removeAttribute('hidden');
+          else panel.setAttribute('hidden', 'until-found');
+        }
+        document.querySelectorAll('.perth-accordion').forEach(function (accordion) {
+          accordion.querySelectorAll('.fold-trigger').forEach(function (trigger, i) {
+            if (i > 0) set(trigger, false);
+          });
+        });
+        document.addEventListener('click', function (event) {
+          const trigger = event.target.closest && event.target.closest('.fold-trigger');
+          if (trigger) set(trigger, trigger.getAttribute('aria-expanded') !== 'true');
+        });
+        // Find-in-page unfolds a row by itself; the button has to follow.
+        document.addEventListener('beforematch', function (event) {
+          const panel = event.target.closest && event.target.closest('.fold-panel');
+          const trigger = panel && document.querySelector('.fold-trigger[aria-controls="' + panel.id + '"]');
+          if (trigger) trigger.setAttribute('aria-expanded', 'true');
+        });
+      })();
+    </script>
 
     <!-- The page's only diagram: server-side tagging is the one thing hard to explain in a sentence -->
     <section class="perth-section">
@@ -510,9 +551,8 @@ const faqSchema = {
   border-top: 1px solid var(--color-border-primary);
 }
 
-.perth-fold > summary {
-  list-style: none;
-  cursor: pointer;
+.fold-head {
+  position: relative;
   display: flex;
   align-items: flex-start;
   gap: 0.9rem;
@@ -520,11 +560,8 @@ const faqSchema = {
   background: var(--color-bg-secondary);
 }
 
-.perth-fold > summary::-webkit-details-marker {
-  display: none;
-}
-
-.perth-fold > summary::after {
+/* The chevron: down when folded, up when open. */
+.fold-head::after {
   content: '';
   width: 8px;
   height: 8px;
@@ -535,13 +572,50 @@ const faqSchema = {
   flex-shrink: 0;
 }
 
-.perth-fold[open] > summary::after {
+.fold-head:has(.fold-trigger[aria-expanded="true"])::after {
   transform: rotate(-135deg);
   margin-top: 0.65rem;
 }
 
-.perth-fold > summary:hover h3 {
+/* The button carries only the heading text, so that is all a screen reader
+   announces; its ::after stretches the click target over the whole row. */
+.fold-trigger {
+  appearance: none;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: none;
+  font: inherit;
+  color: inherit;
+  text-align: start;
+  cursor: pointer;
+}
+
+.fold-trigger::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+}
+
+.fold-trigger:focus {
+  outline: none;
+}
+
+.fold-trigger:focus-visible::after {
+  outline: 2px solid var(--color-accent);
+  outline-offset: -2px;
+}
+
+.fold-head:hover h3 {
   color: var(--color-accent);
+}
+
+/* A folded row still prints. */
+@media print {
+  .fold-panel[hidden] {
+    display: block !important;
+    content-visibility: visible !important;
+  }
 }
 
 .fold-index {
@@ -694,7 +768,7 @@ const faqSchema = {
 
 @media (prefers-reduced-motion: no-preference) {
   .perth-page .faq-item > summary::before,
-  .perth-fold > summary::after {
+  .fold-head::after {
     transition: transform 0.2s ease;
   }
 }

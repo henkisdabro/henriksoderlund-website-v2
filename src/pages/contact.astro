@@ -124,14 +124,27 @@ import { CALENDLY_URL, LINKEDIN_URL, GITHUB_URL } from '../data/links';
 
 .form-group input:focus,
 .form-group textarea:focus {
-  outline: none;
+  /* Transparent rather than none: forced-colours mode drops the box-shadow
+     ring and paints this outline in a system colour instead. */
+  outline: 2px solid transparent;
   border-color: var(--color-accent);
   box-shadow: 0 0 0 3px var(--color-accent-subtle);
 }
 
+/* Only once the field has been edited or a submit attempted, so an empty
+   required field is not flagged on arrival. */
+.form-group input:user-invalid,
+.form-group textarea:user-invalid {
+  border-color: var(--color-error-text);
+}
+
 .form-group textarea {
   resize: vertical;
-  min-height: 120px;
+  /* Grows with the message where supported. The explicit width above keeps
+     it from sizing to the placeholder; the minimum matches rows="6". */
+  field-sizing: content;
+  min-block-size: calc(6lh + 1.5rem + 2px);
+  max-block-size: 24lh;
 }
 
 .form-footer {

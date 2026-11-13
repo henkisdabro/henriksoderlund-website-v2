@@ -83,98 +83,99 @@
 }
 
 /* ==========================================================================
-   Light Theme (default)
+   Palette
 
-   Defined on bare :root as well as the explicit attribute so the palette
-   resolves with no JavaScript at all. The inline theme script in
-   BaseLayout.astro is the only thing that ever stamps data-theme, and it
-   cannot run for a crawler, for a reader-mode tool, or where localStorage
-   throws (Safari "Block All Cookies", Firefox with storage disabled,
-   locked-down enterprise profiles). Without a bare :root every colour token
-   would be unset and every declaration using one invalid at computed-value
-   time - i.e. a completely unstyled page.
+   Every colour is one light-dark(light, dark) pair, resolved by the
+   `color-scheme` in force. The root follows the system (`light dark`) with no
+   JavaScript at all, so a crawler, a reader-mode tool or a browser where
+   localStorage throws still gets the right palette. The inline theme script in
+   BaseLayout.astro stamps data-theme with the theme it resolved, and that pins
+   the scheme to one side.
+
+   light-dark() takes colours only. The tokens that are not colours - font
+   stacks, the RGB triplets the homepage canvas reads, plain numbers - keep
+   their light value here and their dark value in the two blocks below.
    ========================================================================== */
 
-:root,
-:root[data-theme="light"] {
-  color-scheme: light;
+:root {
+  color-scheme: light dark;
 
   /* Backgrounds */
-  --color-bg-primary: #ffffff;
-  --color-bg-secondary: #f8f9fa;
-  --color-bg-tertiary: #f5f5f5;
-  --color-bg-elevated: #ffffff;
-  --color-bg-overlay: rgba(255, 255, 255, 0.9);
-  --color-bg-nav-header: rgba(248, 249, 250, 0.65);
-  --color-bg-code: rgba(0, 0, 0, 0.04);
+  --color-bg-primary: light-dark(#ffffff, #0f1117);
+  --color-bg-secondary: light-dark(#f8f9fa, #1a1d27);
+  --color-bg-tertiary: light-dark(#f5f5f5, #232733);
+  --color-bg-elevated: light-dark(#ffffff, #1e2230);
+  --color-bg-overlay: light-dark(rgba(255, 255, 255, 0.9), rgba(15, 17, 23, 0.92));
+  --color-bg-nav-header: light-dark(rgba(248, 249, 250, 0.65), rgba(26, 29, 39, 0.75));
+  --color-bg-code: light-dark(rgba(0, 0, 0, 0.04), rgba(255, 255, 255, 0.06));
 
   /* Text */
-  --color-text-primary: #333333;
-  --color-text-secondary: #555555;
-  --color-text-tertiary: #666666;
-  --color-text-muted: #6b6b6b;
-  --color-text-faint: #6e6e6e;
-  --color-text-heading: #2c3e50;
-  --color-text-label: #374151;
-  --color-text-strong: #1f2937;
+  --color-text-primary: light-dark(#333333, #e4e4e7);
+  --color-text-secondary: light-dark(#555555, #a1a1aa);
+  --color-text-tertiary: light-dark(#666666, #9494a0);
+  --color-text-muted: light-dark(#6b6b6b, #8f8f99);
+  --color-text-faint: light-dark(#6e6e6e, #8f8f99);
+  --color-text-heading: light-dark(#2c3e50, #f4f4f5);
+  --color-text-label: light-dark(#374151, #d4d4d8);
+  --color-text-strong: light-dark(#1f2937, #f4f4f5);
 
   /* Accent */
-  --color-accent: #007acc;
-  --color-accent-hover: #005999;
-  --color-accent-subtle: rgba(0, 122, 204, 0.12);
-  --color-accent-text: #ffffff;
+  --color-accent: light-dark(#007acc, #38bdf8);
+  --color-accent-hover: light-dark(#005999, #7dd3fc);
+  --color-accent-subtle: light-dark(rgba(0, 122, 204, 0.12), rgba(56, 189, 248, 0.15));
+  --color-accent-text: light-dark(#ffffff, #0f1117);
 
   /* Borders */
-  --color-border-primary: #e1e5e9;
-  --color-border-secondary: #e5e7eb;
-  --color-border-subtle: #f3f4f6;
-  --color-border-input: #d1d5db;
+  --color-border-primary: light-dark(#e1e5e9, #2d3348);
+  --color-border-secondary: light-dark(#e5e7eb, #3a3f54);
+  --color-border-subtle: light-dark(#f3f4f6, #1e2230);
+  --color-border-input: light-dark(#d1d5db, #3a3f54);
 
   /* Status */
-  --color-success-bg: #f0fdf4;
-  --color-success-text: #166534;
-  --color-success-border: #bbf7d0;
-  --color-success-icon: #16a34a;
-  --color-success-hover: #15803d;
+  --color-success-bg: light-dark(#f0fdf4, rgba(22, 163, 74, 0.1));
+  --color-success-text: light-dark(#166534, #4ade80);
+  --color-success-border: light-dark(#bbf7d0, rgba(74, 222, 128, 0.2));
+  --color-success-icon: light-dark(#16a34a, #4ade80);
+  --color-success-hover: light-dark(#15803d, #86efac);
 
-  --color-error-bg: #fef2f2;
-  --color-error-text: #991b1b;
-  --color-error-border: #fecaca;
+  --color-error-bg: light-dark(#fef2f2, rgba(153, 27, 27, 0.15));
+  --color-error-text: light-dark(#991b1b, #fca5a5);
+  --color-error-border: light-dark(#fecaca, rgba(252, 165, 165, 0.2));
 
   /* Tags & Pills */
-  --color-tag-bg: #e9ecef;
-  --color-tag-text: #495057;
-  --color-pill-bg: #f1f3f4;
-  --color-pill-text: #666666;
-  --color-pill-border: #e5e7eb;
+  --color-tag-bg: light-dark(#e9ecef, #232733);
+  --color-tag-text: light-dark(#495057, #a1a1aa);
+  --color-pill-bg: light-dark(#f1f3f4, #1e2230);
+  --color-pill-text: light-dark(#666666, #a1a1aa);
+  --color-pill-border: light-dark(#e5e7eb, #2d3348);
 
   /* Misc */
-  --color-price: #059669;
-  --color-icon: #333333;
-  --color-icon-hover: #000000;
-  --color-nav-active-bg: #e8e8e8;
-  --color-nav-active-border: #666666;
-  --color-nav-hover-bg: #f5f5f5;
-  --color-btn-bg: #f9f9f9;
-  --color-btn-hover-bg: #e9ecef;
-  --color-shadow: rgba(0, 0, 0, 0.1);
-  --color-shadow-heavy: rgba(0, 0, 0, 0.15);
-  --color-gradient-divider: #e0e0e0;
-  --color-marker: #667eea;
-  --color-link-default: #646cff;
-  --color-link-hover: #535bf2;
+  --color-price: light-dark(#059669, #34d399);
+  --color-icon: light-dark(#333333, #d4d4d8);
+  --color-icon-hover: light-dark(#000000, #ffffff);
+  --color-nav-active-bg: light-dark(#e8e8e8, #232733);
+  --color-nav-active-border: light-dark(#666666, #38bdf8);
+  --color-nav-hover-bg: light-dark(#f5f5f5, #1a1d27);
+  --color-btn-bg: light-dark(#f9f9f9, #232733);
+  --color-btn-hover-bg: light-dark(#e9ecef, #2d3348);
+  --color-shadow: light-dark(rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.4));
+  --color-shadow-heavy: light-dark(rgba(0, 0, 0, 0.15), rgba(0, 0, 0, 0.5));
+  --color-gradient-divider: light-dark(#e0e0e0, #2d3348);
+  --color-marker: light-dark(#667eea, #818cf8);
+  --color-link-default: light-dark(#646cff, #818cf8);
+  --color-link-hover: light-dark(#535bf2, #a5b4fc);
 
   /* Motion surface: glow behind the portrait, pointer spotlight, link rest line */
-  --aurora-1: rgba(0, 122, 204, 0.30);
-  --aurora-2: rgba(102, 126, 234, 0.26);
-  --aurora-3: rgba(56, 189, 248, 0.28);
+  --aurora-1: light-dark(rgba(0, 122, 204, 0.30), rgba(56, 189, 248, 0.42));
+  --aurora-2: light-dark(rgba(102, 126, 234, 0.26), rgba(129, 140, 248, 0.40));
+  --aurora-3: light-dark(rgba(56, 189, 248, 0.28), rgba(34, 211, 238, 0.30));
   --aurora-blur: 24px;
   --aurora-ring: 0;
-  --glow-fill: rgba(0, 122, 204, 0.07);
-  --glow-edge: rgba(0, 122, 204, 0.5);
-  --glow-fill-solid: rgba(255, 255, 255, 0.26);
-  --glow-edge-solid: rgba(255, 255, 255, 0.55);
-  --link-rest: color-mix(in srgb, currentColor 26%, transparent);
+  --glow-fill: light-dark(rgba(0, 122, 204, 0.07), rgba(56, 189, 248, 0.07));
+  --glow-edge: light-dark(rgba(0, 122, 204, 0.5), rgba(125, 211, 252, 0.95));
+  --glow-fill-solid: light-dark(rgba(255, 255, 255, 0.26), rgba(255, 255, 255, 0.38));
+  --glow-edge-solid: light-dark(rgba(255, 255, 255, 0.55), rgba(255, 255, 255, 0.8));
+  --link-rest: light-dark(color-mix(in srgb, currentColor 26%, transparent), color-mix(in srgb, currentColor 40%, transparent));
 
   /* Homepage depth field (RGB triplets, read by its canvas script) */
   --field-line: 44, 62, 80;
@@ -197,111 +198,28 @@
   --font-body-alt: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
   --font-mono: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
   --font-code: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
+}
 
+:root[data-theme="light"] {
+  color-scheme: light;
 }
 
 /* ==========================================================================
-   Dark Theme - system preference, no explicit choice stored
+   Dark values of the non-colour tokens
 
-   Guarded with :not([data-theme="light"]) so an explicit light choice still
-   wins: that selector and :root[data-theme="light"] are mutually exclusive, so
-   they never compete. What this block actually overrides is the bare :root in
-   the list above, which carries its own 0,1,0 specificity - a comma-separated
-   list is weighed per selector, so :root does not borrow the weight of the
-   attribute selector beside it - against this block's 0,2,0.
-
-   NOTE: this block duplicates the :root[data-theme="dark"] palette below.
-   Any token changed in one must be changed in the other.
+   Two selectors for the one state, as light-dark() cannot carry these: the
+   system preference with no explicit light choice, and an explicit dark
+   choice. Any token changed in one must be changed in the other.
    ========================================================================== */
 
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
-    color-scheme: dark;
-
-    /* Backgrounds */
-    --color-bg-primary: #0f1117;
-    --color-bg-secondary: #1a1d27;
-    --color-bg-tertiary: #232733;
-    --color-bg-elevated: #1e2230;
-    --color-bg-overlay: rgba(15, 17, 23, 0.92);
-    --color-bg-nav-header: rgba(26, 29, 39, 0.75);
-    --color-bg-code: rgba(255, 255, 255, 0.06);
-
-    /* Text */
-    --color-text-primary: #e4e4e7;
-    --color-text-secondary: #a1a1aa;
-    --color-text-tertiary: #9494a0;
-    --color-text-muted: #8f8f99;
-    --color-text-faint: #8f8f99;
-    --color-text-heading: #f4f4f5;
-    --color-text-label: #d4d4d8;
-    --color-text-strong: #f4f4f5;
-
-    /* Accent */
-    --color-accent: #38bdf8;
-    --color-accent-hover: #7dd3fc;
-    --color-accent-subtle: rgba(56, 189, 248, 0.15);
-    --color-accent-text: #0f1117;
-
-    /* Borders */
-    --color-border-primary: #2d3348;
-    --color-border-secondary: #3a3f54;
-    --color-border-subtle: #1e2230;
-    --color-border-input: #3a3f54;
-
-    /* Status */
-    --color-success-bg: rgba(22, 163, 74, 0.1);
-    --color-success-text: #4ade80;
-    --color-success-border: rgba(74, 222, 128, 0.2);
-    --color-success-icon: #4ade80;
-    --color-success-hover: #86efac;
-
-    --color-error-bg: rgba(153, 27, 27, 0.15);
-    --color-error-text: #fca5a5;
-    --color-error-border: rgba(252, 165, 165, 0.2);
-
-    /* Tags & Pills */
-    --color-tag-bg: #232733;
-    --color-tag-text: #a1a1aa;
-    --color-pill-bg: #1e2230;
-    --color-pill-text: #a1a1aa;
-    --color-pill-border: #2d3348;
-
-    /* Misc */
-    --color-price: #34d399;
-    --color-icon: #d4d4d8;
-    --color-icon-hover: #ffffff;
-    --color-nav-active-bg: #232733;
-    --color-nav-active-border: #38bdf8;
-    --color-nav-hover-bg: #1a1d27;
-    --color-btn-bg: #232733;
-    --color-btn-hover-bg: #2d3348;
-    --color-shadow: rgba(0, 0, 0, 0.4);
-    --color-shadow-heavy: rgba(0, 0, 0, 0.5);
-    --color-gradient-divider: #2d3348;
-    --color-marker: #818cf8;
-    --color-link-default: #818cf8;
-    --color-link-hover: #a5b4fc;
-
-    /* Motion surface: glow behind the portrait, pointer spotlight, link rest line */
-    --aurora-1: rgba(56, 189, 248, 0.42);
-    --aurora-2: rgba(129, 140, 248, 0.40);
-    --aurora-3: rgba(34, 211, 238, 0.30);
     --aurora-blur: 30px;
     --aurora-ring: 1;
-    --glow-fill: rgba(56, 189, 248, 0.07);
-    --glow-edge: rgba(125, 211, 252, 0.95);
-    --glow-fill-solid: rgba(255, 255, 255, 0.38);
-    --glow-edge-solid: rgba(255, 255, 255, 0.8);
-    --link-rest: color-mix(in srgb, currentColor 40%, transparent);
-
-    /* Homepage depth field (RGB triplets, read by its canvas script) */
     --field-line: 160, 174, 198;
     --field-accent: 56, 189, 248;
     --field-k: 0.5;
     --field-blur: 1.6px;
-
-    /* Haze under the field: five mesh-gradient spots as "r, g, b, weight", the layer's strength, its film grain, and how far the lines take on the colour beneath them */
     --haze-1: 56, 189, 248, 0.75;
     --haze-2: 129, 140, 248, 0.9;
     --haze-3: 59, 130, 246, 0.6;
@@ -310,8 +228,6 @@
     --haze-k: 0.2;
     --haze-grain: 0.14;
     --haze-tint: 0.75;
-
-    /* Fonts - coding font in dark mode */
     --font-body: 'JetBrains Mono', 'JetBrains Mono Fallback', 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
     --font-body-alt: 'JetBrains Mono', 'JetBrains Mono Fallback', monospace;
     --font-mono: 'JetBrains Mono', 'JetBrains Mono Fallback', 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
@@ -319,101 +235,15 @@
   }
 }
 
-/* ==========================================================================
-   Dark Theme - explicit choice
-
-   Last in source order so it beats the prefers-color-scheme block above at
-   equal specificity, letting an explicit dark choice override a light OS
-   preference and vice versa.
-   ========================================================================== */
-
 :root[data-theme="dark"] {
   color-scheme: dark;
 
-  /* Backgrounds */
-  --color-bg-primary: #0f1117;
-  --color-bg-secondary: #1a1d27;
-  --color-bg-tertiary: #232733;
-  --color-bg-elevated: #1e2230;
-  --color-bg-overlay: rgba(15, 17, 23, 0.92);
-  --color-bg-nav-header: rgba(26, 29, 39, 0.75);
-  --color-bg-code: rgba(255, 255, 255, 0.06);
-
-  /* Text */
-  --color-text-primary: #e4e4e7;
-  --color-text-secondary: #a1a1aa;
-  --color-text-tertiary: #9494a0;
-  --color-text-muted: #8f8f99;
-  --color-text-faint: #8f8f99;
-  --color-text-heading: #f4f4f5;
-  --color-text-label: #d4d4d8;
-  --color-text-strong: #f4f4f5;
-
-  /* Accent */
-  --color-accent: #38bdf8;
-  --color-accent-hover: #7dd3fc;
-  --color-accent-subtle: rgba(56, 189, 248, 0.15);
-  --color-accent-text: #0f1117;
-
-  /* Borders */
-  --color-border-primary: #2d3348;
-  --color-border-secondary: #3a3f54;
-  --color-border-subtle: #1e2230;
-  --color-border-input: #3a3f54;
-
-  /* Status */
-  --color-success-bg: rgba(22, 163, 74, 0.1);
-  --color-success-text: #4ade80;
-  --color-success-border: rgba(74, 222, 128, 0.2);
-  --color-success-icon: #4ade80;
-  --color-success-hover: #86efac;
-
-  --color-error-bg: rgba(153, 27, 27, 0.15);
-  --color-error-text: #fca5a5;
-  --color-error-border: rgba(252, 165, 165, 0.2);
-
-  /* Tags & Pills */
-  --color-tag-bg: #232733;
-  --color-tag-text: #a1a1aa;
-  --color-pill-bg: #1e2230;
-  --color-pill-text: #a1a1aa;
-  --color-pill-border: #2d3348;
-
-  /* Misc */
-  --color-price: #34d399;
-  --color-icon: #d4d4d8;
-  --color-icon-hover: #ffffff;
-  --color-nav-active-bg: #232733;
-  --color-nav-active-border: #38bdf8;
-  --color-nav-hover-bg: #1a1d27;
-  --color-btn-bg: #232733;
-  --color-btn-hover-bg: #2d3348;
-  --color-shadow: rgba(0, 0, 0, 0.4);
-  --color-shadow-heavy: rgba(0, 0, 0, 0.5);
-  --color-gradient-divider: #2d3348;
-  --color-marker: #818cf8;
-  --color-link-default: #818cf8;
-  --color-link-hover: #a5b4fc;
-
-  /* Motion surface: glow behind the portrait, pointer spotlight, link rest line */
-  --aurora-1: rgba(56, 189, 248, 0.42);
-  --aurora-2: rgba(129, 140, 248, 0.40);
-  --aurora-3: rgba(34, 211, 238, 0.30);
   --aurora-blur: 30px;
   --aurora-ring: 1;
-  --glow-fill: rgba(56, 189, 248, 0.07);
-  --glow-edge: rgba(125, 211, 252, 0.95);
-  --glow-fill-solid: rgba(255, 255, 255, 0.38);
-  --glow-edge-solid: rgba(255, 255, 255, 0.8);
-  --link-rest: color-mix(in srgb, currentColor 40%, transparent);
-
-  /* Homepage depth field (RGB triplets, read by its canvas script) */
   --field-line: 160, 174, 198;
   --field-accent: 56, 189, 248;
   --field-k: 0.5;
   --field-blur: 1.6px;
-
-  /* Haze under the field: five mesh-gradient spots as "r, g, b, weight", the layer's strength, its film grain, and how far the lines take on the colour beneath them */
   --haze-1: 56, 189, 248, 0.75;
   --haze-2: 129, 140, 248, 0.9;
   --haze-3: 59, 130, 246, 0.6;
@@ -422,13 +252,10 @@
   --haze-k: 0.2;
   --haze-grain: 0.14;
   --haze-tint: 0.75;
-
-  /* Fonts - coding font in dark mode */
   --font-body: 'JetBrains Mono', 'JetBrains Mono Fallback', 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
   --font-body-alt: 'JetBrains Mono', 'JetBrains Mono Fallback', monospace;
   --font-mono: 'JetBrains Mono', 'JetBrains Mono Fallback', 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
   --font-code: 'JetBrains Mono', 'JetBrains Mono Fallback', source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
-
 }
 
 /* ==========================================================================

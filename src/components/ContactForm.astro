@@ -112,11 +112,11 @@ const errorReason = errorType === 'validation' ? '' : (error?.message ?? '');
     <div class="form-row">
       <div class="form-group">
         <label for="name">Name</label>
-        <input type="text" id="name" name="name" required maxlength="100" placeholder="Your name" aria-invalid={invalidFlag('name')} aria-describedby={describedBy('name')} />
+        <input type="text" id="name" name="name" autocomplete="name" enterkeyhint="next" required maxlength="100" placeholder="Your name" aria-invalid={invalidFlag('name')} aria-describedby={describedBy('name')} />
       </div>
       <div class="form-group">
         <label for="email">Email</label>
-        <input type="email" id="email" name="email" required maxlength="200" placeholder="you@example.com" aria-invalid={invalidFlag('email')} aria-describedby={describedBy('email')} />
+        <input type="email" id="email" name="email" autocomplete="email" autocapitalize="none" autocorrect="off" spellcheck="false" enterkeyhint="next" required maxlength="200" placeholder="you@example.com" aria-invalid={invalidFlag('email')} aria-describedby={describedBy('email')} />
       </div>
     </div>
     <div class="form-group">
