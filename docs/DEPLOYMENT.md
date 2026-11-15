@@ -12,7 +12,7 @@ One job, `build-test-deploy`, runs these in order, so a failure at any step stop
 
 1. **Build Process**: Dependencies, linting, Astro check, and Astro build
 2. **Verification**: Ensures all required files are generated
-3. **Lead-capture tests**: the contact form, booking CTAs and GTM contract against the built Worker, in Playwright's Chromium headless shell - see `docs/LEAD-CAPTURE-TESTS.md`
+3. **Lead-capture tests**: the Playwright suite against the built Worker, in Playwright's Chromium headless shell - see `docs/LEAD-CAPTURE-TESTS.md`
 4. **Deployment**: Deploys to Cloudflare Workers (main branch only), then runs the same lead-capture checks against production
 
 ### Workflow Triggers
@@ -79,35 +79,22 @@ The key lives in the workflow and in `public/<key>.txt`, which engines fetch to 
 
 The following files are automatically generated during `astro build`:
 
-### Per-Page Markdown Endpoints
+### Text and Markdown Endpoints
 
-Generated from Astro `.md.ts` endpoint files in `src/pages/`:
+`scripts/verify-build.mjs` is the source of truth: its `textEndpoints` list names every endpoint the build must produce, and the build fails if one is missing or too small. At the time of writing that is:
 
-- **Homepage**: `/index.html.md`
-- **Expertise**: `/expertise.md`
-- **Work Experience**: `/work-experience.md`
-- **Consultancy**: `/consultancy.md`
+- `dist/client/llms.txt` and `dist/client/llms-full.txt`
+- `dist/client/index.html.md`, `expertise.md`, `builds.md`, `consultancy.md`, `perth-analytics-consultant.md`, `work-experience.md` and `contact.md`
 
-All files follow the [llms.txt specification](https://llmstxt.org/) for optimal AI consumption.
+They are generated from the `.md.ts` and `.txt.ts` endpoint files in `src/pages/` and follow the [llms.txt specification](https://llmstxt.org/).
 
 ### Sitemap
 
 Generated automatically by the `@astrojs/sitemap` integration.
 
-## Manual Deployment
+## No Manual Deployment
 
-If needed, you can deploy manually:
-
-```bash
-# Install dependencies
-pnpm install --frozen-lockfile
-
-# Build (includes Astro check + build)
-pnpm run build
-
-# Deploy to Cloudflare Workers
-pnpm run deploy
-```
+Production deploys only from CI, on push to `main`. Do not deploy by hand: the `deploy` script in `package.json` skips `astro check` and the Playwright gate, and a hand deploy can race CI.
 
 ## Troubleshooting
 
