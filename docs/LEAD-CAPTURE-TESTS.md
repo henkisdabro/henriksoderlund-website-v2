@@ -8,9 +8,11 @@ This suite checks the outcome instead. It is Playwright, in `tests/e2e/`, with o
 
 | When | Command | Target | Specs |
 |---|---|---|---|
-| Every PR and push, **gates the deploy** | `pnpm run test:e2e` | built Worker under `wrangler dev` | `contact-form`, `cta`, `gtm-contract` |
-| After every deploy | `pnpm run test:prod` | www.henriksoderlund.com | `production`, `cta`, `gtm-contract` |
+| Every PR and push, **gates the deploy** | `pnpm run test:e2e` | built Worker under `wrangler dev` | every spec in `tests/e2e/` except `production` |
+| After every deploy | `pnpm run test:prod` | www.henriksoderlund.com | every spec in `tests/e2e/` except `contact-form` |
 | Daily, 06:00 Perth (`lead-capture-monitor.yml`) | `pnpm run test:prod` | www.henriksoderlund.com | same |
+
+`testIgnore` in `playwright.config.ts` is the source of truth: each target skips one spec and runs everything else, so a new spec gates both unless it is added there.
 
 The daily run exists because neither of those failures came from a deploy.
 
@@ -31,7 +33,7 @@ Reply-To is the one field the simulator does not record, so no local test covers
 ## Production target
 
 - **Synthetic submission.** A POST carrying `X-Synthetic-Check: <CONTACT_SYNTHETIC_TOKEN>` skips the human challenge but nothing else. The Action still calls siteverify and requires the exact `invalid-input-response` rejection, which a valid secret gives a dummy token (a bad secret gives `invalid-input-secret`). It then sends through the real `send_email` binding and sending domain, to `admin+synthetic@henriksoderlund.com` instead of the inbox. A leaked token can reach only that alias, which a Gmail filter archives. The binding's `allowed_destination_addresses` enforces the same limit at the platform level.
-- **Live CSP.** `/contact` loads the Turnstile iframe with zero CSP violations once a field is focused (Turnstile loads on first use of the form, not with the page), apart from Cloudflare's injected tag-gateway loader. Cloudflare keeps injecting it even with "Set up tag" off (a known bug), and the CSP blocks it harmlessly; `fixtures.ts` ignores those two scripts by content and nothing else.
+- **Live CSP.** `/contact` loads the Turnstile iframe with zero CSP violations once a field is focused (Turnstile loads on first use of the form, not with the page), with no exceptions. If Cloudflare's injected tag-gateway loader scripts show up as violations, the dashboard tag-gateway integration has been switched back on: turn it off (see AGENTS.md) rather than allowlisting them.
 - **Calendly.** The event behind every booking CTA renders and has a bookable time this month or next.
 
 Analytics requests are blocked in every test (`fixtures.ts`), so runs never count as visits or leads. The dataLayer still fills, and that is what the tests read.
