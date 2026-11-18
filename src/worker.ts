@@ -100,6 +100,12 @@ const CAMPAIGN_PARAMS = new Set([
   'li_fat_id',
 ]);
 
+// A redirect target for a legacy path, 'gone' for a defunct feed, or null.
+function resolveLegacy(pathname: string): string | null {
+  if (GONE.has(pathname)) return 'gone';
+  return REDIRECTS[pathname] ?? (pathname.startsWith('/blog/') ? '/' : null);
+}
+
 function keepCampaignParams(url: URL): void {
   const kept = new URLSearchParams();
   for (const [key, value] of url.searchParams) {
@@ -190,37 +196,30 @@ export default {
     // /wro1/ itself, and the HTML handling must not touch Google's responses.
     if (url.pathname.startsWith(TAG_PATH)) return tagGateway(request, url);
 
-    // Enforce trailingSlash: 'never' (astro.config.mjs). The Cloudflare asset
-    // binding serves the slash variant as 200, creating a duplicate URL with a
-    // conflicting self-referential canonical Link header. 301 to the non-slash
-    // form so search engines see a single canonical URL.
-    if (url.pathname !== '/' && url.pathname.endsWith('/')) {
-      url.pathname = url.pathname.replace(/\/+$/, '');
-      // Resolve a legacy path in the same hop so /skills/ goes straight to
-      // /expertise rather than chaining a second 301 through /skills.
-      const slashTarget = REDIRECTS[url.pathname];
-      if (slashTarget) {
-        url.pathname = slashTarget;
-        keepCampaignParams(url);
-      }
-      const headers = new Headers({ Location: url.toString() });
-      setSecurityHeaders(headers);
-      return new Response(null, { status: 301, headers });
-    }
+    const slash = url.pathname !== '/' && url.pathname.endsWith('/');
+    if (slash) url.pathname = url.pathname.replace(/\/+$/, '');
+    // Resolved on the stripped path, so a legacy URL with a trailing slash
+    // (/skills/, /blog/post/, /feed/) is answered in one hop, not two.
+    const legacy = resolveLegacy(url.pathname);
 
     // 410 Gone for defunct feed endpoints (no content equivalent)
-    if (GONE.has(url.pathname)) {
+    if (legacy === 'gone') {
       const headers = new Headers({ 'Content-Type': 'text/plain; charset=utf-8' });
       setSecurityHeaders(headers);
       headers.set('X-Robots-Tag', 'noindex');
       return new Response('410 Gone\n', { status: 410, headers });
     }
 
-    // Handle redirects before Astro routing
-    const redirectTarget = REDIRECTS[url.pathname];
-    if (redirectTarget || url.pathname.startsWith('/blog/')) {
-      url.pathname = redirectTarget || '/';
-      keepCampaignParams(url);
+    // Enforce trailingSlash: 'never' (astro.config.mjs). The Cloudflare asset
+    // binding serves the slash variant as 200, creating a duplicate URL with a
+    // conflicting self-referential canonical Link header. 301 to the non-slash
+    // form so search engines see a single canonical URL. Legacy redirects are
+    // handled here too, before Astro routing.
+    if (slash || legacy) {
+      if (legacy) {
+        url.pathname = legacy;
+        keepCampaignParams(url);
+      }
       const headers = new Headers({ Location: url.toString() });
       setSecurityHeaders(headers);
       return new Response(null, { status: 301, headers });
