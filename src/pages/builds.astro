@@ -14,11 +14,13 @@ import ascribeTallImage from '../assets/images/screenshots/ascribe-tall.webp';
 import rottoSnorkelImage from '../assets/images/screenshots/rotto-snorkel.webp';
 import sandcastleKitImage from '../assets/images/screenshots/sandcastle-kit.webp';
 import sandcastleKitTallImage from '../assets/images/screenshots/sandcastle-kit-tall.webp';
+import messageSkillImage from '../assets/images/screenshots/message-skill.webp';
 import automationDiagramImage from '../assets/images/screenshots/automation-diagram.webp';
 import rottoSnorkelVideo from '../assets/videos/rotto-snorkel.mp4?url';
 import sandcastleKitStatusVideo from '../assets/videos/sandcastle-kit-status.mp4?url';
+import messageSkillVideo from '../assets/videos/message-skill-destinations.mp4?url';
 
-const videoMap: Record<string, string> = { rottoSnorkelVideo, sandcastleKitStatusVideo };
+const videoMap: Record<string, string> = { rottoSnorkelVideo, sandcastleKitStatusVideo, messageSkillVideo };
 
 const imageMap: Record<string, ImageMetadata> = {
   dashboardImage,
@@ -27,6 +29,7 @@ const imageMap: Record<string, ImageMetadata> = {
   rottoSnorkelImage,
   sandcastleKitImage,
   sandcastleKitTallImage,
+  messageSkillImage,
   automationDiagramImage,
 };
 
@@ -109,7 +112,7 @@ const hostOf = (url: string) => new URL(url).host.replace(/^www\./, '');
     'googleTagManager',
   ]}
   title="What I Build | Henrik Söderlund"
-  description="Products, automation and open source built by Henrik Söderlund - ascribe, sandcastle-kit, Rotto Snorkel, workflow automation and analytics dashboards. Perth, Australia."
+  description="Products, automation and open source built by Henrik Söderlund - ascribe, sandcastle-kit, Rotto Snorkel, the message skill for Claude Code, workflow automation and analytics dashboards. Perth, Australia."
 >
   <script type="application/ld+json" set:html={JSON.stringify(itemListSchema)} is:inline />
   <div class="expertise-page builds-page">
