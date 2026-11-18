@@ -27,24 +27,31 @@ const fieldIssues: FieldIssue[] =
 
 const invalidFields = [...new Set(fieldIssues.map((issue) => issue.field))];
 
+// No Turnstile token means the widget failed to load, errored or timed out:
+// a bot-check failure, not a field the visitor can correct. It is shown with
+// the verification copy instead of the field list, and reported as bot_check.
+const tokenIssue = fieldIssues.find((issue) => issue.field === 'cf-turnstile-response');
+const listedIssues = tokenIssue ? [] : fieldIssues;
+
 const describedBy = (field: string) => {
-  const ids = fieldIssues.filter((issue) => issue.field === field).map((issue) => issue.id);
+  const ids = listedIssues.filter((issue) => issue.field === field).map((issue) => issue.id);
   return ids.length > 0 ? ids.join(' ') : undefined;
 };
 const invalidFlag = (field: string) => (describedBy(field) ? 'true' : undefined);
 
 const errorCode = error?.code ?? 'UNKNOWN';
 const errorType =
-  errorCode === 'BAD_REQUEST'
-    ? 'validation'
-    : errorCode === 'FORBIDDEN'
-      ? 'bot_check'
+  errorCode === 'FORBIDDEN' || tokenIssue
+    ? 'bot_check'
+    : errorCode === 'BAD_REQUEST'
+      ? 'validation'
       : 'server';
 // The server-authored reason ("Failed to send email", "Verification failed"),
 // which tells a mail-provider outage apart from a bot block - both of which
 // otherwise look alike in GA4. Validation messages are left out: they are
 // already reported per field in error_fields.
-const errorReason = errorType === 'validation' ? '' : (error?.message ?? '');
+const errorReason =
+  errorType === 'validation' ? '' : (tokenIssue?.message ?? error?.message ?? '');
 
 // A rejected submit re-renders the form from the POST response, so put back
 // what the visitor typed. Astro escapes both value= and textarea content. The
@@ -81,14 +88,14 @@ const kept = (field: 'name' | 'email' | 'message') => {
 
 {error && (
   <div id="form-result" class="form-error" tabindex="-1">
-    {error.code === 'FORBIDDEN' ? (
+    {errorType === 'bot_check' ? (
       <p><strong>Verification failed.</strong> Please refresh the page and try again.</p>
     ) : error.code === 'BAD_REQUEST' ? (
-      fieldIssues.length > 0 ? (
+      listedIssues.length > 0 ? (
         <Fragment>
           <p><strong>Please check your input.</strong></p>
           <ul>
-            {fieldIssues.map((issue) => <li id={issue.id}>{issue.message}</li>)}
+            {listedIssues.map((issue) => <li id={issue.id}>{issue.message}</li>)}
           </ul>
         </Fragment>
       ) : (

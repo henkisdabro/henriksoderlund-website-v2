@@ -37,8 +37,9 @@ export const server = {
         .string()
         .min(10, 'Message must be at least 10 characters')
         .max(2000, 'Message must be 2000 characters or fewer'),
+      // Absent, not just empty, when the Turnstile widget never rendered.
       'cf-turnstile-response': z
-        .string()
+        .string({ error: 'Please complete the verification' })
         .min(1, 'Please complete the verification'),
     }),
     handler: async (input, context) => {

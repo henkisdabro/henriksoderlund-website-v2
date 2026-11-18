@@ -101,6 +101,29 @@ test('a submission Turnstile rejects sends nothing and is logged as a bot block'
   expect(unforwardedKeys(container, error), 'form_error keys GTM drops').toEqual([]);
 });
 
+test('a submit Turnstile could not load for is logged as a bot check, not a field error', async ({ page }) => {
+  // Blocked by an extension or the network: the held submit goes out with no token.
+  await page.route(/challenges\.cloudflare\.com/, (route) => route.abort());
+  const emails = watchEmails(PASSES);
+  await page.goto(`http://127.0.0.1:${PASSES}/contact`);
+  await page.getByLabel('Name').fill(visitor.name);
+  await page.getByLabel('Email').fill(visitor.email);
+  await page.getByLabel('Message').fill(visitor.message);
+  await page.getByRole('button', { name: 'Send Message' }).click();
+
+  await expect(page.getByText('Verification failed.')).toBeVisible();
+  await expect(page.getByText('Please check your input.')).toHaveCount(0);
+  expect(emails.sent()).toEqual([]);
+  await expectFieldsKept(page);
+
+  const error = await pushed(page, 'form_error');
+  expect(error).toMatchObject({
+    error_type: 'bot_check',
+    error_code: 'BAD_REQUEST',
+    error_reason: 'Please complete the verification',
+  });
+});
+
 test('when sending fails the visitor gets the direct address and the failure is logged', async ({ page }) => {
   await submitForm(page, SEND_FAILS);
 
