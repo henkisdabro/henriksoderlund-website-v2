@@ -236,7 +236,7 @@ const hostOf = (url: string) => new URL(url).host.replace(/^www\./, '');
     </div>
     <div class="build-dialog-scroll">
       <img alt="" />
-      <video muted loop playsinline hidden></video>
+      <video muted loop playsinline controls hidden></video>
       <div class="build-dialog-art" hidden></div>
     </div>
   </dialog>
@@ -270,7 +270,9 @@ const hostOf = (url: string) => new URL(url).host.replace(/^www\./, '');
         } else if (video) {
           dialogVideo.poster = full;
           dialogVideo.src = video;
-          dialogVideo.play();
+          // Visitors who prefer reduced motion get the poster frame; the
+          // controls start it.
+          if (!reducedMotion) dialogVideo.play().catch(() => {});
         } else {
           dialogImg.src = full;
           dialogImg.alt = media.alt;
@@ -314,7 +316,7 @@ const hostOf = (url: string) => new URL(url).host.replace(/^www\./, '');
     if (!reducedMotion) {
       const observer = new IntersectionObserver((entries) => {
         entries.forEach(({ target, isIntersecting }) => {
-          if (isIntersecting) target.play();
+          if (isIntersecting) target.play().catch(() => {});
           else target.pause();
         });
       }, { threshold: 0.4 });
@@ -323,7 +325,7 @@ const hostOf = (url: string) => new URL(url).host.replace(/^www\./, '');
       // A hover recording plays only while its card is hovered or focused.
       document.querySelectorAll('.build-card--hover-video').forEach((card) => {
         const hoverVideo = card.querySelector('.build-shot-hover');
-        const start = () => hoverVideo.play();
+        const start = () => hoverVideo.play().catch(() => {});
         const stop = () => hoverVideo.pause();
         card.addEventListener('pointerenter', start);
         card.addEventListener('pointerleave', stop);
