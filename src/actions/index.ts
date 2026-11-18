@@ -18,6 +18,16 @@ const SYNTHETIC_RECIPIENT = 'admin+synthetic@henriksoderlund.com';
 // oxlint-disable-next-line no-control-regex
 const CONTROL_CHARS = /[\x00-\x1f\x7f]/;
 
+// Holds a hash of the token a message was sent with. Refreshing the result
+// page resends the same form data and spent token; this tells that apart from
+// a failed verification, so the visitor is told the message already went.
+const SENT_COOKIE = 'contact_sent';
+
+async function hashToken(token: string) {
+  const digest = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(token));
+  return [...new Uint8Array(digest)].map((b) => b.toString(16).padStart(2, '0')).join('');
+}
+
 export const server = {
   contact: defineAction({
     accept: 'form',
@@ -37,8 +47,9 @@ export const server = {
         .string()
         .min(10, 'Message must be at least 10 characters')
         .max(2000, 'Message must be 2000 characters or fewer'),
+      // Absent, not just empty, when the Turnstile widget never rendered.
       'cf-turnstile-response': z
-        .string()
+        .string({ error: 'Please complete the verification' })
         .min(1, 'Please complete the verification'),
     }),
     handler: async (input, context) => {
@@ -54,6 +65,11 @@ export const server = {
       const synthetic =
         Boolean(CONTACT_SYNTHETIC_TOKEN) &&
         context.request.headers.get('X-Synthetic-Check') === CONTACT_SYNTHETIC_TOKEN;
+
+      const tokenHash = await hashToken(input['cf-turnstile-response']);
+      if (context.cookies.get(SENT_COOKIE)?.value === tokenHash) {
+        throw new ActionError({ code: 'CONFLICT', message: 'Message already sent' });
+      }
 
       const ip = context.request.headers.get('CF-Connecting-IP') ?? '';
 
@@ -118,6 +134,13 @@ export const server = {
         });
       }
 
+      context.cookies.set(SENT_COOKIE, tokenHash, {
+        httpOnly: true,
+        secure: true,
+        sameSite: 'strict',
+        path: '/',
+        maxAge: 60 * 60,
+      });
       return { success: true };
     },
   }),

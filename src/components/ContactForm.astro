@@ -5,7 +5,10 @@ import { CONTACT_EMAIL } from '../data/links';
 
 const result = Astro.getActionResult(actions.contact);
 const success = result?.data?.success;
-const error = result?.error;
+// A resend of a message that already went (see SENT_COOKIE in the Action):
+// neither a lead nor an error, so it pushes nothing to the dataLayer.
+const alreadySent = result?.error?.code === 'CONFLICT';
+const error = alreadySent ? undefined : result?.error;
 
 // Surface the per-field validation messages rather than the raw Zod payload,
 // keeping the field name alongside each message so it can be wired to the input
@@ -27,24 +30,40 @@ const fieldIssues: FieldIssue[] =
 
 const invalidFields = [...new Set(fieldIssues.map((issue) => issue.field))];
 
+// No Turnstile token means the widget failed to load, errored or timed out:
+// a bot-check failure, not a field the visitor can correct. It is shown with
+// the verification copy instead of the field list, and reported as bot_check.
+const tokenIssue = fieldIssues.find((issue) => issue.field === 'cf-turnstile-response');
+const listedIssues = tokenIssue ? [] : fieldIssues;
+
 const describedBy = (field: string) => {
-  const ids = fieldIssues.filter((issue) => issue.field === field).map((issue) => issue.id);
+  const ids = listedIssues.filter((issue) => issue.field === field).map((issue) => issue.id);
   return ids.length > 0 ? ids.join(' ') : undefined;
 };
 const invalidFlag = (field: string) => (describedBy(field) ? 'true' : undefined);
 
 const errorCode = error?.code ?? 'UNKNOWN';
 const errorType =
-  errorCode === 'BAD_REQUEST'
-    ? 'validation'
-    : errorCode === 'FORBIDDEN'
-      ? 'bot_check'
+  errorCode === 'FORBIDDEN' || tokenIssue
+    ? 'bot_check'
+    : errorCode === 'BAD_REQUEST'
+      ? 'validation'
       : 'server';
 // The server-authored reason ("Failed to send email", "Verification failed"),
 // which tells a mail-provider outage apart from a bot block - both of which
 // otherwise look alike in GA4. Validation messages are left out: they are
 // already reported per field in error_fields.
-const errorReason = errorType === 'validation' ? '' : (error?.message ?? '');
+const errorReason =
+  errorType === 'validation' ? '' : (tokenIssue?.message ?? error?.message ?? '');
+
+// A rejected submit re-renders the form from the POST response, so put back
+// what the visitor typed. Astro escapes both value= and textarea content. The
+// Turnstile token is spent and never echoed.
+const submitted = error ? await Astro.request.formData().catch(() => null) : null;
+const kept = (field: 'name' | 'email' | 'message') => {
+  const value = submitted?.get(field);
+  return typeof value === 'string' ? value : undefined;
+};
 ---
 
 {success && (
@@ -58,8 +77,8 @@ const errorReason = errorType === 'validation' ? '' : (error?.message ?? '');
       const resultEl = document.getElementById('form-result');
       if (resultEl) resultEl.focus();
 
-      // No client-side deduplication: Turnstile tokens are single-use, so a
-      // re-POST is rejected before this block can ever render a second time.
+      // This block renders once per message sent. The submit guard stops a
+      // second click; a refresh's re-POST is answered as already sent.
       window.dataLayer = window.dataLayer || [];
       window.dataLayer.push({
         'event': 'generate_lead',
@@ -70,16 +89,30 @@ const errorReason = errorType === 'validation' ? '' : (error?.message ?? '');
   </script>
 )}
 
+{alreadySent && (
+  <div id="form-result" class="form-success" tabindex="-1">
+    <div class="form-success-icon">&#10003;</div>
+    <h3>Message already sent</h3>
+    <p>Your message has already been sent, so there is no need to send it again.</p>
+  </div>
+  <script is:inline data-csp>
+    (function () {
+      const resultEl = document.getElementById('form-result');
+      if (resultEl) resultEl.focus();
+    })();
+  </script>
+)}
+
 {error && (
   <div id="form-result" class="form-error" tabindex="-1">
-    {error.code === 'FORBIDDEN' ? (
-      <p><strong>Verification failed.</strong> Please refresh the page and try again.</p>
+    {errorType === 'bot_check' ? (
+      <p><strong>Verification failed.</strong> Please try again.</p>
     ) : error.code === 'BAD_REQUEST' ? (
-      fieldIssues.length > 0 ? (
+      listedIssues.length > 0 ? (
         <Fragment>
           <p><strong>Please check your input.</strong></p>
           <ul>
-            {fieldIssues.map((issue) => <li id={issue.id}>{issue.message}</li>)}
+            {listedIssues.map((issue) => <li id={issue.id}>{issue.message}</li>)}
           </ul>
         </Fragment>
       ) : (
@@ -107,21 +140,21 @@ const errorReason = errorType === 'validation' ? '' : (error?.message ?? '');
   </script>
 )}
 
-{!success && (
+{!success && !alreadySent && (
   <form method="POST" action={actions.contact} class="contact-form">
     <div class="form-row">
       <div class="form-group">
         <label for="name">Name</label>
-        <input type="text" id="name" name="name" autocomplete="name" enterkeyhint="next" required maxlength="100" placeholder="Your name" aria-invalid={invalidFlag('name')} aria-describedby={describedBy('name')} />
+        <input type="text" id="name" name="name" autocomplete="name" enterkeyhint="next" required maxlength="100" placeholder="Your name" value={kept('name')} aria-invalid={invalidFlag('name')} aria-describedby={describedBy('name')} />
       </div>
       <div class="form-group">
         <label for="email">Email</label>
-        <input type="email" id="email" name="email" autocomplete="email" autocapitalize="none" autocorrect="off" spellcheck="false" enterkeyhint="next" required maxlength="200" placeholder="you@example.com" aria-invalid={invalidFlag('email')} aria-describedby={describedBy('email')} />
+        <input type="email" id="email" name="email" autocomplete="email" autocapitalize="none" autocorrect="off" spellcheck="false" enterkeyhint="next" required maxlength="200" placeholder="you@example.com" value={kept('email')} aria-invalid={invalidFlag('email')} aria-describedby={describedBy('email')} />
       </div>
     </div>
     <div class="form-group">
       <label for="message">Message</label>
-      <textarea id="message" name="message" required maxlength="2000" rows="6" placeholder="Tell me about your project or question..." aria-invalid={invalidFlag('message')} aria-describedby={describedBy('message')}></textarea>
+      <textarea id="message" name="message" required minlength="10" maxlength="2000" rows="6" placeholder="Tell me about your project or question..." aria-invalid={invalidFlag('message')} aria-describedby={describedBy('message')}>{kept('message')}</textarea>
     </div>
     <div class="form-footer">
       <div class="cf-turnstile" data-sitekey={TURNSTILE_SITE_KEY} aria-describedby={describedBy('cf-turnstile-response')}></div>
@@ -181,6 +214,10 @@ const errorReason = errorType === 'validation' ? '' : (error?.message ?? '');
         let requested = false;
         let held = false;
         let release = false;
+        // Set once a submit goes to the server: a double click or Enter-then-
+        // click would otherwise post the same token twice.
+        let submitting = false;
+        const button = form.querySelector('.submit-btn');
 
         function load() {
           if (requested) return;
@@ -210,11 +247,30 @@ const errorReason = errorType === 'validation' ? '' : (error?.message ?? '');
         });
 
         form.addEventListener('submit', function (event) {
+          if (submitting) {
+            event.preventDefault();
+            return;
+          }
           const token = form.querySelector('input[name="cf-turnstile-response"]');
-          if (release || (token && token.value)) return;
+          if (release || (token && token.value)) {
+            submitting = true;
+            if (button) button.disabled = true;
+            return;
+          }
           event.preventDefault();
           held = true;
           load();
+        });
+
+        // Back restores this page from the bfcache as it was left: mid-submit,
+        // with a spent token. Ready it for another message.
+        window.addEventListener('pageshow', function (event) {
+          if (!event.persisted || !submitting) return;
+          submitting = false;
+          if (button) button.disabled = false;
+          if (window.turnstile && widgetId !== null && widgetId !== undefined) {
+            window.turnstile.reset(widgetId);
+          }
         });
 
         function reportOutcome(outcome, code) {

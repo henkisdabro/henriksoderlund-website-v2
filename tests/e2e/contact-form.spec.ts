@@ -39,16 +39,23 @@ test.beforeEach(async ({ page }) => {
   });
 });
 
-async function submitForm(page: Page, port: number) {
+async function submitForm(page: Page, port: number, input = visitor) {
   await page.goto(`http://127.0.0.1:${port}/contact`);
-  await page.getByLabel('Name').fill(visitor.name);
-  await page.getByLabel('Email').fill(visitor.email);
-  await page.getByLabel('Message').fill(visitor.message);
+  await page.getByLabel('Name').fill(input.name);
+  await page.getByLabel('Email').fill(input.email);
+  await page.getByLabel('Message').fill(input.message);
   // The test site key solves itself; wait for the token it writes into the form.
   await expect(page.locator('input[name="cf-turnstile-response"]')).toHaveValue(/.+/, {
     timeout: 20_000,
   });
   await page.getByRole('button', { name: 'Send Message' }).click();
+}
+
+// A failed submit re-renders the form; what the visitor typed must survive it.
+async function expectFieldsKept(page: Page, input = visitor) {
+  await expect(page.getByLabel('Name')).toHaveValue(input.name);
+  await expect(page.getByLabel('Email')).toHaveValue(input.email);
+  await expect(page.getByLabel('Message')).toHaveValue(input.message);
 }
 
 async function pushed(page: Page, event: string) {
@@ -77,12 +84,59 @@ test('a visitor message is emailed to Henrik and counted as a lead', async ({ pa
   expect(await cspViolations(page)).toEqual([]);
 });
 
+test('a double click sends one message, and a refresh says it was already sent', async ({ page }) => {
+  const emails = watchEmails(PASSES);
+  const posts: string[] = [];
+  page.on('request', (req) => {
+    if (req.method() === 'POST') posts.push(req.url());
+  });
+  const leads = async () =>
+    (await dataLayerEvents(page)).filter((e) => e.event === 'generate_lead').length;
+
+  await page.goto(`http://127.0.0.1:${PASSES}/contact`);
+  // The page moves on as soon as the form posts, so record the button's state
+  // as each submit leaves (after the form's own listener) for reading after.
+  await page.evaluate(() =>
+    document.addEventListener('submit', () => {
+      const button = document.querySelector<HTMLButtonElement>('.submit-btn');
+      sessionStorage.setItem('e2e-submit-disabled', String(button?.disabled));
+    })
+  );
+  await page.getByLabel('Name').fill(visitor.name);
+  await page.getByLabel('Email').fill(visitor.email);
+  await page.getByLabel('Message').fill(visitor.message);
+  await expect(page.locator('input[name="cf-turnstile-response"]')).toHaveValue(/.+/, {
+    timeout: 20_000,
+  });
+  // Raw mouse input: a locator click would wait on the navigation the first one starts.
+  const box = (await page.getByRole('button', { name: 'Send Message' }).boundingBox())!;
+  await page.mouse.dblclick(box.x + box.width / 2, box.y + box.height / 2);
+
+  await expect(page.getByRole('heading', { name: 'Message sent successfully' })).toBeVisible();
+  expect(posts, 'the form was posted more than once').toHaveLength(1);
+  await emails.one();
+  expect(await leads()).toBe(1);
+  const disabled = await page.evaluate(() => sessionStorage.getItem('e2e-submit-disabled'));
+  expect(disabled, 'the button stayed enabled after the first submit').toBe('true');
+
+  // Refreshing the result page resends the same form data and spent token.
+  await page.reload();
+  await expect(page.getByRole('heading', { name: 'Message already sent' })).toBeVisible();
+  await expect(page.getByText('Verification failed.')).toHaveCount(0);
+  await expect(page.getByRole('heading', { name: 'Message sent successfully' })).toHaveCount(0);
+  expect(emails.sent()).toHaveLength(1);
+  const events = (await dataLayerEvents(page)).map((e) => e.event);
+  expect(events).not.toContain('generate_lead');
+  expect(events).not.toContain('form_error');
+});
+
 test('a submission Turnstile rejects sends nothing and is logged as a bot block', async ({ page }) => {
   const emails = watchEmails(BOT);
   await submitForm(page, BOT);
 
   await expect(page.getByText('Verification failed.')).toBeVisible();
   expect(emails.sent()).toEqual([]);
+  await expectFieldsKept(page);
 
   const error = await pushed(page, 'form_error');
   expect(error).toMatchObject({
@@ -91,6 +145,29 @@ test('a submission Turnstile rejects sends nothing and is logged as a bot block'
     error_reason: 'Verification failed',
   });
   expect(unforwardedKeys(container, error), 'form_error keys GTM drops').toEqual([]);
+});
+
+test('a submit Turnstile could not load for is logged as a bot check, not a field error', async ({ page }) => {
+  // Blocked by an extension or the network: the held submit goes out with no token.
+  await page.route(/challenges\.cloudflare\.com/, (route) => route.abort());
+  const emails = watchEmails(PASSES);
+  await page.goto(`http://127.0.0.1:${PASSES}/contact`);
+  await page.getByLabel('Name').fill(visitor.name);
+  await page.getByLabel('Email').fill(visitor.email);
+  await page.getByLabel('Message').fill(visitor.message);
+  await page.getByRole('button', { name: 'Send Message' }).click();
+
+  await expect(page.getByText('Verification failed.')).toBeVisible();
+  await expect(page.getByText('Please check your input.')).toHaveCount(0);
+  expect(emails.sent()).toEqual([]);
+  await expectFieldsKept(page);
+
+  const error = await pushed(page, 'form_error');
+  expect(error).toMatchObject({
+    error_type: 'bot_check',
+    error_code: 'BAD_REQUEST',
+    error_reason: 'Please complete the verification',
+  });
 });
 
 test('when sending fails the visitor gets the direct address and the failure is logged', async ({ page }) => {
@@ -102,11 +179,50 @@ test('when sending fails the visitor gets the direct address and the failure is 
     `mailto:${CONTACT_EMAIL}`
   );
   await expect(page.getByRole('heading', { name: 'Message sent successfully' })).toHaveCount(0);
+  await expectFieldsKept(page);
 
   const error = await pushed(page, 'form_error');
   expect(error).toMatchObject({ error_type: 'server', error_code: 'INTERNAL_SERVER_ERROR' });
   expect(String(error.error_reason)).toMatch(/^Failed to send email/);
   expect((await dataLayerEvents(page)).some((e) => e.event === 'generate_lead')).toBe(false);
+});
+
+test('a message under 10 characters is stopped in the browser, and the server keeps the input when it rejects one', async ({ page }) => {
+  // Quotes and angle brackets prove the kept values are escaped, not injected.
+  const short = { name: 'Ada "Countess" <Lovelace>', email: visitor.email, message: 'Hi Henrik' };
+  const emails = watchEmails(PASSES);
+  const posts: string[] = [];
+  page.on('request', (req) => {
+    if (req.method() === 'POST') posts.push(req.url());
+  });
+
+  await submitForm(page, PASSES, short);
+  const tooShort = await page
+    .getByLabel('Message')
+    .evaluate((el: HTMLTextAreaElement) => el.validity.tooShort);
+  expect(tooShort, 'the browser did not flag the message as too short').toBe(true);
+  expect(posts, 'the browser posted a message the server rejects').toEqual([]);
+
+  // A client that skips the browser's check still gets the server's.
+  const token = await page.locator('input[name="cf-turnstile-response"]').inputValue();
+  await page.locator('form.contact-form').evaluate((form: HTMLFormElement) => {
+    form.noValidate = true;
+  });
+  const response = page.waitForResponse((res) => res.request().method() === 'POST');
+  await page.getByRole('button', { name: 'Send Message' }).click();
+  expect(await (await response).text(), 'the Turnstile token was echoed').not.toContain(token);
+
+  await expect(page.getByText('Please check your input.')).toBeVisible();
+  await expect(page.getByText('Message must be at least 10 characters')).toBeVisible();
+  expect(emails.sent()).toEqual([]);
+  await expectFieldsKept(page, short);
+
+  const error = await pushed(page, 'form_error');
+  expect(error).toMatchObject({
+    error_type: 'validation',
+    error_code: 'BAD_REQUEST',
+    error_fields: 'message',
+  });
 });
 
 test.describe('the synthetic check used against production', () => {
