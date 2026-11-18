@@ -66,40 +66,39 @@ const kept = (field: 'name' | 'email' | 'message') => {
 };
 ---
 
-{success && (
+{(success || alreadySent) && (
   <div id="form-result" class="form-success" tabindex="-1">
     <div class="form-success-icon">&#10003;</div>
-    <h3>Message sent successfully</h3>
-    <p>Thank you for reaching out. I'll get back to you within one business day.</p>
+    {alreadySent ? (
+      <Fragment>
+        <h3>Message already sent</h3>
+        <p>Your message has already been sent, so there is no need to send it again.</p>
+      </Fragment>
+    ) : (
+      <Fragment>
+        <h3>Message sent successfully</h3>
+        <p>Thank you for reaching out. I'll get back to you within one business day.</p>
+      </Fragment>
+    )}
   </div>
   <script is:inline data-csp>
     (function () {
       const resultEl = document.getElementById('form-result');
       if (resultEl) resultEl.focus();
-
-      // This block renders once per message sent. The submit guard stops a
-      // second click; a refresh's re-POST is answered as already sent.
-      window.dataLayer = window.dataLayer || [];
-      window.dataLayer.push({
-        'event': 'generate_lead',
-        'form_name': 'contact',
-        'form_location': window.location.pathname
-      });
     })();
   </script>
 )}
 
-{alreadySent && (
-  <div id="form-result" class="form-success" tabindex="-1">
-    <div class="form-success-icon">&#10003;</div>
-    <h3>Message already sent</h3>
-    <p>Your message has already been sent, so there is no need to send it again.</p>
-  </div>
+{success && (
   <script is:inline data-csp>
-    (function () {
-      const resultEl = document.getElementById('form-result');
-      if (resultEl) resultEl.focus();
-    })();
+    // This renders once per message sent. The submit guard stops a second
+    // click; a refresh's re-POST is answered as already sent.
+    window.dataLayer = window.dataLayer || [];
+    window.dataLayer.push({
+      'event': 'generate_lead',
+      'form_name': 'contact',
+      'form_location': window.location.pathname
+    });
   </script>
 )}
 

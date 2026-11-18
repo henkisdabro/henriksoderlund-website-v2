@@ -66,8 +66,8 @@ export const server = {
         Boolean(CONTACT_SYNTHETIC_TOKEN) &&
         context.request.headers.get('X-Synthetic-Check') === CONTACT_SYNTHETIC_TOKEN;
 
-      const tokenHash = await hashToken(input['cf-turnstile-response']);
-      if (context.cookies.get(SENT_COOKIE)?.value === tokenHash) {
+      const sentHash = context.cookies.get(SENT_COOKIE)?.value;
+      if (sentHash && sentHash === (await hashToken(input['cf-turnstile-response']))) {
         throw new ActionError({ code: 'CONFLICT', message: 'Message already sent' });
       }
 
@@ -134,7 +134,7 @@ export const server = {
         });
       }
 
-      context.cookies.set(SENT_COOKIE, tokenHash, {
+      context.cookies.set(SENT_COOKIE, await hashToken(input['cf-turnstile-response']), {
         httpOnly: true,
         secure: true,
         sameSite: 'strict',

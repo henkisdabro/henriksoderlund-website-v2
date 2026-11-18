@@ -39,16 +39,29 @@ test.beforeEach(async ({ page }) => {
   });
 });
 
-async function submitForm(page: Page, port: number, input = visitor) {
+async function fillForm(page: Page, port: number, input = visitor, { waitForToken = true } = {}) {
   await page.goto(`http://127.0.0.1:${port}/contact`);
   await page.getByLabel('Name').fill(input.name);
   await page.getByLabel('Email').fill(input.email);
   await page.getByLabel('Message').fill(input.message);
+  if (!waitForToken) return;
   // The test site key solves itself; wait for the token it writes into the form.
   await expect(page.locator('input[name="cf-turnstile-response"]')).toHaveValue(/.+/, {
     timeout: 20_000,
   });
+}
+
+async function submitForm(page: Page, port: number, input = visitor) {
+  await fillForm(page, port, input);
   await page.getByRole('button', { name: 'Send Message' }).click();
+}
+
+function watchPosts(page: Page) {
+  const posts: string[] = [];
+  page.on('request', (req) => {
+    if (req.method() === 'POST') posts.push(req.url());
+  });
+  return posts;
 }
 
 // A failed submit re-renders the form; what the visitor typed must survive it.
@@ -86,14 +99,11 @@ test('a visitor message is emailed to Henrik and counted as a lead', async ({ pa
 
 test('a double click sends one message, and a refresh says it was already sent', async ({ page }) => {
   const emails = watchEmails(PASSES);
-  const posts: string[] = [];
-  page.on('request', (req) => {
-    if (req.method() === 'POST') posts.push(req.url());
-  });
+  const posts = watchPosts(page);
   const leads = async () =>
     (await dataLayerEvents(page)).filter((e) => e.event === 'generate_lead').length;
 
-  await page.goto(`http://127.0.0.1:${PASSES}/contact`);
+  await fillForm(page, PASSES);
   // The page moves on as soon as the form posts, so record the button's state
   // as each submit leaves (after the form's own listener) for reading after.
   await page.evaluate(() =>
@@ -102,12 +112,6 @@ test('a double click sends one message, and a refresh says it was already sent',
       sessionStorage.setItem('e2e-submit-disabled', String(button?.disabled));
     })
   );
-  await page.getByLabel('Name').fill(visitor.name);
-  await page.getByLabel('Email').fill(visitor.email);
-  await page.getByLabel('Message').fill(visitor.message);
-  await expect(page.locator('input[name="cf-turnstile-response"]')).toHaveValue(/.+/, {
-    timeout: 20_000,
-  });
   // Raw mouse input: a locator click would wait on the navigation the first one starts.
   const box = (await page.getByRole('button', { name: 'Send Message' }).boundingBox())!;
   await page.mouse.dblclick(box.x + box.width / 2, box.y + box.height / 2);
@@ -151,10 +155,7 @@ test('a submit Turnstile could not load for is logged as a bot check, not a fiel
   // Blocked by an extension or the network: the held submit goes out with no token.
   await page.route(/challenges\.cloudflare\.com/, (route) => route.abort());
   const emails = watchEmails(PASSES);
-  await page.goto(`http://127.0.0.1:${PASSES}/contact`);
-  await page.getByLabel('Name').fill(visitor.name);
-  await page.getByLabel('Email').fill(visitor.email);
-  await page.getByLabel('Message').fill(visitor.message);
+  await fillForm(page, PASSES, visitor, { waitForToken: false });
   await page.getByRole('button', { name: 'Send Message' }).click();
 
   await expect(page.getByText('Verification failed.')).toBeVisible();
@@ -191,10 +192,7 @@ test('a message under 10 characters is stopped in the browser, and the server ke
   // Quotes and angle brackets prove the kept values are escaped, not injected.
   const short = { name: 'Ada "Countess" <Lovelace>', email: visitor.email, message: 'Hi Henrik' };
   const emails = watchEmails(PASSES);
-  const posts: string[] = [];
-  page.on('request', (req) => {
-    if (req.method() === 'POST') posts.push(req.url());
-  });
+  const posts = watchPosts(page);
 
   await submitForm(page, PASSES, short);
   const tooShort = await page

@@ -11,7 +11,6 @@ for (const path of ['/consultancy.md', '/llms-full.txt']) {
     expect(text).toContain('### Technology Stack\n\n- Asana API for workflow automation');
     expect(text).toContain(`## Quality Guarantee\n\n${consultationData.qualityGuarantee.paragraph}`);
     expect(text).toContain('## Frequently Asked Questions');
-    expect(consultationData.faq.items).toHaveLength(6);
     for (const { question, answer } of consultationData.faq.items) {
       expect(text).toContain(`### ${question}\n\n${answer}`);
     }

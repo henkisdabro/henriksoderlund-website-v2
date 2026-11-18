@@ -100,12 +100,6 @@ const CAMPAIGN_PARAMS = new Set([
   'li_fat_id',
 ]);
 
-// A redirect target for a legacy path, 'gone' for a defunct feed, or null.
-function resolveLegacy(pathname: string): string | null {
-  if (GONE.has(pathname)) return 'gone';
-  return REDIRECTS[pathname] ?? (pathname.startsWith('/blog/') ? '/' : null);
-}
-
 function keepCampaignParams(url: URL): void {
   const kept = new URLSearchParams();
   for (const [key, value] of url.searchParams) {
@@ -198,12 +192,11 @@ export default {
 
     const slash = url.pathname !== '/' && url.pathname.endsWith('/');
     if (slash) url.pathname = url.pathname.replace(/\/+$/, '');
-    // Resolved on the stripped path, so a legacy URL with a trailing slash
-    // (/skills/, /blog/post/, /feed/) is answered in one hop, not two.
-    const legacy = resolveLegacy(url.pathname);
+    // Legacy paths are resolved on the stripped path, so a URL with a trailing
+    // slash (/skills/, /blog/post/, /feed/) is answered in one hop, not two.
 
     // 410 Gone for defunct feed endpoints (no content equivalent)
-    if (legacy === 'gone') {
+    if (GONE.has(url.pathname)) {
       const headers = new Headers({ 'Content-Type': 'text/plain; charset=utf-8' });
       setSecurityHeaders(headers);
       headers.set('X-Robots-Tag', 'noindex');
@@ -215,6 +208,8 @@ export default {
     // conflicting self-referential canonical Link header. 301 to the non-slash
     // form so search engines see a single canonical URL. Legacy redirects are
     // handled here too, before Astro routing.
+    const legacy =
+      REDIRECTS[url.pathname] ?? (url.pathname.startsWith('/blog/') ? '/' : null);
     if (slash || legacy) {
       if (legacy) {
         url.pathname = legacy;
