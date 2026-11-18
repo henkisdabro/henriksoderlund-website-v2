@@ -45,6 +45,15 @@ const errorType =
 // otherwise look alike in GA4. Validation messages are left out: they are
 // already reported per field in error_fields.
 const errorReason = errorType === 'validation' ? '' : (error?.message ?? '');
+
+// A rejected submit re-renders the form from the POST response, so put back
+// what the visitor typed. Astro escapes both value= and textarea content. The
+// Turnstile token is spent and never echoed.
+const submitted = error ? await Astro.request.formData().catch(() => null) : null;
+const kept = (field: 'name' | 'email' | 'message') => {
+  const value = submitted?.get(field);
+  return typeof value === 'string' ? value : undefined;
+};
 ---
 
 {success && (
@@ -112,16 +121,16 @@ const errorReason = errorType === 'validation' ? '' : (error?.message ?? '');
     <div class="form-row">
       <div class="form-group">
         <label for="name">Name</label>
-        <input type="text" id="name" name="name" autocomplete="name" enterkeyhint="next" required maxlength="100" placeholder="Your name" aria-invalid={invalidFlag('name')} aria-describedby={describedBy('name')} />
+        <input type="text" id="name" name="name" autocomplete="name" enterkeyhint="next" required maxlength="100" placeholder="Your name" value={kept('name')} aria-invalid={invalidFlag('name')} aria-describedby={describedBy('name')} />
       </div>
       <div class="form-group">
         <label for="email">Email</label>
-        <input type="email" id="email" name="email" autocomplete="email" autocapitalize="none" autocorrect="off" spellcheck="false" enterkeyhint="next" required maxlength="200" placeholder="you@example.com" aria-invalid={invalidFlag('email')} aria-describedby={describedBy('email')} />
+        <input type="email" id="email" name="email" autocomplete="email" autocapitalize="none" autocorrect="off" spellcheck="false" enterkeyhint="next" required maxlength="200" placeholder="you@example.com" value={kept('email')} aria-invalid={invalidFlag('email')} aria-describedby={describedBy('email')} />
       </div>
     </div>
     <div class="form-group">
       <label for="message">Message</label>
-      <textarea id="message" name="message" required maxlength="2000" rows="6" placeholder="Tell me about your project or question..." aria-invalid={invalidFlag('message')} aria-describedby={describedBy('message')}></textarea>
+      <textarea id="message" name="message" required minlength="10" maxlength="2000" rows="6" placeholder="Tell me about your project or question..." aria-invalid={invalidFlag('message')} aria-describedby={describedBy('message')}>{kept('message')}</textarea>
     </div>
     <div class="form-footer">
       <div class="cf-turnstile" data-sitekey={TURNSTILE_SITE_KEY} aria-describedby={describedBy('cf-turnstile-response')}></div>

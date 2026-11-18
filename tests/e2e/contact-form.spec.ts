@@ -39,16 +39,23 @@ test.beforeEach(async ({ page }) => {
   });
 });
 
-async function submitForm(page: Page, port: number) {
+async function submitForm(page: Page, port: number, input = visitor) {
   await page.goto(`http://127.0.0.1:${port}/contact`);
-  await page.getByLabel('Name').fill(visitor.name);
-  await page.getByLabel('Email').fill(visitor.email);
-  await page.getByLabel('Message').fill(visitor.message);
+  await page.getByLabel('Name').fill(input.name);
+  await page.getByLabel('Email').fill(input.email);
+  await page.getByLabel('Message').fill(input.message);
   // The test site key solves itself; wait for the token it writes into the form.
   await expect(page.locator('input[name="cf-turnstile-response"]')).toHaveValue(/.+/, {
     timeout: 20_000,
   });
   await page.getByRole('button', { name: 'Send Message' }).click();
+}
+
+// A failed submit re-renders the form; what the visitor typed must survive it.
+async function expectFieldsKept(page: Page, input = visitor) {
+  await expect(page.getByLabel('Name')).toHaveValue(input.name);
+  await expect(page.getByLabel('Email')).toHaveValue(input.email);
+  await expect(page.getByLabel('Message')).toHaveValue(input.message);
 }
 
 async function pushed(page: Page, event: string) {
@@ -83,6 +90,7 @@ test('a submission Turnstile rejects sends nothing and is logged as a bot block'
 
   await expect(page.getByText('Verification failed.')).toBeVisible();
   expect(emails.sent()).toEqual([]);
+  await expectFieldsKept(page);
 
   const error = await pushed(page, 'form_error');
   expect(error).toMatchObject({
@@ -102,11 +110,50 @@ test('when sending fails the visitor gets the direct address and the failure is 
     `mailto:${CONTACT_EMAIL}`
   );
   await expect(page.getByRole('heading', { name: 'Message sent successfully' })).toHaveCount(0);
+  await expectFieldsKept(page);
 
   const error = await pushed(page, 'form_error');
   expect(error).toMatchObject({ error_type: 'server', error_code: 'INTERNAL_SERVER_ERROR' });
   expect(String(error.error_reason)).toMatch(/^Failed to send email/);
   expect((await dataLayerEvents(page)).some((e) => e.event === 'generate_lead')).toBe(false);
+});
+
+test('a message under 10 characters is stopped in the browser, and the server keeps the input when it rejects one', async ({ page }) => {
+  // Quotes and angle brackets prove the kept values are escaped, not injected.
+  const short = { name: 'Ada "Countess" <Lovelace>', email: visitor.email, message: 'Hi Henrik' };
+  const emails = watchEmails(PASSES);
+  const posts: string[] = [];
+  page.on('request', (req) => {
+    if (req.method() === 'POST') posts.push(req.url());
+  });
+
+  await submitForm(page, PASSES, short);
+  const tooShort = await page
+    .getByLabel('Message')
+    .evaluate((el: HTMLTextAreaElement) => el.validity.tooShort);
+  expect(tooShort, 'the browser did not flag the message as too short').toBe(true);
+  expect(posts, 'the browser posted a message the server rejects').toEqual([]);
+
+  // A client that skips the browser's check still gets the server's.
+  const token = await page.locator('input[name="cf-turnstile-response"]').inputValue();
+  await page.locator('form.contact-form').evaluate((form: HTMLFormElement) => {
+    form.noValidate = true;
+  });
+  const response = page.waitForResponse((res) => res.request().method() === 'POST');
+  await page.getByRole('button', { name: 'Send Message' }).click();
+  expect(await (await response).text(), 'the Turnstile token was echoed').not.toContain(token);
+
+  await expect(page.getByText('Please check your input.')).toBeVisible();
+  await expect(page.getByText('Message must be at least 10 characters')).toBeVisible();
+  expect(emails.sent()).toEqual([]);
+  await expectFieldsKept(page, short);
+
+  const error = await pushed(page, 'form_error');
+  expect(error).toMatchObject({
+    error_type: 'validation',
+    error_code: 'BAD_REQUEST',
+    error_fields: 'message',
+  });
 });
 
 test.describe('the synthetic check used against production', () => {
