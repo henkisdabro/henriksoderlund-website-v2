@@ -84,6 +84,52 @@ test('a visitor message is emailed to Henrik and counted as a lead', async ({ pa
   expect(await cspViolations(page)).toEqual([]);
 });
 
+test('a double click sends one message, and a refresh says it was already sent', async ({ page }) => {
+  const emails = watchEmails(PASSES);
+  const posts: string[] = [];
+  page.on('request', (req) => {
+    if (req.method() === 'POST') posts.push(req.url());
+  });
+  const leads = async () =>
+    (await dataLayerEvents(page)).filter((e) => e.event === 'generate_lead').length;
+
+  await page.goto(`http://127.0.0.1:${PASSES}/contact`);
+  // The page moves on as soon as the form posts, so record the button's state
+  // as each submit leaves (after the form's own listener) for reading after.
+  await page.evaluate(() =>
+    document.addEventListener('submit', () => {
+      const button = document.querySelector<HTMLButtonElement>('.submit-btn');
+      sessionStorage.setItem('e2e-submit-disabled', String(button?.disabled));
+    })
+  );
+  await page.getByLabel('Name').fill(visitor.name);
+  await page.getByLabel('Email').fill(visitor.email);
+  await page.getByLabel('Message').fill(visitor.message);
+  await expect(page.locator('input[name="cf-turnstile-response"]')).toHaveValue(/.+/, {
+    timeout: 20_000,
+  });
+  // Raw mouse input: a locator click would wait on the navigation the first one starts.
+  const box = (await page.getByRole('button', { name: 'Send Message' }).boundingBox())!;
+  await page.mouse.dblclick(box.x + box.width / 2, box.y + box.height / 2);
+
+  await expect(page.getByRole('heading', { name: 'Message sent successfully' })).toBeVisible();
+  expect(posts, 'the form was posted more than once').toHaveLength(1);
+  await emails.one();
+  expect(await leads()).toBe(1);
+  const disabled = await page.evaluate(() => sessionStorage.getItem('e2e-submit-disabled'));
+  expect(disabled, 'the button stayed enabled after the first submit').toBe('true');
+
+  // Refreshing the result page resends the same form data and spent token.
+  await page.reload();
+  await expect(page.getByRole('heading', { name: 'Message already sent' })).toBeVisible();
+  await expect(page.getByText('Verification failed.')).toHaveCount(0);
+  await expect(page.getByRole('heading', { name: 'Message sent successfully' })).toHaveCount(0);
+  expect(emails.sent()).toHaveLength(1);
+  const events = (await dataLayerEvents(page)).map((e) => e.event);
+  expect(events).not.toContain('generate_lead');
+  expect(events).not.toContain('form_error');
+});
+
 test('a submission Turnstile rejects sends nothing and is logged as a bot block', async ({ page }) => {
   const emails = watchEmails(BOT);
   await submitForm(page, BOT);

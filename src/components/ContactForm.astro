@@ -5,7 +5,10 @@ import { CONTACT_EMAIL } from '../data/links';
 
 const result = Astro.getActionResult(actions.contact);
 const success = result?.data?.success;
-const error = result?.error;
+// A resend of a message that already went (see SENT_COOKIE in the Action):
+// neither a lead nor an error, so it pushes nothing to the dataLayer.
+const alreadySent = result?.error?.code === 'CONFLICT';
+const error = alreadySent ? undefined : result?.error;
 
 // Surface the per-field validation messages rather than the raw Zod payload,
 // keeping the field name alongside each message so it can be wired to the input
@@ -74,8 +77,8 @@ const kept = (field: 'name' | 'email' | 'message') => {
       const resultEl = document.getElementById('form-result');
       if (resultEl) resultEl.focus();
 
-      // No client-side deduplication: Turnstile tokens are single-use, so a
-      // re-POST is rejected before this block can ever render a second time.
+      // This block renders once per message sent. The submit guard stops a
+      // second click; a refresh's re-POST is answered as already sent.
       window.dataLayer = window.dataLayer || [];
       window.dataLayer.push({
         'event': 'generate_lead',
@@ -86,10 +89,24 @@ const kept = (field: 'name' | 'email' | 'message') => {
   </script>
 )}
 
+{alreadySent && (
+  <div id="form-result" class="form-success" tabindex="-1">
+    <div class="form-success-icon">&#10003;</div>
+    <h3>Message already sent</h3>
+    <p>Your message has already been sent, so there is no need to send it again.</p>
+  </div>
+  <script is:inline data-csp>
+    (function () {
+      const resultEl = document.getElementById('form-result');
+      if (resultEl) resultEl.focus();
+    })();
+  </script>
+)}
+
 {error && (
   <div id="form-result" class="form-error" tabindex="-1">
     {errorType === 'bot_check' ? (
-      <p><strong>Verification failed.</strong> Please refresh the page and try again.</p>
+      <p><strong>Verification failed.</strong> Please try again.</p>
     ) : error.code === 'BAD_REQUEST' ? (
       listedIssues.length > 0 ? (
         <Fragment>
@@ -123,7 +140,7 @@ const kept = (field: 'name' | 'email' | 'message') => {
   </script>
 )}
 
-{!success && (
+{!success && !alreadySent && (
   <form method="POST" action={actions.contact} class="contact-form">
     <div class="form-row">
       <div class="form-group">
@@ -197,6 +214,10 @@ const kept = (field: 'name' | 'email' | 'message') => {
         let requested = false;
         let held = false;
         let release = false;
+        // Set once a submit goes to the server: a double click or Enter-then-
+        // click would otherwise post the same token twice.
+        let submitting = false;
+        const button = form.querySelector('.submit-btn');
 
         function load() {
           if (requested) return;
@@ -226,11 +247,30 @@ const kept = (field: 'name' | 'email' | 'message') => {
         });
 
         form.addEventListener('submit', function (event) {
+          if (submitting) {
+            event.preventDefault();
+            return;
+          }
           const token = form.querySelector('input[name="cf-turnstile-response"]');
-          if (release || (token && token.value)) return;
+          if (release || (token && token.value)) {
+            submitting = true;
+            if (button) button.disabled = true;
+            return;
+          }
           event.preventDefault();
           held = true;
           load();
+        });
+
+        // Back restores this page from the bfcache as it was left: mid-submit,
+        // with a spent token. Ready it for another message.
+        window.addEventListener('pageshow', function (event) {
+          if (!event.persisted || !submitting) return;
+          submitting = false;
+          if (button) button.disabled = false;
+          if (window.turnstile && widgetId !== null && widgetId !== undefined) {
+            window.turnstile.reset(widgetId);
+          }
         });
 
         function reportOutcome(outcome, code) {
