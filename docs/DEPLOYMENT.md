@@ -20,6 +20,8 @@ One job, `build-test-deploy`, runs these in order, so a failure at any step stop
 - **Push to `main`**: Full build, verification, and deployment
 - **Pull Requests**: Build and verification only (no deployment)
 
+Runs share a concurrency group per ref: pushes to `main` queue behind the running deploy (GitHub keeps only the newest pending run) and are never cancelled mid-deploy, while a new push to a pull request cancels that PR's superseded run.
+
 ### Required Setup
 
 #### 1. Disable Cloudflare Automatic Builds

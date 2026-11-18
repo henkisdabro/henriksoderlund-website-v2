@@ -9,6 +9,13 @@ on:
 permissions:
   contents: read
 
+# Pushes to main queue rather than overlap, so an older commit can never deploy
+# over a newer one; an in-flight deploy is never cancelled. Superseded PR runs
+# are cancelled.
+concurrency:
+  group: deploy-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
 jobs:
   # One job, so the site is built and set up once. Lead capture is tested end
   # to end before anything ships: the contact form through the built Worker,

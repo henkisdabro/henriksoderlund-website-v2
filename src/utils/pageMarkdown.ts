@@ -70,7 +70,7 @@ export function getExpertiseMarkdown(): string {
       const platforms = g.platforms
         ? `\n\n${g.platforms.map((set) => `- ${set.label}: ${set.names.join(', ')}`).join('\n')}`
         : '';
-      return `### ${g.name}\n\n${g.description ? `${g.description}\n\n` : ''}${g.skills.map((skill) => `- ${skill}`).join('\n')}${platforms}`;
+      return `### ${g.name}\n\n${g.description ? `${g.description}\n\n` : ''}${g.skills.map((skill) => (g.core?.includes(skill) ? `- **${skill}**` : `- ${skill}`)).join('\n')}${platforms}`;
     })
     .join('\n\n');
 
@@ -93,7 +93,9 @@ ${skillGroups}
 }
 
 export function getConsultancyMarkdown(): string {
-  const { hero, idealClients, services, performanceNote, engagementModels, caseStudy } = consultationData;
+  const {
+    hero, idealClients, services, performanceNote, engagementModels, caseStudy, qualityGuarantee, faq,
+  } = consultationData;
 
   const clientProfiles = idealClients.profiles
     .map((p) => `- **${p.label}** ${p.description}`)
@@ -121,6 +123,14 @@ export function getConsultancyMarkdown(): string {
   const results = caseStudy.results.metrics
     .map((m) => `- ${m.metric}: ${m.value} - ${m.description}`)
     .join('\n');
+
+  const technologies = caseStudy.technologies.items
+    .map((t) => `- ${t}`)
+    .join('\n');
+
+  const faqItems = faq.items
+    .map((i) => `### ${i.question}\n\n${i.answer}`)
+    .join('\n\n');
 
   return `# Consultancy - Henrik Soederlund
 
@@ -174,7 +184,19 @@ ${caseStudy.results.description}
 
 ${results}
 
+### ${caseStudy.technologies.title}
+
+${technologies}
+
 > "${caseStudy.testimonial.quote}" - ${caseStudy.testimonial.author}
+
+## ${qualityGuarantee.title}
+
+${qualityGuarantee.paragraph}
+
+## ${faq.title}
+
+${faqItems}
 `;
 }
 

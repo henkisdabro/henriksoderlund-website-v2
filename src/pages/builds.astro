@@ -236,7 +236,7 @@ const hostOf = (url: string) => new URL(url).host.replace(/^www\./, '');
     </div>
     <div class="build-dialog-scroll">
       <img alt="" />
-      <video muted loop playsinline hidden></video>
+      <video muted loop playsinline controls hidden></video>
       <div class="build-dialog-art" hidden></div>
     </div>
   </dialog>
@@ -252,6 +252,8 @@ const hostOf = (url: string) => new URL(url).host.replace(/^www\./, '');
     const dialogVisit = document.getElementById('build-dialog-visit');
     const dialogScroll = dialog.querySelector('.build-dialog-scroll');
     const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    // A refused autoplay (iOS Low Power Mode, for one) is not an error here.
+    const play = (video) => video.play().catch(() => {});
 
     function openBuild(shot) {
       // The card's media is an image, a screen recording or a drawn illustration.
@@ -270,7 +272,9 @@ const hostOf = (url: string) => new URL(url).host.replace(/^www\./, '');
         } else if (video) {
           dialogVideo.poster = full;
           dialogVideo.src = video;
-          dialogVideo.play();
+          // Visitors who prefer reduced motion get the poster frame; the
+          // controls start it.
+          if (!reducedMotion) play(dialogVideo);
         } else {
           dialogImg.src = full;
           dialogImg.alt = media.alt;
@@ -314,7 +318,7 @@ const hostOf = (url: string) => new URL(url).host.replace(/^www\./, '');
     if (!reducedMotion) {
       const observer = new IntersectionObserver((entries) => {
         entries.forEach(({ target, isIntersecting }) => {
-          if (isIntersecting) target.play();
+          if (isIntersecting) play(target);
           else target.pause();
         });
       }, { threshold: 0.4 });
@@ -323,7 +327,7 @@ const hostOf = (url: string) => new URL(url).host.replace(/^www\./, '');
       // A hover recording plays only while its card is hovered or focused.
       document.querySelectorAll('.build-card--hover-video').forEach((card) => {
         const hoverVideo = card.querySelector('.build-shot-hover');
-        const start = () => hoverVideo.play();
+        const start = () => play(hoverVideo);
         const stop = () => hoverVideo.pause();
         card.addEventListener('pointerenter', start);
         card.addEventListener('pointerleave', stop);
