@@ -1,4 +1,4 @@
-import { GITHUB_URL, ASCRIBE_URL, ROTTOSNORKEL_URL, SANDCASTLE_KIT_URL, SANDCASTLE_KIT_SITE_URL } from './links';
+import { GITHUB_URL, ASCRIBE_URL, ROTTOSNORKEL_URL, SANDCASTLE_KIT_URL, SANDCASTLE_KIT_SITE_URL, WOOKSTAR_PLUGINS_URL, MESSAGE_SKILL_URL } from './links';
 
 export interface Build {
   /** Anchor on /builds, so each build is linkable as /builds#<id>. */
@@ -48,6 +48,18 @@ export const buildsData = {
       accentColourDark: '#f2c230',
     },
     {
+      id: 'rotto-snorkel',
+      title: 'Rotto Snorkel',
+      url: ROTTOSNORKEL_URL,
+      type: 'Public Website',
+      tagline: 'Live traffic-light safety ratings for 36 snorkel spots and wrecks',
+      description: 'Live snorkelling guide for Rottnest Island. An interactive map rates every spot and wreck green, amber or red from live wind, wave and swell data, picks the best bet right now, and opens each spot with its readings and how to get in.',
+      tags: ['React', 'MapLibre GL', 'Cloudflare Workers', 'Live Weather API'],
+      image: 'rottoSnorkelImage',
+      video: 'rottoSnorkelVideo',
+      accentColour: '#0ea5e9',
+    },
+    {
       id: 'workflow-automation',
       title: 'AI-Powered Workflow Automation',
       type: 'Automation Platform',
@@ -74,16 +86,17 @@ export const buildsData = {
       accentColourDark: '#f59e0b',
     },
     {
-      id: 'rotto-snorkel',
-      title: 'Rotto Snorkel',
-      url: ROTTOSNORKEL_URL,
-      type: 'Public Website',
-      tagline: 'Live traffic-light safety ratings for 36 snorkel spots and wrecks',
-      description: 'Live snorkelling guide for Rottnest Island. An interactive map rates every spot and wreck green, amber or red from live wind, wave and swell data, picks the best bet right now, and opens each spot with its readings and how to get in.',
-      tags: ['React', 'MapLibre GL', 'Cloudflare Workers', 'Live Weather API'],
-      image: 'rottoSnorkelImage',
-      video: 'rottoSnorkelVideo',
-      accentColour: '#0ea5e9',
+      id: 'message-skill',
+      title: 'message - Paste Ready drafts',
+      sourceUrl: MESSAGE_SKILL_URL,
+      type: 'Open Source · Claude Code Plugin',
+      tagline: 'One draft, pasted correctly into 22 destinations',
+      description: "The flagship skill in wookstar-claude-plugins, my Claude Code plugin marketplace of 32 plugins. Claude writes a message once as Markdown and a live browser preview converts it for Gmail, mail apps, WhatsApp, Slack, Teams, X, LinkedIn and 15 more - each in that platform's own formatting, with length counters, X threads and one-click Copy or Open.",
+      tags: ['Claude Code', 'Agent Skills', 'Bun', 'TypeScript'],
+      image: 'messageSkillImage',
+      hoverVideo: 'messageSkillVideo',
+      accentColour: '#0f766e',
+      accentColourDark: '#5eead4',
     },
     {
       id: 'dashboards',
@@ -103,6 +116,11 @@ export const buildsData = {
         title: 'sandcastle-kit',
         url: SANDCASTLE_KIT_URL,
         description: 'Unattended coding agents that burn down a GitHub issue backlog in Docker sandboxes - implemented, reviewed, gated and merged.',
+      },
+      {
+        title: 'wookstar-claude-plugins',
+        url: WOOKSTAR_PLUGINS_URL,
+        description: 'Claude Code plugin marketplace of 32 plugins across development, analytics, content and ops - including the message skill for paste-ready drafts.',
       },
       {
         title: 'Cloudflare Workers React Boilerplate',

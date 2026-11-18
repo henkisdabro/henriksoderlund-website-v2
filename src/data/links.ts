@@ -29,3 +29,5 @@ export function productLink(url: string, content: string): string {
 
 export const SANDCASTLE_KIT_URL = 'https://github.com/henkisdabro/sandcastle-kit';
 export const SANDCASTLE_KIT_SITE_URL = 'https://henkisdabro.github.io/sandcastle-kit/';
+export const WOOKSTAR_PLUGINS_URL = 'https://github.com/henkisdabro/wookstar-claude-plugins';
+export const MESSAGE_SKILL_URL = `${WOOKSTAR_PLUGINS_URL}/tree/main/plugins/message`;
